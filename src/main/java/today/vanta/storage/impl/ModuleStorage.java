@@ -25,6 +25,7 @@ public class ModuleStorage extends Storage<Module> {
         changelog.add("[+] Added `Spaced out` and `Module case` to Arraylist");
         changelog.add("[+] Added `Gradient background` to ClickGuis");
         changelog.add("[+] Added ImGui ClickGui toggles for modules");
+        changelog.add("[+] Added MovementFix");
         changelog.add("[-] Removed deprecated display names");
     }
 
