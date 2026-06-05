@@ -5,15 +5,20 @@ import net.minecraft.client.gui.GuiScreen;
 import today.vanta.Vanta;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
+import today.vanta.client.module.impl.client.ClickGUI;
+import today.vanta.client.module.impl.client.Theme;
 import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.BooleanSetting;
 import today.vanta.client.setting.impl.MultiStringSetting;
 import today.vanta.client.setting.impl.NumberSetting;
 import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.client.IClient;
+import today.vanta.util.game.render.RenderUtil;
 import today.vanta.util.system.lwjgl.imgui.ImGuiImpl;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 public class ImGuiClickGUIScreen extends GuiScreen implements IClient {
     private Category currentCategory = Category.COMBAT;
@@ -22,6 +27,16 @@ public class ImGuiClickGUIScreen extends GuiScreen implements IClient {
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        if (Vanta.instance.moduleStorage.getT(ClickGUI.class).darkenBackground.getValue()) {
+            RenderUtil.rectangle(0, 0, width, height, new Color(0,0,0,150));
+        }
+
+        Color color1 = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
+
+        if (Vanta.instance.moduleStorage.getT(ClickGUI.class).gradientBackground.getValue()) {
+            RenderUtil.verticalGradient(0, 0, width, height, new Color(0,0,0,150), new Color(color1.getRed(),color1.getGreen(),color1.getBlue(),150));
+        }
+
         ImGuiImpl.draw(() -> {
             ImGui.setNextWindowSize(600, 425);
             if (ImGui.begin(CLIENT_NAME)) {
@@ -29,7 +44,7 @@ public class ImGuiClickGUIScreen extends GuiScreen implements IClient {
                     float fullWidth = ImGui.getContentRegionAvailX();
 
                     for (Category category : Category.values()) {
-                        if (ImGui.button(category.name, fullWidth, 50)) {
+                        if (ImGui.button(category.name, fullWidth, 20)) {
                             if (currentModule != null) {
                                 lastModulePerCategory.put(currentCategory, currentModule);
                             }
@@ -63,6 +78,14 @@ public class ImGuiClickGUIScreen extends GuiScreen implements IClient {
                         float fullWidth = ImGui.getContentRegionAvailX();
 
                         ImGui.text(currentModule.displayName);
+
+                        float checkboxWidth = ImGui.getFrameHeight();
+                        float rightEdge = ImGui.getContentRegionAvailX();
+
+                        ImGui.sameLine(ImGui.getCursorPosX() + rightEdge - checkboxWidth);
+                        if (ImGui.checkbox("##Toggle", currentModule.isEnabled())) {
+                            currentModule.setEnabled(!currentModule.isEnabled());
+                        }
                         ImGui.separator();
 
                         for (Setting<?> setting : currentModule.settings) {
