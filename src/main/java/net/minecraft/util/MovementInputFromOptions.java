@@ -1,6 +1,7 @@
 package net.minecraft.util;
 
 import net.minecraft.client.settings.GameSettings;
+import today.vanta.client.event.impl.game.player.MoveInputEvent;
 
 public class MovementInputFromOptions extends MovementInput {
     private final GameSettings gameSettings;
@@ -32,9 +33,18 @@ public class MovementInputFromOptions extends MovementInput {
         this.jump = this.gameSettings.keyBindJump.isKeyDown();
         this.sneak = this.gameSettings.keyBindSneak.isKeyDown();
 
+        MoveInputEvent moveInputEvent = new MoveInputEvent(this.moveForward, this.moveStrafe, this.jump, this.sneak, 0.3F);
+        moveInputEvent.call();
+
+        this.moveStrafe = moveInputEvent.strafe;
+        this.moveForward = moveInputEvent.forward;
+
+        this.jump = moveInputEvent.jumping;
+        this.sneak = moveInputEvent.sneaking;
+
         if (this.sneak) {
-            this.moveStrafe = (float) ((double) this.moveStrafe * 0.3D);
-            this.moveForward = (float) ((double) this.moveForward * 0.3D);
+            this.moveStrafe *= moveInputEvent.sneakFactor;
+            this.moveForward *= moveInputEvent.sneakFactor;
         }
     }
 }

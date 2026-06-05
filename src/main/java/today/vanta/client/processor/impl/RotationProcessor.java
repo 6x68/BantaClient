@@ -9,8 +9,7 @@ import today.vanta.util.game.player.RotationUtil;
 import today.vanta.util.game.player.constructors.Rotation;
 
 public class RotationProcessor extends Processor {
-
-    private Rotation rotations;
+    public Rotation rotations;
 
     @EventListen(priority = EventPriority.HIGHEST)
     private void onMotion(MotionEvent event) {

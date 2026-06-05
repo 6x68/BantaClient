@@ -1,6 +1,7 @@
 package today.vanta.util.game.player;
 
 import net.minecraft.potion.Potion;
+import today.vanta.client.event.impl.game.player.MoveInputEvent;
 import today.vanta.util.game.IMinecraft;
 
 public class MovementUtil implements IMinecraft {
@@ -87,5 +88,39 @@ public class MovementUtil implements IMinecraft {
         }
 
         return motionY;
+    }
+
+    public static void correctMovement(MoveInputEvent event, float yaw) {
+        if (event.forward == 0 && event.strafe == 0) {
+            return;
+        }
+
+        float realYaw = mc.thePlayer.rotationYaw;
+
+        float moveX = event.strafe * (float) Math.cos(Math.toRadians(realYaw)) - event.forward * (float) Math.sin(Math.toRadians(realYaw));
+        float moveZ = event.forward * (float) Math.cos(Math.toRadians(realYaw)) + event.strafe * (float) Math.sin(Math.toRadians(realYaw));
+
+        double[] bestMovement = null;
+
+        for (int forward = -1; forward <= 1; forward++) {
+            for (int strafe = -1; strafe <= 1; strafe++) {
+                if (forward == 0 && strafe == 0) continue;
+
+                float newMoveX = strafe * (float) Math.cos(Math.toRadians(yaw)) - forward * (float) Math.sin(Math.toRadians(yaw));
+                float newMoveZ = forward * (float) Math.cos(Math.toRadians(yaw)) + strafe * (float) Math.sin(Math.toRadians(yaw));
+
+                float deltaX = newMoveX - moveX;
+                float deltaZ = newMoveZ - moveZ;
+
+                double dist = Math.sqrt(deltaX * deltaX + deltaZ * deltaZ);
+
+                if (bestMovement == null || bestMovement[0] > dist) {
+                    bestMovement = new double[]{dist, forward, strafe};
+                }
+            }
+        }
+
+        event.forward = (float) Math.round(bestMovement[1]);
+        event.strafe = (float) Math.round(bestMovement[2]);
     }
 }

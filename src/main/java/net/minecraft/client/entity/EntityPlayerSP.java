@@ -20,14 +20,12 @@ import net.minecraft.network.play.client.*;
 import net.minecraft.potion.Potion;
 import net.minecraft.stats.StatBase;
 import net.minecraft.stats.StatFileWriter;
+import net.minecraft.stats.StatList;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.*;
 import net.minecraft.world.IInteractionObject;
 import net.minecraft.world.World;
-import today.vanta.client.event.impl.game.player.MotionEvent;
-import today.vanta.client.event.impl.game.player.RotationLookEvent;
-import today.vanta.client.event.impl.game.player.SlowdownEvent;
-import today.vanta.client.event.impl.game.player.SprintEvent;
+import today.vanta.client.event.impl.game.player.*;
 import today.vanta.client.event.impl.game.world.UpdateEvent;
 import today.vanta.util.game.events.EventState;
 
@@ -623,6 +621,66 @@ public class EntityPlayerSP extends AbstractClientPlayer {
         if (this.onGround && this.capabilities.isFlying && !this.mc.playerController.isSpectatorMode()) {
             this.capabilities.isFlying = false;
             this.sendPlayerAbilities();
+        }
+    }
+
+    @Override
+    public void jump() {
+        JumpEvent jumpEvent = new JumpEvent(this.rotationYaw);
+        jumpEvent.call();
+        this.motionY = this.getJumpUpwardsMotion();
+
+        if (this.isPotionActive(Potion.jump)) {
+            this.motionY += (float) (this.getActivePotionEffect(Potion.jump).getAmplifier() + 1) * 0.1F;
+        }
+
+        if (this.isSprinting()) {
+            float f = jumpEvent.yaw * 0.017453292F;
+            this.motionX -= MathHelper.sin(f) * 0.2F;
+            this.motionZ += MathHelper.cos(f) * 0.2F;
+        }
+
+        this.isAirBorne = true;
+
+        this.triggerAchievement(StatList.jumpStat);
+
+        if (this.isSprinting()) {
+            this.addExhaustion(0.8F);
+        } else {
+            this.addExhaustion(0.2F);
+        }
+    }
+
+    @Override
+    public void moveFlying(float strafe, float forward, float friction) {
+        MoveFlyingEvent flyingEvent = new MoveFlyingEvent(this.rotationYaw, strafe, forward, friction);
+        flyingEvent.call();
+
+        if (flyingEvent.cancelled) {
+            return;
+        }
+
+        strafe = flyingEvent.strafe;
+        forward = flyingEvent.forward;
+        friction = flyingEvent.friction;
+
+        float yaw = flyingEvent.yaw;
+        float f = strafe * strafe + forward * forward;
+
+        if (f >= 1.0E-4F) {
+            f = MathHelper.sqrt_float(f);
+
+            if (f < 1.0F) {
+                f = 1.0F;
+            }
+
+            f = friction / f;
+            strafe = strafe * f;
+            forward = forward * f;
+            float f1 = MathHelper.sin(yaw * (float) Math.PI / 180.0F);
+            float f2 = MathHelper.cos(yaw * (float) Math.PI / 180.0F);
+            this.motionX += strafe * f2 - forward * f1;
+            this.motionZ += forward * f2 + strafe * f1;
         }
     }
 }
