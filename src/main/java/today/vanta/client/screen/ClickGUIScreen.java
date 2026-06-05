@@ -58,8 +58,12 @@ public class ClickGUIScreen extends GuiScreen {
         }
 
         Color color1 = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
-        float panelHeight = 16;
 
+        if (Vanta.instance.moduleStorage.getT(ClickGUI.class).gradientBackground.getValue()) {
+            RenderUtil.verticalGradient(0, 0, width, height, new Color(0,0,0,150), new Color(color1.getRed(),color1.getGreen(),color1.getBlue(),150));
+        }
+
+        float panelHeight = 16;
         for (Category category : Category.values()) {
             Vector2f position = category.position;
             boolean hoverCat = RenderUtil.hovered(mouseX, mouseY, position.x, position.y, panelWidth, panelHeight);

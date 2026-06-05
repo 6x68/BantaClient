@@ -172,6 +172,38 @@ public class RenderUtil {
         GlStateManager.popMatrix();
     }
 
+    public static void verticalGradient(double x, double y, double width, double height, Color topColor, Color bottomColor) {
+        start();
+
+        GL11.glShadeModel(GL11.GL_SMOOTH);
+        GL11.glBegin(GL11.GL_QUADS);
+
+        { // Top left
+            color(topColor);
+            GL11.glVertex2d(x, y);
+        }
+
+        { // Top right
+            color(topColor);
+            GL11.glVertex2d(x + width, y);
+        }
+
+        { // Bottom right
+            color(bottomColor);
+            GL11.glVertex2d(x + width, y + height);
+        }
+
+        { // Bottom left
+            color(bottomColor);
+            GL11.glVertex2d(x, y + height);
+        }
+
+        GL11.glEnd();
+        GL11.glShadeModel(GL11.GL_FLAT);
+
+        stop();
+    }
+
     public static BufferedImage base64ToBufferedImage(String base64Image) {
         base64Image = base64Image.replace("\\u003d", "=");
         try {

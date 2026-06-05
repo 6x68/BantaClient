@@ -19,6 +19,11 @@ public class ClickGUI extends Module {
     darkenBackground = BooleanSetting.builder()
             .name("Dark background")
             .value(true)
+            .build(),
+
+    gradientBackground = BooleanSetting.builder()
+            .name("Gradient background")
+            .value(true)
             .build();
 
     private final StringSetting design = StringSetting.builder()
