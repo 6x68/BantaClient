@@ -20,6 +20,7 @@ public class ActiveRenderInfo {
     private static final FloatBuffer MODELVIEW = GLAllocation.createDirectFloatBuffer(16);
     private static final FloatBuffer PROJECTION = GLAllocation.createDirectFloatBuffer(16);
     private static final FloatBuffer OBJECTCOORDS = GLAllocation.createDirectFloatBuffer(3);
+    private static final FloatBuffer SCREENCOORDS = GLAllocation.createDirectFloatBuffer(3);
     private static Vec3 position = new Vec3(0.0D, 0.0D, 0.0D);
     private static float rotationX;
     private static float rotationXZ;
@@ -53,6 +54,23 @@ public class ActiveRenderInfo {
         double d4 = d1 + position.yCoord;
         double d5 = d2 + position.zCoord;
         return new Vec3(d3, d4, d5);
+    }
+
+    public static Vec3 projectWorldToScreen(double x, double y, double z) {
+        FloatBuffer modelView = MODELVIEW.asReadOnlyBuffer();
+        FloatBuffer projection = PROJECTION.asReadOnlyBuffer();
+        IntBuffer viewport = VIEWPORT.asReadOnlyBuffer();
+
+        modelView.rewind();
+        projection.rewind();
+        viewport.rewind();
+        SCREENCOORDS.clear();
+
+        if (!GLU.gluProject((float) x, (float) y, (float) z, modelView, projection, viewport, SCREENCOORDS)) {
+            return null;
+        }
+
+        return new Vec3(SCREENCOORDS.get(0), SCREENCOORDS.get(1), SCREENCOORDS.get(2));
     }
 
     public static Block getBlockAtEntityViewpoint(World worldIn, Entity p_180786_1_, float p_180786_2_) {
