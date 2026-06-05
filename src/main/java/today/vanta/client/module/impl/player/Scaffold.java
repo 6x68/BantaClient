@@ -108,7 +108,7 @@ public class Scaffold extends Module {
 
     public Scaffold() {
         super("Scaffold", "Bridges for you.", Category.PLAYER);
-        displayNames = new String[]{"Scaffold", "ScaffoldWalk", "Scaffold Walk", "BlockFly", "Block Fly"};
+        displayNames = new String[]{"Scaffold", "ScaffoldWalk", "BlockFly"};
 
         rotationMode.addListener((setting, oldValue, newValue) -> {
             if (newValue.equals("Godbridge")) {

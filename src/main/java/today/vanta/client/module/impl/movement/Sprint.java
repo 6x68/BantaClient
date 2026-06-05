@@ -8,7 +8,7 @@ import today.vanta.util.game.events.EventListen;
 public class Sprint extends Module {
     public Sprint() {
         super("Sprint", "Makes you always sprint.", Category.MOVEMENT);
-        displayNames = new String[] {"Sprint", "AutoSprint", "Auto Sprint", "ToggleSprint", "Toggle Sprint"};
+        displayNames = new String[] {"Sprint", "AutoSprint", "ToggleSprint"};
     }
 
     @EventListen

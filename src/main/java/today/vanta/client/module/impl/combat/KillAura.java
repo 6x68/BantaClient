@@ -88,7 +88,7 @@ public class KillAura extends Module {
 
     public KillAura() {
         super("KillAura", "Attacks entities in proximity.", Category.COMBAT);
-        displayNames = new String[]{"KillAura", "Killaura", "Kill Aura", "Aura"};
+        displayNames = new String[]{"KillAura", "Killaura", "Aura"};
 
         swingMode = StringSetting.builder()
                 .name("Swing mode")

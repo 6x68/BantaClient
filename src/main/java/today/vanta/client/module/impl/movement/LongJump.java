@@ -1,7 +1,6 @@
 package today.vanta.client.module.impl.movement;
 
 import today.vanta.client.event.impl.game.player.MotionEvent;
-import today.vanta.client.event.impl.game.world.UpdateEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.setting.impl.NumberSetting;
@@ -47,7 +46,6 @@ public class LongJump extends Module {
 
     public LongJump() {
         super("LongJump", "Makes you jump longer.", Category.MOVEMENT);
-        displayNames = new String[]{"LongJump", "Long Jump"};
     }
 
     private int offGroundTicks;

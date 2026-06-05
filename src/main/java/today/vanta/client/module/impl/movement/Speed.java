@@ -24,7 +24,7 @@ public class Speed extends Module {
 
     public Speed() {
         super("Speed", "Makes you go faster.", Category.MOVEMENT);
-        displayNames = new String[]{"Speed", "FastMove", "Fast Move"};
+        displayNames = new String[]{"Speed", "FastMove", "Zoot", "SpeedyGonzales"};
     }
 
     @EventListen

@@ -11,7 +11,7 @@ import today.vanta.util.game.events.EventListen;
 public class Velocity extends Module {
     public Velocity() {
         super("Velocity", "Reduces knockback.", Category.COMBAT);
-        displayNames = new String[] {"Velocity", "AntiKnockback", "AntiKB", "Anti Knockback", "Anti KB"};
+        displayNames = new String[] {"Velocity", "AntiKnockback", "AntiKB"};
     }
 
     private final NumberSetting

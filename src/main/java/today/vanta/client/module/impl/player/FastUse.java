@@ -26,7 +26,7 @@ public class FastUse extends Module {
 
     public FastUse() {
         super("FastUse", "Makes you use items faster", Category.PLAYER);
-        displayNames = new String[]{"FastUse", "Fast Use", "FastPlace", "Fast Place", "NoClickDelay", "No Click Delay"};
+        displayNames = new String[]{"FastUse", "FastPlace", "NoClickDelay"};
     }
 
     @EventListen
