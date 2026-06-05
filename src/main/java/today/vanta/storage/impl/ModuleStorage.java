@@ -22,8 +22,10 @@ public class ModuleStorage extends Storage<Module> {
     public List<String> changelog = new ArrayList<>();
 
     public ModuleStorage() {
-        changelog.add("[#] Fixed changelog rendering on top of buttons");
-        changelog.add("[+] Added ImGui ClickGUI");
+        changelog.add("[+] Added `Spaced out` and `Module case` to Arraylist");
+        changelog.add("[+] Added `Gradient background` to ClickGuis");
+        changelog.add("[+] Added ImGui ClickGui toggles for modules");
+        changelog.add("[-] Removed deprecated display names");
     }
 
     @Override
