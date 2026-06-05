@@ -35,7 +35,7 @@ public class AntiBot extends Module {
 
                     if (player.getDisplayName().getUnformattedText().toLowerCase().contains("[npc]") ||
                             player.getDisplayName().getUnformattedText().toLowerCase().contains("[bot]")) {
-                        Vanta.instance.processorStorage.getT(TargetProcessor.class).bots.add(player.getDisplayName().getUnformattedText());
+                        TargetProcessor.getInstance().bots.add(player.getDisplayName().getUnformattedText());
                     }
                 }
                 break;

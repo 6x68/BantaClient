@@ -2,17 +2,16 @@ package today.vanta.client.processor.impl;
 
 import com.viaversion.viaversion.api.protocol.version.ProtocolVersion;
 import de.florianmichael.vialoadingbase.ViaLoadingBase;
-import de.florianmichael.viamcp.ViaMCP;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
+import today.vanta.Vanta;
 import today.vanta.client.event.impl.game.player.EntityMotionEvent;
 import today.vanta.client.event.impl.game.player.SlowdownEvent;
 import today.vanta.client.event.impl.game.render.SwordItemActionEvent;
 import today.vanta.client.event.impl.game.world.EntityCollisionBorderSizeEvent;
 import today.vanta.client.processor.Processor;
 import today.vanta.util.game.events.EventListen;
-import today.vanta.util.game.events.EventPriority;
 import today.vanta.util.game.player.MovementUtil;
 
 public class VersionProcessor extends Processor {
@@ -53,5 +52,9 @@ public class VersionProcessor extends Processor {
         if (!isNative()) {
             event.motion = 0.003D;
         }
+    }
+
+    public static VersionProcessor getInstance() {
+        return Vanta.instance.processorStorage.getT(VersionProcessor.class);
     }
 }

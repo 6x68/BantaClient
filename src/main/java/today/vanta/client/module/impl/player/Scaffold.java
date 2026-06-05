@@ -183,7 +183,7 @@ public class Scaffold extends Module {
             }
 
             BlockPos playerBlockPos = new BlockPos(mc.thePlayer.posX, posY, mc.thePlayer.posZ);
-            Vanta.instance.processorStorage.getT(TargetProcessor.class).cache = BlockCache.getCache(playerBlockPos);
+            TargetProcessor.getInstance().cache = BlockCache.getCache(playerBlockPos);
         }
     }
 
@@ -209,25 +209,25 @@ public class Scaffold extends Module {
                 }
             }
 
-            if (mc.thePlayer != null && mc.thePlayer.getHeldItem() != null && Vanta.instance.processorStorage.getT(TargetProcessor.class).cache != null) {
+            if (mc.thePlayer != null && mc.thePlayer.getHeldItem() != null && TargetProcessor.getInstance().cache != null) {
                 ItemStack heldItemStack = mc.thePlayer.getHeldItem();
 
                 if (rots != null && heldItemStack != null) {
-                    if (mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, heldItemStack, Vanta.instance.processorStorage.getT(TargetProcessor.class).cache.pos, Vanta.instance.processorStorage.getT(TargetProcessor.class).cache.facing, new Vec3(Vanta.instance.processorStorage.getT(TargetProcessor.class).cache.pos))) {
+                    if (mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, heldItemStack, TargetProcessor.getInstance().cache.pos, TargetProcessor.getInstance().cache.facing, new Vec3(TargetProcessor.getInstance().cache.pos))) {
                         mc.thePlayer.swingItem();
                     }
                 }
             }
         }
 
-        if (Vanta.instance.processorStorage.getT(TargetProcessor.class).cache != null && lastRots != null) {
+        if (TargetProcessor.getInstance().cache != null && lastRots != null) {
             switch (rotationMode.getValue()) {
                 case "Simple":
-                    rots = RotationUtil.getSimpleRotations(Vanta.instance.processorStorage.getT(TargetProcessor.class).cache, lastRots);
+                    rots = RotationUtil.getSimpleRotations(TargetProcessor.getInstance().cache, lastRots);
                     break;
 
                 case "Godbridge":
-                    rots = RotationUtil.getGodbridgeRotations(Vanta.instance.processorStorage.getT(TargetProcessor.class).cache, lastRots);
+                    rots = RotationUtil.getGodbridgeRotations(TargetProcessor.getInstance().cache, lastRots);
                     break;
             }
 

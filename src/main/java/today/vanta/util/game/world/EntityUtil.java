@@ -29,7 +29,6 @@ public class EntityUtil implements IMinecraft {
     private static final Map<String, Float> skinCache = new ConcurrentHashMap<>();
     private static final ExecutorService executorService = Executors.newFixedThreadPool(2);
 
-
     public static Comparator<EntityLivingBase> getComparatorForSorting(String mode) {
         switch (mode) {
             case "Health":
@@ -84,8 +83,8 @@ public class EntityUtil implements IMinecraft {
                 entity.getName().isEmpty() ||
                 entity.isInvisible() ||
                 (raytrace && !mc.thePlayer.canEntityBeSeen(entity)) ||
-                Vanta.instance.processorStorage.getT(TargetProcessor.class).friends.contains(entity.getDisplayName().getUnformattedText()) ||
-                Vanta.instance.processorStorage.getT(TargetProcessor.class).bots.contains(entity.getDisplayName().getUnformattedText()) ||
+                TargetProcessor.getInstance().friends.contains(entity.getDisplayName().getUnformattedText()) ||
+                TargetProcessor.getInstance().bots.contains(entity.getDisplayName().getUnformattedText()) ||
                 entity.getDistanceToEntity(mc.thePlayer) > searchRange) {
             return false;
         }

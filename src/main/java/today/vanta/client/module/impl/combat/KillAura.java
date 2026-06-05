@@ -176,8 +176,8 @@ public class KillAura extends Module {
             return;
         }
 
-        if (Vanta.instance.processorStorage.getT(TargetProcessor.class).target != null) {
-            rots = RotationUtil.getSimpleRotations(Vanta.instance.processorStorage.getT(TargetProcessor.class).target);
+        if (TargetProcessor.getInstance().target != null) {
+            rots = RotationUtil.getSimpleRotations(TargetProcessor.getInstance().target);
             setRotations(rots, event);
         }
     }
@@ -195,14 +195,14 @@ public class KillAura extends Module {
             return;
         }
 
-        if (Vanta.instance.processorStorage.getT(TargetProcessor.class).target == null) {
+        if (TargetProcessor.getInstance().target == null) {
             rots = null;
         }
 
-        if (mc.thePlayer != null && event.state == EventState.PRE && Vanta.instance.processorStorage.getT(TargetProcessor.class).target != null) {
+        if (mc.thePlayer != null && event.state == EventState.PRE && TargetProcessor.getInstance().target != null) {
             switch (attackMode.getValue()) {
                 case "Single":
-                    if (attackCounter.hasElapsed(calculateAttackDelay(), true) && Vanta.instance.processorStorage.getT(TargetProcessor.class).target.getDistanceToEntity(mc.thePlayer) <= rangeFix) {
+                    if (attackCounter.hasElapsed(calculateAttackDelay(), true) && TargetProcessor.getInstance().target.getDistanceToEntity(mc.thePlayer) <= rangeFix) {
                         peformBlock(false);
 
                         if (!noSwing.getValue())
@@ -215,7 +215,7 @@ public class KillAura extends Module {
                                 mc.clickMouse();
                                 break;
                             case "Blatant":
-                                mc.playerController.attackEntity(mc.thePlayer, Vanta.instance.processorStorage.getT(TargetProcessor.class).target);
+                                mc.playerController.attackEntity(mc.thePlayer, TargetProcessor.getInstance().target);
                                 break;
                         }
 

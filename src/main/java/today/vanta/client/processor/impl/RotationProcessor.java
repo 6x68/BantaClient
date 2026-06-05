@@ -1,5 +1,6 @@
 package today.vanta.client.processor.impl;
 
+import today.vanta.Vanta;
 import today.vanta.client.event.impl.game.player.MotionEvent;
 import today.vanta.client.event.impl.game.player.RotationLookEvent;
 import today.vanta.client.processor.Processor;
@@ -26,5 +27,9 @@ public class RotationProcessor extends Processor {
         if (rotations != null) {
             event.rotationVector = RotationUtil.getVectorForRotation(rotations.pitch, rotations.yaw);
         }
+    }
+
+    public static RotationProcessor getInstance() {
+        return Vanta.instance.processorStorage.getT(RotationProcessor.class);
     }
 }

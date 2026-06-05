@@ -9,6 +9,7 @@ import today.vanta.client.module.Module;
 import today.vanta.client.processor.impl.RotationProcessor;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.player.MovementUtil;
+import today.vanta.util.game.player.constructors.Rotation;
 
 public class MovementFix extends Module {
     public MovementFix() {
@@ -17,17 +18,24 @@ public class MovementFix extends Module {
     }
 
     @EventListen
-    public void onMoveInput(MoveInputEvent event) {
-        MovementUtil.correctMovement(event, Vanta.instance.processorStorage.getT(RotationProcessor.class).rotations.yaw);
+    private void onMoveInput(MoveInputEvent event) {
+        if (getRotations() == null) return;
+        MovementUtil.correctMovement(event, getRotations().yaw);
     }
 
     @EventListen
-    public void onStrafe(MoveFlyingEvent event) {
-        event.yaw = Vanta.instance.processorStorage.getT(RotationProcessor.class).rotations.yaw;
+    private void onStrafe(MoveFlyingEvent event) {
+        if (getRotations() == null) return;
+        event.yaw = getRotations().yaw;
     }
 
     @EventListen
-    public void onJump(JumpEvent event) {
-        event.yaw = Vanta.instance.processorStorage.getT(RotationProcessor.class).rotations.yaw;
+    private void onJump(JumpEvent event) {
+        if (getRotations() == null) return;
+        event.yaw = getRotations().yaw;
+    }
+
+    private Rotation getRotations() {
+        return RotationProcessor.getInstance().rotations;
     }
 }

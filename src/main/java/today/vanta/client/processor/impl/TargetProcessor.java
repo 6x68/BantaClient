@@ -70,4 +70,8 @@ public class TargetProcessor extends Processor {
     public boolean shouldLook() {
         return killaura != null && killaura.isEnabled();
     }
+
+    public static TargetProcessor getInstance() {
+        return Vanta.instance.processorStorage.getT(TargetProcessor.class);
+    }
 }

@@ -1,5 +1,6 @@
 package today.vanta.client.processor.impl;
 
+import today.vanta.Vanta;
 import today.vanta.client.event.impl.game.network.ChatMessageEvent;
 import today.vanta.client.processor.Processor;
 import today.vanta.util.game.events.EventListen;
@@ -11,5 +12,9 @@ public class ChatProcessor extends Processor {
         if (event.message.contains("nigger")) {
             Sounds.NIGGER.play();
         }
+    }
+
+    public static ChatProcessor getInstance() {
+        return Vanta.instance.processorStorage.getT(ChatProcessor.class);
     }
 }
