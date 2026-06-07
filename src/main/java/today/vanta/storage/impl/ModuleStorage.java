@@ -28,6 +28,7 @@ public class ModuleStorage extends Storage<Module> {
         changelog.add("[+] Added ImGui ClickGui toggles for modules");
         changelog.add("[+] Added 'Line' to Arraylist");
         changelog.add("[+] Added MovementFix");
+        changelog.add("[+] Added Criticals");
         changelog.add("[+] Added ESP");
         changelog.add("[#] Modified ClickGui colors for better visibility");
         changelog.add("[-] Removed deprecated display names");
