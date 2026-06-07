@@ -241,10 +241,11 @@ public class ClickGUIScreen extends GuiScreen {
 
                                 sett.drawString(setting.name, x + 5, y + 2.5f, -1);
 
-                                String formattedValue = String.valueOf(value);
+                                String format = "%." + slider.places + "f";
+                                String formattedValue = String.format(format, value) + slider.suffix;
                                 sett.drawString(formattedValue, x + panelWidth - 5 - sett.getStringWidth(formattedValue), y + 1.5f, -1);
 
-                                if (RenderUtil.hovered(mouseX, mouseY, x + 5, y, 111, 18) && Mouse.isButtonDown(0)) {
+                                if (RenderUtil.hovered(mouseX, mouseY, x + 5, y, 112, 18) && Mouse.isButtonDown(0)) {
                                     double normalizedX = (mouseX - (x + 5)) / 111.0;
                                     double newValue = min + normalizedX * (max - min);
                                     newValue = MathUtil.round(newValue, slider.places);

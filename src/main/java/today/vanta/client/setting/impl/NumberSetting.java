@@ -9,12 +9,14 @@ import java.util.List;
 public class NumberSetting extends Setting<Number> {
     public Number min, max;
     public int places;
+    public String suffix;
 
-    private NumberSetting(String name, Number value, Number min, Number max, int places) {
+    private NumberSetting(String name, Number value, Number min, Number max, int places, String suffix) {
         super(name, value);
         this.min = min;
         this.max = max;
         this.places = places;
+        this.suffix = suffix;
     }
 
     public static NumberSettingBuilder builder() {
@@ -26,6 +28,7 @@ public class NumberSetting extends Setting<Number> {
         private String name;
         private Number value, min, max;
         private int places;
+        private String suffix = "";
 
         private NumberSettingBuilder() {}
 
@@ -54,6 +57,11 @@ public class NumberSetting extends Setting<Number> {
             return this;
         }
 
+        public NumberSettingBuilder suffix(String suffix) {
+            this.suffix = suffix;
+            return this;
+        }
+
         public NumberSetting.NumberSettingBuilder listener(SettingChangeListener<Number> listener) {
             this.listeners.add(listener);
             return this;
@@ -64,7 +72,7 @@ public class NumberSetting extends Setting<Number> {
                 throw new IllegalArgumentException("Name cannot be null or empty");
             }
 
-            NumberSetting setting = new NumberSetting(name, value, min, max, places);
+            NumberSetting setting = new NumberSetting(name, value, min, max, places, suffix);
             for (SettingChangeListener<Number> listener : listeners) {
                 setting.addListener(listener);
             }

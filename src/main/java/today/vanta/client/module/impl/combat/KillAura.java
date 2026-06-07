@@ -52,6 +52,7 @@ public class KillAura extends Module {
             .min(1)
             .max(7)
             .places(1)
+            .suffix("m")
             .build();
 
     public final MultiStringSetting entities = MultiStringSetting.builder()
@@ -102,6 +103,7 @@ public class KillAura extends Module {
                 .min(1)
                 .max(6)
                 .places(1)
+                .suffix("m")
                 .build();
 
         previousAttackRange = attackRange.getValue().floatValue();

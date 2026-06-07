@@ -39,6 +39,7 @@ public class Arraylist extends Module {
             .min(10)
             .max(42)
             .places(0)
+            .suffix("px")
             .listener((setting, oldValue, newValue) -> setFont())
             .build();
 

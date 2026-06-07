@@ -20,6 +20,7 @@ public class Velocity extends Module {
             .value(0)
             .max(100)
             .min(0)
+            .suffix("%")
             .build(),
 
     vertical = NumberSetting.builder()
@@ -27,6 +28,7 @@ public class Velocity extends Module {
             .value(0)
             .max(100)
             .min(0)
+            .suffix("%")
             .build();
 
     @EventListen

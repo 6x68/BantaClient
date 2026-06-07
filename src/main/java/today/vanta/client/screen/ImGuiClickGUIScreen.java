@@ -101,23 +101,47 @@ public class ImGuiClickGUIScreen extends GuiScreen implements IClient {
                                 NumberSetting numSet = (NumberSetting) setting;
                                 ImGui.text(numSet.name);
                                 ImGui.sameLine();
-                                float avail = ImGui.getContentRegionAvailX();
+                                ImGui.pushItemWidth(ImGui.getContentRegionAvailX());
 
-                                ImGui.pushItemWidth(avail);
+                                String suffix = numSet.suffix;
+                                if (suffix != null && suffix.contains("%")) {
+                                    suffix = suffix.replace("%", "%%");
+                                }
 
-                                if (numSet.getValue() instanceof Integer) {
+                                boolean isInt = numSet.getValue() instanceof Integer;
+
+                                String format;
+                                if (isInt) {
+                                    format = "%d";
+                                } else {
+                                    format = "%." + numSet.places + "f";
+                                }
+
+                                if (suffix != null && !suffix.isEmpty()) {
+                                    format += suffix;
+                                }
+
+                                if (isInt) {
                                     int[] val = {numSet.getValue().intValue()};
-                                    if (ImGui.sliderInt("##" + numSet.name, val,
+
+                                    if (ImGui.sliderInt(
+                                            "##" + numSet.name,
+                                            val,
                                             numSet.min.intValue(),
-                                            numSet.max.intValue())) {
+                                            numSet.max.intValue(),
+                                            format)) {
                                         numSet.setValue(val[0]);
                                     }
+
                                 } else {
                                     float[] val = {numSet.getValue().floatValue()};
-                                    if (ImGui.sliderFloat("##" + numSet.name, val,
+
+                                    if (ImGui.sliderFloat(
+                                            "##" + numSet.name,
+                                            val,
                                             numSet.min.floatValue(),
                                             numSet.max.floatValue(),
-                                            "%." + numSet.places + "f")) {
+                                            format)) {
                                         numSet.setValue(val[0]);
                                     }
                                 }
