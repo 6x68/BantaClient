@@ -106,7 +106,7 @@ public class ClickGUIScreen extends GuiScreen {
                             } else if (setting instanceof MultiStringSetting) {
                                 MultiStringSetting setting1 = (MultiStringSetting) setting;
                                 if (setting1.expanded) {
-                                    ignoreThis += setting1.allValues.length * 14;
+                                    ignoreThis += setting1.allValues.length * 12;
                                 } else {
                                     ignoreThis += 14;
                                 }
@@ -269,8 +269,9 @@ public class ClickGUIScreen extends GuiScreen {
                                 y += 14;
                             } else if (setting instanceof MultiStringSetting) {
                                 MultiStringSetting selector = (MultiStringSetting) setting;
-                                boolean hover2 = RenderUtil.hovered(mouseX, mouseY, x + 1.5f, y, panelWidth - 3, 14 + (selector.expanded ? selector.allValues.length * 14 : 0));
-                                RenderUtil.rectangle(x + 1.5f, y, panelWidth - 3, 14 + (selector.expanded ? selector.allValues.length * 14 : 0), hover2 ? new Color(40, 40, 40) : new Color(35, 35, 35));
+                                float height = selector.expanded ? selector.allValues.length * 12 : 14;
+                                boolean hover2 = RenderUtil.hovered(mouseX, mouseY, x + 1.5f, y, panelWidth - 3, height);
+                                RenderUtil.rectangle(x + 1.5f, y, panelWidth - 3, height, hover2 ? new Color(40, 40, 40) : new Color(35, 35, 35));
                                 sett.drawString(setting.name, x + 5, y + 2, -1);
                                 float bX = x + panelWidth - 14;
                                 String enabled = selector.getValue().length + " Enabled";
