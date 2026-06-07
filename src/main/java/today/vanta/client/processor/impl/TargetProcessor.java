@@ -23,9 +23,9 @@ public class TargetProcessor extends Processor {
     public EntityLivingBase target;
     public BlockCache cache;
 
-    private KillAura killaura;
-    private Scaffold scaffold;
-    private AntiBot antiBot;
+    public KillAura killaura;
+    public Scaffold scaffold;
+    public AntiBot antiBot;
 
     @Override
     public void onInitialize() {
