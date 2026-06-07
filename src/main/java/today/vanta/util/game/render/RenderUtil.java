@@ -1,10 +1,13 @@
 package today.vanta.util.game.render;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.TextureUtil;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import today.vanta.Vanta;
@@ -159,7 +162,7 @@ public class RenderUtil {
         GlStateManager.popMatrix();
     }
 
-    public static void verticalGradient(double x, double y, double width, double height, Color topColor, Color bottomColor) {
+    public static void vertical_grad(double x, double y, double width, double height, Color topColor, Color bottomColor) {
         start();
 
         GL11.glShadeModel(GL11.GL_SMOOTH);
@@ -189,6 +192,14 @@ public class RenderUtil {
         GL11.glShadeModel(GL11.GL_FLAT);
 
         stop();
+    }
+
+    public static void player_head(EntityPlayer target, float x, float y, float headSize) {
+        ResourceLocation skinLocation = ((AbstractClientPlayer) target).getLocationSkin();
+        mc.getTextureManager().bindTexture(skinLocation);
+
+        Gui.drawScaledCustomSizeModalRect((int) x, (int) y, 8, 8, 8, 8, (int) headSize, (int) headSize, 64, 64);
+        Gui.drawScaledCustomSizeModalRect((int) x, (int) y, 40, 8, 8, 8, (int) headSize, (int) headSize, 64, 64);
     }
 
     public static BufferedImage base64ToBufferedImage(String base64Image) {
