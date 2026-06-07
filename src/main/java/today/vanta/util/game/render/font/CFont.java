@@ -154,7 +154,7 @@ public class CFont {
         tex = setupTexture(font, this.antiAlias, this.fractionalMetrics, this.charData);
     }
 
-    protected static class CharData {
+    public static class CharData {
         public int width;
         public int height;
         public int storedX;

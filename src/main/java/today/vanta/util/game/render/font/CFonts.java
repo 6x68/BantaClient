@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class CFonts {
-
     public static CFontRenderer HN_MEDIUM_24 = getFont("HN-Medium", 24);
     public static CFontRenderer HN_REGULAR_48 = getFont("HN-Regular", 48);
 
