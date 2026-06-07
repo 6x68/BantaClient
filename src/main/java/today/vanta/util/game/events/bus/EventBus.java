@@ -7,6 +7,7 @@ import today.vanta.util.game.events.exception.EventCallException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -22,9 +23,11 @@ public class EventBus {
                 method.setAccessible(true);
                 EventListen listenAnnotation = method.getAnnotation(EventListen.class);
                 EventPriority priority = listenAnnotation.priority();
-                eventHandlers
-                        .computeIfAbsent(eventType, k -> new ArrayList<>())
-                        .add(new EventHandler(listener, method, priority));
+                List<EventHandler> handlers = eventHandlers
+                        .computeIfAbsent(eventType, k -> Collections.synchronizedList(new ArrayList<>()));
+                synchronized (handlers) {
+                    handlers.add(new EventHandler(listener, method, priority));
+                }
                 sortHandlers(eventType);
             }
         }
@@ -32,14 +35,20 @@ public class EventBus {
 
     public void unregister(Object listener) {
         for (List<EventHandler> handlers : eventHandlers.values()) {
-            handlers.removeIf(handler -> handler.listener == listener);
+            synchronized (handlers) {
+                handlers.removeIf(handler -> handler.listener == listener);
+            }
         }
     }
 
     public void call(Object event) {
         List<EventHandler> handlers = eventHandlers.get(event.getClass());
         if (handlers != null) {
-            for (EventHandler handler : handlers) {
+            List<EventHandler> handlersCopy;
+            synchronized (handlers) {
+                handlersCopy = new ArrayList<>(handlers);
+            }
+            for (EventHandler handler : handlersCopy) {
                 try {
                     handler.method.invoke(handler.listener, event);
                 } catch (IllegalAccessException | InvocationTargetException e) {
@@ -57,7 +66,9 @@ public class EventBus {
     private void sortHandlers(Class<?> eventType) {
         List<EventHandler> handlers = eventHandlers.get(eventType);
         if (handlers != null) {
-            handlers.sort(Comparator.comparingInt(handler -> handler.priority.ordinal()));
+            synchronized (handlers) {
+                handlers.sort(Comparator.comparingInt(handler -> handler.priority.ordinal()));
+            }
         }
     }
 }
