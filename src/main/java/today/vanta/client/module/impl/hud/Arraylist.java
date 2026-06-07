@@ -58,16 +58,16 @@ public class Arraylist extends Module {
             .value(true)
             .build(),
 
-    outline = BooleanSetting.builder()
-            .name("Outline")
-            .value(true)
-            .build().hide(() -> !background.getValue()),
-
     spaceOut = BooleanSetting.builder()
             .name("Space out")
             .value(false)
             .build();
 
+    private final StringSetting line = StringSetting.builder()
+            .name("Line")
+            .value("Full")
+            .values("Full", "Left", "Right", "Top", "Top+right")
+            .build().hide(() -> !background.getValue());
 
     private final NumberSetting backgroundAlpha = NumberSetting.builder()
             .name("Background alpha")
@@ -132,40 +132,64 @@ public class Arraylist extends Module {
                 float rectWidth = modWidth + 4.5f;
                 float rectHeight = modHeight + 5;
 
-                if (outline.getValue()) {
-                    boolean first = i == 0;
-                    boolean last = i == modules.size() - 1;
+                boolean first = i == 0;
+                boolean last = i == modules.size() - 1;
 
-                    if (first) {
-                        // top
-                        RenderUtil.rectangle(rectX, rectY - 1, rectWidth, 1, fg);
-                        // top left corner
-                        RenderUtil.rectangle(rectX - 1, rectY - 1, 1, 1, fg);
-                    }
+                switch (line.getValue()) {
+                    case "Top+right":
+                    case "Top":
+                        if (first) {
+                            // top
+                            RenderUtil.rectangle(rectX, rectY - 1, rectWidth, 1, fg);
+                        }
 
-                    if (last) {
-                        // bottom for last module
-                        RenderUtil.rectangle(rectX, rectY + rectHeight, rectWidth, 1, fg);
-                    } else {
-                        // bottom for each middle module
-                        Module nextModule = modules.get(i + 1);
-                        String nextName = getModuleName(nextModule);
-                        float nextModWidth = font.getStringWidth(nextName);
-                        float nextX = event.scaledResolution.getScaledWidth() - nextModWidth - 5;
-                        float nextRectX = nextX - 2;
+                        if (line.getValue().equals("Top+right")) {
+                            // right side
+                            RenderUtil.rectangle(rectX + rectWidth, rectY - 1, 1, rectHeight + 1, fg);
+                        }
+                        break;
+                    case "Full":
+                        if (first) {
+                            // top
+                            RenderUtil.rectangle(rectX, rectY - 1, rectWidth, 1, fg);
+                            // top left corner
+                            RenderUtil.rectangle(rectX - 1, rectY - 1, 1, 1, fg);
+                        }
 
-                        float widthToNext = nextRectX - rectX;
+                        if (last) {
+                            // bottom for last module
+                            RenderUtil.rectangle(rectX, rectY + rectHeight, rectWidth, 1, fg);
+                        } else {
+                            // bottom for each middle module
+                            Module nextModule = modules.get(i + 1);
+                            String nextName = getModuleName(nextModule);
+                            float nextModWidth = font.getStringWidth(nextName);
+                            float nextX = event.scaledResolution.getScaledWidth() - nextModWidth - 5;
+                            float nextRectX = nextX - 2;
 
-                        RenderUtil.rectangle(rectX, rectY + rectHeight, widthToNext, 1, fg);
-                    }
+                            float widthToNext = nextRectX - rectX;
 
-                    // left side
-                    RenderUtil.rectangle(rectX - 1, rectY, 1, rectHeight, fg);
-                    // bottom left corner
-                    RenderUtil.rectangle(rectX - 1, rectY + rectHeight, 1, 1, fg);
+                            RenderUtil.rectangle(rectX, rectY + rectHeight, widthToNext, 1, fg);
+                        }
 
-                    // right side
-                    RenderUtil.rectangle(rectX + rectWidth, rectY - 1, 1, modHeight + 7, fg);
+                        // left side
+                        RenderUtil.rectangle(rectX - 1, rectY, 1, rectHeight, fg);
+                        // bottom left corner
+                        RenderUtil.rectangle(rectX - 1, rectY + rectHeight, 1, 1, fg);
+
+                        // right side
+                        RenderUtil.rectangle(rectX + rectWidth, rectY - 1, 1, modHeight + 7, fg);
+                        break;
+
+                    case "Left":
+                        // left side
+                        RenderUtil.rectangle(rectX - 1, rectY, 1, rectHeight, fg);
+                        break;
+
+                    case "Right":
+                        // right side
+                        RenderUtil.rectangle(rectX + rectWidth, rectY, 1, modHeight + 5, fg);
+                        break;
                 }
 
                 RenderUtil.rectangle(rectX, rectY, rectWidth, rectHeight, bg);
