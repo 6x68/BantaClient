@@ -31,6 +31,7 @@ import net.optifine.DynamicLights;
 import net.optifine.reflect.Reflector;
 import net.optifine.shaders.Shaders;
 import org.lwjgl.opengl.GL11;
+import today.vanta.client.event.impl.game.render.PerformBlockEvent;
 
 public class ItemRenderer {
     private static final ResourceLocation RES_MAP_BACKGROUND = new ResourceLocation("textures/map/map_background.png");
@@ -235,7 +236,7 @@ public class ItemRenderer {
         GlStateManager.rotate(f3 * 30.0F, 0.0F, 0.0F, 1.0F);
     }
 
-    private void transformFirstPersonItem(float equipProgress, float swingProgress) {
+    public void transformFirstPersonItem(float equipProgress, float swingProgress) {
         GlStateManager.translate(0.56F, -0.52F, -0.71999997F);
         GlStateManager.translate(0.0F, equipProgress * -0.6F, 0.0F);
         GlStateManager.rotate(45.0F, 0.0F, 1.0F, 0.0F);
@@ -271,7 +272,7 @@ public class ItemRenderer {
         GlStateManager.scale(1.0F, 1.0F, 1.0F + f1 * 0.2F);
     }
 
-    private void doBlockTransformations() {
+    public void doBlockTransformations() {
         GlStateManager.translate(-0.5F, 0.2F, 0.0F);
         GlStateManager.rotate(30.0F, 0.0F, 1.0F, 0.0F);
         GlStateManager.rotate(-80.0F, 1.0F, 0.0F, 0.0F);
@@ -309,8 +310,13 @@ public class ItemRenderer {
                             break;
 
                         case BLOCK:
-                            this.transformFirstPersonItem(f, 0.0F);
-                            this.doBlockTransformations();
+                            PerformBlockEvent event = new PerformBlockEvent(this, partialTicks, f, 0.0f);
+                            event.call();
+
+                            if (!event.cancelled) {
+                                this.transformFirstPersonItem(event.equippedProgress, event.swingProgress);
+                                this.doBlockTransformations();
+                            }
                             break;
 
                         case BOW:

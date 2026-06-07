@@ -61,6 +61,7 @@ public class ModuleStorage extends Storage<Module> {
         // Render
         list.add(new ESP());
         list.add(new Ambience());
+        list.add(new Animations());
 
         // Misc
 
