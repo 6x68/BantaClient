@@ -21,6 +21,8 @@ import static org.lwjgl.opengl.GL11.*;
  * @author liticane
  */
 public class RenderUtil {
+    private static final Minecraft mc = Minecraft.getMinecraft();
+
     public static boolean hovered(float mouseX, float mouseY, float x, float y, float width, float height) {
         return mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
     }
@@ -51,30 +53,32 @@ public class RenderUtil {
         rectangle(x, y, width, height, true, new Color(color));
     }
 
-    public static void start_scissor() {
-        GL11.glPushMatrix();
+    private static void start_scissor() {
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
     }
 
-    public static void scissor(double x, double y, double width, double height) {
-        width = Math.max(width, 0.1);
-
-        ScaledResolution sr = new ScaledResolution(Minecraft.getMinecraft());
-        double scale = sr.getScaleFactor();
-
-        y = sr.getScaledHeight() - y;
-
-        x *= scale;
-        y *= scale;
-        width *= scale;
-        height *= scale;
-
-        GL11.glScissor((int) x, (int) (y - height), (int) width, (int) height);
+    private static void end_scissor() {
+        GL11.glDisable(GL11.GL_SCISSOR_TEST);
     }
 
-    public static void end_scissor() {
-        GL11.glDisable(GL11.GL_SCISSOR_TEST);
-        GL11.glPopMatrix();
+    public static void scissor(double x, double y, double width, double height, Runnable runnable) {
+        ScaledResolution sr = new ScaledResolution(mc);
+        double scaleFactor = sr.getScaleFactor();
+
+        int sx = (int) (x * scaleFactor);
+        int sw = (int) (width * scaleFactor);
+        int sh = (int) (height * scaleFactor);
+
+        int sy = (int) ((sr.getScaledHeight() - y - height) * scaleFactor);
+
+        start_scissor();
+        GL11.glScissor(sx, sy, sw, sh);
+
+        try {
+            runnable.run();
+        } finally {
+            end_scissor();
+        }
     }
 
     public static void image(ResourceLocation resourceLocation, float x, float y, float width, float height, Color color) {
@@ -111,11 +115,15 @@ public class RenderUtil {
         GlStateManager.disableBlend();
     }
 
-    public static void image(int image, float x, float y, float width, float height) {
+    public static void image(int textureId, float x, float y, float width, float height, float u, float v, float tW, float tH) {
         color(new Color(255, 255, 255));
-        TextureUtil.bindTexture(image);
-        Gui.drawModalRectWithCustomSizedTexture((int) x, (int) y, (float) 0, (float) 0, (int) width, (int) height, width, height);
+        TextureUtil.bindTexture(textureId);
+        Gui.drawModalRectWithCustomSizedTexture((int) x, (int) y, u, v, (int) width, (int) height, tW, tH);
         color(new Color(255, 255, 255));
+    }
+
+    public static void image(int textureId, float x, float y, float width, float height) {
+        image(textureId, x, y, width, height, 0, 0, width, height);
     }
 
     public static void color(Color color) {
