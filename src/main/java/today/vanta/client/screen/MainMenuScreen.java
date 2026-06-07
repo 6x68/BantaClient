@@ -79,7 +79,7 @@ public class MainMenuScreen extends GuiScreen {
 
         RenderUtil.rectangle(middleX - 143 / 2f, middleY - 16, 143, 14 * (buttons.size()) + 18, new Color(30, 30, 30));
         roundedSemibold10.drawString(IClient.CLIENT_NAME, middleX - 143 / 2f + 3, middleY - 18 + 4.5f, -1);
-        roundedMedium9.drawString(IClient.CLIENT_VERSION + " | " + IClient.USERNAME, middleX * 2 - roundedMedium9.getStringWidth(IClient.CLIENT_VERSION + " | " + IClient.USERNAME) - 3, middleY * 2 - roundedMedium9.getFontHeight() - 5.5f, new Color(200, 200, 200));
+        roundedMedium9.drawString(IClient.CLIENT_VERSION + " | " + IClient.DEVELOPERS, middleX * 2 - roundedMedium9.getStringWidth(IClient.CLIENT_VERSION + " | " + IClient.DEVELOPERS) - 3, middleY * 2 - roundedMedium9.getFontHeight() - 5.5f, new Color(200, 200, 200));
 
         buttons.forEach(but -> but.draw(mouseX, mouseY));
     }
