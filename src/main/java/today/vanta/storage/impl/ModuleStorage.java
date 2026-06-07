@@ -66,6 +66,7 @@ public class ModuleStorage extends Storage<Module> {
         //Hud
         list.add(new Arraylist());
         list.add(new Watermark());
+        list.add(new TargetHUD());
 
         this.context = null;
     }
