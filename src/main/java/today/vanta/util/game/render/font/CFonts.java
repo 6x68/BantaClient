@@ -31,17 +31,21 @@ public class CFonts {
     }
 
     private static Font getAwtFont(InputStream inputStream, float size) {
-        size = isOracleVm() ? size / 2.0f : size;
+        String vmVendor = System.getProperty("java.vm.vendor", "");
+        boolean isOracle = vmVendor.toLowerCase().contains("oracle");
+        boolean isOpenJ9 = vmVendor.toLowerCase().contains("openj9");
+
+        if (isOracle) {
+            size = size / 2.0f;
+        } else if (isOpenJ9) {
+            size = size / 1.5f;
+        }
+
         try {
             Font font = Font.createFont(Font.TRUETYPE_FONT, inputStream);
             return font.deriveFont(size);
         } catch (FontFormatException | IOException e) {
-            Vanta.instance.logger.warn("Failed to get font", e);
-            return new Font("SansSerif", Font.PLAIN, (int) size);
+            return new Font("SansSerif", Font.PLAIN, Math.max(12, (int) size));
         }
-    }
-
-    public static boolean isOracleVm() {
-        return System.getProperty("java.vm.vendor").equals("Oracle Corporation");
     }
 }
