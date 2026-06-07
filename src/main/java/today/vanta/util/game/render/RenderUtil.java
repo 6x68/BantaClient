@@ -78,28 +78,7 @@ public class RenderUtil {
     }
 
     public static void image(ResourceLocation resourceLocation, float x, float y, float width, float height, Color color) {
-        Minecraft.getMinecraft().getTextureManager().bindTexture(resourceLocation);
-        GlStateManager.enableBlend();
-        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GlStateManager.color(color.getRed() / 255.0F, color.getGreen() / 255.0F, color.getBlue() / 255.0F, color.getAlpha() / 255.0F);
-
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(x, y, 0);
-        GlStateManager.scale(width, height, 1);
-
-        GL11.glBegin(GL11.GL_QUADS);
-        GL11.glTexCoord2f(0, 0);
-        GL11.glVertex2f(0, 0);
-        GL11.glTexCoord2f(1, 0);
-        GL11.glVertex2f(1, 0);
-        GL11.glTexCoord2f(1, 1);
-        GL11.glVertex2f(1, 1);
-        GL11.glTexCoord2f(0, 1);
-        GL11.glVertex2f(0, 1);
-        GL11.glEnd();
-
-        GlStateManager.popMatrix();
-        GlStateManager.disableBlend();
+        image(resourceLocation, x, y, width, height, color.getRGB());
     }
 
     public static void image(ResourceLocation resourceLocation, float x, float y, float width, float height, int color) {
