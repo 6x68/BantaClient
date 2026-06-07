@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL11;
 import today.vanta.client.event.impl.game.render.PerformBlockEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
+import today.vanta.client.setting.impl.BooleanSetting;
 import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.events.EventListen;
 
@@ -15,6 +16,10 @@ public class Animations extends Module {
             .name("Mode")
             .value("Exhibition")
             .values("Exhibition", "Interia")
+            .build();
+    public final BooleanSetting germannobob = BooleanSetting.builder()
+            .name("German No-Bob")
+            .value(false)
             .build();
 
     public Animations() {

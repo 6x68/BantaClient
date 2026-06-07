@@ -1,5 +1,6 @@
 package today.vanta.client.module.impl.movement;
 
+import today.vanta.client.event.impl.game.player.MotionEvent;
 import today.vanta.client.event.impl.game.world.UpdateEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
@@ -12,7 +13,7 @@ public class Speed extends Module {
             mode = StringSetting.builder()
             .name("Mode")
             .value("OldNCP")
-            .values("OldNCP", "NCP")
+            .values("OldNCP", "NCP", "Mospixel-Tick")
             .build(),
 
     oncpmode = StringSetting.builder()
@@ -25,6 +26,17 @@ public class Speed extends Module {
     public Speed() {
         super("Speed", "Makes you go faster.", Category.MOVEMENT);
         displayNames = new String[]{"Speed", "FastMove", "Zoot", "SpeedyGonzales"};
+    }
+
+    int offGroundTicks;
+
+    @EventListen
+    public void onMotionEvent(MotionEvent event) {
+        if (!mc.thePlayer.onGround) {
+            offGroundTicks++;
+        } else {
+            offGroundTicks = 0;
+        }
     }
 
     @EventListen
@@ -55,6 +67,25 @@ public class Speed extends Module {
                     mc.gameSettings.keyBindJump.pressed = MovementUtil.isMoving();
                     MovementUtil.strafe();
                     break;
+
+                case "Mospixel-Tick":
+                    if (mc.thePlayer.onGround && !mc.gameSettings.keyBindJump.isKeyDown()) {
+                        mc.thePlayer.jump();
+                    }
+//        if (mc.thePlayer.onGround) {
+//            MoveUtil.strafe(0.3f);
+//        } else {
+//            MoveUtil.strafe(0.3f);
+//        }
+
+                    if (offGroundTicks == 1) {
+                        MovementUtil.strafe(0.3f);
+                    } if (offGroundTicks > 2) {
+                    MovementUtil.strafe(0.28f);
+                }
+                    if (mc.thePlayer.motionY < 0.17f && offGroundTicks > 3) {
+                        mc.thePlayer.motionY -= 0.05f;
+                    }
             }
         }
     }
