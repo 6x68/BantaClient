@@ -34,4 +34,16 @@ public class InventoryUtil implements IMinecraft {
 
         return 0;
     }
+
+    public static int getHotbarBlockCount() {
+        int total = 0;
+        for (int i = 0; i < 9; i++) {
+            ItemStack stack = mc.thePlayer.inventory.getStackInSlot(i);
+
+            if (stack != null && stack.getItem() instanceof ItemBlock) {
+                total += stack.stackSize;
+            }
+        }
+        return total;
+    }
 }
