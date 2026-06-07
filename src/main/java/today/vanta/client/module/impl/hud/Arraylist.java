@@ -58,6 +58,11 @@ public class Arraylist extends Module {
             .value(true)
             .build(),
 
+    outline = BooleanSetting.builder()
+            .name("Outline")
+            .value(true)
+            .build().hide(() -> !background.getValue()),
+
     spaceOut = BooleanSetting.builder()
             .name("Space out")
             .value(false)
@@ -88,6 +93,9 @@ public class Arraylist extends Module {
 
     @EventListen(priority = EventPriority.LOWEST)
     public void onRender(Render2DEvent event) {
+        Color fg = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
+        Color bg = new Color(0, 0, 0, backgroundAlpha.getValue().intValue());
+
         List<Module> modules = Vanta.instance.moduleStorage.list.stream().
                 filter(m -> {
                     boolean add = m.isEnabled();
@@ -109,19 +117,64 @@ public class Arraylist extends Module {
                 }).reversed()).collect(Collectors.toList());
 
         float y = 3;
-        for (Module module : modules) {
+        for (int i = 0; i < modules.size(); i++) {
+            Module module = modules.get(i);
             String name = getModuleName(module);
 
-            float x = event.scaledResolution.getScaledWidth() - font.getStringWidth(name) - 5;
+            float modWidth = font.getStringWidth(name);
+            float modHeight = font.getFontHeight();
+
+            float x = event.scaledResolution.getScaledWidth() - modWidth - 5;
 
             if (background.getValue()) {
-                RenderUtil.rectangle(x - 2, y, font.getStringWidth(name) + 4, font.getFontHeight() + 5, new Color(0, 0, 0, backgroundAlpha.getValue().intValue()));
+                float rectX = x - 2;
+                float rectY = y;
+                float rectWidth = modWidth + 4.5f;
+                float rectHeight = modHeight + 5;
+
+                if (outline.getValue()) {
+                    boolean first = i == 0;
+                    boolean last = i == modules.size() - 1;
+
+                    if (first) {
+                        // top
+                        RenderUtil.rectangle(rectX, rectY - 1, rectWidth, 1, fg);
+                        // top left corner
+                        RenderUtil.rectangle(rectX - 1, rectY - 1, 1, 1, fg);
+                    }
+
+                    if (last) {
+                        // bottom for last module
+                        RenderUtil.rectangle(rectX, rectY + rectHeight, rectWidth, 1, fg);
+                    } else {
+                        // bottom for each middle module
+                        Module nextModule = modules.get(i + 1);
+                        String nextName = getModuleName(nextModule);
+                        float nextModWidth = font.getStringWidth(nextName);
+                        float nextX = event.scaledResolution.getScaledWidth() - nextModWidth - 5;
+                        float nextRectX = nextX - 2;
+
+                        float widthToNext = nextRectX - rectX;
+
+                        RenderUtil.rectangle(rectX, rectY + rectHeight, widthToNext, 1, fg);
+                    }
+
+                    // left side
+                    RenderUtil.rectangle(rectX - 1, rectY, 1, rectHeight, fg);
+                    // bottom left corner
+                    RenderUtil.rectangle(rectX - 1, rectY + rectHeight, 1, 1, fg);
+
+                    // right side
+                    RenderUtil.rectangle(rectX + rectWidth, rectY - 1, 1, modHeight + 7, fg);
+                }
+
+                RenderUtil.rectangle(rectX, rectY, rectWidth, rectHeight, bg);
             }
 
             if (fontShadow.getValue()) {
-                font.drawStringWithShadow(name, x, y + 0.7, Vanta.instance.moduleStorage.getT(Theme.class).colors[0]);
+                font.drawStringWithShadow(name, x, y + 0.5f, fg);
             } else {
-                font.drawString(name, x, y + 0.7f, Vanta.instance.moduleStorage.getT(Theme.class).colors[0]);
+                font.drawString(name, x, y + 0.5f, fg);
             }
 
             y += font.getFontHeight() + (background.getValue() ? 3 : 0) + 2;

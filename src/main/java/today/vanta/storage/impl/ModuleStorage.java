@@ -26,6 +26,7 @@ public class ModuleStorage extends Storage<Module> {
         changelog.add("[+] Added `Spaced out` and `Module case` to Arraylist");
         changelog.add("[+] Added `Gradient background` to ClickGuis");
         changelog.add("[+] Added ImGui ClickGui toggles for modules");
+        changelog.add("[+] Added 'Outline' to Arraylist");
         changelog.add("[+] Added MovementFix");
         changelog.add("[+] Added ESP");
         changelog.add("[-] Removed deprecated display names");
@@ -85,5 +86,4 @@ public class ModuleStorage extends Storage<Module> {
     public Module getModule(String input) {
         return this.list.stream().filter(m -> m.name.equalsIgnoreCase(input)).findFirst().orElse(null);
     }
-
 }
