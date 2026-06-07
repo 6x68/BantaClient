@@ -207,13 +207,20 @@ public class Arraylist extends Module {
 
     private String getModuleName(Module module) {
         String name = module.displayName;
+        String suffix = "";
+
+        if (module.getSuffix() != null && module.addSuffix && suffixes.getValue()) {
+            suffix = module.getSuffix();
+            if (spaceOut.getValue()) {
+                suffix = suffix.replaceAll("(?<=[a-z])(?=[A-Z])", " ");
+            }
+            name += "§f" + suffix;
+        }
 
         if (spaceOut.getValue()) {
             name = name.replaceAll("(?<=[a-z])(?=[A-Z])", " ");
-        }
-
-        if (module.getSuffix() != null && module.addSuffix && suffixes.getValue()) {
-            name += " §f" + module.getSuffix();
+        } else {
+            name = name.replace("§", " §");
         }
 
         switch (moduleCase.getValue()) {
