@@ -26,11 +26,17 @@ public class ModuleStorage extends Storage<Module> {
         changelog.add("[+] Added `Spaced out` and `Module case` to Arraylist");
         changelog.add("[+] Added `Gradient background` to ClickGuis");
         changelog.add("[+] Added ImGui ClickGui toggles for modules");
+        changelog.add("[+] Added block counter to Scaffold");
         changelog.add("[+] Added 'Line' to Arraylist");
         changelog.add("[+] Added MovementFix");
+        changelog.add("[+] Added Animations");
+        changelog.add("[+] Added TargetHUD");
+        changelog.add("[+] Added Ambience");
+        changelog.add("[+] Added BlockHit");
         changelog.add("[+] Added Criticals");
         changelog.add("[+] Added ESP");
-        changelog.add("[#] Modified ClickGui colors for better visibility");
+        changelog.add("[#] Fixed Auto-block");
+        changelog.add("[~] Modified ClickGui colors for better visibility");
         changelog.add("[-] Removed deprecated display names");
     }
 
