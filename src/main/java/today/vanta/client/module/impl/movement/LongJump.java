@@ -1,6 +1,7 @@
 package today.vanta.client.module.impl.movement;
 
 import today.vanta.client.event.impl.game.player.MotionEvent;
+import today.vanta.client.event.impl.game.world.UpdateEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.setting.impl.NumberSetting;
@@ -13,7 +14,7 @@ public class LongJump extends Module {
     private final StringSetting mode = StringSetting.builder()
             .name("Mode")
             .value("NCP")
-            .values("NCP")
+            .values("NCP", "Mospixel-Jump")
             .build();
 
     private final NumberSetting
@@ -49,6 +50,7 @@ public class LongJump extends Module {
     }
 
     private int offGroundTicks;
+    private boolean canDisable;
 
     @EventListen
     private void onMotion(MotionEvent event) {
@@ -57,7 +59,6 @@ public class LongJump extends Module {
         } else {
             offGroundTicks++;
         }
-
         if (event.state == EventState.PRE) {
             switch (mode.getValue()) {
                 case "NCP":
@@ -81,6 +82,25 @@ public class LongJump extends Module {
                     }
                     MovementUtil.strafe();
                     break;
+                case "Mospixel-Jump":
+                    if (mc.thePlayer.onGround && !canDisable) {
+                        mc.thePlayer.jump();
+                    }
+                    if (offGroundTicks > 6) {
+//            MovementUtil.strafe(MovementUtil.getMovementSpeed() + 0.5f);
+                        mc.thePlayer.motionY = -0.20f;
+                        canDisable = true;
+                    }
+
+                    if (offGroundTicks == 1) {
+                        MovementUtil.strafe(1.5f);
+                    }
+
+                    if (canDisable && mc.thePlayer.onGround) {
+                        super.setEnabled(false);
+                    }
+
+                    break;
             }
 
         }
@@ -89,6 +109,7 @@ public class LongJump extends Module {
     @Override
     public void onEnable() {
         offGroundTicks = 0;
+        canDisable = false;
     }
 
     @Override
