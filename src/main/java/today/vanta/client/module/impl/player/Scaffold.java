@@ -1,6 +1,8 @@
 package today.vanta.client.module.impl.player;
 
 import net.minecraft.block.BlockAir;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
@@ -10,8 +12,11 @@ import today.vanta.Vanta;
 import today.vanta.client.event.impl.game.RunTickEvent;
 import today.vanta.client.event.impl.game.player.MotionEvent;
 import today.vanta.client.event.impl.game.player.SprintEvent;
+import today.vanta.client.event.impl.game.render.Render2DEvent;
+import today.vanta.client.event.impl.game.world.UpdateEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
+import today.vanta.client.module.impl.client.Theme;
 import today.vanta.client.processor.impl.TargetProcessor;
 import today.vanta.client.setting.impl.BooleanSetting;
 import today.vanta.client.setting.impl.NumberSetting;
@@ -24,9 +29,12 @@ import today.vanta.util.game.player.InventoryUtil;
 import today.vanta.util.game.player.MovementUtil;
 import today.vanta.util.game.player.RotationUtil;
 import today.vanta.util.game.player.constructors.Rotation;
+import today.vanta.util.game.render.RenderUtil;
+import today.vanta.util.game.render.font.CFonts;
 import today.vanta.util.game.world.BlockCache;
 import today.vanta.util.system.math.Counter;
 
+import java.awt.*;
 import java.util.Random;
 
 public class Scaffold extends Module {
@@ -243,11 +251,23 @@ public class Scaffold extends Module {
     }
 
     @EventListen
+    public void onRender2D(Render2DEvent event) {
+        int blocksinHotbar = InventoryUtil.getHotbarBlockCount();
+        String test = String.valueOf(blocksinHotbar);
+        float width = CFonts.SFPT_SEMIBOLD_20.getStringWidth("Blocks: " + blocksinHotbar);
+        float widthe = 75f;
+        Color bg = new Color(30,30,30,255);
+//        RenderUtil.rectangle(mc.displayWidth / 4 - (widthe / 2), mc.displayHeight / 4 + 15f, widthe, 20f, bg);
+        CFonts.SFPT_SEMIBOLD_20.drawStringWithShadow("Blocks: "+blocksinHotbar, mc.displayWidth / 4 - (width / 2), mc.displayHeight / 4 + 20, Color.WHITE);
+    }
+
+    @EventListen
     private void onSprint(SprintEvent event) {
         if (sprintMode.getValue().equals("None") && rots != null) {
             event.cancelled = true;
         }
     }
+
 
     @Override
     public void onDisable() {
