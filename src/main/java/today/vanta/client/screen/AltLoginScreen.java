@@ -137,13 +137,4 @@ public class AltLoginScreen extends GuiScreen {
             }
         }
     }
-
-    @Override
-    protected void keyTyped(char typedChar, int keyCode) throws IOException {
-        if (keyCode == 1) {
-            return;
-        }
-
-        super.keyTyped(typedChar, keyCode);
-    }
 }
