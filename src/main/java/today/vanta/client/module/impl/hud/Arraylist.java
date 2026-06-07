@@ -105,16 +105,9 @@ public class Arraylist extends Module {
                     }
 
                     return add;
-                }).sorted(Comparator.comparingDouble(m -> {
-                    Module module = (Module) m;
-                    String moduleName = module.displayName;
-
-                    if (module.getSuffix() != null && module.addSuffix && suffixes.getValue()) {
-                        moduleName += " " + module.getSuffix();
-                    }
-
-                    return font.getStringWidth(moduleName);
-                }).reversed()).collect(Collectors.toList());
+                }).sorted(Comparator.comparingDouble(
+                        m -> font.getStringWidth(getModuleName((Module) m))
+                ).reversed()).collect(Collectors.toList());
 
         float y = 3;
         for (int i = 0; i < modules.size(); i++) {
@@ -207,7 +200,7 @@ public class Arraylist extends Module {
 
     private String getModuleName(Module module) {
         String name = module.displayName;
-        String suffix = "";
+        String suffix;
 
         if (module.getSuffix() != null && module.addSuffix && suffixes.getValue()) {
             suffix = module.getSuffix();
@@ -218,7 +211,7 @@ public class Arraylist extends Module {
         }
 
         if (spaceOut.getValue()) {
-            name = name.replaceAll("(?<=[a-z])(?=[A-Z])", " ");
+            name = name.replaceAll("(?<=[a-z])(?=[A-Z])|(?<=[A-Za-z])(?=\\d)", " ");
         } else {
             name = name.replace("§", " §");
         }
