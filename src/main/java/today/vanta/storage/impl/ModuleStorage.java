@@ -8,7 +8,7 @@ import today.vanta.client.module.impl.hud.*;
 import today.vanta.client.module.impl.movement.*;
 import today.vanta.client.module.impl.combat.*;
 import today.vanta.client.module.impl.player.*;
-import today.vanta.client.module.impl.render.ESP;
+import today.vanta.client.module.impl.render.*;
 import today.vanta.storage.Storage;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.events.EventPriority;
@@ -60,6 +60,7 @@ public class ModuleStorage extends Storage<Module> {
 
         // Render
         list.add(new ESP());
+        list.add(new Ambience());
 
         // Misc
 
