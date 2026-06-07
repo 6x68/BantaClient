@@ -54,13 +54,13 @@ public class ClickGUIScreen extends GuiScreen {
         super.drawScreen(mouseX, mouseY, partialTicks);
 
         if (Vanta.instance.moduleStorage.getT(ClickGUI.class).darkenBackground.getValue()) {
-            RenderUtil.rectangle(0, 0, width, height, new Color(0,0,0,150));
+            RenderUtil.rectangle(0, 0, width, height, new Color(0, 0, 0, 150));
         }
 
         Color color1 = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
 
         if (Vanta.instance.moduleStorage.getT(ClickGUI.class).gradientBackground.getValue()) {
-            RenderUtil.verticalGradient(0, 0, width, height, new Color(0,0,0,150), new Color(color1.getRed(),color1.getGreen(),color1.getBlue(),150));
+            RenderUtil.verticalGradient(0, 0, width, height, new Color(0, 0, 0, 150), new Color(color1.getRed(), color1.getGreen(), color1.getBlue(), 150));
         }
 
         float panelHeight = 16;
@@ -124,7 +124,7 @@ public class ClickGUIScreen extends GuiScreen {
 
                 boolean hoverMod = RenderUtil.hovered(mouseX, mouseY, x + 1.5f, y + 1, panelWidth - 3, 14);
 
-                RenderUtil.rectangle(x + 1.5f, y, panelWidth - 3, 14, hoverMod ? new Color(40, 40, 40) : new Color(35, 35, 35));
+                RenderUtil.rectangle(x + 1.5f, y, panelWidth - 3, 14, hoverMod ? new Color(50, 50, 50) : new Color(40, 40, 40));
 
                 regular.drawString(module.name, x + 5, y + 2, module.isEnabled() ? color1 : Color.WHITE);
                 regular.drawString(module.isExpanded() ? "-" : "+", x + panelWidth - regular.getStringWidth(module.isExpanded() ? "-" : "+") - 7, y + 1.5f, hoverMod ? Color.LIGHT_GRAY : Color.WHITE);
@@ -134,7 +134,7 @@ public class ClickGUIScreen extends GuiScreen {
                 if (module.isExpanded()) {
                     if (module.displayNames.length > 1 && !module.hideFromArraylist) {
                         boolean hoverDisplayName = RenderUtil.hovered(mouseX, mouseY, x + 1.5f, y, panelWidth - 3, 14);
-                        RenderUtil.rectangle(x + 1.5f, y, panelWidth - 3, 14, hoverDisplayName ? new Color(40, 40, 40) : new Color(35, 35, 35));
+                        RenderUtil.rectangle(x + 1.5f, y, panelWidth - 3, 14, hoverDisplayName ? new Color(42, 42, 42) : new Color(38, 38, 38));
                         sett.drawString("Display name", x + 5, y + 2.5f, -1);
 
                         float bX = x + panelWidth - 5;
@@ -146,7 +146,7 @@ public class ClickGUIScreen extends GuiScreen {
 
                     if (!module.frozen) {
                         boolean hoverKeybind = RenderUtil.hovered(mouseX, mouseY, x + 1.5f, y, panelWidth - 3, 14);
-                        RenderUtil.rectangle(x + 1.5f, y, panelWidth - 3, 14, hoverKeybind ? new Color(40, 40, 40) : new Color(35, 35, 35));
+                        RenderUtil.rectangle(x + 1.5f, y, panelWidth - 3, 14, hoverKeybind ? new Color(42, 42, 42) : new Color(38, 38, 38));
                         sett.drawString("Keybind", x + 5, y + 2.5f, -1);
 
                         float bXKey = x + panelWidth - 5;
@@ -162,7 +162,7 @@ public class ClickGUIScreen extends GuiScreen {
 
                     if (!module.frozen && !module.category.equals(Category.CLIENT)) {
                         boolean hoverHide = RenderUtil.hovered(mouseX, mouseY, x + 1.5f, y, panelWidth - 3, 14);
-                        RenderUtil.rectangle(x + 1.5f, y, panelWidth - 3, 14, hoverHide ? new Color(40, 40, 40) : new Color(35, 35, 35));
+                        RenderUtil.rectangle(x + 1.5f, y, panelWidth - 3, 14, hoverHide ? new Color(42, 42, 42) : new Color(38, 38, 38));
                         sett.drawString("Hide on arraylist", x + 5, y + 2.5f, -1);
 
                         boolean hidden = module.hideFromArraylist;
@@ -174,7 +174,7 @@ public class ClickGUIScreen extends GuiScreen {
                     }
 
                     boolean hoverSave = RenderUtil.hovered(mouseX, mouseY, x + 1.5f, y, panelWidth - 3, 14);
-                    RenderUtil.rectangle(x + 1.5f, y, panelWidth - 3, 14, hoverSave ? new Color(40, 40, 40) : new Color(35, 35, 35));
+                    RenderUtil.rectangle(x + 1.5f, y, panelWidth - 3, 14, hoverSave ? new Color(42, 42, 42) : new Color(38, 38, 38));
                     sett.drawString("Save in config", x + 5, y + 2.5f, -1);
 
                     boolean save = module.addToConfig;
@@ -186,7 +186,7 @@ public class ClickGUIScreen extends GuiScreen {
 
                     if (module.getSuffix() != null && !module.hideFromArraylist) {
                         boolean hoverSuffix = RenderUtil.hovered(mouseX, mouseY, x + 1.5f, y, panelWidth - 3, 14);
-                        RenderUtil.rectangle(x + 1.5f, y, panelWidth - 3, 14, hoverSuffix ? new Color(40, 40, 40) : new Color(35, 35, 35));
+                        RenderUtil.rectangle(x + 1.5f, y, panelWidth - 3, 14, hoverSuffix ? new Color(42, 42, 42) : new Color(38, 38, 38));
                         sett.drawString("Show suffix", x + 5, y + 2.5f, -1);
 
                         boolean suffix = module.addSuffix;
