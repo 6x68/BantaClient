@@ -47,6 +47,7 @@ public class ModuleStorage extends Storage<Module> {
         list.add(new Criticals());
         list.add(new KillAura());
         list.add(new Velocity());
+        list.add(new BlockHit());
 
         // Movement
         list.add(new Sprint());

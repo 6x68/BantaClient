@@ -56,6 +56,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemSword;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
@@ -98,6 +99,7 @@ import today.vanta.Vanta;
 import today.vanta.client.event.impl.game.ClickEvent;
 import today.vanta.client.event.impl.game.GameLoopEvent;
 import today.vanta.client.event.impl.game.RunTickEvent;
+import today.vanta.client.event.impl.game.player.AllowAttackWhileBlockingEvent;
 import today.vanta.client.event.impl.game.render.DisplayGuiScreenEvent;
 import today.vanta.client.event.impl.game.world.LoadWorldEvent;
 import today.vanta.client.event.impl.system.KeyboardEvent;
@@ -1530,6 +1532,15 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 
             if (!clickProcessingEvent.cancelled) {
                 if (this.thePlayer.isUsingItem()) {
+                    AllowAttackWhileBlockingEvent attackEvent = new AllowAttackWhileBlockingEvent();
+                    attackEvent.call();
+
+                    if (attackEvent.cancelled) {
+                        while (this.gameSettings.keyBindAttack.isPressed()) {
+                            this.clickMouse();
+                        }
+                    }
+
                     if (!this.gameSettings.keyBindUseItem.isKeyDown()) {
                         this.playerController.onStoppedUsingItem(this.thePlayer);
                     }
