@@ -167,6 +167,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
     public Session session;
     private boolean isGamePaused;
     public FontRenderer fontRendererObj;
+    public FontRenderer exhiFontRendererObj;
     public FontRenderer standardGalacticFontRenderer;
     public GuiScreen currentScreen;
     public LoadingScreenRenderer loadingScreen;
@@ -338,6 +339,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
         this.mcResourceManager.registerReloadListener(this.mcSoundHandler);
         this.mcMusicTicker = new MusicTicker(this);
         this.fontRendererObj = new FontRenderer(this.gameSettings, new ResourceLocation("textures/font/ascii.png"), this.renderEngine, false);
+        this.exhiFontRendererObj = new FontRenderer(this.gameSettings, new ResourceLocation("vanta","fonts/crack.png"), this.renderEngine, false);
 
         if (this.gameSettings.language != null) {
             this.fontRendererObj.setUnicodeFlag(this.isUnicode());
