@@ -7,7 +7,6 @@ import net.minecraft.network.play.client.C0APacketAnimation;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import today.vanta.Vanta;
-import today.vanta.client.event.impl.game.GameLoopEvent;
 import today.vanta.client.event.impl.game.player.KeepSprintEvent;
 import today.vanta.client.event.impl.game.player.MotionEvent;
 import today.vanta.client.event.impl.game.player.SprintEvent;
@@ -188,27 +187,30 @@ public class KillAura extends Module {
 
     @EventListen
     private void onMotion(MotionEvent event) {
-        if (mc.thePlayer.ticksExisted % 20 == 0) {
-            rangeFix = (int) (attackRange.getValue().floatValue() + Math.random() * 0.4);
-        }
+        if (event.state == EventState.PRE) {
+            if (mc.thePlayer.ticksExisted % 20 == 0) {
+                rangeFix = (int) (attackRange.getValue().floatValue() + Math.random() * 0.4);
+            }
 
-        if (blockDelay > 0) {
-            blockDelay--;
-        }
+            if (blockDelay > 0) {
+                blockDelay--;
+            }
 
-        if (autoBlockMode.getValue().equals("Vanilla") &&
-                TargetProcessor.getInstance().target != null &&
-                !isBlocking &&
-                blockDelay == 0 &&
-                !isAttacking &&
-                mc.thePlayer.getHeldItem() != null &&
-                mc.thePlayer.getHeldItem().getItem() instanceof ItemSword) {
-            startVanillaBlock();
+            if (autoBlockMode.getValue().equals("Vanilla") &&
+                    TargetProcessor.getInstance().target != null &&
+                    !isBlocking &&
+                    blockDelay == 0 &&
+                    !isAttacking &&
+                    mc.thePlayer.getHeldItem() != null &&
+                    mc.thePlayer.getHeldItem().getItem() instanceof ItemSword) {
+                startVanillaBlock();
+            }
+
+            handleAttack();
         }
     }
 
-    @EventListen
-    private void onLoop(GameLoopEvent event) {
+    private void handleAttack() {
         if (Vanta.instance.moduleStorage.getModule("Scaffold").isEnabled()) {
             if (isBlocking) {
                 performBlock(false);
@@ -224,7 +226,7 @@ public class KillAura extends Module {
             return;
         }
 
-        if (mc.thePlayer != null && event.state == EventState.PRE && TargetProcessor.getInstance().target != null) {
+        if (mc.thePlayer != null && TargetProcessor.getInstance().target != null) {
             switch (attackMode.getValue()) {
                 case "Single":
                     if (attackCounter.hasElapsed(calculateAttackDelay(), true) &&
