@@ -27,6 +27,7 @@ public class ModuleStorage extends Storage<Module> {
         changelog.add("[+] Added more animations to Animations");
         changelog.add("[+] Added Mospixel LongJump");
         changelog.add("[+] Added Mospixel Speed");
+        changelog.add("[+] Added NoSlowdown");
         changelog.add("[~] Updated ViaVersion to 5.9.1");
         changelog.add("[#] Fixed MovementFix strafing when unnecessary");
         changelog.add("[#] Fixed GCD flaw");
@@ -52,6 +53,7 @@ public class ModuleStorage extends Storage<Module> {
         list.add(new LongJump());
         list.add(new Speed());
         list.add(new MovementFix());
+        list.add(new NoSlowdown());
 
         // Player
         list.add(new Scaffold());
