@@ -21,7 +21,7 @@ public class Watermark extends Module {
     private final StringSetting style = StringSetting.builder()
             .name("Style")
             .value("Vanta")
-            .values("Vanta", "Jello", "Einstein Approved")
+            .values("Vanta", "Jello", "My Eyes")
             .build();
 
     public Watermark() {
@@ -41,8 +41,8 @@ public class Watermark extends Module {
                 CFonts.HN_REGULAR_48.drawString(IClient.CLIENT_NAME, 5, 5, new Color(255, 255, 255, 185));
                 CFonts.HN_MEDIUM_24.drawString("Jello", 5, 5 + CFonts.HN_REGULAR_48.getFontHeight() - 1, new Color(255, 255, 255, 185));
                 break;
-            case "Einstein Approved":
-                CFonts.SFPT_SEMIBOLD_42.drawStringWithShadow("Vanta Client (Sponsored by Israel and Donald Trump)", 5, 0, epstein);
+            case "My Eyes":
+                CFonts.ARABICLOOKINGFONT.drawStringWithShadow("Vanta Client ft. Aditya & ", 5, 0, epstein);
                 break;
         }
     }
