@@ -21,7 +21,6 @@ public class RotationProcessor extends Processor {
         }
     }
 
-
     @EventListen(priority = EventPriority.HIGHEST)
     private void onLook(RotationLookEvent event) { //sets the server-side mouse over object to the rotations
         if (rotations != null) {

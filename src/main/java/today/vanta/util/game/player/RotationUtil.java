@@ -10,8 +10,6 @@ import today.vanta.util.game.player.constructors.Rotation;
 import today.vanta.util.game.world.BlockCache;
 
 public class RotationUtil implements IMinecraft {
-    private static final float GCD_VALUE = getGCDValue();
-
     public static Rotation getSimpleRotations(EntityLivingBase target) {
         double diffX = target.posX - mc.thePlayer.posX;
         double diffY = target.posY + target.getEyeHeight() - (mc.thePlayer.posY + mc.thePlayer.getEyeHeight());
@@ -21,7 +19,7 @@ public class RotationUtil implements IMinecraft {
         float yaw = (float) Math.toDegrees(Math.atan2(diffZ, diffX)) - 90.0F;
         float pitch = (float) -Math.toDegrees(Math.atan2(diffY, dist));
 
-        return applyGCD(yaw, pitch);
+        return new Rotation(yaw, pitch);
     }
 
     public static Rotation getSimpleRotations(BlockPos blockPos) {
@@ -33,7 +31,7 @@ public class RotationUtil implements IMinecraft {
         float yaw = (float) Math.toDegrees(Math.atan2(diffZ, diffX)) - 90.0F;
         float pitch = (float) -Math.toDegrees(Math.atan2(diffY, dist));
 
-        return applyGCD(yaw, pitch);
+        return new Rotation(yaw, pitch);
     }
 
     public static Rotation getSimpleRotations(BlockCache blockCache, Rotation lastRotations) {
@@ -50,7 +48,7 @@ public class RotationUtil implements IMinecraft {
         yaw = smooth(lastRotations.yaw, yaw, 30);
         pitch = smooth(lastRotations.pitch, pitch, 20);
 
-        return applyGCD(yaw, pitch);
+        return new Rotation(yaw, pitch);
     }
 
     public static Rotation getGodbridgeRotations(BlockCache blockCache, Rotation lastRotations) {
@@ -82,13 +80,13 @@ public class RotationUtil implements IMinecraft {
         }
 
         if (lastRotations == null) {
-            return applyGCD(yaw, pitch);
+            return new Rotation(yaw, pitch);
         }
 
         yaw = smooth(lastRotations.yaw, yaw, 30);
         pitch = smooth(lastRotations.pitch, pitch, 20);
 
-        return applyGCD(yaw, pitch);
+        return new Rotation(yaw, pitch);
     }
 
     private static float smooth(float current, float target, float max) {
@@ -102,15 +100,9 @@ public class RotationUtil implements IMinecraft {
      * From the minecraft code {@link net.minecraft.client.renderer.EntityRenderer#updateRenderer}
      * @return Returns a GCD mouse fix value.
      */
-    public static float getGCDValue() {
+    public static float getMouseGCD() {
         float f = mc.gameSettings.mouseSensitivity * 0.6F + 0.2F;
         return (f * f * f * 8.0F) * 0.15F;
-    }
-
-    public static Rotation applyGCD(float yaw, float pitch) {
-        yaw -= yaw % GCD_VALUE;
-        pitch -= pitch % GCD_VALUE;
-        return new Rotation(yaw, pitch);
     }
 
     /**
