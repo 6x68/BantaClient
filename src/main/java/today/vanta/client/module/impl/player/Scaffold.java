@@ -102,7 +102,7 @@ public class Scaffold extends Module {
             .hide(() -> rotationMode.getValue().equals("Godbridge")),
 
             speedKeepy = BooleanSetting.builder()
-            .name("Keep Y if Speed Enabled")
+            .name("Keep Y on Speed")
             .value(false)
             .build()
             .hide(() -> rotationMode.getValue().equals("Godbridge") || keepY.getValue()),
@@ -168,6 +168,7 @@ public class Scaffold extends Module {
                         break;
                 }
             }
+
 
             if (rotationMode.getValue().equals("Godbridge")) {
                 distCounter.tick(mc.thePlayer);
@@ -248,6 +249,9 @@ public class Scaffold extends Module {
 
                 case "Godbridge":
                     rots = RotationUtil.getGodbridgeRotations(TargetProcessor.getInstance().cache, lastRots);
+                    break;
+                case "Static":
+                    rots = RotationUtil.getStaticRotations(50,180,lastRots);
                     break;
             }
 

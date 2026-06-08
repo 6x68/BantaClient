@@ -1,6 +1,7 @@
 package today.vanta.client.module.impl.movement;
 
 import net.minecraft.item.*;
+import today.vanta.Vanta;
 import today.vanta.client.event.impl.game.player.SlowdownEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
@@ -49,19 +50,27 @@ public class NoSlowdown extends Module {
     private void onSlow(SlowdownEvent event) {
         ItemStack currentItem = mc.thePlayer.getCurrentEquippedItem();
 
-        if (shouldSprint.getValue() == false) {
-            mc.gameSettings.keyBindSprint.pressed = false;
-        }
-
         if (currentItem == null || !mc.thePlayer.isUsingItem() || !MovementUtil.isMoving()) {
             return;
         }
+
+        if (shouldSprint.getValue() == false) {
+
+            mc.gameSettings.keyBindSprint.pressed = false;
+        }
+
 
         if ((items.isEnabled("Swords") && currentItem.getItem() instanceof ItemSword) ||
                 (items.isEnabled("Consumables") && (currentItem.getItem() instanceof ItemFood || currentItem.getItem() instanceof ItemPotion)) ||
                 (items.isEnabled("Bows") && currentItem.getItem() instanceof ItemBow)) {
             event.forward = forwardMultiplier.getValue().floatValue();
             event.strafe = strafeMultiplier.getValue().floatValue();
+        }
+    }
+    @Override
+    public void onDisable() {
+        if (Vanta.instance.moduleStorage.getT(Sprint.class).isEnabled()) {
+            mc.gameSettings.keyBindSprint.pressed = true;
         }
     }
 }

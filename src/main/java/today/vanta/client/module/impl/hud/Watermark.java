@@ -1,7 +1,9 @@
 package today.vanta.client.module.impl.hud;
 
 import today.vanta.Vanta;
+import today.vanta.client.event.impl.game.player.MotionEvent;
 import today.vanta.client.event.impl.game.render.Render2DEvent;
+import today.vanta.client.event.impl.game.world.UpdateEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.module.impl.client.Theme;
@@ -14,10 +16,12 @@ import today.vanta.util.game.render.font.CFonts;
 import java.awt.*;
 
 public class Watermark extends Module {
+    float tick;
+    Color epstein = new Color(0,0,0,255);
     private final StringSetting style = StringSetting.builder()
             .name("Style")
             .value("Vanta")
-            .values("Vanta", "Jello")
+            .values("Vanta", "Jello", "Einstein Approved")
             .build();
 
     public Watermark() {
@@ -37,6 +41,53 @@ public class Watermark extends Module {
                 CFonts.HN_REGULAR_48.drawString(IClient.CLIENT_NAME, 5, 5, new Color(255, 255, 255, 185));
                 CFonts.HN_MEDIUM_24.drawString("Jello", 5, 5 + CFonts.HN_REGULAR_48.getFontHeight() - 1, new Color(255, 255, 255, 185));
                 break;
+            case "Einstein Approved":
+                CFonts.SFPT_SEMIBOLD_42.drawStringWithShadow("Vanta Client (Sponsored by Israel and Donald Trump)", 5, 0, epstein);
+                break;
+        }
+    }
+
+    @EventListen
+    public void TickingEpsteinEvent(UpdateEvent event) {
+        tick++;
+        if (tick == 1) {
+            epstein = Color.WHITE;
+        }
+        if (tick == 3) {
+            epstein = Color.GREEN;
+        }
+        if (tick == 5) {
+            epstein = Color.PINK;
+        }
+        if (tick == 7) {
+            epstein = Color.CYAN;
+        }
+
+        if (tick == 10) {
+            epstein = Color.LIGHT_GRAY;
+        }
+
+        if (tick == 12) {
+            epstein = Color.BLACK;
+        }
+
+        if (tick == 14) {
+            epstein = Color.MAGENTA;
+        }
+        if (tick == 16) {
+            epstein = Color.ORANGE;
+        }
+
+        if (tick == 18) {
+            epstein = Color.RED;
+        }
+
+        if (tick == 20) {
+            epstein = Color.yellow;
+        }
+
+        if (tick == 22) {
+            tick = 1;
         }
     }
 }

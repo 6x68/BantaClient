@@ -89,6 +89,19 @@ public class RotationUtil implements IMinecraft {
         return new Rotation(yaw, pitch);
     }
 
+    public static Rotation getStaticRotations(float yaw, float pitch, Rotation lastRotations) {
+        float goalYaw;
+        float goalPitch;
+        goalYaw = mc.thePlayer.rotationYaw + yaw;
+        goalPitch = mc.thePlayer.rotationPitch + pitch;
+        if (lastRotations == null) {
+            return new Rotation(goalYaw, goalPitch);
+        }
+        goalYaw = smooth(lastRotations.yaw, goalPitch, 30);
+        goalYaw = smooth(lastRotations.pitch, goalYaw, 20);
+        return new Rotation(goalYaw, goalPitch);
+    }
+
     private static float smooth(float current, float target, float max) {
         float diff = MathHelper.wrapAngleTo180_float(target - current);
         if (diff > max) diff = max;

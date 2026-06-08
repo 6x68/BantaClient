@@ -5,6 +5,7 @@ import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.module.impl.client.*;
 import today.vanta.client.module.impl.hud.*;
+import today.vanta.client.module.impl.misc.ClientBrand;
 import today.vanta.client.module.impl.misc.Disabler;
 import today.vanta.client.module.impl.movement.*;
 import today.vanta.client.module.impl.combat.*;
@@ -50,6 +51,7 @@ public class ModuleStorage extends Storage<Module> {
         list.add(new KillAura());
         list.add(new Velocity());
         list.add(new BlockHit());
+        list.add(new KeepSprint());
 
         // Movement
         list.add(new Sprint());
@@ -70,6 +72,7 @@ public class ModuleStorage extends Storage<Module> {
 
         // Misc
         list.add(new Disabler());
+        list.add(new ClientBrand());
 
         //Hud
         list.add(new Arraylist());

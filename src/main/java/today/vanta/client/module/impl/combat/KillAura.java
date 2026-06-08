@@ -78,6 +78,11 @@ public class KillAura extends Module {
             .value(true)
             .build(),
 
+    swingOnHurtime = BooleanSetting.builder()
+            .name("Only Hurtime swing")
+            .value(false)
+            .build(),
+
     keepSprint = BooleanSetting.builder()
             .name("Keep sprint")
             .value(false)
@@ -259,10 +264,21 @@ public class KillAura extends Module {
                         }
 
                         if (!noSwing.getValue())
-                            mc.thePlayer.swingItem();
+                            if (swingOnHurtime.getValue()) {
+                                if (TargetProcessor.getInstance().target.hurtTime < 2) {
+                                    mc.thePlayer.swingItem();
+                                }
+                            } else {
+                                mc.thePlayer.swingItem();
+                            }
                         else
+                        if (swingOnHurtime.getValue()) {
+                            if (TargetProcessor.getInstance().target.hurtTime < 1) {
+                                mc.thePlayer.sendQueue.addToSendQueue(new C0APacketAnimation());
+                            }
+                        } else {
                             mc.thePlayer.sendQueue.addToSendQueue(new C0APacketAnimation());
-
+                        }
                         switch (swingMode.getValue()) {
                             case "Legit":
                                 mc.clickMouse();
