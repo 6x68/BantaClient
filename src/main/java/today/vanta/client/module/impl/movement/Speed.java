@@ -64,25 +64,33 @@ public class Speed extends Module {
                     }
                     break;
                 case "NCP":
-                    mc.gameSettings.keyBindJump.pressed = MovementUtil.isMoving();
+                    if (mc.thePlayer.onGround && !mc.gameSettings.keyBindJump.isKeyDown()) {
+                        mc.thePlayer.jump();
+                    }
+
                     MovementUtil.strafe();
+
+                    if (!MovementUtil.isMoving()) {
+                        MovementUtil.stop();
+                    }
                     break;
 
                 case "Mospixel-Tick":
                     if (mc.thePlayer.onGround && !mc.gameSettings.keyBindJump.isKeyDown()) {
                         mc.thePlayer.jump();
                     }
-//        if (mc.thePlayer.onGround) {
-//            MoveUtil.strafe(0.3f);
-//        } else {
-//            MoveUtil.strafe(0.3f);
-//        }
+                    //if (mc.thePlayer.onGround) {
+                    //  MoveUtil.strafe(0.3f);
+                    //} else {
+                    //  MoveUtil.strafe(0.3f);
+                    //}
 
                     if (offGroundTicks == 1) {
                         MovementUtil.strafe(0.35f);
-                    } if (offGroundTicks > 2) {
-//                    MovementUtil.strafe(0.3f);
-                }
+                    }
+                    if (offGroundTicks > 2) {
+                        //MovementUtil.strafe(0.3f);
+                    }
                     if (mc.thePlayer.motionY < 0.17f && offGroundTicks > 3) {
                         mc.thePlayer.motionY -= 0.05f;
                     }
