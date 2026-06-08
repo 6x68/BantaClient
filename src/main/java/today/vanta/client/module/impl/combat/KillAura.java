@@ -41,7 +41,7 @@ public class KillAura extends Module {
     autoBlockMode = StringSetting.builder()
             .name("Auto-block mode")
             .value("None")
-            .values("None", "Vanilla", "Packet")
+            .values("None", "Vanilla", "Packet", "Hold")
             .build();
 
     private final StringSetting swingMode;
@@ -196,6 +196,18 @@ public class KillAura extends Module {
                 blockDelay--;
             }
 
+            if (autoBlockMode.getValue().equals("Hold")) {
+                if (TargetProcessor.getInstance().target != null &&
+                        mc.thePlayer.getHeldItem() != null &&
+                        mc.thePlayer.getHeldItem().getItem() instanceof ItemSword) {
+                    if (!isBlocking && !isAttacking) {
+                        startVanillaBlock();
+                    }
+                } else if (isBlocking) {
+                    stopVanillaBlock();
+                }
+            }
+
             if (autoBlockMode.getValue().equals("Vanilla") &&
                     TargetProcessor.getInstance().target != null &&
                     !isBlocking &&
@@ -212,7 +224,7 @@ public class KillAura extends Module {
 
     private void handleAttack() {
         if (Vanta.instance.moduleStorage.getModule("Scaffold").isEnabled()) {
-            if (isBlocking) {
+            if (isBlocking && !autoBlockMode.getValue().equals("Hold")) {
                 performBlock(false);
             }
             return;
@@ -220,7 +232,7 @@ public class KillAura extends Module {
 
         if (TargetProcessor.getInstance().target == null) {
             rots = null;
-            if (isBlocking) {
+            if (isBlocking && !autoBlockMode.getValue().equals("Hold")) {
                 performBlock(false);
             }
             return;
@@ -233,6 +245,10 @@ public class KillAura extends Module {
                             TargetProcessor.getInstance().target.getDistanceToEntity(mc.thePlayer) <= rangeFix) {
 
                         isAttacking = true;
+
+                        if (autoBlockMode.getValue().equals("Hold") && isBlocking) {
+                            stopVanillaBlock();
+                        }
 
                         if (autoBlockMode.getValue().equals("Vanilla") && isBlocking) {
                             stopVanillaBlock();
@@ -262,6 +278,11 @@ public class KillAura extends Module {
 
                         if (autoBlockMode.getValue().equals("Vanilla")) {
                             blockDelay = 2;
+                        }
+
+                        if (autoBlockMode.getValue().equals("Hold") &&
+                                TargetProcessor.getInstance().target != null) {
+                            startVanillaBlock();
                         }
 
                         isAttacking = false;
