@@ -73,6 +73,7 @@ import org.lwjgl.opengl.GL12;
 import org.lwjgl.opengl.GLContext;
 import org.lwjgl.util.glu.Project;
 import today.vanta.Vanta;
+import today.vanta.client.event.impl.game.render.DrawScreenEvent;
 import today.vanta.client.module.impl.render.Animations;
 import today.vanta.util.system.lwjgl.imgui.ImGuiImpl;
 
@@ -1036,8 +1037,8 @@ public class EntityRenderer implements IResourceManagerReloadListener {
             final ScaledResolution scaledresolution = new ScaledResolution(this.mc);
             int i1 = scaledresolution.getScaledWidth();
             int j1 = scaledresolution.getScaledHeight();
-            final int k1 = Mouse.getX() * i1 / this.mc.displayWidth;
-            final int l1 = j1 - Mouse.getY() * j1 / this.mc.displayHeight - 1;
+            final int mouseX = Mouse.getX() * i1 / this.mc.displayWidth;
+            final int mouseY = j1 - Mouse.getY() * j1 / this.mc.displayHeight - 1;
             int i2 = this.mc.gameSettings.limitFramerate;
 
             if (this.mc.theWorld != null) {
@@ -1091,14 +1092,15 @@ public class EntityRenderer implements IResourceManagerReloadListener {
                 TileEntityRendererDispatcher.instance.fontRenderer = this.mc.fontRendererObj;
             }
 
+
             if (this.mc.currentScreen != null) {
                 GlStateManager.clear(256);
 
                 try {
                     if (Reflector.ForgeHooksClient_drawScreen.exists()) {
-                        Reflector.callVoid(Reflector.ForgeHooksClient_drawScreen, this.mc.currentScreen, Integer.valueOf(k1), Integer.valueOf(l1), Float.valueOf(partialTicks));
+                        Reflector.callVoid(Reflector.ForgeHooksClient_drawScreen, this.mc.currentScreen, Integer.valueOf(mouseX), Integer.valueOf(mouseY), Float.valueOf(partialTicks));
                     } else {
-                        this.mc.currentScreen.drawScreen(k1, l1, partialTicks);
+                        this.mc.currentScreen.drawScreen(mouseX, mouseY, partialTicks);
                     }
                 } catch (Throwable throwable) {
                     CrashReport crashreport = CrashReport.makeCrashReport(throwable, "Rendering screen");
@@ -1110,7 +1112,7 @@ public class EntityRenderer implements IResourceManagerReloadListener {
                     });
                     crashreportcategory.addCrashSectionCallable("Mouse location", new Callable<String>() {
                         public String call() throws Exception {
-                            return String.format("Scaled: (%d, %d). Absolute: (%d, %d)", Integer.valueOf(k1), Integer.valueOf(l1), Integer.valueOf(Mouse.getX()), Integer.valueOf(Mouse.getY()));
+                            return String.format("Scaled: (%d, %d). Absolute: (%d, %d)", Integer.valueOf(mouseX), Integer.valueOf(mouseY), Integer.valueOf(Mouse.getX()), Integer.valueOf(Mouse.getY()));
                         }
                     });
                     crashreportcategory.addCrashSectionCallable("Screen size", new Callable<String>() {
@@ -1121,6 +1123,8 @@ public class EntityRenderer implements IResourceManagerReloadListener {
                     throw new ReportedException(crashreport);
                 }
             }
+
+            new DrawScreenEvent(mouseX, mouseY, partialTicks).call();
 
             ImGuiImpl.scroll();
             ImGuiImpl.render(mc.getFramebuffer(), partialTicks);
