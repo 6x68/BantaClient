@@ -1,7 +1,4 @@
 /*
- * This file is part of ViaMCP - https://github.com/FlorianMichael/ViaMCP
- * Copyright (C) 2020-2024 FlorianMichael/EnZaXD <florian.michael07@gmail.com> and contributors
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -20,7 +17,6 @@ package de.florianmichael.viamcp.fixes;
 
 import com.viaversion.viaversion.api.protocol.version.ProtocolVersion;
 import de.florianmichael.vialoadingbase.ViaLoadingBase;
-import de.florianmichael.viamcp.ViaMCP;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;

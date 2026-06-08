@@ -1,7 +1,4 @@
 /*
- * This file is part of ViaMCP - https://github.com/FlorianMichael/ViaMCP
- * Copyright (C) 2020-2024 FlorianMichael/EnZaXD <florian.michael07@gmail.com> and contributors
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -39,16 +36,7 @@ public class AsyncVersionSlider extends GuiButton {
         super(buttonId, x, y, Math.max(widthIn, 110), heightIn, "");
         this.values = ViaLoadingBase.PROTOCOLS;
         Collections.reverse(values);
-        ProtocolVersion defaultVersion = ProtocolVersion.v1_8;
-        int defaultIndex = 0;
-        for (int i = 0; i < values.size(); i++) {
-            if (values.get(i).getVersion() == defaultVersion.getVersion()) {
-                defaultIndex = i;
-                break;
-            }
-        }
-        this.dragValue = (float) defaultIndex / (values.size() - 1);
-        this.sliderValue = this.dragValue;
+        this.sliderValue = dragValue;
         this.displayString = values.get((int) Math.ceil(this.sliderValue * (values.size() - 1))).getName();
     }
 
