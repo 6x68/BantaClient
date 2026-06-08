@@ -4,12 +4,14 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.util.MathHelper;
 import org.lwjgl.opengl.GL11;
+import today.vanta.client.event.impl.game.player.MotionEvent;
 import today.vanta.client.event.impl.game.render.PerformBlockEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.setting.impl.BooleanSetting;
 import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.events.EventListen;
+import today.vanta.util.game.events.EventState;
 
 public class Animations extends Module {
     private final StringSetting mode = StringSetting.builder()
@@ -17,13 +19,22 @@ public class Animations extends Module {
             .value("Exhibition")
             .values("Exhibition", "Interia")
             .build();
-    public final BooleanSetting germannobob = BooleanSetting.builder()
-            .name("German No-Bob")
+
+    private final BooleanSetting noBob = BooleanSetting.builder()
+            .name("German No-bob")
             .value(false)
             .build();
 
     public Animations() {
         super("Animations", "Modifies Minecraft block animations.", Category.RENDER);
+    }
+
+    @EventListen
+    private void onMotion(MotionEvent event) {
+        if (event.state == EventState.PRE && noBob.getValue()) {
+            mc.thePlayer.distanceWalkedModified = 0.0F;
+            mc.gameSettings.viewBobbing = true;
+        }
     }
 
     @EventListen

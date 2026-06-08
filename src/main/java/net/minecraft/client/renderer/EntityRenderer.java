@@ -527,7 +527,6 @@ public class EntityRenderer implements IResourceManagerReloadListener {
         if (this.mc.getRenderViewEntity() instanceof EntityPlayer) {
             EntityPlayer entityplayer = (EntityPlayer) this.mc.getRenderViewEntity();
             float f = entityplayer.distanceWalkedModified - entityplayer.prevDistanceWalkedModified;
-            System.out.println("TO:DO german no bob");
             float f1 = -(entityplayer.distanceWalkedModified + f * partialTicks);
             float f2 = entityplayer.prevCameraYaw + (entityplayer.cameraYaw - entityplayer.prevCameraYaw) * partialTicks;
             float f3 = entityplayer.prevCameraPitch + (entityplayer.cameraPitch - entityplayer.prevCameraPitch) * partialTicks;

@@ -23,6 +23,7 @@ public class ModuleStorage extends Storage<Module> {
     public List<String> changelog = new ArrayList<>();
 
     public ModuleStorage() {
+        changelog.add("[+] Added 'German No-bob' to Animations");
         changelog.add("[+] Added Mospixel LongJump");
         changelog.add("[+] Added Mospixel Speed");
         changelog.add("[#] Updated ViaVersion to 5.9.1");
