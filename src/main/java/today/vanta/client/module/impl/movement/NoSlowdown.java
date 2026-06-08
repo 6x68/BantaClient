@@ -4,6 +4,7 @@ import net.minecraft.item.*;
 import today.vanta.client.event.impl.game.player.SlowdownEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
+import today.vanta.client.setting.impl.BooleanSetting;
 import today.vanta.client.setting.impl.MultiStringSetting;
 import today.vanta.client.setting.impl.NumberSetting;
 import today.vanta.util.game.events.EventListen;
@@ -32,6 +33,13 @@ public class NoSlowdown extends Module {
             .places(1)
             .build();
 
+    private final BooleanSetting
+            shouldSprint = BooleanSetting.builder()
+            .name("Should Sprint")
+            .value(false)
+            .build();
+
+
     public NoSlowdown() {
         super("NoSlowdown", "Removes the slowdown effect when using an item.", Category.MOVEMENT);
         displayNames = new String[]{"NoSlowdown", "NoSlow", "NoSlowDown"};
@@ -40,6 +48,10 @@ public class NoSlowdown extends Module {
     @EventListen
     private void onSlow(SlowdownEvent event) {
         ItemStack currentItem = mc.thePlayer.getCurrentEquippedItem();
+
+        if (shouldSprint.getValue() == false) {
+            mc.gameSettings.keyBindSprint.pressed = false;
+        }
 
         if (currentItem == null || !mc.thePlayer.isUsingItem() || !MovementUtil.isMoving()) {
             return;

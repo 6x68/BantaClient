@@ -1,7 +1,9 @@
 package net.minecraft.util;
 
 import net.minecraft.client.settings.GameSettings;
+import today.vanta.Vanta;
 import today.vanta.client.event.impl.game.player.MoveInputEvent;
+import today.vanta.client.module.impl.movement.FastSneak;
 
 public class MovementInputFromOptions extends MovementInput {
     private final GameSettings gameSettings;
@@ -43,6 +45,9 @@ public class MovementInputFromOptions extends MovementInput {
         this.sneak = moveInputEvent.sneaking;
 
         if (this.sneak) {
+            if (Vanta.instance.moduleStorage.getT(FastSneak.class).isEnabled()) {
+                return;
+            }
             this.moveStrafe *= moveInputEvent.sneakFactor;
             this.moveForward *= moveInputEvent.sneakFactor;
         }
