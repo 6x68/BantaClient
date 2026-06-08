@@ -17,18 +17,17 @@ package de.florianmichael.viamcp;
 
 import com.mojang.authlib.GameProfile;
 import com.viaversion.viabackwards.protocol.v1_17to1_16_4.Protocol1_17To1_16_4;
+import com.viaversion.viabackwards.protocol.v1_20_3to1_20_2.Protocol1_20_3To1_20_2;
 import com.viaversion.viaversion.api.Via;
 import com.viaversion.viaversion.api.connection.UserConnection;
-import com.viaversion.viaversion.protocols.v1_16_1to1_16_2.packet.ClientboundPackets1_16_2;
-import com.viaversion.viaversion.protocols.v1_16_1to1_16_2.packet.ServerboundPackets1_16_2;
-import com.viaversion.viaversion.protocols.v1_16_4to1_17.packet.ClientboundPackets1_17;
-import com.viaversion.viaversion.protocols.v1_16_4to1_17.packet.ServerboundPackets1_17;
-import com.viaversion.viabackwards.protocol.v1_20_3to1_20_2.Protocol1_20_3To1_20_2;
 import com.viaversion.viaversion.api.protocol.packet.PacketWrapper;
 import com.viaversion.viaversion.api.protocol.packet.State;
 import com.viaversion.viaversion.api.type.Types;
 import com.viaversion.viaversion.protocols.base.ServerboundLoginPackets;
-
+import com.viaversion.viaversion.protocols.v1_16_1to1_16_2.packet.ClientboundPackets1_16_2;
+import com.viaversion.viaversion.protocols.v1_16_1to1_16_2.packet.ServerboundPackets1_16_2;
+import com.viaversion.viaversion.protocols.v1_16_4to1_17.packet.ClientboundPackets1_17;
+import com.viaversion.viaversion.protocols.v1_16_4to1_17.packet.ServerboundPackets1_17;
 import de.florianmichael.vialoadingbase.ViaLoadingBase;
 import de.florianmichael.viamcp.gui.AsyncVersionSlider;
 import net.minecraft.client.Minecraft;
@@ -48,14 +47,17 @@ public class ViaMCP {
     private AsyncVersionSlider asyncVersionSlider;
 
     public ViaMCP() {
-        ViaLoadingBase.ViaLoadingBaseBuilder.create().runDirectory(new File("ViaMCP")).nativeVersion(NATIVE_VERSION).onProtocolReload(protocolVersion -> {
-            if (getAsyncVersionSlider() != null) {
-                getAsyncVersionSlider().setVersion(protocolVersion.getVersion());
-            }
-        }).build();
+        ViaLoadingBase.ViaLoadingBaseBuilder.create()
+                .runDirectory(new File("ViaMCP"))
+                .nativeVersion(NATIVE_VERSION)
+                .onProtocolReload(protocolVersion -> {
+                    if (getAsyncVersionSlider() != null) {
+                        getAsyncVersionSlider().setVersion(protocolVersion.getVersion());
+                    }
+                }).build();
 
         fixTransactions();
-        fixHypixelLogin();
+        //fixHypixelLogin();
     }
 
     private void fixTransactions() {
@@ -63,10 +65,12 @@ public class ViaMCP {
         Via.getManager().getProtocolManager().addMappingLoaderFuture(Protocol1_17To1_16_4.class, () -> {
             final Protocol1_17To1_16_4 protocol = Via.getManager().getProtocolManager().getProtocol(Protocol1_17To1_16_4.class);
             if (protocol == null) return;
-            protocol.registerClientbound(ClientboundPackets1_17.PING, ClientboundPackets1_16_2.CONTAINER_ACK, wrapper -> {
-            }, true);
-            protocol.registerServerbound(ServerboundPackets1_16_2.CONTAINER_ACK, ServerboundPackets1_17.PONG, wrapper -> {
-            }, true);
+            protocol.replaceClientbound(ClientboundPackets1_17.PING, wrapper -> {
+                wrapper.setPacketType(ClientboundPackets1_16_2.CONTAINER_ACK);
+            });
+            protocol.replaceServerbound(ServerboundPackets1_16_2.CONTAINER_ACK, wrapper -> {
+                wrapper.setPacketType(ServerboundPackets1_17.PONG);
+            });
         });
     }
 
