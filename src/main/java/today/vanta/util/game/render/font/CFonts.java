@@ -1,12 +1,14 @@
 package today.vanta.util.game.render.font;
 
-import today.vanta.Vanta;
-
 import java.awt.*;
-import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class CFonts {
+    private static final Map<String, Font> FONT_CACHE = new ConcurrentHashMap<>();
+    private static final Map<String, CFontRenderer> RENDERER_CACHE = new ConcurrentHashMap<>();
+
     public static CFontRenderer HN_MEDIUM_24 = getFont("HN-Medium", 24);
     public static CFontRenderer HN_REGULAR_48 = getFont("HN-Regular", 48);
 
@@ -16,36 +18,40 @@ public class CFonts {
     public static CFontRenderer SFPT_SEMIBOLD_42 = getFont("SFPT-Semibold", 42);
 
     public static CFontRenderer getFont(String fontName, float size) {
-        return new CFontRenderer(getAwtFont(fontName + ".otf", size));
+        String key = fontName + ":" + size;
+
+        return RENDERER_CACHE.computeIfAbsent(
+                key,
+                k -> new CFontRenderer(getAwtFont(fontName + ".otf", size))
+        );
     }
 
     private static Font getAwtFont(String fontName, float size) {
-        Font customFont = Font.getFont("SansSerif");
-        try (InputStream fontStream = CFonts.class.getResourceAsStream("/assets/vanta/fonts/" + fontName)) {
-            if (fontStream != null) {
-               customFont = getAwtFont(fontStream, size);
+        Font baseFont = FONT_CACHE.computeIfAbsent(fontName, name -> {
+            try (InputStream fontStream = CFonts.class.getResourceAsStream("/assets/vanta/fonts/" + name)) {
+                if (fontStream != null) {
+                    return Font.createFont(Font.TRUETYPE_FONT, fontStream);
+                }
+            } catch (Exception ignored) {
             }
-        } catch (Exception e) {
-        }
-        return customFont;
+
+            return new Font("SansSerif", Font.PLAIN, 12);
+        });
+
+        return baseFont.deriveFont(adjustSize(size));
     }
 
-    private static Font getAwtFont(InputStream inputStream, float size) {
-        String vmVendor = System.getProperty("java.vm.vendor", "");
-        boolean isOracle = vmVendor.toLowerCase().contains("oracle");
-        boolean isOpenJ9 = vmVendor.toLowerCase().contains("openj9");
+    private static float adjustSize(float size) {
+        String vmVendor = System.getProperty("java.vm.vendor", "").toLowerCase();
 
-        if (isOracle) {
-            size = size / 2.0f;
-        } else if (isOpenJ9) {
-            size = size / 1.5f;
+        if (vmVendor.contains("oracle")) {
+            return size / 2.0f;
         }
 
-        try {
-            Font font = Font.createFont(Font.TRUETYPE_FONT, inputStream);
-            return font.deriveFont(size);
-        } catch (FontFormatException | IOException e) {
-            return new Font("SansSerif", Font.PLAIN, Math.max(12, (int) size));
+        if (vmVendor.contains("openj9")) {
+            return size / 1.5f;
         }
+
+        return size;
     }
 }
