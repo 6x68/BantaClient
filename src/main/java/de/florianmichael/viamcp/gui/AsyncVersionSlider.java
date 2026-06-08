@@ -22,22 +22,25 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.MathHelper;
 
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class AsyncVersionSlider extends GuiButton {
-    private float dragValue = (float) ViaLoadingBase.PROTOCOLS.indexOf(ViaLoadingBase.getInstance().getTargetVersion()) / (ViaLoadingBase.PROTOCOLS.size() - 1);
-
     private final List<ProtocolVersion> values;
     private float sliderValue;
+    private float dragValue;
     public boolean dragging;
 
     public AsyncVersionSlider(int buttonId, int x, int y, int widthIn, int heightIn) {
         super(buttonId, x, y, Math.max(widthIn, 110), heightIn, "");
-        this.values = ViaLoadingBase.PROTOCOLS;
-        Collections.reverse(values);
-        this.sliderValue = dragValue;
-        this.displayString = values.get((int) Math.ceil(this.sliderValue * (values.size() - 1))).getName();
+        this.values = new ArrayList<>(ViaLoadingBase.PROTOCOLS);
+        this.values.sort(Comparator.comparingInt(ProtocolVersion::getVersion));
+        int index = this.values.indexOf(ViaLoadingBase.getInstance().getTargetVersion());
+        if (index == -1) index = 0;
+        this.sliderValue = (float) index / (this.values.size() - 1);
+        this.dragValue = this.sliderValue;
+        this.displayString = values.get(index).getName();
     }
 
     public void drawButton(Minecraft mc, int mouseX, int mouseY) {
@@ -103,10 +106,10 @@ public class AsyncVersionSlider extends GuiButton {
     }
 
     public void setVersion(int protocol) {
-        this.dragValue = (float) ViaLoadingBase.PROTOCOLS.indexOf(ProtocolVersion.getProtocol(protocol)) / (ViaLoadingBase.PROTOCOLS.size() - 1);
-        this.sliderValue = this.dragValue;
-
-        int selectedProtocolIndex = (int) Math.ceil(this.sliderValue * (values.size() - 1));
-        this.displayString = values.get(selectedProtocolIndex).getName();
+        int index = this.values.indexOf(ProtocolVersion.getProtocol(protocol));
+        if (index == -1) index = 0;
+        this.sliderValue = (float) index / (this.values.size() - 1);
+        this.dragValue = this.sliderValue;
+        this.displayString = values.get(index).getName();
     }
 }
