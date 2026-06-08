@@ -17,6 +17,7 @@ import today.vanta.client.event.impl.game.world.UpdateEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.module.impl.client.Theme;
+import today.vanta.client.module.impl.movement.Speed;
 import today.vanta.client.processor.impl.TargetProcessor;
 import today.vanta.client.setting.impl.BooleanSetting;
 import today.vanta.client.setting.impl.NumberSetting;
@@ -42,7 +43,7 @@ public class Scaffold extends Module {
             rotationMode = StringSetting.builder()
             .name("Rotation mode")
             .value("Simple")
-            .values("Simple", "Godbridge")
+            .values("Simple", "Godbridge", "Static")
             .build(),
 
     itemSwitchMode = StringSetting.builder()
@@ -99,6 +100,12 @@ public class Scaffold extends Module {
             .value(false)
             .build()
             .hide(() -> rotationMode.getValue().equals("Godbridge")),
+
+            speedKeepy = BooleanSetting.builder()
+            .name("Keep Y if Speed Enabled")
+            .value(false)
+            .build()
+            .hide(() -> rotationMode.getValue().equals("Godbridge") || keepY.getValue()),
 
     downwards = BooleanSetting.builder()
             .name("Downwards")
@@ -197,6 +204,11 @@ public class Scaffold extends Module {
 
     @EventListen
     private void onMotion(MotionEvent event) {
+        if (speedKeepy.getValue() && Vanta.instance.moduleStorage.getT(Speed.class).isEnabled()) {
+            keepY.setValue(true);
+        } else {
+            keepY.setValue(false);
+        }
         if (event.state.equals(EventState.PRE)) {
             if (sneak.getValue()) {
                 switch (sneakMode.getValue()) {

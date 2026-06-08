@@ -55,6 +55,7 @@ public class LongJump extends Module {
     @EventListen
     private void onMotion(MotionEvent event) {
         if (mc.thePlayer.onGround) {
+            System.out.println(offGroundTicks);
             offGroundTicks = 0;
         } else {
             offGroundTicks++;
@@ -83,16 +84,17 @@ public class LongJump extends Module {
                     MovementUtil.strafe();
                     break;
                 case "Mospixel-Jump":
-                    if (mc.thePlayer.onGround && !canDisable) {
-                        mc.thePlayer.jump();
-                    }
-                    if (offGroundTicks > 6) {
+                    if (offGroundTicks > 21) {
 //            MovementUtil.strafe(MovementUtil.getMovementSpeed() + 0.5f);
                         mc.thePlayer.motionY = -0.20f;
+                        if (mc.thePlayer.onGround) {
+                            System.out.println("what");
+                        }
                         canDisable = true;
                     }
 
                     if (offGroundTicks == 1) {
+                        canDisable = true;
                         MovementUtil.strafe(1.5f);
                     }
 
@@ -110,6 +112,9 @@ public class LongJump extends Module {
     public void onEnable() {
         offGroundTicks = 0;
         canDisable = false;
+        if (mc.thePlayer.onGround) {
+            mc.thePlayer.jump();
+        }
     }
 
     @Override

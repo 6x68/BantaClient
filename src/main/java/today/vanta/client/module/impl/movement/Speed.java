@@ -81,7 +81,7 @@ public class Speed extends Module {
                     if (offGroundTicks == 1) {
                         MovementUtil.strafe(0.3f);
                     } if (offGroundTicks > 2) {
-                    MovementUtil.strafe(0.28f);
+                    MovementUtil.strafe(0.3f);
                 }
                     if (mc.thePlayer.motionY < 0.17f && offGroundTicks > 3) {
                         mc.thePlayer.motionY -= 0.05f;
