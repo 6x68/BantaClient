@@ -1,7 +1,4 @@
 /*
- * This file is part of ViaLoadingBase - https://github.com/FlorianMichael/ViaLoadingBase
- * Copyright (C) 2020-2024 FlorianMichael/EnZaXD <florian.michael07@gmail.com> and contributors
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -35,7 +32,7 @@ import de.florianmichael.vialoadingbase.util.VLBTask;
 
 import java.io.File;
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -55,30 +52,6 @@ public class ViaVersionPlatformImpl implements ViaPlatform<UserConnection> {
         final List<ProtocolVersion> versions = new ArrayList<>(ProtocolVersion.getProtocols()).stream().filter(version -> version.newerThanOrEqualTo(ProtocolVersion.v1_8)).collect(Collectors.toList());
         Collections.reverse(versions);
         return versions;
-    }
-
-    @Override
-    public ViaCommandSender[] getOnlinePlayers() {
-        return new ViaCommandSender[0];
-    }
-
-    @Override
-    public void sendMessage(UUID uuid, String msg) {
-        if (uuid == null) {
-            this.getLogger().info(msg);
-        } else {
-            this.getLogger().info("[" + uuid + "] " + msg);
-        }
-    }
-
-    @Override
-    public boolean kickPlayer(UUID uuid, String s) {
-        return false;
-    }
-
-    @Override
-    public boolean disconnect(UserConnection connection, String message) {
-        return ViaPlatform.super.disconnect(connection, message);
     }
 
     @Override
@@ -148,11 +121,6 @@ public class ViaVersionPlatformImpl implements ViaPlatform<UserConnection> {
     @Override
     public String getPlatformVersion() {
         return ViaLoadingBase.VERSION;
-    }
-
-    @Override
-    public boolean isPluginEnabled() {
-        return true;
     }
 
     public VLBViaConfig getConfig() {

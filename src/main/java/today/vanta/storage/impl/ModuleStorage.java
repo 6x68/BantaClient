@@ -23,21 +23,9 @@ public class ModuleStorage extends Storage<Module> {
     public List<String> changelog = new ArrayList<>();
 
     public ModuleStorage() {
-        changelog.add("[+] Added `Spaced out` and `Module case` to Arraylist");
-        changelog.add("[+] Added `Gradient background` to ClickGuis");
-        changelog.add("[+] Added ImGui ClickGui toggles for modules");
-        changelog.add("[+] Added block counter to Scaffold");
-        changelog.add("[+] Added 'Line' to Arraylist");
-        changelog.add("[+] Added MovementFix");
-        changelog.add("[+] Added Animations");
-        changelog.add("[+] Added TargetHUD");
-        changelog.add("[+] Added Ambience");
-        changelog.add("[+] Added BlockHit");
-        changelog.add("[+] Added Criticals");
-        changelog.add("[+] Added ESP");
-        changelog.add("[#] Fixed Auto-block");
-        changelog.add("[~] Modified ClickGui colors for better visibility");
-        changelog.add("[-] Removed deprecated display names");
+        changelog.add("[+] Added Mospixel LongJump");
+        changelog.add("[+] Added Mospixel Speed");
+        changelog.add("[#] Updated ViaVersion to 5.9.1");
     }
 
     @Override

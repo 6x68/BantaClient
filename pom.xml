@@ -6,7 +6,7 @@
 
     <groupId>today.vanta</groupId>
     <artifactId>vanta</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -80,25 +80,25 @@
         <dependency>
             <groupId>com.viaversion</groupId>
             <artifactId>ViaVersion</artifactId>
-            <version>5.2.0-downgraded</version>
+            <version>5.9.1-downgraded</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/release/ViaVersion-5.2.0-downgraded.jar</systemPath>
+            <systemPath>${project.basedir}/release/ViaVersion-5.9.1-downgraded.jar</systemPath>
         </dependency>
 
         <dependency>
             <groupId>com.viaversion</groupId>
             <artifactId>ViaBackwards</artifactId>
-            <version>5.2.0-downgraded</version>
+            <version>5.9.1-downgraded</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/release/ViaBackwards-5.2.0-downgraded.jar</systemPath>
+            <systemPath>${project.basedir}/release/ViaBackwards-5.9.1-downgraded.jar</systemPath>
         </dependency>
 
         <dependency>
             <groupId>com.viaversion</groupId>
             <artifactId>ViaRewind</artifactId>
-            <version>4.0.4-downgraded</version>
+            <version>4.1.1-downgraded</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/release/ViaRewind-4.0.4-downgraded.jar</systemPath>
+            <systemPath>${project.basedir}/release/ViaRewind-4.1.1-downgraded.jar</systemPath>
         </dependency>
 
         <dependency>
