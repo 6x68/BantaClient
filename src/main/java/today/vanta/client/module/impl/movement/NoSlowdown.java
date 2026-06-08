@@ -49,10 +49,6 @@ public class NoSlowdown extends Module {
     private void onSlow(SlowdownEvent event) {
         ItemStack currentItem = mc.thePlayer.getCurrentEquippedItem();
 
-        if (shouldSprint.getValue()) {
-            mc.gameSettings.keyBindSprint.pressed = false;
-        }
-
         if (currentItem == null || !mc.thePlayer.isUsingItem() || !MovementUtil.isMoving()) {
             return;
         }
@@ -60,8 +56,14 @@ public class NoSlowdown extends Module {
         if ((items.isEnabled("Swords") && currentItem.getItem() instanceof ItemSword) ||
                 (items.isEnabled("Consumables") && (currentItem.getItem() instanceof ItemFood || currentItem.getItem() instanceof ItemPotion)) ||
                 (items.isEnabled("Bows") && currentItem.getItem() instanceof ItemBow)) {
+            if (!shouldSprint.getValue()) {
+                mc.gameSettings.keyBindSprint.pressed = false;
+                mc.thePlayer.setSprinting(false);
+            }
             event.forward = forwardMultiplier.getValue().floatValue();
             event.strafe = strafeMultiplier.getValue().floatValue();
+
+
         }
     }
     @Override
