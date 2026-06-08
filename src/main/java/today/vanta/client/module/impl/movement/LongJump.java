@@ -121,4 +121,9 @@ public class LongJump extends Module {
         mc.timer.timerSpeed = 1.0f;
         MovementUtil.stop();
     }
+
+    @Override
+    public String getSuffix() {
+        return mode.getValue();
+    }
 }
