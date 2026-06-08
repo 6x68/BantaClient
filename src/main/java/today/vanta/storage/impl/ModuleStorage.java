@@ -5,6 +5,7 @@ import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.module.impl.client.*;
 import today.vanta.client.module.impl.hud.*;
+import today.vanta.client.module.impl.misc.Disabler;
 import today.vanta.client.module.impl.movement.*;
 import today.vanta.client.module.impl.combat.*;
 import today.vanta.client.module.impl.player.*;
@@ -29,6 +30,7 @@ public class ModuleStorage extends Storage<Module> {
         changelog.add("[+] Added a 'Hold' auto-block");
         changelog.add("[+] Added Mospixel Speed");
         changelog.add("[+] Added NoSlowdown");
+        changelog.add("[+] Added Disabler");
         changelog.add("[~] Updated ViaVersion to 5.9.1");
         changelog.add("[#] Fixed MovementFix strafing when unnecessary");
         changelog.add("[#] Fixed GCD flaw");
@@ -67,6 +69,7 @@ public class ModuleStorage extends Storage<Module> {
         list.add(new Animations());
 
         // Misc
+        list.add(new Disabler());
 
         //Hud
         list.add(new Arraylist());
