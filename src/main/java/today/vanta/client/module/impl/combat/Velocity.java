@@ -33,6 +33,7 @@ public class Velocity extends Module {
 
     @EventListen
     private void onPacket(ReceivePacketEvent event) {
+        if (mc.thePlayer == null) return;
         if (event.packet instanceof S12PacketEntityVelocity) {
             S12PacketEntityVelocity veloPacket = (S12PacketEntityVelocity) event.packet;
 
