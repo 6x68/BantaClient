@@ -35,10 +35,9 @@ public class NoSlowdown extends Module {
 
     private final BooleanSetting
             shouldSprint = BooleanSetting.builder()
-            .name("Should Sprint")
-            .value(false)
+            .name("Should sprint")
+            .value(true)
             .build();
-
 
     public NoSlowdown() {
         super("NoSlowdown", "Removes the slowdown effect when using an item.", Category.MOVEMENT);
@@ -49,7 +48,7 @@ public class NoSlowdown extends Module {
     private void onSlow(SlowdownEvent event) {
         ItemStack currentItem = mc.thePlayer.getCurrentEquippedItem();
 
-        if (shouldSprint.getValue() == false) {
+        if (!shouldSprint.getValue()) {
             mc.gameSettings.keyBindSprint.pressed = false;
         }
 
