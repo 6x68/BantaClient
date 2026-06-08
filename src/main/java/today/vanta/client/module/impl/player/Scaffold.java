@@ -35,7 +35,7 @@ public class Scaffold extends Module {
             rotationMode = StringSetting.builder()
             .name("Rotation mode")
             .value("Simple")
-            .values("Simple", "Godbridge", "Static")
+            .values("Simple", "Godbridge", "Static", "Forward")
             .build(),
 
     itemSwitchMode = StringSetting.builder()
@@ -236,6 +236,14 @@ public class Scaffold extends Module {
 
                 case "Godbridge":
                     rots = RotationUtil.getGodbridgeRotations(TargetProcessor.getInstance().cache, lastRots);
+                    break;
+
+                case "Static":
+                    rots = RotationUtil.getStaticRotations(TargetProcessor.getInstance().cache, lastRots);
+                    break;
+
+                case "Forward":
+                    rots = RotationUtil.getForwardRotations(TargetProcessor.getInstance().cache, lastRots);
                     break;
             }
 

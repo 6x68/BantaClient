@@ -89,17 +89,24 @@ public class RotationUtil implements IMinecraft {
         return new Rotation(yaw, pitch);
     }
 
-    public static Rotation getStaticRotations(float yaw, float pitch, Rotation lastRotations) {
-        float goalYaw;
-        float goalPitch;
-        goalYaw = mc.thePlayer.rotationYaw + yaw;
-        goalPitch = mc.thePlayer.rotationPitch + pitch;
-        if (lastRotations == null) {
-            return new Rotation(goalYaw, goalPitch);
+    public static Rotation getStaticRotations(BlockCache blockCache, Rotation lastRotations) {
+        float yaw = 180;
+        switch (mc.thePlayer.getHorizontalFacing()) {
+            case NORTH:
+                yaw = 0;
+                break;
+            case WEST:
+                yaw = -90;
+                break;
+            case EAST:
+                yaw = 90;
+                break;
         }
-        goalYaw = smooth(lastRotations.yaw, goalPitch, 30);
-        goalYaw = smooth(lastRotations.pitch, goalYaw, 20);
-        return new Rotation(goalYaw, goalPitch);
+        return new Rotation(yaw, 75.5f);
+    }
+
+    public static Rotation getForwardRotations(BlockCache blockCache, Rotation lastRotations) {
+        return new Rotation(mc.thePlayer.rotationYaw, 75.5f);
     }
 
     private static float smooth(float current, float target, float max) {
@@ -111,6 +118,7 @@ public class RotationUtil implements IMinecraft {
 
     /**
      * From the minecraft code {@link net.minecraft.client.renderer.EntityRenderer#updateRenderer}
+     *
      * @return Returns a GCD mouse fix value.
      */
     public static float getMouseGCD() {
@@ -120,8 +128,9 @@ public class RotationUtil implements IMinecraft {
 
     /**
      * From the minecraft code {@link net.minecraft.entity.Entity#getVectorForRotation(float, float)}
+     *
      * @param pitch The pitch.
-     * @param yaw The yaw.
+     * @param yaw   The yaw.
      * @return Returns a vector of rotations.
      */
     public static Vec3 getVectorForRotation(float pitch, float yaw) {
