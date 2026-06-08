@@ -201,12 +201,18 @@ public class KillAura extends Module {
                 blockDelay--;
             }
 
+            if (TargetProcessor.getInstance().target != null && mc.thePlayer.getHeldItem() != null && mc.thePlayer.getHeldItem().getItem() instanceof ItemSword) {
+                if (autoBlockMode.getValue().equals("Packet") || autoBlockMode.getValue().equals("Hold")) {
+                    stopPacketBlock();
+                }
+            }
+
             if (autoBlockMode.getValue().equals("Hold")) {
                 if (TargetProcessor.getInstance().target != null &&
                         mc.thePlayer.getHeldItem() != null &&
                         mc.thePlayer.getHeldItem().getItem() instanceof ItemSword) {
-                    if (!isBlocking && !isAttacking) {
-                        startVanillaBlock();
+                    if (!mc.thePlayer.isUsingItem()) {
+                        mc.thePlayer.setItemInUse(mc.thePlayer.getHeldItem(), mc.thePlayer.getHeldItem().getMaxItemUseDuration());
                     }
                 } else if (isBlocking) {
                     stopVanillaBlock();
@@ -224,6 +230,12 @@ public class KillAura extends Module {
             }
 
             handleAttack();
+        } else if (event.state == EventState.POST) {
+            if (TargetProcessor.getInstance().target != null && mc.thePlayer.getHeldItem() != null && mc.thePlayer.getHeldItem().getItem() instanceof ItemSword) {
+                if (autoBlockMode.getValue().equals("Packet") || autoBlockMode.getValue().equals("Hold")) {
+                    startPacketBlock();
+                }
+            }
         }
     }
 
@@ -251,16 +263,8 @@ public class KillAura extends Module {
 
                         isAttacking = true;
 
-                        if (autoBlockMode.getValue().equals("Hold") && isBlocking) {
-                            stopVanillaBlock();
-                        }
-
                         if (autoBlockMode.getValue().equals("Vanilla") && isBlocking) {
                             stopVanillaBlock();
-                        }
-
-                        if (autoBlockMode.getValue().equals("Packet")) {
-                            startPacketBlock();
                         }
 
                         if (!noSwing.getValue())
@@ -288,17 +292,8 @@ public class KillAura extends Module {
                                 break;
                         }
 
-                        if (autoBlockMode.getValue().equals("Packet")) {
-                            stopPacketBlock();
-                        }
-
                         if (autoBlockMode.getValue().equals("Vanilla")) {
                             blockDelay = 2;
-                        }
-
-                        if (autoBlockMode.getValue().equals("Hold") &&
-                                TargetProcessor.getInstance().target != null) {
-                            startVanillaBlock();
                         }
 
                         isAttacking = false;
@@ -317,6 +312,7 @@ public class KillAura extends Module {
         if (start) {
             switch (autoBlockMode.getValue()) {
                 case "Vanilla":
+                case "Hold":
                     startVanillaBlock();
                     break;
                 case "Packet":
@@ -326,6 +322,7 @@ public class KillAura extends Module {
         } else {
             switch (autoBlockMode.getValue()) {
                 case "Vanilla":
+                case "Hold":
                     stopVanillaBlock();
                     break;
                 case "Packet":
@@ -339,6 +336,7 @@ public class KillAura extends Module {
         if (!isBlocking && mc.thePlayer.getHeldItem() != null &&
                 mc.thePlayer.getHeldItem().getItem() instanceof ItemSword) {
             mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.getHeldItem());
+            mc.thePlayer.setItemInUse(mc.thePlayer.getHeldItem(), mc.thePlayer.getHeldItem().getMaxItemUseDuration());
             isBlocking = true;
         }
     }

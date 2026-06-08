@@ -6,6 +6,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.EntityAnimal;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
@@ -62,6 +63,7 @@ public class ESP extends Module {
         if (living instanceof EntityAnimal && entities.isEnabled("Animals")) return true;
         if (living instanceof IMob && entities.isEnabled("Monsters")) return true;
         if (living.isInvisible() && entities.isEnabled("Invisibles")) return true;
+        if (living instanceof EntityPlayer && entities.isEnabled("Player")) return true;
         return false;
     }
 

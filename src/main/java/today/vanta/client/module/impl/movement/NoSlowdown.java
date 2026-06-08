@@ -40,7 +40,6 @@ public class NoSlowdown extends Module {
             .value(false)
             .build();
 
-
     public NoSlowdown() {
         super("NoSlowdown", "Removes the slowdown effect when using an item.", Category.MOVEMENT);
         displayNames = new String[]{"NoSlowdown", "NoSlow", "NoSlowDown"};
@@ -50,15 +49,13 @@ public class NoSlowdown extends Module {
     private void onSlow(SlowdownEvent event) {
         ItemStack currentItem = mc.thePlayer.getCurrentEquippedItem();
 
-        if (currentItem == null || !mc.thePlayer.isUsingItem() || !MovementUtil.isMoving()) {
-            return;
-        }
-
-        if (shouldSprint.getValue() == false) {
-
+        if (shouldSprint.getValue()) {
             mc.gameSettings.keyBindSprint.pressed = false;
         }
 
+        if (currentItem == null || !mc.thePlayer.isUsingItem() || !MovementUtil.isMoving()) {
+            return;
+        }
 
         if ((items.isEnabled("Swords") && currentItem.getItem() instanceof ItemSword) ||
                 (items.isEnabled("Consumables") && (currentItem.getItem() instanceof ItemFood || currentItem.getItem() instanceof ItemPotion)) ||

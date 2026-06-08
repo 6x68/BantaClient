@@ -1,8 +1,6 @@
 package today.vanta.client.module.impl.player;
 
 import net.minecraft.block.BlockAir;
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
@@ -13,10 +11,8 @@ import today.vanta.client.event.impl.game.RunTickEvent;
 import today.vanta.client.event.impl.game.player.MotionEvent;
 import today.vanta.client.event.impl.game.player.SprintEvent;
 import today.vanta.client.event.impl.game.render.Render2DEvent;
-import today.vanta.client.event.impl.game.world.UpdateEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
-import today.vanta.client.module.impl.client.Theme;
 import today.vanta.client.module.impl.movement.Speed;
 import today.vanta.client.processor.impl.TargetProcessor;
 import today.vanta.client.setting.impl.BooleanSetting;
@@ -169,7 +165,6 @@ public class Scaffold extends Module {
                 }
             }
 
-
             if (rotationMode.getValue().equals("Godbridge")) {
                 distCounter.tick(mc.thePlayer);
                 if (distCounter.getTravelled() >= targetDistance) {
@@ -249,9 +244,6 @@ public class Scaffold extends Module {
 
                 case "Godbridge":
                     rots = RotationUtil.getGodbridgeRotations(TargetProcessor.getInstance().cache, lastRots);
-                    break;
-                case "Static":
-                    rots = RotationUtil.getStaticRotations(50,180,lastRots);
                     break;
             }
 

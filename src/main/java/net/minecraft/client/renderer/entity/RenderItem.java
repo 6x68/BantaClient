@@ -386,6 +386,37 @@ public class RenderItem implements IResourceManagerReloadListener {
         this.renderItemGui = false;
     }
 
+    public void renderItemIntoGUIFullBright(ItemStack stack, int x, int y) {
+        this.renderItemGui = true;
+        IBakedModel ibakedmodel = this.itemModelMesher.getItemModel(stack);
+        GlStateManager.pushMatrix();
+        this.textureManager.bindTexture(TextureMap.locationBlocksTexture);
+        this.textureManager.getTexture(TextureMap.locationBlocksTexture).setBlurMipmap(false, false);
+        GlStateManager.enableRescaleNormal();
+        GlStateManager.enableAlpha();
+        GlStateManager.alphaFunc(516, 0.1F);
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(770, 771);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        this.setupGuiTransform(x, y, ibakedmodel.isGui3d());
+
+        if (Reflector.ForgeHooksClient_handleCameraTransforms.exists()) {
+            ibakedmodel = (IBakedModel) Reflector.call(Reflector.ForgeHooksClient_handleCameraTransforms, new Object[]{ibakedmodel, ItemCameraTransforms.TransformType.GUI});
+        } else {
+            ibakedmodel.getItemCameraTransforms().applyTransform(ItemCameraTransforms.TransformType.GUI);
+        }
+
+        GlStateManager.disableLighting();
+        this.renderItem(stack, ibakedmodel);
+        GlStateManager.disableAlpha();
+        GlStateManager.disableRescaleNormal();
+        GlStateManager.disableLighting();
+        GlStateManager.popMatrix();
+        this.textureManager.bindTexture(TextureMap.locationBlocksTexture);
+        this.textureManager.getTexture(TextureMap.locationBlocksTexture).restoreLastBlurMipmap();
+        this.renderItemGui = false;
+    }
+
     private void setupGuiTransform(int xPosition, int yPosition, boolean isGui3d) {
         GlStateManager.translate((float) xPosition, (float) yPosition, 100.0F + this.zLevel);
         GlStateManager.translate(8.0F, 8.0F, 0.0F);
