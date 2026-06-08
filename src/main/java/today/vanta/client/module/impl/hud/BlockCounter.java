@@ -41,6 +41,8 @@ public class BlockCounter extends Module {
             return;
         }
 
+        if (mc.thePlayer.getCurrentEquippedItem() == null) return;
+
         if (mc.currentScreen instanceof GuiChat) {
             handleDragging(event.mouseX, event.mouseY);
         }
