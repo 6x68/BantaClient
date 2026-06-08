@@ -28,6 +28,7 @@ public class ModuleStorage extends Storage<Module> {
         changelog.add("[+] Added Mospixel LongJump");
         changelog.add("[+] Added Mospixel Speed");
         changelog.add("[~] Updated ViaVersion to 5.9.1");
+        changelog.add("[#] Fixed MovementFix strafing when unnecessary");
         changelog.add("[#] Fixed GCD flaw");
     }
 

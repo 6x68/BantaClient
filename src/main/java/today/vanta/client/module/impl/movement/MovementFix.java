@@ -9,6 +9,7 @@ import today.vanta.client.module.Module;
 import today.vanta.client.module.impl.combat.KillAura;
 import today.vanta.client.module.impl.player.Scaffold;
 import today.vanta.client.processor.impl.RotationProcessor;
+import today.vanta.client.processor.impl.TargetProcessor;
 import today.vanta.client.setting.impl.MultiStringSetting;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.player.MovementUtil;
@@ -28,14 +29,14 @@ public class MovementFix extends Module {
 
     @EventListen
     private void onMoveInput(MoveInputEvent event) {
-        if (getRotations() == null) return;
+        if (!shouldFix()) return;
         if (isExempted()) return;
         MovementUtil.correctMovement(event, getRotations().yaw);
     }
 
     @EventListen
     private void onStrafe(MoveFlyingEvent event) {
-        if (getRotations() == null) return;
+        if (!shouldFix()) return;
         if (isExempted()) return;
         event.yaw = getRotations().yaw;
     }
@@ -45,6 +46,10 @@ public class MovementFix extends Module {
         if (getRotations() == null) return;
         if (isExempted()) return;
         event.yaw = getRotations().yaw;
+    }
+
+    private boolean shouldFix() {
+        return getRotations() != null && (TargetProcessor.getInstance().target != null || TargetProcessor.getInstance().cache != null);
     }
 
     private Rotation getRotations() {
