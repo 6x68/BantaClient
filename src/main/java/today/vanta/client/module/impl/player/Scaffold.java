@@ -10,7 +10,6 @@ import today.vanta.Vanta;
 import today.vanta.client.event.impl.game.RunTickEvent;
 import today.vanta.client.event.impl.game.player.MotionEvent;
 import today.vanta.client.event.impl.game.player.SprintEvent;
-import today.vanta.client.event.impl.game.render.Render2DEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.module.impl.movement.Speed;
@@ -26,12 +25,9 @@ import today.vanta.util.game.player.InventoryUtil;
 import today.vanta.util.game.player.MovementUtil;
 import today.vanta.util.game.player.RotationUtil;
 import today.vanta.util.game.player.constructors.Rotation;
-import today.vanta.util.game.render.RenderUtil;
-import today.vanta.util.game.render.font.CFonts;
 import today.vanta.util.game.world.BlockCache;
 import today.vanta.util.system.math.Counter;
 
-import java.awt.*;
 import java.util.Random;
 
 public class Scaffold extends Module {
@@ -97,7 +93,7 @@ public class Scaffold extends Module {
             .build()
             .hide(() -> rotationMode.getValue().equals("Godbridge")),
 
-            speedKeepy = BooleanSetting.builder()
+    speedKeepY = BooleanSetting.builder()
             .name("Keep Y on Speed")
             .value(false)
             .build()
@@ -132,6 +128,7 @@ public class Scaffold extends Module {
         keepY.addListener((setting, oldValue, newValue) -> {
             if (newValue) {
                 downwards.setValue(false);
+                speedKeepY.setValue(false);
             }
         });
 
@@ -189,7 +186,7 @@ public class Scaffold extends Module {
 
             if (downwards.getValue() && mc.gameSettings.keyBindSneak.isKeyDown()) {
                 posY = mc.thePlayer.posY - 1.8;
-            } else if (mc.thePlayer.posY < posY || (!mc.thePlayer.onGround && !MovementUtil.isMoving()) || mc.thePlayer.posY - posY > 6 || !keepY.getValue()) {
+            } else if (mc.thePlayer.posY < posY || (!mc.thePlayer.onGround && !MovementUtil.isMoving()) || mc.thePlayer.posY - posY > 6 || !shouldKeepY()) {
                 posY = mc.thePlayer.posY - 0.9;
             }
 
@@ -200,13 +197,6 @@ public class Scaffold extends Module {
 
     @EventListen
     private void onMotion(MotionEvent event) {
-        if (speedKeepy.getValue()) {
-            if (Vanta.instance.moduleStorage.getT(Speed.class).isEnabled()) {
-                keepY.setValue(true);
-            } else {
-                keepY.setValue(false);
-            }
-            }
         if (event.state.equals(EventState.PRE)) {
             if (sneak.getValue()) {
                 switch (sneakMode.getValue()) {
@@ -267,6 +257,15 @@ public class Scaffold extends Module {
         }
     }
 
+    private boolean shouldKeepY() {
+        boolean speedEnabled = Vanta.instance.moduleStorage.getT(Speed.class).isEnabled();
+
+        if (speedKeepY.getValue()) {
+            return speedEnabled;
+        }
+
+        return keepY.getValue();
+    }
 
     @Override
     public void onDisable() {
