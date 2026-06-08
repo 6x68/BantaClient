@@ -1274,26 +1274,28 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
         int modelParts = 0;
         // Hypixel only allow 1.21.4+ client to login.
         if (ViaLoadingBase.getInstance().getTargetVersion().newerThanOrEqualTo(ProtocolVersion.v1_21_4)) {
-            packet = (PacketWrapperImpl) PacketWrapper.create(ServerboundConfigurationPackets1_20_2.CUSTOM_PAYLOAD, ViaMCP.INSTANCE.user);
-            packet.write(Types.STRING, "minecraft:brand");
-            packet.write(Types.STRING, "vanilla");
-            packet.sendToServer(Protocol1_20_3To1_20_2.class);
+            if (ViaMCP.INSTANCE.user != null && ViaMCP.INSTANCE.user.isActive() && ViaMCP.INSTANCE.user.getChannel() != null) {
+                packet = (PacketWrapperImpl) PacketWrapper.create(ServerboundConfigurationPackets1_20_2.CUSTOM_PAYLOAD, ViaMCP.INSTANCE.user);
+                packet.write(Types.STRING, "minecraft:brand");
+                packet.write(Types.STRING, "vanilla");
+                packet.sendToServer(Protocol1_20_3To1_20_2.class);
 
-            packetInfo = (PacketWrapperImpl) PacketWrapper.create(ServerboundConfigurationPackets1_20_2.CLIENT_INFORMATION, ViaMCP.INSTANCE.user);
-            packetInfo.write(Types.STRING, Minecraft.getMinecraft().gameSettings.language.toLowerCase());
-            packetInfo.write(Types.BYTE, (byte) Minecraft.getMinecraft().gameSettings.renderDistanceChunks);
-            packetInfo.write(Types.VAR_INT, Minecraft.getMinecraft().gameSettings.chatVisibility.ordinal());
-            packetInfo.write(Types.BOOLEAN, Minecraft.getMinecraft().gameSettings.chatColours);
+                packetInfo = (PacketWrapperImpl) PacketWrapper.create(ServerboundConfigurationPackets1_20_2.CLIENT_INFORMATION, ViaMCP.INSTANCE.user);
+                packetInfo.write(Types.STRING, Minecraft.getMinecraft().gameSettings.language.toLowerCase());
+                packetInfo.write(Types.BYTE, (byte) Minecraft.getMinecraft().gameSettings.renderDistanceChunks);
+                packetInfo.write(Types.VAR_INT, Minecraft.getMinecraft().gameSettings.chatVisibility.ordinal());
+                packetInfo.write(Types.BOOLEAN, Minecraft.getMinecraft().gameSettings.chatColours);
 
-            for (EnumPlayerModelParts parts : Minecraft.getMinecraft().gameSettings.getModelParts()) {
-                modelParts |= parts.getPartMask();
+                for (EnumPlayerModelParts parts : Minecraft.getMinecraft().gameSettings.getModelParts()) {
+                    modelParts |= parts.getPartMask();
+                }
+
+                packetInfo.write(Types.UNSIGNED_BYTE, (short) modelParts);
+                packetInfo.write(Types.VAR_INT, 1);
+                packetInfo.write(Types.BOOLEAN, true);
+                packetInfo.write(Types.BOOLEAN, true);
+                packetInfo.sendToServer(Protocol1_20_3To1_20_2.class);
             }
-
-            packetInfo.write(Types.UNSIGNED_BYTE, (short) modelParts);
-            packetInfo.write(Types.VAR_INT, 1);
-            packetInfo.write(Types.BOOLEAN, true);
-            packetInfo.write(Types.BOOLEAN, true);
-            packetInfo.sendToServer(Protocol1_20_3To1_20_2.class);
         }
 
         if (this.rightClickDelayTimer > 0) {
@@ -1690,8 +1692,10 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
         if (ViaLoadingBase.getInstance().getTargetVersion().newerThanOrEqualTo(ProtocolVersion.v1_21_2)) {
             if (!Via.getManager().getConnectionManager().getConnections().isEmpty()) {
                 UserConnection connection = Via.getManager().getConnectionManager().getConnections().iterator().next();
-                PacketWrapper clientTickEnd = PacketWrapper.create(ServerboundPackets1_21_2.CLIENT_TICK_END, null, connection);
-                clientTickEnd.sendToServer(Protocol1_21_2To1_21.class);
+                if (connection.isActive() && connection.getChannel() != null) {
+                    PacketWrapper clientTickEnd = PacketWrapper.create(ServerboundPackets1_21_2.CLIENT_TICK_END, null, connection);
+                    clientTickEnd.sendToServer(Protocol1_21_2To1_21.class);
+                }
             }
         }
 
