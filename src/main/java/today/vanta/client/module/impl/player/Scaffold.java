@@ -9,7 +9,6 @@ import org.lwjgl.input.Keyboard;
 import today.vanta.client.event.impl.game.RunTickEvent;
 import today.vanta.client.event.impl.game.player.MotionEvent;
 import today.vanta.client.event.impl.game.player.SprintEvent;
-import today.vanta.client.event.impl.game.render.Render2DEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.processor.impl.TargetProcessor;
@@ -24,7 +23,6 @@ import today.vanta.util.game.player.InventoryUtil;
 import today.vanta.util.game.player.MovementUtil;
 import today.vanta.util.game.player.RotationUtil;
 import today.vanta.util.game.player.constructors.Rotation;
-import today.vanta.util.game.render.font.CFonts;
 import today.vanta.util.game.world.BlockCache;
 import today.vanta.util.system.math.Counter;
 
@@ -242,17 +240,6 @@ public class Scaffold extends Module {
                 lastRots = new Rotation(event.yaw, event.pitch);
             }
         }
-    }
-
-    @EventListen
-    public void onRender2D(Render2DEvent event) {
-        int blocksinHotbar = InventoryUtil.getHotbarBlockCount();
-        String test = String.valueOf(blocksinHotbar);
-        float width = CFonts.SFPT_SEMIBOLD_20.getStringWidth("Blocks: " + blocksinHotbar);
-        float widthe = 75f;
-        Color bg = new Color(30, 30, 30, 255);
-//        RenderUtil.rectangle(mc.displayWidth / 4 - (widthe / 2), mc.displayHeight / 4 + 15f, widthe, 20f, bg);
-        CFonts.SFPT_SEMIBOLD_20.drawStringWithShadow("Blocks: " + blocksinHotbar, mc.displayWidth / 4 - (width / 2), mc.displayHeight / 4 + 20, Color.WHITE);
     }
 
     @EventListen

@@ -158,7 +158,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
     public WorldClient theWorld;
     public RenderGlobal renderGlobal;
     private RenderManager renderManager;
-    private RenderItem renderItem;
+    public RenderItem renderItem;
     private ItemRenderer itemRenderer;
     public EntityPlayerSP thePlayer;
     private Entity renderViewEntity;
