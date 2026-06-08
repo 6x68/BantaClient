@@ -24,6 +24,7 @@ public class ModuleStorage extends Storage<Module> {
 
     public ModuleStorage() {
         changelog.add("[+] Added 'German No-bob' to Animations");
+        changelog.add("[+] Added more animations to Animations");
         changelog.add("[+] Added Mospixel LongJump");
         changelog.add("[+] Added Mospixel Speed");
         changelog.add("[~] Updated ViaVersion to 5.9.1");

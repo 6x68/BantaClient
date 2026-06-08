@@ -16,8 +16,8 @@ import today.vanta.util.game.events.EventState;
 public class Animations extends Module {
     private final StringSetting mode = StringSetting.builder()
             .name("Mode")
-            .value("Exhibition")
-            .values("Exhibition", "Interia")
+            .value("1.7")
+            .values("1.7", "Interia", "Exhibition", "Sigma", "Stella")
             .build();
 
     private final BooleanSetting noBob = BooleanSetting.builder()
@@ -48,6 +48,25 @@ public class Animations extends Module {
         float var9 = MathHelper.sin(MathHelper.sqrt_float(f1) * MathHelper.PI);
 
         switch (mode.getValue()) {
+            case "1.7":
+                renderer.transformFirstPersonItem(-0.1f, f1);
+                renderer.doBlockTransformations();
+                break;
+            case "Sigma":
+                renderer.transformFirstPersonItem(f * 0.5f, 0);
+                GlStateManager.rotate(-var9 * 55 / 2.0F, -8.0F, -0.0F, 9.0F);
+                GlStateManager.rotate(-var9 * 45, 1.0F, var9 / 2, -0.0F);
+                renderer.doBlockTransformations();
+                GL11.glTranslated(1.2, 0.3, 0.5);
+                GL11.glTranslatef(-1, mc.thePlayer.isSneaking() ? -0.1F : -0.2F, 0.2F);
+                break;
+            case "Stella":
+                renderer.transformFirstPersonItem(-0.1f, f1);
+                GlStateManager.translate(-0.5F, 0.4F, -0.2F);
+                GlStateManager.rotate(30.0F, 0.0F, 1.0F, 0.0F);
+                GlStateManager.rotate(-70.0F, 1.0F, 0.0F, 0.0F);
+                GlStateManager.rotate(40.0F, 0.0F, 1.0F, 0.0F);
+                break;
             case "Exhibition":
                 GL11.glTranslated(-0.04D, 0.13D, 0.0D);
                 renderer.transformFirstPersonItem(f / 2.5F, 0.0f);
