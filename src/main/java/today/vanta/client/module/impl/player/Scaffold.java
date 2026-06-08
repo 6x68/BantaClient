@@ -200,11 +200,13 @@ public class Scaffold extends Module {
 
     @EventListen
     private void onMotion(MotionEvent event) {
-        if (speedKeepy.getValue() && Vanta.instance.moduleStorage.getT(Speed.class).isEnabled()) {
-            keepY.setValue(true);
-        } else {
-            keepY.setValue(false);
-        }
+        if (speedKeepy.getValue()) {
+            if (Vanta.instance.moduleStorage.getT(Speed.class).isEnabled()) {
+                keepY.setValue(true);
+            } else {
+                keepY.setValue(false);
+            }
+            }
         if (event.state.equals(EventState.PRE)) {
             if (sneak.getValue()) {
                 switch (sneakMode.getValue()) {
