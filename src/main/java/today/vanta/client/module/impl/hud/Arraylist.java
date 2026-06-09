@@ -5,14 +5,15 @@ import today.vanta.client.event.impl.game.render.Render2DEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.module.impl.client.Theme;
+import today.vanta.client.module.impl.hud.arraylist.ArraylistRenderer;
+import today.vanta.client.module.impl.hud.arraylist.BitMapRenderer;
+import today.vanta.client.module.impl.hud.arraylist.GlyphRenderer;
 import today.vanta.client.setting.impl.BooleanSetting;
 import today.vanta.client.setting.impl.NumberSetting;
 import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.events.EventPriority;
 import today.vanta.util.game.render.RenderUtil;
-import today.vanta.util.game.render.font.IRenderer;
-import today.vanta.util.game.render.font.impl.GlyphFontRenderer;
 import today.vanta.util.game.render.font.CFonts;
 
 import java.awt.*;
@@ -110,18 +111,18 @@ public class Arraylist extends Module {
         setEnabled(true);
     }
 
-    private IRenderer arraylistFont = CFonts.SFPT_MEDIUM_24;
+    private ArraylistRenderer arraylistFontRenderer = new GlyphRenderer(CFonts.SFPT_MEDIUM_24);
 
     private void setFont() {
         switch (font.getValue()) {
             case "Exhibition":
-                arraylistFont = mc.exhiFontRendererObj;
+                arraylistFontRenderer = new BitMapRenderer(mc.exhiFontRendererObj);
                 break;
             case "Minecraft":
-                arraylistFont = mc.fontRendererObj;
+                arraylistFontRenderer = new BitMapRenderer(mc.fontRendererObj);
                 break;
             default:
-                arraylistFont = CFonts.getFont("SFPT-" + fontStyle.getValue(), fontSize.getValue().intValue());
+                arraylistFontRenderer = new GlyphRenderer(CFonts.getFont("SFPT-" + fontStyle.getValue(), fontSize.getValue().intValue()));
                 break;
         }
     }
@@ -141,7 +142,7 @@ public class Arraylist extends Module {
 
                     return add;
                 }).sorted(Comparator.comparingDouble(
-                        m -> arraylistFont.getStringWidth(getModuleName((Module) m))
+                        m -> arraylistFontRenderer.getStringWidth(getModuleName((Module) m))
                 ).reversed()).collect(Collectors.toList());
 
         float y = yValue.getValue().floatValue();
@@ -149,8 +150,8 @@ public class Arraylist extends Module {
             Module module = modules.get(i);
             String name = getModuleName(module);
 
-            float modWidth = arraylistFont.getStringWidth(name);
-            float modHeight = arraylistFont.getFontHeight();
+            float modWidth = arraylistFontRenderer.getStringWidth(name);
+            float modHeight = arraylistFontRenderer.getFontHeight();
 
             float x = event.scaledResolution.getScaledWidth() - modWidth - xValue.getValue().floatValue() - 2.5f;
 
@@ -158,7 +159,7 @@ public class Arraylist extends Module {
                 float rectX = x - 2;
                 float rectY = y;
                 float rectWidth = modWidth + 4.5f;
-                float rectHeight = modHeight + 5;
+                float rectHeight = arraylistFontRenderer.getBoxHeight();
 
                 boolean first = i == 0;
                 boolean last = i == modules.size() - 1;
@@ -191,7 +192,7 @@ public class Arraylist extends Module {
                             // bottom for each middle module
                             Module nextModule = modules.get(i + 1);
                             String nextName = getModuleName(nextModule);
-                            float nextModWidth = arraylistFont.getStringWidth(nextName);
+                            float nextModWidth = arraylistFontRenderer.getStringWidth(nextName);
                             float nextX = event.scaledResolution.getScaledWidth() - nextModWidth - 5;
                             float nextRectX = nextX - xValue.getValue().floatValue();
 
@@ -206,7 +207,7 @@ public class Arraylist extends Module {
                         RenderUtil.rectangle(rectX - 1, rectY + rectHeight, 1, 1, fg);
 
                         // right side
-                        RenderUtil.rectangle(rectX + rectWidth, rectY - 1, 1, modHeight + 7, fg);
+                        RenderUtil.rectangle(rectX + rectWidth, rectY - 1, 1, rectHeight + 2, fg);
                         break;
 
                     case "Left":
@@ -216,20 +217,16 @@ public class Arraylist extends Module {
 
                     case "Right":
                         // right side
-                        RenderUtil.rectangle(rectX + rectWidth, rectY, 1, modHeight + 5, fg);
+                        RenderUtil.rectangle(rectX + rectWidth, rectY, 1, rectHeight, fg);
                         break;
                 }
 
                 RenderUtil.rectangle(rectX, rectY, rectWidth, rectHeight, bg);
             }
 
-            if (fontShadow.getValue()) {
-                arraylistFont.drawStringWithShadow(name, x, y + 0.5f, fg);
-            } else {
-                arraylistFont.drawString(name, x, y + 0.5f, fg);
-            }
+            arraylistFontRenderer.drawString(name, x, y + 0.5f, fg, fontShadow.getValue());
 
-            y += arraylistFont.getFontHeight() + (background.getValue() ? 3 : 0) + 2;
+            y += background.getValue() ? arraylistFontRenderer.getBoxHeight() : arraylistFontRenderer.getFontHeight() + 2;
         }
     }
 
