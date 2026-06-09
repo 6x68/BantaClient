@@ -22,5 +22,4 @@ public class MathUtil {
         }
         return previous + partialTicks * delta;
     }
-
 }

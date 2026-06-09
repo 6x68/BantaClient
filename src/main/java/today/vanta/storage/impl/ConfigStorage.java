@@ -13,7 +13,6 @@ import today.vanta.client.setting.impl.MultiStringSetting;
 import today.vanta.client.setting.impl.NumberSetting;
 import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.storage.Storage;
-import today.vanta.util.system.FileUtil;
 import today.vanta.util.system.VantaFile;
 
 import java.io.*;
@@ -26,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ConfigStorage extends Storage<File> {
-    public final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     @Override
     public void subscribe() {
@@ -44,7 +43,8 @@ public class ConfigStorage extends Storage<File> {
         if (!configFile.exists()) return;
 
         try (Reader reader = new FileReader(configFile)) {
-            Type type = new TypeToken<Map<String, JsonObject>>() {}.getType();
+            Type type = new TypeToken<Map<String, JsonObject>>() {
+            }.getType();
             Map<String, JsonObject> moduleDataMap = GSON.fromJson(reader, type);
             Vanta.instance.logger.info("Loading config {}", configFile.getName());
 
@@ -74,7 +74,8 @@ public class ConfigStorage extends Storage<File> {
                         } else if (setting instanceof StringSetting) {
                             ((StringSetting) setting).setValue(settingEntry.getValue().getAsString());
                         } else if (setting instanceof MultiStringSetting) {
-                            List<String> values = GSON.fromJson(settingEntry.getValue(), new TypeToken<List<String>>() {}.getType());
+                            List<String> values = GSON.fromJson(settingEntry.getValue(), new TypeToken<List<String>>() {
+                            }.getType());
                             String[] valuesArray = values.toArray(new String[0]);
                             ((MultiStringSetting) setting).setValue(valuesArray);
                         }
@@ -130,5 +131,4 @@ public class ConfigStorage extends Storage<File> {
             Vanta.instance.logger.warn("Error occurred when saving {} {}", configFile.getName(), e.getMessage());
         }
     }
-
 }

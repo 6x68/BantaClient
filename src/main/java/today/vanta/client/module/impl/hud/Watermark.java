@@ -1,7 +1,6 @@
 package today.vanta.client.module.impl.hud;
 
 import today.vanta.Vanta;
-import today.vanta.client.event.impl.game.player.MotionEvent;
 import today.vanta.client.event.impl.game.render.Render2DEvent;
 import today.vanta.client.event.impl.game.world.UpdateEvent;
 import today.vanta.client.module.Category;
@@ -16,8 +15,9 @@ import today.vanta.util.game.render.font.CFonts;
 import java.awt.*;
 
 public class Watermark extends Module {
-    float tick;
-    Color epstein = new Color(0,0,0,255);
+    private static Color epstein = new Color(0, 0, 0, 255);
+    private float tick;
+
     private final StringSetting style = StringSetting.builder()
             .name("Style")
             .value("Vanta")
@@ -31,7 +31,7 @@ public class Watermark extends Module {
     }
 
     @EventListen(priority = EventPriority.LOWEST)
-    public void onRender(Render2DEvent event) {
+    private void onRender(Render2DEvent event) {
         switch (style.getValue()) {
             case "Vanta":
                 CFonts.SFPT_SEMIBOLD_42.drawStringWithShadow(IClient.CLIENT_NAME, 5, -3 + 3, Vanta.instance.moduleStorage.getT(Theme.class).colors[0]);
@@ -48,17 +48,21 @@ public class Watermark extends Module {
     }
 
     @EventListen
-    public void TickingEpsteinEvent(UpdateEvent event) {
+    private void onUpdate(UpdateEvent event) {
         tick++;
+
         if (tick == 1) {
             epstein = Color.WHITE;
         }
+
         if (tick == 3) {
             epstein = Color.GREEN;
         }
+
         if (tick == 5) {
             epstein = Color.PINK;
         }
+
         if (tick == 7) {
             epstein = Color.CYAN;
         }

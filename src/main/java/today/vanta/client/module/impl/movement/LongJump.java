@@ -55,11 +55,11 @@ public class LongJump extends Module {
     @EventListen
     private void onMotion(MotionEvent event) {
         if (mc.thePlayer.onGround) {
-            System.out.println(offGroundTicks);
             offGroundTicks = 0;
         } else {
             offGroundTicks++;
         }
+
         if (event.state == EventState.PRE) {
             switch (mode.getValue()) {
                 case "NCP":
@@ -87,9 +87,9 @@ public class LongJump extends Module {
                     if (offGroundTicks > 21) {
 //            MovementUtil.strafe(MovementUtil.getMovementSpeed() + 0.5f);
                         mc.thePlayer.motionY = -0.20f;
-                        if (mc.thePlayer.onGround) {
-                            System.out.println("what");
-                        }
+                        //if (mc.thePlayer.onGround) {
+                        //   System.out.println("what");
+                        //}
                         canDisable = true;
                     }
 
@@ -99,7 +99,7 @@ public class LongJump extends Module {
                     }
 
                     if (canDisable && mc.thePlayer.onGround) {
-                        super.setEnabled(false);
+                        setEnabled(false);
                     }
 
                     break;
@@ -110,8 +110,11 @@ public class LongJump extends Module {
 
     @Override
     public void onEnable() {
+        if (mc.thePlayer == null) return;
+
         offGroundTicks = 0;
         canDisable = false;
+
         if (mc.thePlayer.onGround) {
             mc.thePlayer.jump();
         }
@@ -119,9 +122,7 @@ public class LongJump extends Module {
 
     @Override
     public void onDisable() {
-        if (mc.thePlayer == null) {
-            return;
-        }
+        if (mc.thePlayer == null) return;
 
         mc.timer.timerSpeed = 1.0f;
         MovementUtil.stop();

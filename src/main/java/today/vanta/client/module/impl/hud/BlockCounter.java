@@ -1,8 +1,9 @@
 package today.vanta.client.module.impl.hud;
 
 import net.minecraft.client.gui.GuiChat;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemSword;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import today.vanta.Vanta;
@@ -11,6 +12,7 @@ import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.module.impl.client.Theme;
 import today.vanta.client.processor.impl.TargetProcessor;
+import today.vanta.client.setting.impl.NumberSetting;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.player.InventoryUtil;
 import today.vanta.util.game.render.RenderUtil;
@@ -20,17 +22,26 @@ import java.awt.*;
 
 public class BlockCounter extends Module {
     private static final Color BACKGROUND = new Color(20, 20, 20, 200);
-    private static final Color windowPane = new Color(50, 50, 50, 255);
-    private static final Color NO = new Color(0, 0, 0, 255);
 
-    private float x = 20, y = 70;
-    private static final float WIDTH = 80;
-    private static final float HEIHT = 15;
-    private static final float windowWidth = 80;
-    private static final float windowHeight = 15;
+    private static final float WIDTH = 90;
+    private static final float HEIHT = 40;
 
     private boolean dragging;
     private float dragX, dragY;
+
+    private final NumberSetting x = NumberSetting.builder()
+            .name("X position")
+            .value(20)
+            .min(0)
+            .max(2000)
+            .build();
+
+    private final NumberSetting y = NumberSetting.builder()
+            .name("Y position")
+            .value(70)
+            .min(0)
+            .max(2000)
+            .build();
 
     public BlockCounter() {
         super("BlockCounter", "Block information.", Category.HUD);
@@ -44,7 +55,11 @@ public class BlockCounter extends Module {
             return;
         }
 
-        if (mc.thePlayer.getCurrentEquippedItem() == null) return;
+        ItemStack heldItem = mc.thePlayer.getCurrentEquippedItem();
+
+        if (heldItem == null || !(heldItem.getItem() instanceof ItemBlock)) {
+            return;
+        }
 
         if (mc.currentScreen instanceof GuiChat) {
             handleDragging(event.mouseX, event.mouseY);
@@ -55,15 +70,15 @@ public class BlockCounter extends Module {
 
     private void handleDragging(float mouseX, float mouseY) {
         if (Mouse.isButtonDown(0)) {
-            if (!dragging && RenderUtil.hovered(mouseX, mouseY, x, y, WIDTH, HEIHT)) {
+            if (!dragging && RenderUtil.hovered(mouseX, mouseY, x.getValue().floatValue(), y.getValue().floatValue(), WIDTH, HEIHT)) {
                 dragging = true;
-                dragX = mouseX - x;
-                dragY = mouseY - y;
+                dragX = mouseX - x.getValue().floatValue();
+                dragY = mouseY - y.getValue().floatValue();
             }
 
             if (dragging) {
-                x = mouseX - dragX;
-                y = mouseY - dragY;
+                x.setValue(mouseX - dragX);
+                y.setValue(mouseY - dragY);
             }
         } else {
             dragging = false;
@@ -73,6 +88,9 @@ public class BlockCounter extends Module {
     private void draw() {
         Color color = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
         int blocksinHotbar = InventoryUtil.getHotbarBlockCount();
+
+        float x = this.x.getValue().floatValue();
+        float y = this.y.getValue().floatValue();
 
         RenderUtil.rectangle(x, y, WIDTH, HEIHT, BACKGROUND);
         double scale = 2.4;
@@ -92,32 +110,6 @@ public class BlockCounter extends Module {
 
         if (dragging) {
             RenderUtil.rectangle(x - 0.5, y - 0.5, WIDTH + 1, HEIHT + 1, false, color);
-        }
-    }
-
-    private void drawWindow() {
-        Color color = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
-        int blocksinHotbar = InventoryUtil.getHotbarBlockCount();
-        RenderUtil.rectangle(x, y - 10, WIDTH, 10f, windowPane);
-        float textWidth = CFonts.SFPT_MEDIUM_18.getStringWidth("Block Counter");
-        CFonts.SFPT_MEDIUM_18.drawStringWithShadow("Block Counter", x + (WIDTH / 2) - (textWidth / 2) - 7,y- 10,color);
-        RenderUtil.rectangle(x, y, WIDTH, HEIHT, BACKGROUND);
-        double scale = 0.65;
-
-        double itemX = x + 20;
-        double itemY = y - HEIHT + 20;
-
-        GL11.glPushMatrix();
-        GL11.glTranslated(itemX, itemY, 0);
-        GL11.glScaled(scale, scale, 1.0);
-        GL11.glTranslated(-itemX, -itemY, 0);
-        mc.renderItem.renderItemIntoGUIFullBright(mc.thePlayer.getCurrentEquippedItem(), (int)x + 94, (int)y - 18);
-        GL11.glPopMatrix();
-
-        CFonts.SFPT_SEMIBOLD_20.drawStringWithShadow("Blocks: " + blocksinHotbar, x + 1.5f, y + 2,color );
-
-        if (dragging) {
-            RenderUtil.rectangle(x - 0.5, y - 10.5, WIDTH + 1, HEIHT + 11, false, color);
         }
     }
 }

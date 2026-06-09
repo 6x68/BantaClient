@@ -13,13 +13,14 @@ public class Fly extends Module {
             .value("Miniblox")
             .values("Vanilla", "Miniblox")
             .build();
+
     public Fly() {
-        super("Fly", "Flies", Category.MOVEMENT);
+        super("Fly", "Allows you to fly like a pelican.", Category.MOVEMENT);
     }
 
     @EventListen
-    public void onUpdate(UpdateEvent event) {
-        switch(mode.getValue()) {
+    private void onUpdate(UpdateEvent event) {
+        switch (mode.getValue()) {
             case "Miniblox":
                 mc.thePlayer.motionY = 0f;
                 MovementUtil.strafe(0.15f);
@@ -44,16 +45,18 @@ public class Fly extends Module {
 
     @Override
     public void onEnable() {
-        if (mc.thePlayer != null && mode.getValue().equals("Miniblox")) {
+        if (mc.thePlayer == null) return;
+
+        if (mode.getValue().equals("Miniblox"))
             mc.thePlayer.sendChatMessage("/desync");
-        }
     }
 
     @Override
     public void onDisable() {
-        if (mc.thePlayer != null &&  mode.getValue().equals("Miniblox")) {
+        if (mc.thePlayer == null) return;
+
+        if (mode.getValue().equals("Miniblox"))
             mc.thePlayer.sendChatMessage("/desync");
-        }
     }
 
     @Override

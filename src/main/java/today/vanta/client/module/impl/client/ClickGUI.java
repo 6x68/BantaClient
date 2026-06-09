@@ -9,7 +9,6 @@ import today.vanta.client.setting.impl.BooleanSetting;
 import today.vanta.client.setting.impl.StringSetting;
 
 public class ClickGUI extends Module {
-
     public final BooleanSetting
             pauseGame = BooleanSetting.builder()
             .name("Pause singleplayer")

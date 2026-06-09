@@ -23,7 +23,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class AltLoginScreen extends GuiScreen {
-
     private final CFontRenderer smallTitle = CFonts.SFPT_SEMIBOLD_20;
     private final CFontRenderer buttonText = CFonts.SFPT_MEDIUM_18;
 

@@ -13,6 +13,7 @@ public enum Category {
 
     public final String name;
     public final Vector2f position;
+
     Category(String name, Vector2f position) {
         this.name = name;
         this.position = position;

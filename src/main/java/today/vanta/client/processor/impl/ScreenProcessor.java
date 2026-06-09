@@ -9,7 +9,6 @@ import today.vanta.storage.impl.ScreenStorage;
 import today.vanta.util.game.events.EventListen;
 
 public class ScreenProcessor extends Processor {
-
     private ScreenStorage screenStorage;
 
     @Override

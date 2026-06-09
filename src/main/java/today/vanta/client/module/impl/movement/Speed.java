@@ -28,10 +28,10 @@ public class Speed extends Module {
         displayNames = new String[]{"Speed", "FastMove", "Zoot", "SpeedyGonzales"};
     }
 
-    int offGroundTicks;
+    private int offGroundTicks;
 
     @EventListen
-    public void onMotionEvent(MotionEvent event) {
+    private void onMotionEvent(MotionEvent event) {
         if (!mc.thePlayer.onGround) {
             offGroundTicks++;
         } else {
@@ -40,7 +40,7 @@ public class Speed extends Module {
     }
 
     @EventListen
-    public void onUpdate(UpdateEvent event) {
+    private void onUpdate(UpdateEvent event) {
         if (MovementUtil.isMoving()) {
             mc.gameSettings.keyBindSprint.pressed = true;
 

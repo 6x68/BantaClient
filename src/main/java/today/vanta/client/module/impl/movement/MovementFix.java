@@ -10,12 +10,18 @@ import today.vanta.client.module.impl.combat.KillAura;
 import today.vanta.client.module.impl.player.Scaffold;
 import today.vanta.client.processor.impl.RotationProcessor;
 import today.vanta.client.processor.impl.TargetProcessor;
+import today.vanta.client.setting.impl.BooleanSetting;
 import today.vanta.client.setting.impl.MultiStringSetting;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.player.MovementUtil;
 import today.vanta.util.game.player.constructors.Rotation;
 
 public class MovementFix extends Module {
+    private final BooleanSetting silent = BooleanSetting.builder()
+            .name("Silent")
+            .value(true)
+            .build();
+
     private final MultiStringSetting exemptions = MultiStringSetting.builder()
             .name("Exemptions")
             .value("Scaffold")
@@ -23,14 +29,15 @@ public class MovementFix extends Module {
             .build();
 
     public MovementFix() {
-        super("MovementFix", "Fixes your yaw when in combat", Category.MOVEMENT);
-        displayNames = new String[] {"MovementFix", "MovementCorrection", "CorrectMovement", "MoveFix"};
+        super("MovementFix", "Fixes your movement when in combat.", Category.MOVEMENT);
+        displayNames = new String[]{"MovementFix", "MovementCorrection", "CorrectMovement", "MoveFix"};
     }
 
     @EventListen
     private void onMoveInput(MoveInputEvent event) {
         if (!shouldFix()) return;
         if (isExempted()) return;
+        if (!silent.getValue()) return;
         MovementUtil.correctMovement(event, getRotations().yaw);
     }
 
@@ -72,5 +79,10 @@ public class MovementFix extends Module {
         }
 
         return false;
+    }
+
+    @Override
+    public String getSuffix() {
+        return silent.getValue() ? "Silent" : null;
     }
 }

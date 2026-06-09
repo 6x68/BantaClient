@@ -69,5 +69,4 @@ public class MultiStringSetting extends Setting<String[]> {
             return setting;
         }
     }
-
 }

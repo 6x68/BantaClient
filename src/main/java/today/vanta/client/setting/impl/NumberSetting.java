@@ -80,5 +80,4 @@ public class NumberSetting extends Setting<Number> {
             return setting;
         }
     }
-
 }

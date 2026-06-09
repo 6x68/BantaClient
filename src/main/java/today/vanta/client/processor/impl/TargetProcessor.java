@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TargetProcessor extends Processor {
-
     public List<EntityLivingBase> list = new ArrayList<>();
     public List<String> friends = new ArrayList<>(), bots = new ArrayList<>();
     public EntityLivingBase target;

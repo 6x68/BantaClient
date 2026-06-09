@@ -21,20 +21,21 @@ import java.util.stream.Collectors;
 
 public class Arraylist extends Module {
     private final NumberSetting xValue = NumberSetting.builder()
-            .name("X Value")
-            .value(0)
+            .name("X offset")
+            .value(5)
             .min(1)
-            .max(100)
+            .max(25)
             .places(0)
             .build();
 
     private final NumberSetting yValue = NumberSetting.builder()
-            .name("Y Value")
-            .value(0)
+            .name("Y offset")
+            .value(5)
             .min(0)
-            .max(100)
+            .max(25)
             .places(0)
             .build();
+
     private final StringSetting fontStyle = StringSetting.builder()
             .name("Font style")
             .value("Medium")
@@ -82,7 +83,7 @@ public class Arraylist extends Module {
     private final StringSetting line = StringSetting.builder()
             .name("Line")
             .value("Full")
-            .values("Full", "Left", "Right", "Top", "Top+right")
+            .values("Full", "Left", "Right", "Top", "Top+right", "None")
             .build().hide(() -> !background.getValue());
 
     private final NumberSetting backgroundAlpha = NumberSetting.builder()
@@ -108,7 +109,7 @@ public class Arraylist extends Module {
     }
 
     @EventListen(priority = EventPriority.LOWEST)
-    public void onRender(Render2DEvent event) {
+    private void onRender(Render2DEvent event) {
         Color fg = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
         Color bg = new Color(0, 0, 0, backgroundAlpha.getValue().intValue());
 
@@ -133,12 +134,12 @@ public class Arraylist extends Module {
             float modWidth = font.getStringWidth(name);
             float modHeight = font.getFontHeight();
 
-            float x = event.scaledResolution.getScaledWidth() - modWidth - xValue.getValue().floatValue();
+            float x = event.scaledResolution.getScaledWidth() - modWidth - xValue.getValue().floatValue() - 2.5f;
 
             if (background.getValue()) {
                 float rectX = x - 2;
                 float rectY = y;
-                float rectWidth = modWidth + 3f;
+                float rectWidth = modWidth + 4.5f;
                 float rectHeight = modHeight + 5;
 
                 boolean first = i == 0;
@@ -173,7 +174,7 @@ public class Arraylist extends Module {
                             Module nextModule = modules.get(i + 1);
                             String nextName = getModuleName(nextModule);
                             float nextModWidth = font.getStringWidth(nextName);
-                            float nextX = event.scaledResolution.getScaledWidth() - nextModWidth - 3;
+                            float nextX = event.scaledResolution.getScaledWidth() - nextModWidth - 5;
                             float nextRectX = nextX - xValue.getValue().floatValue();
 
                             float widthToNext = nextRectX - rectX;
@@ -205,9 +206,9 @@ public class Arraylist extends Module {
             }
 
             if (fontShadow.getValue()) {
-                font.drawStringWithShadow(name, x - 0.5f, y, fg);
+                font.drawStringWithShadow(name, x, y + 0.5f, fg);
             } else {
-                font.drawString(name, x - 1f, y, fg);
+                font.drawString(name, x, y + 0.5f, fg);
             }
 
             y += font.getFontHeight() + (background.getValue() ? 3 : 0) + 2;

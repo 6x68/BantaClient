@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import today.vanta.Vanta;
 import today.vanta.client.module.Category;
+import today.vanta.storage.impl.ConfigStorage;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -11,13 +12,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ScreenSavingUtil {
-
     public static boolean loadConfig(File configFile) {
         if (!configFile.exists()) return false;
 
         try (Reader reader = new FileReader(configFile)) {
             Type type = new TypeToken<Map<String, JsonObject>>() {}.getType();
-            Map<String, JsonObject> categoryMap = Vanta.instance.configStorage.GSON.fromJson(reader, type);
+            Map<String, JsonObject> categoryMap = ConfigStorage.GSON.fromJson(reader, type);
             Vanta.instance.logger.info("Loading category positions {}", configFile.getName());
 
             for (Map.Entry<String, JsonObject> entry : categoryMap.entrySet()) {
@@ -47,11 +47,10 @@ public class ScreenSavingUtil {
             }
 
             Vanta.instance.logger.info("Saving category positions {}", configFile.getName());
-            Vanta.instance.configStorage.GSON.toJson(categoryMap, writer);
+            ConfigStorage.GSON.toJson(categoryMap, writer);
             writer.flush();
         } catch (IOException e) {
             Vanta.instance.logger.warn("Error occurred when saving {} {}", configFile.getName(), e.getMessage());
         }
     }
-
 }
