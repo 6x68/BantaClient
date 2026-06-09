@@ -23,7 +23,7 @@ public class Fly extends Module {
         switch (mode.getValue()) {
             case "Miniblox":
                 mc.thePlayer.motionY = 0f;
-                MovementUtil.strafe(0.2f);
+                MovementUtil.strafe(0.15f);
                 break;
             case "Vanilla":
                 mc.thePlayer.motionY = 0f;
@@ -37,6 +37,10 @@ public class Fly extends Module {
                 }
                 break;
         }
+//        if (mode.getValue().equals("Miniblox")) {
+//            mc.thePlayer.motionY = 0f;
+//            MovementUtil.strafe(0.2f);
+//        }
     }
 
     @Override
