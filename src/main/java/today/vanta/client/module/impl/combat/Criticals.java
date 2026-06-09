@@ -12,6 +12,7 @@ import today.vanta.client.module.Module;
 import today.vanta.client.module.impl.movement.Speed;
 import today.vanta.client.processor.impl.RotationProcessor;
 import today.vanta.client.processor.impl.TargetProcessor;
+import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.events.EventState;
@@ -27,7 +28,7 @@ public class Criticals extends Module {
     private static final double RANDOM_OFFSET_MIN = 0.001D;
     private static final double RANDOM_OFFSET_MAX = 0.0011D;
 
-    private final StringSetting mode = StringSetting.of("Mode", "Edit", "Edit", "Packet", "Old Watchdog");
+    private final StringSetting mode = Setting.of("Mode", "Edit", "Edit", "Packet", "Old Watchdog");
 
     public Criticals() {
         super("Criticals", "Tries to make all landed hits critical.", Category.COMBAT);

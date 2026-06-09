@@ -11,6 +11,7 @@ import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.module.impl.client.Theme;
 import today.vanta.client.processor.impl.TargetProcessor;
+import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.NumberSetting;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.player.InventoryUtil;
@@ -29,8 +30,8 @@ public class BlockCounter extends Module {
     private float dragX, dragY;
 
     private final NumberSetting
-            x = NumberSetting.of("X position", 20, 0, 2000),
-            y = NumberSetting.of("Y position", 70, 0, 2000);
+            x = Setting.of("X position", 20, 0, 2000),
+            y = Setting.of("Y position", 70, 0, 2000);
 
     public BlockCounter() {
         super("BlockCounter", "Block information.", Category.HUD);

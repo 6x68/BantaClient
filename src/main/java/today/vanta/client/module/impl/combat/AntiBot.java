@@ -6,11 +6,12 @@ import today.vanta.client.event.impl.game.RunTickEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.processor.impl.TargetProcessor;
+import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.events.EventListen;
 
 public class AntiBot extends Module {
-    private final StringSetting mode = StringSetting.of("Mode", "Basic", "Basic");
+    private final StringSetting mode = Setting.of("Mode", "Basic", "Basic");
 
     public AntiBot() {
         super("AntiBot", "Prevents attacking bots.", Category.COMBAT);
