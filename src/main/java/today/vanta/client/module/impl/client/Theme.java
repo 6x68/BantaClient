@@ -2,17 +2,13 @@ package today.vanta.client.module.impl.client;
 
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
+import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.StringSetting;
 
 import java.awt.*;
 
 public class Theme extends Module {
-    private final StringSetting theme = StringSetting.builder()
-            .name("Theme")
-            .value("Coral")
-            .values("Coral", "Capri", "Twilight", "Margo", "Lust", "Light", "ShadowNotro")
-            .listener((setting, oldValue, newValue) -> setColorArray())
-            .build();
+    private final StringSetting theme = Setting.of("Theme", "Coral", "Coral", "Capri", "Twilight", "Margo", "Lust", "Light", "ShadowNotro");
 
     public Theme() {
         super("Theme", "Manage the client's colors.", Category.CLIENT);

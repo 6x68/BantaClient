@@ -8,6 +8,7 @@ import today.vanta.client.module.impl.client.Theme;
 import today.vanta.client.module.impl.hud.arraylist.ArraylistRenderer;
 import today.vanta.client.module.impl.hud.arraylist.BitMapRenderer;
 import today.vanta.client.module.impl.hud.arraylist.GlyphRenderer;
+import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.BooleanSetting;
 import today.vanta.client.setting.impl.NumberSetting;
 import today.vanta.client.setting.impl.StringSetting;
@@ -22,93 +23,36 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Arraylist extends Module {
-    private final NumberSetting xValue = NumberSetting.builder()
-            .name("X offset")
-            .value(5)
-            .min(0)
-            .max(25)
-            .places(0)
-            .build();
+    private final NumberSetting
+            xOffset = Setting.of("X offset", 5, 0, 25),
+            yOffset = Setting.of("Y offset", 5, 0, 25);
 
-    private final NumberSetting yValue = NumberSetting.builder()
-            .name("Y offset")
-            .value(5)
-            .min(0)
-            .max(25)
-            .places(0)
-            .build();
+    private final StringSetting
+            font = Setting.of("Font", "SFPT", "SFPT", "Minecraft", "Exhibition"),
+            fontStyle = Setting.of("Font style", "Medium", "Light", "Italic", "Medium", "Semibold", "Bold", "Heavy");
 
-    private final StringSetting font = StringSetting.builder()
-            .name("Font")
-            .value("SFPT")
-            .values("SFPT", "Minecraft", "Exhibition")
-            .listener((setting, oldValue, newValue) -> setFont())
-            .build();
-
-    private final StringSetting fontStyle = StringSetting.builder()
-            .name("Font style")
-            .value("Medium")
-            .values("Light", "Italic", "Medium", "Semibold", "Bold", "Heavy")
-            .listener((setting, oldValue, newValue) -> setFont())
-            .build().hide(() -> !font.getValue().equals("SFPT"));
-
-    private final StringSetting moduleCase = StringSetting.builder()
-            .name("Module case")
-            .value("Default")
-            .values("Default", "Lowercase", "Uppercase")
-            .build();
-
-    private final NumberSetting fontSize = NumberSetting.builder()
-            .name("Font size")
-            .value(24)
-            .min(10)
-            .max(42)
-            .places(0)
-            .suffix("px")
-            .listener((setting, oldValue, newValue) -> setFont())
-            .build().hide(() -> !font.getValue().equals("SFPT"));
+    private final NumberSetting fontSize = Setting.of("Font size", 24, 10, 42, "px").hide(() -> !font.getValue().equals("SFPT"));
 
     private final BooleanSetting
-            fontShadow = BooleanSetting.builder()
-            .name("Font shadow")
-            .value(true)
-            .build(),
+            fontShadow = Setting.of("Font shadow", true),
+            suffixes = Setting.of("Show suffixes", true),
+            background = Setting.of("Background", true),
+            spaceOut = Setting.of("Space out", false);
 
-    suffixes = BooleanSetting.builder()
-            .name("Show suffixes")
-            .value(true)
-            .build(),
+    private final StringSetting line = Setting.of("Line", "Full", "Full", "Left", "Right", "Top", "Top+right", "None");
 
-    background = BooleanSetting.builder()
-            .name("Background")
-            .value(true)
-            .build(),
-
-    spaceOut = BooleanSetting.builder()
-            .name("Space out")
-            .value(false)
-            .build();
-
-    private final StringSetting line = StringSetting.builder()
-            .name("Line")
-            .value("Full")
-            .values("Full", "Left", "Right", "Top", "Top+right", "None")
-            .build().hide(() -> !background.getValue());
-
-    private final NumberSetting backgroundAlpha = NumberSetting.builder()
-            .name("Background alpha")
-            .value(100)
-            .min(0)
-            .max(255)
-            .places(0)
-            .build()
-            .hide(() -> !background.getValue());
+    private final NumberSetting backgroundAlpha = Setting.of("Background alpha", 100, 0, 255).hide(() -> !background.getValue());
+    private final StringSetting moduleCase = Setting.of("Module case", "Default", "Default", "Lowercase", "Uppercase");
 
     public Arraylist() {
         super("Arraylist", "Draws an arraylist of modules.", Category.HUD);
         displayNames = new String[]{"Arraylist", "ArrayList", "ModuleList"};
         hideFromArraylist = true;
         setEnabled(true);
+
+        font.addListener(((setting, oldValue, newValue) -> setFont()));
+        fontStyle.addListener(((setting, oldValue, newValue) -> setFont()));
+        fontSize.addListener(((setting, oldValue, newValue) -> setFont()));
     }
 
     private ArraylistRenderer arraylistFontRenderer = new GlyphRenderer(CFonts.SFPT_MEDIUM_24);
@@ -145,7 +89,7 @@ public class Arraylist extends Module {
                         m -> arraylistFontRenderer.getStringWidth(getModuleName((Module) m))
                 ).reversed()).collect(Collectors.toList());
 
-        float y = yValue.getValue().floatValue();
+        float y = yOffset.getValue().floatValue();
         for (int i = 0; i < modules.size(); i++) {
             Module module = modules.get(i);
             String name = getModuleName(module);
@@ -153,7 +97,7 @@ public class Arraylist extends Module {
             float modWidth = arraylistFontRenderer.getStringWidth(name);
             float modHeight = arraylistFontRenderer.getFontHeight();
 
-            float x = event.scaledResolution.getScaledWidth() - modWidth - xValue.getValue().floatValue() - 2.5f;
+            float x = event.scaledResolution.getScaledWidth() - modWidth - xOffset.getValue().floatValue() - 2.5f;
 
             if (background.getValue()) {
                 float rectX = x - 2;
@@ -194,7 +138,7 @@ public class Arraylist extends Module {
                             String nextName = getModuleName(nextModule);
                             float nextModWidth = arraylistFontRenderer.getStringWidth(nextName);
                             float nextX = event.scaledResolution.getScaledWidth() - nextModWidth - 5;
-                            float nextRectX = nextX - xValue.getValue().floatValue();
+                            float nextRectX = nextX - xOffset.getValue().floatValue();
 
                             float widthToNext = nextRectX - rectX;
 

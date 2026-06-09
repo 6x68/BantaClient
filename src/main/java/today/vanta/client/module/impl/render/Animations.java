@@ -5,32 +5,30 @@ import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.util.MathHelper;
 import org.lwjgl.opengl.GL11;
 import today.vanta.client.event.impl.game.player.MotionEvent;
+import today.vanta.client.event.impl.game.render.BobArmEvent;
 import today.vanta.client.event.impl.game.render.PerformBlockEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
+import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.BooleanSetting;
 import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.events.EventState;
 
 public class Animations extends Module {
-    private final StringSetting mode = StringSetting.builder()
-            .name("Mode")
-            .value("1.7")
-            .values("1.7", "Interia", "Exhibition", "Sigma", "Stella", "Smooth")
-            .build();
+    private final StringSetting mode = Setting.of("Mode", "1.7", "1.7", "Interia", "Exhibition", "Sigma", "Stella", "Smooth");
 
-    private final BooleanSetting noBob = BooleanSetting.builder()
-            .name("German No-bob")
-            .value(false)
-            .build();
-    public final BooleanSetting noSway = BooleanSetting.builder()
-            .name("Remove Hand Sway")
-            .value(false)
-            .build();
+    private final BooleanSetting
+            noBob = Setting.of("German No-bob", false),
+            noSway = Setting.of("No hand sway", false);
 
     public Animations() {
         super("Animations", "Modifies Minecraft block animations.", Category.RENDER);
+    }
+
+    @EventListen
+    private void onBob(BobArmEvent event) {
+        event.cancelled = noSway.getValue();
     }
 
     @EventListen

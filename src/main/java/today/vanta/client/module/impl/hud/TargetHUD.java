@@ -28,19 +28,9 @@ public class TargetHUD extends Module {
     private boolean dragging;
     private float dragX, dragY;
 
-    private final NumberSetting x = NumberSetting.builder()
-            .name("X position")
-            .value(20)
-            .min(0)
-            .max(2000)
-            .build();
-
-    private final NumberSetting y = NumberSetting.builder()
-            .name("Y position")
-            .value(20)
-            .min(0)
-            .max(2000)
-            .build();
+    private final NumberSetting
+            x = NumberSetting.of("X position", 20, 0, 2000),
+            y = NumberSetting.of("Y position", 20, 0, 2000);
 
     public TargetHUD() {
         super("TargetHUD", "Target information.", Category.HUD);

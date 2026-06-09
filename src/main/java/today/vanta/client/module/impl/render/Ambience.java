@@ -5,22 +5,14 @@ import today.vanta.client.event.impl.game.network.ReceivePacketEvent;
 import today.vanta.client.event.impl.game.world.UpdateEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
+import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.BooleanSetting;
 import today.vanta.client.setting.impl.NumberSetting;
 import today.vanta.util.game.events.EventListen;
 
 public class Ambience extends Module {
-    private final NumberSetting time = NumberSetting.builder()
-            .name("Time")
-            .value(1000)
-            .min(0)
-            .max(24000)
-            .build();
-
-    private final BooleanSetting fullbright = BooleanSetting.builder()
-            .name("Fullbright")
-            .value(false)
-            .build();
+    private final NumberSetting time = Setting.of("Time", 1000, 0, 24000);
+    private final BooleanSetting fullbright = Setting.of("Fullbright", false);
 
     private float oldGamma = 1.0f;
 

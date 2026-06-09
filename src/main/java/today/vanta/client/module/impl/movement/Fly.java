@@ -3,16 +3,13 @@ package today.vanta.client.module.impl.movement;
 import today.vanta.client.event.impl.game.world.UpdateEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
+import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.player.MovementUtil;
 
 public class Fly extends Module {
-    private final StringSetting mode = StringSetting.builder()
-            .name("Mode")
-            .value("Miniblox")
-            .values("Vanilla", "Miniblox")
-            .build();
+    private final StringSetting mode = Setting.of("Mode", "Vanilla", "Vanilla", "Miniblox");
 
     public Fly() {
         super("Fly", "Allows you to fly like a pelican.", Category.MOVEMENT);
@@ -37,10 +34,6 @@ public class Fly extends Module {
                 }
                 break;
         }
-//        if (mode.getValue().equals("Miniblox")) {
-//            mc.thePlayer.motionY = 0f;
-//            MovementUtil.strafe(0.2f);
-//        }
     }
 
     @Override

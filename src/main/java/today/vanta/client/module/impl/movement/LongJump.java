@@ -1,9 +1,9 @@
 package today.vanta.client.module.impl.movement;
 
 import today.vanta.client.event.impl.game.player.MotionEvent;
-import today.vanta.client.event.impl.game.world.UpdateEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
+import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.NumberSetting;
 import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.events.EventListen;
@@ -11,39 +11,12 @@ import today.vanta.util.game.events.EventState;
 import today.vanta.util.game.player.MovementUtil;
 
 public class LongJump extends Module {
-    private final StringSetting mode = StringSetting.builder()
-            .name("Mode")
-            .value("NCP")
-            .values("NCP", "Mospixel-Jump")
-            .build();
+    private final StringSetting mode = Setting.of("Mode", "NCP", "NCP", "Mospixel-Jump");
 
     private final NumberSetting
-            timer = NumberSetting.builder()
-            .name("Timer speed")
-            .value(1)
-            .min(0.1)
-            .max(2)
-            .places(1)
-            .build()
-            .hide(() -> !mode.getValue().equals("NCP")),
-
-    groundSpeed = NumberSetting.builder()
-            .name("Ground speed")
-            .value(0.4)
-            .min(0.1)
-            .max(3)
-            .places(1)
-            .build()
-            .hide(() -> !mode.getValue().equals("NCP")),
-
-    airSpeed = NumberSetting.builder()
-            .name("Air speed")
-            .value(1.4)
-            .min(0.1)
-            .max(3)
-            .places(1)
-            .build()
-            .hide(() -> !mode.getValue().equals("NCP"));
+            timer = Setting.of("Timer speed", 1, 0.1, 2, 1).hide(() -> !mode.getValue().equals("NCP")),
+            groundSpeed = Setting.of("Ground speed", 0.4, 0.1, 3, 1).hide(() -> !mode.getValue().equals("NCP")),
+            airSpeed = Setting.of("Air speed", 1.4, 0.1, 3, 1).hide(() -> !mode.getValue().equals("NCP"));
 
     public LongJump() {
         super("LongJump", "Makes you jump longer.", Category.MOVEMENT);
@@ -110,10 +83,10 @@ public class LongJump extends Module {
 
     @Override
     public void onEnable() {
-        if (mc.thePlayer == null) return;
-
         offGroundTicks = 0;
         canDisable = false;
+
+        if (mc.thePlayer == null) return;
 
         if (mc.thePlayer.onGround) {
             mc.thePlayer.jump();

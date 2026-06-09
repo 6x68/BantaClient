@@ -15,6 +15,7 @@ import today.vanta.client.event.impl.game.render.Render2DEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.module.impl.client.Theme;
+import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.MultiStringSetting;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.render.RenderUtil;
@@ -22,11 +23,7 @@ import today.vanta.util.game.render.RenderUtil;
 import java.awt.*;
 
 public class ESP extends Module {
-    private final MultiStringSetting entities = MultiStringSetting.builder()
-            .name("Entities")
-            .value("Players")
-            .values("Players", "Monsters", "Animals", "Local", "Invisibles")
-            .build();
+    private final MultiStringSetting entities = Setting.of("Entities", new String[]{"Players"}, new String[]{"Players", "Monsters", "Animals", "Local", "Invisibles"});
 
     public ESP() {
         super("ESP", "Extra-sensory perception.", Category.RENDER);

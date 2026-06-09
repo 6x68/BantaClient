@@ -6,6 +6,7 @@ import today.vanta.client.event.impl.game.world.UpdateEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.module.impl.client.Theme;
+import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.client.IClient;
 import today.vanta.util.game.events.EventListen;
@@ -18,11 +19,7 @@ public class Watermark extends Module {
     private static Color epstein = new Color(0, 0, 0, 255);
     private float tick;
 
-    private final StringSetting style = StringSetting.builder()
-            .name("Style")
-            .value("Vanta")
-            .values("Vanta", "Jello", "My Eyes")
-            .build();
+    private final StringSetting style = Setting.of("Style", "Vanta", "Vanta", "Jello", "My Eyes"); //travis scott reference?
 
     public Watermark() {
         super("Watermark", "Draws a watermark of the client.", Category.HUD);

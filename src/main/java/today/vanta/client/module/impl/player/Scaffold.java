@@ -14,6 +14,7 @@ import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.module.impl.movement.Speed;
 import today.vanta.client.processor.impl.TargetProcessor;
+import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.BooleanSetting;
 import today.vanta.client.setting.impl.NumberSetting;
 import today.vanta.client.setting.impl.StringSetting;
@@ -32,78 +33,24 @@ import java.util.Random;
 
 public class Scaffold extends Module {
     private final StringSetting
-            rotationMode = StringSetting.builder()
-            .name("Rotation mode")
-            .value("Simple")
-            .values("Simple", "Godbridge", "Static", "Forward")
-            .build(),
+            rotationMode = Setting.of("Rotation mode", "Simple", "Simple", "Godbridge", "Static", "Forward"),
+            itemSwitchMode = Setting.of("Item spoof", "Switch", "Switch", "None"),
+            towerMode = Setting.of("Tower mode", "Jump", "Jump", "Motion"),
+            sprintMode = Setting.of("Sprint mode", "Manual", "None", "Always");
 
-    itemSwitchMode = StringSetting.builder()
-            .name("Item spoof")
-            .value("Switch")
-            .values("Switch", "None")
-            .build(),
-
-    towerMode = StringSetting.builder()
-            .name("Tower mode")
-            .value("Jump")
-            .values("Jump", "Motion")
-            .build(),
-
-    sprintMode = StringSetting.builder()
-            .name("Sprint mode")
-            .value("Manual")
-            .values("Manual", "None", "Always")
-            .build();
-
-    private final BooleanSetting sneak = BooleanSetting.builder()
-            .name("Sneak")
-            .value(false)
-            .build()
-            .hide(() -> rotationMode.getValue().equals("Godbridge"));
-
-    private final StringSetting sneakMode = StringSetting.builder()
-            .name("Sneak mode")
-            .value("Eagle")
-            .values("Eagle", "Blatant", "Always")
-            .build()
-            .hide(() -> !sneak.getValue());
+    private final BooleanSetting sneak = Setting.of("Sneak", false).hide(() -> rotationMode.getValue().equals("Godbridge"));
+    private final StringSetting sneakMode = Setting.of("Sneak mode", "Eagle", "Eagle", "Blatant", "Always").hide(() -> !sneak.getValue());
 
     private final NumberSetting
-            sneakDelay = NumberSetting.builder()
-            .name("Sneak delay (ms)")
-            .value(57)
-            .min(0)
-            .max(300)
-            .build()
+            sneakDelay = Setting.of("Sneak delay", 57, 0, 300, "ms")
             .hide(() -> !sneak.getValue() || !(sneakMode.getValue().equals("Eagle") || sneakMode.getValue().equals("Blatant"))),
-
-    unSneakDelay = NumberSetting.builder()
-            .name("Unsneak delay (ms)")
-            .value(299)
-            .min(0)
-            .max(300)
-            .build()
-            .hide(() -> !sneak.getValue() || !(sneakMode.getValue().equals("Eagle") || sneakMode.getValue().equals("Blatant")));
+            unSneakDelay = Setting.of("Unsneak delay", 299, 0, 300, "ms"
+            ).hide(() -> !sneak.getValue() || !(sneakMode.getValue().equals("Eagle") || sneakMode.getValue().equals("Blatant")));
 
     private final BooleanSetting
-            keepY = BooleanSetting.builder()
-            .name("Keep Y")
-            .value(false)
-            .build()
-            .hide(() -> rotationMode.getValue().equals("Godbridge")),
-
-    speedKeepY = BooleanSetting.builder()
-            .name("Keep Y on Speed")
-            .value(false)
-            .build()
-            .hide(() -> rotationMode.getValue().equals("Godbridge") || keepY.getValue()),
-
-    downwards = BooleanSetting.builder()
-            .name("Downwards")
-            .value(false)
-            .build()
-            .hide(() -> rotationMode.getValue().equals("Godbridge"));
+            keepY = Setting.of("Keep Y", false).hide(() -> rotationMode.getValue().equals("Godbridge")),
+            speedKeepY = Setting.of("Keep Y on Speed", false).hide(() -> rotationMode.getValue().equals("Godbridge") || keepY.getValue()),
+            downwards = Setting.of("Downwards", false).hide(() -> rotationMode.getValue().equals("Godbridge"));
 
     private final DistanceCounter distCounter = new DistanceCounter();
     private int targetDistance = 7;

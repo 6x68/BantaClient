@@ -5,13 +5,13 @@ import today.vanta.Vanta;
 import today.vanta.client.event.impl.game.RunTickEvent;
 import today.vanta.client.event.impl.game.network.ReceivePacketEvent;
 import today.vanta.client.event.impl.game.player.ChangeWorldEvent;
-import today.vanta.client.event.impl.game.world.UpdateEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.module.impl.combat.KillAura;
 import today.vanta.client.module.impl.movement.Fly;
 import today.vanta.client.module.impl.movement.Speed;
 import today.vanta.client.module.impl.player.Scaffold;
+import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.BooleanSetting;
 import today.vanta.client.setting.impl.MultiStringSetting;
 import today.vanta.util.game.events.EventListen;
@@ -19,31 +19,13 @@ import today.vanta.util.game.player.ChatUtil;
 import today.vanta.util.system.math.Counter;
 
 public class AutoDisable extends Module {
-    private final MultiStringSetting modules = MultiStringSetting.builder()
-            .name("Modules")
-            .value("Scaffold", "KillAura")
-            .values("Scaffold", "KillAura", "Speed", "Fly")
-            .build();
+    private final MultiStringSetting modules = Setting.of("Modules", new String[]{"Scaffold", "KillAura"}, new String[]{"Scaffold", "KillAura", "Speed", "Fly"});
 
-    private final BooleanSetting onDeath = BooleanSetting.builder()
-            .name("On death")
-            .value(true)
-            .build();
-
-    private final BooleanSetting onWorldChange = BooleanSetting.builder()
-            .name("On world change")
-            .value(true)
-            .build();
-
-    private final BooleanSetting onTeleport = BooleanSetting.builder()
-            .name("On teleport (flag)")
-            .value(false)
-            .build();
-
-    private final BooleanSetting warn = BooleanSetting.builder()
-            .name("Warn")
-            .value(true)
-            .build();
+    private final BooleanSetting
+            onDeath = Setting.of("On death", true),
+            onWorldChange = Setting.of("On world change", true),
+            onTeleport = Setting.of("On teleport (flag)", false),
+            warn = Setting.of("Warn", true);
 
     private final Counter disableCooldown = new Counter();
 

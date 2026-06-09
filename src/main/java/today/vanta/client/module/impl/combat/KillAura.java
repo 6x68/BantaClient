@@ -13,6 +13,7 @@ import today.vanta.client.event.impl.game.player.SprintEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.processor.impl.TargetProcessor;
+import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.BooleanSetting;
 import today.vanta.client.setting.impl.MultiStringSetting;
 import today.vanta.client.setting.impl.NumberSetting;
@@ -26,68 +27,27 @@ import today.vanta.util.system.math.Counter;
 
 public class KillAura extends Module {
     public final StringSetting
-            attackMode = StringSetting.builder()
-            .name("Attack mode")
-            .value("Single")
-            .values("Single")
-            .build(),
+            attackMode = Setting.of("Attack mode", "Single", "Single"),
+            sortMode = Setting.of("Sort mode", "Range", "Range", "Health", "Armor", "Hurt-time", "Ticks", "Skin color"),
+            autoBlockMode = Setting.of("Auto-block mode", "None", "None", "Vanilla", "Packet", "Hold"),
+            swingMode = Setting.of("Swing mode", "Legit", "Legit", "Blatant");
 
-    sortMode = StringSetting.builder()
-            .name("Sort mode")
-            .value("Range")
-            .values("Range", "Health", "Armor", "Hurt-time", "Ticks", "Skin color")
-            .build(),
+    public final NumberSetting
+            attackRange = Setting.of("Attack range", 3.4, 1, 6, 1, "m"),
+            searchRange = Setting.of("Search range", 4.3, 1, 7, 1, "m");
 
-    autoBlockMode = StringSetting.builder()
-            .name("Auto-block mode")
-            .value("None")
-            .values("None", "Vanilla", "Packet", "Hold")
-            .build();
+    public final MultiStringSetting entities = Setting.of("Entities", new String[]{"Players"}, new String[]{"Players", "Animals", "Monsters"});
 
-    private final StringSetting swingMode;
-    public final NumberSetting attackRange, searchRange = NumberSetting.builder()
-            .name("Search range")
-            .value(4.3)
-            .min(1)
-            .max(7)
-            .places(1)
-            .suffix("m")
-            .build();
-
-    public final MultiStringSetting entities = MultiStringSetting.builder()
-            .name("Entities")
-            .value("Players")
-            .values("Players", "Animals", "Monsters")
-            .build();
-
-    private final NumberSetting maxCPS, minCPS;
+    private final NumberSetting
+            maxCPS = Setting.of("Max CPS", 11, 1, 20),
+            minCPS = Setting.of("Min CPS", 10, 1, 20);
 
     public final BooleanSetting
-            raytrace = BooleanSetting.builder()
-            .name("Raytrace")
-            .value(true)
-            .build(),
-
-    noSwing = BooleanSetting.builder()
-            .name("No swing")
-            .value(false)
-            .build(),
-
-    sprintReset = BooleanSetting.builder()
-            .name("Sprint reset")
-            .value(true)
-            .build(),
-
-    swingOnHurtime = BooleanSetting.builder()
-            .name("Only Hurtime swing")
-            .value(false)
-            .build(),
-
-    keepSprint = BooleanSetting.builder()
-            .name("Keep sprint")
-            .value(false)
-            .build()
-            .hide(sprintReset::getValue);
+            raytrace = Setting.of("Raytrace", true),
+            noSwing = Setting.of("No swing", false),
+            sprintReset = Setting.of("Sprint reset", true),
+            swingOnHurtTime = Setting.of("Only Hurtime swing", false),
+            keepSprint = Setting.of("Keep sprint", false).hide(sprintReset::getValue);
 
     private float previousAttackRange;
 
@@ -95,36 +55,7 @@ public class KillAura extends Module {
         super("KillAura", "Attacks entities in proximity.", Category.COMBAT);
         displayNames = new String[]{"KillAura", "Killaura", "Aura"};
 
-        swingMode = StringSetting.builder()
-                .name("Swing mode")
-                .value("Legit")
-                .values("Legit", "Blatant")
-                .build();
-
-        attackRange = NumberSetting.builder()
-                .name("Attack range")
-                .value(3.4)
-                .min(1)
-                .max(6)
-                .places(1)
-                .suffix("m")
-                .build();
-
         previousAttackRange = attackRange.getValue().floatValue();
-
-        maxCPS = NumberSetting.builder()
-                .name("Max CPS")
-                .value(11)
-                .min(1)
-                .max(20)
-                .build();
-
-        minCPS = NumberSetting.builder()
-                .name("Min CPS")
-                .value(10)
-                .min(1)
-                .max(20)
-                .build();
 
         swingMode.addListener((setting, oldValue, newValue) -> {
             if (newValue.equals("Legit") && attackRange.getValue().floatValue() > 3.4f) {
@@ -269,15 +200,14 @@ public class KillAura extends Module {
                         }
 
                         if (!noSwing.getValue())
-                            if (swingOnHurtime.getValue()) {
+                            if (swingOnHurtTime.getValue()) {
                                 if (TargetProcessor.getInstance().target.hurtTime < 2) {
                                     mc.thePlayer.swingItem();
                                 }
                             } else {
                                 mc.thePlayer.swingItem();
                             }
-                        else
-                        if (swingOnHurtime.getValue()) {
+                        else if (swingOnHurtTime.getValue()) {
                             if (TargetProcessor.getInstance().target.hurtTime < 1) {
                                 mc.thePlayer.sendQueue.addToSendQueue(new C0APacketAnimation());
                             }

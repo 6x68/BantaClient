@@ -4,17 +4,14 @@ import net.minecraft.network.play.client.C0CPacketInput;
 import today.vanta.client.event.impl.game.world.UpdateEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
+import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.MultiStringSetting;
 import today.vanta.util.game.events.EventListen;
 
 import java.util.Arrays;
 
 public class Disabler extends Module {
-    private final MultiStringSetting disable = MultiStringSetting.builder()
-            .name("Disable")
-            .value("Miniblox")
-            .values("Miniblox")
-            .build();
+    private final MultiStringSetting disable = Setting.of("Disable", new String[]{"Miniblox"}, new String[]{"Miniblox"});
 
     public Disabler() {
         super("Disabler", "Disable anticheats, or at least parts of them.", Category.MISC);

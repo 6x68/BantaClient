@@ -5,30 +5,17 @@ import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.screen.ClickGUIScreen;
 import today.vanta.client.screen.ImGuiClickGUIScreen;
+import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.BooleanSetting;
 import today.vanta.client.setting.impl.StringSetting;
 
 public class ClickGUI extends Module {
     public final BooleanSetting
-            pauseGame = BooleanSetting.builder()
-            .name("Pause singleplayer")
-            .value(false)
-            .build(),
+            pauseGame = Setting.of("Pause singleplayer", false),
+            darkenBackground = Setting.of("Dark background", true),
+            gradientBackground = Setting.of("Gradient background", true);
 
-    darkenBackground = BooleanSetting.builder()
-            .name("Dark background")
-            .value(true)
-            .build(),
-
-    gradientBackground = BooleanSetting.builder()
-            .name("Gradient background")
-            .value(true)
-            .build();
-
-    private final StringSetting design = StringSetting.builder()
-            .name("Design")
-            .value("Dropdown").values("Dropdown", "ImGui")
-            .build();
+    private final StringSetting design = Setting.of("Design", "Dropdown", "Dropdown", "ImGui");
 
     public ClickGUI() {
         super("ClickGUI", "Opens up the ClickGUI.", Category.CLIENT, Keyboard.KEY_RSHIFT);

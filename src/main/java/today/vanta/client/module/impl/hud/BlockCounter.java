@@ -3,7 +3,6 @@ package today.vanta.client.module.impl.hud;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemSword;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import today.vanta.Vanta;
@@ -29,19 +28,9 @@ public class BlockCounter extends Module {
     private boolean dragging;
     private float dragX, dragY;
 
-    private final NumberSetting x = NumberSetting.builder()
-            .name("X position")
-            .value(20)
-            .min(0)
-            .max(2000)
-            .build();
-
-    private final NumberSetting y = NumberSetting.builder()
-            .name("Y position")
-            .value(70)
-            .min(0)
-            .max(2000)
-            .build();
+    private final NumberSetting
+            x = NumberSetting.of("X position", 20, 0, 2000),
+            y = NumberSetting.of("Y position", 70, 0, 2000);
 
     public BlockCounter() {
         super("BlockCounter", "Block information.", Category.HUD);
@@ -102,10 +91,10 @@ public class BlockCounter extends Module {
         GL11.glTranslated(itemX, itemY, 0);
         GL11.glScaled(scale, scale, 1.0);
         GL11.glTranslated(-itemX, -itemY, 0);
-        mc.renderItem.renderItemIntoGUIFullBright(mc.thePlayer.getCurrentEquippedItem(), (int)x, (int)y);
+        mc.renderItem.renderItemIntoGUIFullBright(mc.thePlayer.getCurrentEquippedItem(), (int) x, (int) y);
         GL11.glPopMatrix();
 
-        CFonts.SFPT_SEMIBOLD_20.drawStringWithShadow("Blocks", x + 38, y + 4,color );
+        CFonts.SFPT_SEMIBOLD_20.drawStringWithShadow("Blocks", x + 38, y + 4, color);
         CFonts.SFPT_SEMIBOLD_20.drawStringWithShadow(String.valueOf(blocksinHotbar), x + 38, y + 15, Color.WHITE);
 
         if (dragging) {

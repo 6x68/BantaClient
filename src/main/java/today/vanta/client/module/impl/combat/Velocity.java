@@ -2,34 +2,21 @@ package today.vanta.client.module.impl.combat;
 
 import net.minecraft.network.play.server.S12PacketEntityVelocity;
 import today.vanta.client.event.impl.game.network.ReceivePacketEvent;
-import today.vanta.client.event.impl.game.network.SendPacketEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
+import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.NumberSetting;
 import today.vanta.util.game.events.EventListen;
 
 public class Velocity extends Module {
+    private final NumberSetting
+            horizontal = Setting.of("Horizontal", 0, 0, 100, "%"),
+            vertical = Setting.of("Vertical", 0, 0, 100, "%");
+
     public Velocity() {
         super("Velocity", "Reduces knockback.", Category.COMBAT);
         displayNames = new String[]{"Velocity", "AntiKnockback", "AntiKB"};
     }
-
-    private final NumberSetting
-            horizontal = NumberSetting.builder()
-            .name("Horizontal")
-            .value(0)
-            .max(100)
-            .min(0)
-            .suffix("%")
-            .build(),
-
-    vertical = NumberSetting.builder()
-            .name("Vertical")
-            .value(0)
-            .max(100)
-            .min(0)
-            .suffix("%")
-            .build();
 
     @EventListen
     private void onPacket(ReceivePacketEvent event) {

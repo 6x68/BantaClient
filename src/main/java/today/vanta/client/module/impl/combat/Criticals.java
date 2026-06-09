@@ -27,11 +27,7 @@ public class Criticals extends Module {
     private static final double RANDOM_OFFSET_MIN = 0.001D;
     private static final double RANDOM_OFFSET_MAX = 0.0011D;
 
-    private final StringSetting mode = StringSetting.builder()
-            .name("Mode")
-            .value("Edit")
-            .values("Edit", "Packet", "Old Watchdog")
-            .build();
+    private final StringSetting mode = StringSetting.of("Mode", "Edit", "Edit", "Packet", "Old Watchdog");
 
     public Criticals() {
         super("Criticals", "Tries to make all landed hits critical.", Category.COMBAT);

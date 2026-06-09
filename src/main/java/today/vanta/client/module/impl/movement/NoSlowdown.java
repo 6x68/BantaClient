@@ -5,6 +5,7 @@ import today.vanta.Vanta;
 import today.vanta.client.event.impl.game.player.SlowdownEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
+import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.BooleanSetting;
 import today.vanta.client.setting.impl.MultiStringSetting;
 import today.vanta.client.setting.impl.NumberSetting;
@@ -12,33 +13,13 @@ import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.player.MovementUtil;
 
 public class NoSlowdown extends Module {
-    private final MultiStringSetting items = MultiStringSetting.builder()
-            .name("Items")
-            .value("Swords")
-            .values("Swords", "Bows", "Consumables")
-            .build();
+    private final MultiStringSetting items = Setting.of("Items", new String[]{"Swords"}, new String[]{"Swords", "Bows", "Consumables"});
 
-    private final NumberSetting forwardMultiplier = NumberSetting.builder()
-            .name("Forward multiplier")
-            .value(1f)
-            .min(0)
-            .max(1)
-            .places(1)
-            .build();
+    private final NumberSetting
+            forwardMultiplier = Setting.of("Forward multiplier", 1, 0, 1, 2),
+            strafeMultiplier = Setting.of("Strafe multiplier", 1, 0, 1, 2);
 
-    private final NumberSetting strafeMultiplier = NumberSetting.builder()
-            .name("Strafe multiplier")
-            .value(1f)
-            .min(0)
-            .max(1)
-            .places(1)
-            .build();
-
-    private final BooleanSetting
-            shouldSprint = BooleanSetting.builder()
-            .name("Should sprint")
-            .value(true)
-            .build();
+    private final BooleanSetting shouldSprint = Setting.of("Should sprint", true);
 
     public NoSlowdown() {
         super("NoSlowdown", "Removes the slowdown effect when using an item.", Category.MOVEMENT);

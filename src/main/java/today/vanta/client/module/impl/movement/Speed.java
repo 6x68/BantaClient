@@ -4,24 +4,15 @@ import today.vanta.client.event.impl.game.player.MotionEvent;
 import today.vanta.client.event.impl.game.world.UpdateEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
+import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.player.MovementUtil;
 
 public class Speed extends Module {
     private final StringSetting
-            mode = StringSetting.builder()
-            .name("Mode")
-            .value("OldNCP")
-            .values("OldNCP", "NCP", "Mospixel-Tick")
-            .build(),
-
-    oncpmode = StringSetting.builder()
-            .name("ONCP mode")
-            .value("Y-Port")
-            .values("Y-Port", "Strafe")
-            .build()
-            .hide(() -> !mode.getValue().equals("OldNCP"));
+            mode = Setting.of("Mode", "NCP", "OldNCP", "Mospixel-Tick"),
+            oncpmode = Setting.of("OldNCP Mode", "Y-Port", "Y-Port", "Strafe").hide(() -> !mode.getValue().equals("OldNCP"));
 
     public Speed() {
         super("Speed", "Makes you go faster.", Category.MOVEMENT);
