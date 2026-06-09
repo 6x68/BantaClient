@@ -10,7 +10,7 @@ public class Theme extends Module {
     private final StringSetting theme = StringSetting.builder()
             .name("Theme")
             .value("Coral")
-            .values("Coral", "Capri", "Twilight", "Margo", "Lust", "Light")
+            .values("Coral", "Capri", "Twilight", "Margo", "Lust", "Light", "ShadowNotro")
             .listener((setting, oldValue, newValue) -> setColorArray())
             .build();
 
