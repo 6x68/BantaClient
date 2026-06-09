@@ -28,7 +28,9 @@ public class ModuleStorage extends Storage<Module> {
         changelog.add("[+] Added 'Color mode' option to Arraylist");
         changelog.add("[+] Added 'Font' option to Arraylist");
         changelog.add("[+] Added AutoDisable");
+        changelog.add("[+] Added new 'ShadowNotro' theme");
         changelog.add("[#] Fixed Arraylist height offsets");
+        changelog.add("[#] Finished ImGui ClickGui");
     }
 
     @Override
