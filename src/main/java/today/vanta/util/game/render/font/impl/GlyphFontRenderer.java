@@ -62,6 +62,9 @@ public class GlyphFontRenderer extends CFont implements IRenderer {
         boolean strikethrough = false;
         boolean underline = false;
 
+        boolean useGradient = true;
+        int currentColorRGB = 0;
+
         x *= 2.0F;
         y *= 2.0F;
         y += 3;
@@ -74,22 +77,36 @@ public class GlyphFontRenderer extends CFont implements IRenderer {
         GlStateManager.bindTexture(tex.getGlTextureId());
 
         int size = text.length();
-
         long time = (long) (System.currentTimeMillis() * speed);
 
         for (int i = 0; i < size; i++) {
             char character = text.charAt(i);
 
             if ((character == '§') && (i + 1 < size)) {
-                int colorIndex = colorCodeCharacters.indexOf(text.charAt(i + 1));
+                char codeChar = text.charAt(i + 1);
+                int colorIndex = colorCodeCharacters.indexOf(codeChar);
 
-                if (colorIndex < 16 || colorIndex == 21) {
+                if (colorIndex < 16) {
                     bold = false;
                     italic = false;
                     underline = false;
                     strikethrough = false;
                     GlStateManager.bindTexture(tex.getGlTextureId());
                     currentData = this.charData;
+
+                    useGradient = false;
+                    currentColorRGB = colorCode[colorIndex];
+
+                } else if (colorIndex == 21) { // Reset (§r)
+                    bold = false;
+                    italic = false;
+                    underline = false;
+                    strikethrough = false;
+                    GlStateManager.bindTexture(tex.getGlTextureId());
+                    currentData = this.charData;
+
+                    useGradient = true;
+
                 } else if (colorIndex == 17) { // Bold
                     bold = true;
                     if (italic) {
@@ -115,15 +132,22 @@ public class GlyphFontRenderer extends CFont implements IRenderer {
                 }
                 i++;
             } else if ((character < currentData.length) && (character >= 0)) {
-                double offset = (time + (i * spacing)) % 2000 / 2000.0;
-                double factor = Math.abs(Math.sin(offset * Math.PI));
 
-                int colorRGB = ColorUtil.getGradientColor(startColor, endColor, factor);
+                int colorRGB;
+
+                if (useGradient) {
+                    double offset = (time + (i * spacing)) % 2000 / 2000.0;
+                    double factor = Math.abs(Math.sin(offset * Math.PI));
+                    colorRGB = ColorUtil.getGradientColor(startColor, endColor, factor);
+                } else {
+                    colorRGB = currentColorRGB;
+                }
 
                 int cr = (colorRGB >> 16) & 0xFF;
                 int cg = (colorRGB >> 8) & 0xFF;
                 int cb = colorRGB & 0xFF;
-                int ca = (colorRGB >> 24) & 0xFF;
+
+                int ca = ((colorRGB >> 24) & 0xFF) == 0 ? 255 : ((colorRGB >> 24) & 0xFF);
 
                 GlStateManager.color(cr / 255.0F, cg / 255.0F, cb / 255.0F, ca / 255.0F);
 
