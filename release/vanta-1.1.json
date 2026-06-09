@@ -28,9 +28,9 @@
       "downloads": {
         "artifact": {
           "path": "com/viaversion/ViaVersion/5.9.1/ViaVersion-5.9.1-downgraded.jar",
-          "sha1": "bc31c823857e12ba87ea597c3a8a643c305470c8",
-          "size": 6440533,
-          "url": "https://github.com/VantaClient/Client/raw/refs/heads/main/release/ViaVersion-5.2.0-downgraded.jar"
+          "sha1": "55df85bfed94c871245fa30af41d50c105d14fe5",
+          "size": 6357878,
+          "url": "https://github.com/VantaClient/Client/raw/refs/heads/main/release/ViaVersion-5.9.1-downgraded.jar"
         }
       },
       "name": "com.viaversion:ViaVersion:5.9.1-downgraded"
@@ -52,7 +52,7 @@
           "path": "com/viaversion/ViaRewind/4.1.1/ViaRewind-4.1.1-downgraded.jar",
           "sha1": "4049a3a5a6e93aa2e13c48000d3d0d778d8338b0",
           "size": 401835,
-          "url": "https://github.com/VantaClient/Client/raw/refs/heads/main/release/ViaRewind-4.0.4-downgraded.jar"
+          "url": "https://github.com/VantaClient/Client/raw/refs/heads/main/release/ViaRewind-4.1.1-downgraded.jar"
         }
       },
       "name": "com.viaversion:ViaRewind:4.1.1-downgraded"
