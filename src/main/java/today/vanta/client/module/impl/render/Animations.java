@@ -17,7 +17,7 @@ public class Animations extends Module {
     private final StringSetting mode = StringSetting.builder()
             .name("Mode")
             .value("1.7")
-            .values("1.7", "Interia", "Exhibition", "Sigma", "Stella")
+            .values("1.7", "Interia", "Exhibition", "Sigma", "Stella", "Smooth")
             .build();
 
     private final BooleanSetting noBob = BooleanSetting.builder()
@@ -81,6 +81,14 @@ public class Animations extends Module {
                 GlStateManager.rotate(-80.0F, 1.0F, 0.0F, 0.0F);
                 GlStateManager.rotate(60.0F, 0.0F, 1.0F, 0.0F);
                 break;
+            case "Smooth":
+                renderer.transformFirstPersonItem(f / 1.5F, 0.0f);
+                renderer.doBlockTransformations();
+                GlStateManager.translate(-0.05f, 0.3f, 0.3f);
+                GlStateManager.rotate(-var9 * 140.0f, 8.0f, 0.0f, 8.0f);
+                GlStateManager.rotate(var9 * 90.0f, 8.0f, 0.0f, 8.0f);
+                break;
+
         }
     }
 }

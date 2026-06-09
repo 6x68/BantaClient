@@ -20,6 +20,21 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Arraylist extends Module {
+    private final NumberSetting xValue = NumberSetting.builder()
+            .name("X Value")
+            .value(0)
+            .min(1)
+            .max(100)
+            .places(0)
+            .build();
+
+    private final NumberSetting yValue = NumberSetting.builder()
+            .name("Y Value")
+            .value(0)
+            .min(0)
+            .max(100)
+            .places(0)
+            .build();
     private final StringSetting fontStyle = StringSetting.builder()
             .name("Font style")
             .value("Medium")
@@ -110,7 +125,7 @@ public class Arraylist extends Module {
                         m -> font.getStringWidth(getModuleName((Module) m))
                 ).reversed()).collect(Collectors.toList());
 
-        float y = 3;
+        float y = yValue.getValue().floatValue();
         for (int i = 0; i < modules.size(); i++) {
             Module module = modules.get(i);
             String name = getModuleName(module);
@@ -118,12 +133,12 @@ public class Arraylist extends Module {
             float modWidth = font.getStringWidth(name);
             float modHeight = font.getFontHeight();
 
-            float x = event.scaledResolution.getScaledWidth() - modWidth - 5;
+            float x = event.scaledResolution.getScaledWidth() - modWidth - xValue.getValue().floatValue();
 
             if (background.getValue()) {
                 float rectX = x - 2;
                 float rectY = y;
-                float rectWidth = modWidth + 4.5f;
+                float rectWidth = modWidth + 3f;
                 float rectHeight = modHeight + 5;
 
                 boolean first = i == 0;
@@ -158,8 +173,8 @@ public class Arraylist extends Module {
                             Module nextModule = modules.get(i + 1);
                             String nextName = getModuleName(nextModule);
                             float nextModWidth = font.getStringWidth(nextName);
-                            float nextX = event.scaledResolution.getScaledWidth() - nextModWidth - 5;
-                            float nextRectX = nextX - 2;
+                            float nextX = event.scaledResolution.getScaledWidth() - nextModWidth - 3;
+                            float nextRectX = nextX - xValue.getValue().floatValue();
 
                             float widthToNext = nextRectX - rectX;
 
@@ -190,9 +205,9 @@ public class Arraylist extends Module {
             }
 
             if (fontShadow.getValue()) {
-                font.drawStringWithShadow(name, x, y + 0.5f, fg);
+                font.drawStringWithShadow(name, x - 0.5f, y, fg);
             } else {
-                font.drawString(name, x, y + 0.5f, fg);
+                font.drawString(name, x - 1f, y, fg);
             }
 
             y += font.getFontHeight() + (background.getValue() ? 3 : 0) + 2;
