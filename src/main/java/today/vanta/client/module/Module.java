@@ -30,7 +30,7 @@ public abstract class Module implements IMinecraft {
         this.key = key;
 
         this.displayName = name;
-        this.displayNames = new String[] {displayName};
+        this.displayNames = new String[]{displayName};
 
         Vanta.instance.moduleStorage.context = this;
     }
@@ -42,6 +42,10 @@ public abstract class Module implements IMinecraft {
 
     public Module(String name, String description, Category category) {
         this(name, description, category, 0);
+
+        if (!description.endsWith(".")) {
+            throw new IllegalArgumentException("No description or description missing period at the end!");
+        }
     }
 
     public void onEnable() {
