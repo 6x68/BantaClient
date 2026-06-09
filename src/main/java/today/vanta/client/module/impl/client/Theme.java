@@ -41,7 +41,7 @@ public class Theme extends Module {
                 colors = new Color[]{new Color(255, 255, 255, 185), new Color(0x29A6FF)};
                 break;
             case "ShadowNotro":
-                colors = new Color[]{new Color(158, 0, 123), new Color(28, 0, 100)};
+                colors = new Color[]{new Color(255, 0, 181), new Color(28, 0, 100)};
                 break;
         }
     }
