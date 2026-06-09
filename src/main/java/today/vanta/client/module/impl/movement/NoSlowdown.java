@@ -36,7 +36,7 @@ public class NoSlowdown extends Module {
 
     private final BooleanSetting
             shouldSprint = BooleanSetting.builder()
-            .name("Should Sprint")
+            .name("Should sprint")
             .value(false)
             .build();
 
