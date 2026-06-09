@@ -84,9 +84,7 @@ public class ClickGUIScreen extends GuiScreen {
                         ignoreThis += 14;
                     if (!module.frozen)
                         ignoreThis += 14;
-                    if (!module.frozen && !module.category.equals(Category.CLIENT))
-                        ignoreThis += 14;
-                    ignoreThis += 14;
+                    ignoreThis += 14 * 2;
                     if (module.getSuffix() != null && !module.hideFromArraylist)
                         ignoreThis += 14;
 
@@ -159,7 +157,7 @@ public class ClickGUIScreen extends GuiScreen {
                         y += 14;
                     }
 
-                    if (!module.frozen && !module.category.equals(Category.CLIENT)) {
+                    if (!module.frozen) {
                         boolean hoverHide = RenderUtil.hovered(mouseX, mouseY, x + 1.5f, y, panelWidth - 3, 14);
                         RenderUtil.rectangle(x + 1.5f, y, panelWidth - 3, 14, hoverHide ? new Color(42, 42, 42) : new Color(38, 38, 38));
                         sett.drawString("Hide on arraylist", x + 5, y + 2.5f, -1);
@@ -348,7 +346,7 @@ public class ClickGUIScreen extends GuiScreen {
                         y += 14;
                     }
 
-                    if (!module.frozen && !module.category.equals(Category.CLIENT)) {
+                    if (!module.frozen) {
                         float bXHidden = x + panelWidth - 5;
                         boolean hoverHide = RenderUtil.hovered(mouseX, mouseY, bXHidden - 17, y + 3.5f, 17, 7);
                         if (hoverHide && mouseButton == 0) {

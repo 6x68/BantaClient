@@ -106,6 +106,7 @@ import today.vanta.client.event.impl.game.ClickEvent;
 import today.vanta.client.event.impl.game.GameLoopEvent;
 import today.vanta.client.event.impl.game.RunTickEvent;
 import today.vanta.client.event.impl.game.player.AllowAttackWhileBlockingEvent;
+import today.vanta.client.event.impl.game.player.ChangeWorldEvent;
 import today.vanta.client.event.impl.game.render.DisplayGuiScreenEvent;
 import today.vanta.client.event.impl.game.world.LoadWorldEvent;
 import today.vanta.client.event.impl.system.KeyboardEvent;
@@ -1853,6 +1854,8 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
         if (this.currentScreen instanceof GuiGameOver) {
             this.displayGuiScreen(null);
         }
+
+        new ChangeWorldEvent().call();
     }
 
     public NetHandlerPlayClient getNetHandler() {
