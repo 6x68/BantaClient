@@ -22,8 +22,11 @@ public interface IMinecraft {
         float targetYaw = rotations.lastYaw + yawDiff;
         float targetPitch = MathHelper.clamp_float(rotations.lastPitch + pitchDiff, -90, 90);
 
+        mc.thePlayer.prevRenderYawOffset = targetYaw;
+
         event.yaw = targetYaw;
         event.pitch = targetPitch;
+
         mc.thePlayer.rotationYawHead = event.yaw;
         mc.thePlayer.renderYawOffset = event.yaw;
         mc.thePlayer.rotationPitchHead = event.pitch;
