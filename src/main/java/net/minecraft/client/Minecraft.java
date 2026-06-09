@@ -16,11 +16,8 @@ import com.viaversion.viaversion.api.Via;
 import com.viaversion.viaversion.api.connection.UserConnection;
 import com.viaversion.viaversion.api.protocol.packet.PacketWrapper;
 import com.viaversion.viaversion.api.protocol.version.ProtocolVersion;
-import com.viaversion.viaversion.api.type.Types;
-import com.viaversion.viaversion.protocol.packet.PacketWrapperImpl;
 import com.viaversion.viaversion.protocols.v1_21to1_21_2.packet.ServerboundPackets1_21_2;
 import de.florianmichael.vialoadingbase.ViaLoadingBase;
-import de.florianmichael.viamcp.ViaMCP;
 import de.florianmichael.viamcp.fixes.AttackOrder;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -60,14 +57,12 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.entity.boss.BossStatus;
 import net.minecraft.entity.item.*;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EnumPlayerModelParts;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Bootstrap;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemSword;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
@@ -116,6 +111,7 @@ import today.vanta.client.event.impl.game.world.LoadWorldEvent;
 import today.vanta.client.event.impl.system.KeyboardEvent;
 import today.vanta.util.client.IClient;
 import today.vanta.util.game.events.EventState;
+import today.vanta.util.game.render.font.impl.BitMapFontRenderer;
 import today.vanta.util.system.lwjgl.imgui.ImGuiImpl;
 
 import javax.imageio.ImageIO;
@@ -166,9 +162,9 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
     public EffectRenderer effectRenderer;
     public Session session;
     private boolean isGamePaused;
-    public FontRenderer fontRendererObj;
-    public FontRenderer exhiFontRendererObj;
-    public FontRenderer standardGalacticFontRenderer;
+    public BitMapFontRenderer fontRendererObj;
+    public BitMapFontRenderer exhiFontRendererObj;
+    public BitMapFontRenderer standardGalacticFontRenderer;
     public GuiScreen currentScreen;
     public LoadingScreenRenderer loadingScreen;
     public EntityRenderer entityRenderer;
@@ -338,15 +334,15 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
         this.mcSoundHandler = new SoundHandler(this.mcResourceManager, this.gameSettings);
         this.mcResourceManager.registerReloadListener(this.mcSoundHandler);
         this.mcMusicTicker = new MusicTicker(this);
-        this.fontRendererObj = new FontRenderer(this.gameSettings, new ResourceLocation("textures/font/ascii.png"), this.renderEngine, false);
-        this.exhiFontRendererObj = new FontRenderer(this.gameSettings, new ResourceLocation("vanta","fonts/crack.png"), this.renderEngine, false);
+        this.fontRendererObj = new BitMapFontRenderer(this.gameSettings, new ResourceLocation("textures/font/ascii.png"), this.renderEngine, false);
+        this.exhiFontRendererObj = new BitMapFontRenderer(this.gameSettings, new ResourceLocation("vanta","fonts/crack.png"), this.renderEngine, false);
 
         if (this.gameSettings.language != null) {
             this.fontRendererObj.setUnicodeFlag(this.isUnicode());
             this.fontRendererObj.setBidiFlag(this.mcLanguageManager.isCurrentLanguageBidirectional());
         }
 
-        this.standardGalacticFontRenderer = new FontRenderer(this.gameSettings, new ResourceLocation("textures/font/ascii_sga.png"), this.renderEngine, false);
+        this.standardGalacticFontRenderer = new BitMapFontRenderer(this.gameSettings, new ResourceLocation("textures/font/ascii_sga.png"), this.renderEngine, false);
         this.mcResourceManager.registerReloadListener(this.fontRendererObj);
         this.mcResourceManager.registerReloadListener(this.exhiFontRendererObj);
         this.mcResourceManager.registerReloadListener(this.standardGalacticFontRenderer);

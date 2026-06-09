@@ -1,6 +1,6 @@
 package net.minecraft.client.renderer.tileentity;
 
-import net.minecraft.client.gui.FontRenderer;
+import today.vanta.util.game.render.font.impl.BitMapFontRenderer;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.tileentity.TileEntity;
@@ -32,7 +32,7 @@ public abstract class TileEntitySpecialRenderer<T extends TileEntity> implements
         this.rendererDispatcher = rendererDispatcherIn;
     }
 
-    public FontRenderer getFontRenderer() {
+    public BitMapFontRenderer getFontRenderer() {
         return this.rendererDispatcher.getFontRenderer();
     }
 

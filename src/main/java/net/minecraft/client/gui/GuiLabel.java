@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
+import today.vanta.util.game.render.font.impl.BitMapFontRenderer;
 
 import java.util.List;
 
@@ -21,10 +22,10 @@ public class GuiLabel extends Gui {
     private final int field_146169_o;
     private final int field_146166_p;
     private final int field_146165_q;
-    private final FontRenderer fontRenderer;
+    private final BitMapFontRenderer fontRenderer;
     private final int field_146163_s;
 
-    public GuiLabel(FontRenderer fontRendererObj, int p_i45540_2_, int p_i45540_3_, int p_i45540_4_, int p_i45540_5_, int p_i45540_6_, int p_i45540_7_) {
+    public GuiLabel(BitMapFontRenderer fontRendererObj, int p_i45540_2_, int p_i45540_3_, int p_i45540_4_, int p_i45540_5_, int p_i45540_6_, int p_i45540_7_) {
         this.fontRenderer = fontRendererObj;
         this.field_175204_i = p_i45540_2_;
         this.field_146162_g = p_i45540_3_;

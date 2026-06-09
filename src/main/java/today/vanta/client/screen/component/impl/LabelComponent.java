@@ -2,7 +2,7 @@ package today.vanta.client.screen.component.impl;
 
 import today.vanta.client.screen.component.Component;
 import today.vanta.util.game.render.RenderUtil;
-import today.vanta.util.game.render.font.CFontRenderer;
+import today.vanta.util.game.render.font.impl.GlyphFontRenderer;
 import today.vanta.util.game.sound.Sounds;
 
 import java.awt.*;
@@ -10,11 +10,11 @@ import java.awt.*;
 public class LabelComponent extends Component {
     private boolean onlyText = false;
 
-    public LabelComponent(String text, float x, float y, float width, float height, CFontRenderer font) {
+    public LabelComponent(String text, float x, float y, float width, float height, GlyphFontRenderer font) {
         super(text, x, y, width, height, font);
     }
 
-    public LabelComponent(String text, float x, float y, CFontRenderer font) {
+    public LabelComponent(String text, float x, float y, GlyphFontRenderer font) {
         super(text, x, y, font.getStringWidth(text), font.getFontHeight(), font);
         onlyText = true;
     }

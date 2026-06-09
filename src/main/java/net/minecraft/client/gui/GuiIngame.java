@@ -34,6 +34,7 @@ import net.minecraft.util.*;
 import net.minecraft.world.border.WorldBorder;
 import net.optifine.CustomColors;
 import today.vanta.client.event.impl.game.render.Render2DEvent;
+import today.vanta.util.game.render.font.impl.BitMapFontRenderer;
 
 import java.util.Collection;
 import java.util.List;
@@ -710,7 +711,7 @@ public class GuiIngame extends Gui {
     private void renderBossHealth() {
         if (BossStatus.bossName != null && BossStatus.statusBarTime > 0) {
             --BossStatus.statusBarTime;
-            FontRenderer fontrenderer = this.mc.fontRendererObj;
+            BitMapFontRenderer fontrenderer = this.mc.fontRendererObj;
             ScaledResolution scaledresolution = new ScaledResolution(this.mc);
             int i = scaledresolution.getScaledWidth();
             int j = 182;
@@ -937,7 +938,7 @@ public class GuiIngame extends Gui {
         return this.updateCounter;
     }
 
-    public FontRenderer getFontRenderer() {
+    public BitMapFontRenderer getFontRenderer() {
         return this.mc.fontRendererObj;
     }
 

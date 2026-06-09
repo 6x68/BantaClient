@@ -26,6 +26,7 @@ import net.optifine.util.NativeMemory;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import today.vanta.util.client.IClient;
+import today.vanta.util.game.render.font.impl.BitMapFontRenderer;
 
 import java.util.Collection;
 import java.util.List;
@@ -33,7 +34,7 @@ import java.util.Map.Entry;
 
 public class GuiOverlayDebug extends Gui {
     private final Minecraft mc;
-    private final FontRenderer fontRenderer;
+    private final BitMapFontRenderer fontRenderer;
     private String debugOF = null;
     private List<String> debugInfoLeft = null;
     private List<String> debugInfoRight = null;

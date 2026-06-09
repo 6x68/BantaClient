@@ -7,7 +7,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ContainerEnchantment;
 import net.minecraft.item.ItemStack;
@@ -18,6 +17,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IWorldNameable;
 import net.minecraft.world.World;
 import org.lwjgl.util.glu.Project;
+import today.vanta.util.game.render.font.impl.BitMapFontRenderer;
 
 import java.io.IOException;
 import java.util.List;
@@ -150,7 +150,7 @@ public class GuiEnchantment extends GuiContainer {
                 this.drawTexturedModalRect(i1, j + 14 + 19 * l, 0, 185, 108, 19);
             } else {
                 String s1 = "" + l1;
-                FontRenderer fontrenderer = this.mc.standardGalacticFontRenderer;
+                BitMapFontRenderer fontrenderer = this.mc.standardGalacticFontRenderer;
                 int i2 = 6839882;
 
                 if ((k < l + 1 || this.mc.thePlayer.experienceLevel < l1) && !this.mc.thePlayer.capabilities.isCreativeMode) {

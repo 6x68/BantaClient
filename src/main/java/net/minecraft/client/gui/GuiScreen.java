@@ -29,9 +29,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import today.vanta.util.game.render.font.impl.BitMapFontRenderer;
 
 import java.awt.*;
-import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
@@ -54,7 +54,7 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback {
     protected List<GuiButton> buttonList = Lists.newArrayList();
     protected List<GuiLabel> labelList = Lists.newArrayList();
     public boolean allowUserInput;
-    protected FontRenderer fontRendererObj;
+    protected BitMapFontRenderer fontRendererObj;
     private GuiButton selectedButton;
     private int eventButton;
     private long lastMouseEvent;

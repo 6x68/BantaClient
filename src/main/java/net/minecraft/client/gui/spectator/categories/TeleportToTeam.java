@@ -3,7 +3,7 @@ package net.minecraft.client.gui.spectator.categories;
 import com.google.common.collect.Lists;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.client.gui.FontRenderer;
+import today.vanta.util.game.render.font.impl.BitMapFontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiSpectator;
 import net.minecraft.client.gui.spectator.ISpectatorMenuObject;
@@ -99,7 +99,7 @@ public class TeleportToTeam implements ISpectatorMenuView, ISpectatorMenuObject 
 
         public void func_178663_a(float p_178663_1_, int alpha) {
             int i = -1;
-            String s = FontRenderer.getFormatFromString(this.field_178676_b.getColorPrefix());
+            String s = BitMapFontRenderer.getFormatFromString(this.field_178676_b.getColorPrefix());
 
             if (s.length() >= 2) {
                 i = Minecraft.getMinecraft().fontRendererObj.getColorCode(s.charAt(1));

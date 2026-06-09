@@ -8,10 +8,11 @@ import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ChatAllowedCharacters;
 import net.minecraft.util.MathHelper;
+import today.vanta.util.game.render.font.impl.BitMapFontRenderer;
 
 public class GuiTextField extends Gui {
     private final int id;
-    private final FontRenderer fontRendererInstance;
+    private final BitMapFontRenderer fontRendererInstance;
     public int xPosition;
     public int yPosition;
     private final int width;
@@ -32,7 +33,7 @@ public class GuiTextField extends Gui {
     private GuiPageButtonList.GuiResponder field_175210_x;
     private Predicate<String> validator = Predicates.alwaysTrue();
 
-    public GuiTextField(int componentId, FontRenderer fontrendererObj, int x, int y, int par5Width, int par6Height) {
+    public GuiTextField(int componentId, BitMapFontRenderer fontrendererObj, int x, int y, int par5Width, int par6Height) {
         this.id = componentId;
         this.fontRendererInstance = fontrendererObj;
         this.xPosition = x;
@@ -366,7 +367,7 @@ public class GuiTextField extends Gui {
 
             if (s.length() > 0) {
                 String s1 = flag ? s.substring(0, j) : s;
-                j1 = this.fontRendererInstance.drawStringWithShadow(s1, (float) l, (float) i1, i);
+                j1 = (int) this.fontRendererInstance.drawStringWithShadow(s1, (float) l, (float) i1, i);
             }
 
             boolean flag2 = this.cursorPosition < this.text.length() || this.text.length() >= this.getMaxStringLength();
@@ -380,7 +381,7 @@ public class GuiTextField extends Gui {
             }
 
             if (s.length() > 0 && flag && j < s.length()) {
-                j1 = this.fontRendererInstance.drawStringWithShadow(s.substring(j), (float) j1, (float) i1, i);
+                this.fontRendererInstance.drawStringWithShadow(s.substring(j), (float) j1, (float) i1, i);
             }
 
             if (flag1) {

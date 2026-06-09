@@ -1,7 +1,7 @@
 package net.minecraft.client.renderer.tileentity;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
+import today.vanta.util.game.render.font.impl.BitMapFontRenderer;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.entity.Render;
@@ -175,7 +175,7 @@ public class RenderItemFrame extends Render<EntityItemFrame> {
                 String s = entity.getDisplayedItem().getDisplayName();
 
                 if (entity.isSneaking()) {
-                    FontRenderer fontrenderer = this.getFontRendererFromRenderManager();
+                    BitMapFontRenderer fontrenderer = this.getFontRendererFromRenderManager();
                     GlStateManager.pushMatrix();
                     GlStateManager.translate((float) x + 0.0F, (float) y + entity.height + 0.5F, (float) z);
                     GL11.glNormal3f(0.0F, 1.0F, 0.0F);

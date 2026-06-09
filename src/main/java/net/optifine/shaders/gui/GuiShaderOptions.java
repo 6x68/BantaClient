@@ -1,6 +1,6 @@
 package net.optifine.shaders.gui;
 
-import net.minecraft.client.gui.FontRenderer;
+import today.vanta.util.game.render.font.impl.BitMapFontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
@@ -102,7 +102,7 @@ public class GuiShaderOptions extends GuiScreenOF {
             ShaderOptionScreen shaderoptionscreen = (ShaderOptionScreen) so;
             return s + "...";
         } else {
-            FontRenderer fontrenderer = Config.getMinecraft().fontRendererObj;
+            BitMapFontRenderer fontrenderer = Config.getMinecraft().fontRendererObj;
 
             for (int i = fontrenderer.getStringWidth(": " + Lang.getOff()) + 5; fontrenderer.getStringWidth(s) + i >= btnWidth && s.length() > 0; s = s.substring(0, s.length() - 1)) {
             }

@@ -1,8 +1,10 @@
-package today.vanta.util.game.render.font;
+package today.vanta.util.game.render.font.impl;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import org.lwjgl.opengl.GL11;
+import today.vanta.util.game.render.font.CFont;
+import today.vanta.util.game.render.font.IRenderer;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -10,7 +12,7 @@ import java.awt.Font;
 /**
  * @author <a href="https://github.com/IUDevman/gamesense-client/tree/master">GAMESENSE Client</a>
  */
-public class CFontRenderer extends CFont {
+public class GlyphFontRenderer extends CFont implements IRenderer {
     protected CharData[] boldChars = new CharData[256];
     protected CharData[] italicChars = new CharData[256];
     protected CharData[] boldItalicChars = new CharData[256];
@@ -22,58 +24,48 @@ public class CFontRenderer extends CFont {
     protected DynamicTexture texItalic;
     protected DynamicTexture texItalicBold;
 
-    public CFontRenderer(Font font, boolean antiAlias, boolean fractionalMetrics) {
-        super(font, antiAlias, fractionalMetrics);
+    public GlyphFontRenderer(Font font) {
+        super(font);
         setupMinecraftColorCodes();
         setupBoldItalicIDs();
     }
 
-    public CFontRenderer(Font font) {
-        super(font, true, true);
-        setupMinecraftColorCodes();
-        setupBoldItalicIDs();
+    @Override
+    public float drawYCenteredString(String text, float x, float y, Color color, boolean dropShadow) {
+        return drawString(text, x, y - getFontHeight() / 2F, color.getRGB(), dropShadow);
     }
 
-    public float drawStringWithShadow(String text, double x, double y, Color color) {
-        float shadowWidth = drawString(text, x + 1D, y + 1D, color, true);
+    @Override
+    public float drawStringWithShadow(String text, float x, float y, Color color) {
+        float shadowWidth = drawString(text, x + 1, y + 1, color.getRGB(), true);
+        return Math.max(shadowWidth, drawString(text, x, y, color.getRGB(), false));
+    }
+
+    @Override
+    public float drawStringWithShadow(String text, float x, float y, int color) {
+        float shadowWidth = drawString(text, x + 1, y + 1, color, true);
         return Math.max(shadowWidth, drawString(text, x, y, color, false));
     }
 
-    public float drawString(String text, float x, float y, int color) {
-        return drawString(text, x, y, new Color(color), false);
-    }
-
-    public float drawString(String text, float x, float y, Color color) {
-        return drawString(text, x, y, color, false);
-    }
-
-    public float drawCenteredStringWithShadow(String text, float x, float y, Color color) {
-        return drawStringWithShadow(text, x - getStringWidth(text) / 2f, y, color);
-    }
-
-    public float drawCenteredString(String text, float x, float y, Color color) {
-        return drawString(text, x - getStringWidth(text) / 2f, y, color);
-    }
-
-    public float drawYCenteredString(String text, float x, float y, Color color, boolean dropShadow) {
-        return drawString(text, x, y - getFontHeight() / 2F, color, dropShadow);
-    }
-
-    public float drawString(String text, double x, double y, Color color, boolean shadow) {
+    @Override
+    public float drawString(String text, float x, float y, int color, boolean shadow) {
         x -= 1;
         y -= 2;
 
         if (text == null)
             return 0.0F;
 
-        if (color.getRed() == 255 && color.getGreen() == 255 && color.getBlue() == 255 && color.getAlpha() == 32)
-            color = new Color(255, 255, 255);
+        int red = (color >> 16) & 0xFF;
+        int green = (color >> 8) & 0xFF;
+        int blue = (color) & 0xFF;
+        int alpha = (color >> 24) & 0xFF;
 
-        if (color.getAlpha() < 4)
-            color = new Color(color.getRed(), color.getGreen(), color.getBlue(), 255);
+        if (alpha < 4) alpha = 255;
 
         if (shadow) {
-            color = new Color(color.getRed() / 4, color.getGreen() / 4, color.getBlue() / 4, color.getAlpha());
+            red /= 4;
+            green /= 4;
+            blue /= 4;
         }
 
         CharData[] currentData = this.charData;
@@ -83,8 +75,8 @@ public class CFontRenderer extends CFont {
         boolean strikethrough = false;
         boolean underline = false;
 
-        x *= 2.0D;
-        y *= 2.0D;
+        x *= 2.0F;
+        y *= 2.0F;
 
         y += 3;
 
@@ -92,7 +84,13 @@ public class CFontRenderer extends CFont {
         GlStateManager.scale(0.5D, 0.5D, 0.5D);
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GlStateManager.color(color.getRed() / 255.0f, color.getGreen() / 255.0f, color.getBlue() / 255.0f, color.getAlpha() / 255.0f);
+
+        GlStateManager.color(
+                red / 255.0f,
+                green / 255.0f,
+                blue / 255.0f,
+                alpha / 255.0f
+        );
 
         int size = text.length();
 
@@ -117,13 +115,18 @@ public class CFontRenderer extends CFont {
                     GlStateManager.bindTexture(tex.getGlTextureId());
                     currentData = this.charData;
 
-                    if ((colorIndex < 0) || (colorIndex > 15))
+                    if (colorIndex < 0 || colorIndex > 15)
                         colorIndex = 15;
 
                     if (shadow) colorIndex += 16;
-                    int colorcode = this.colorCode[colorIndex];
 
-                    GlStateManager.color((colorcode >> 16 & 0xFF) / 255.0F, (colorcode >> 8 & 0xFF) / 255.0F, (colorcode & 0xFF) / 255.0F, color.getAlpha());
+                    int colorCode = this.colorCode[colorIndex];
+
+                    int cr = (colorCode >> 16) & 0xFF;
+                    int cg = (colorCode >> 8) & 0xFF;
+                    int cb = colorCode & 0xFF;
+
+                    GlStateManager.color(cr / 255.0F, cg / 255.0F, cb / 255.0F, alpha / 255.0F);
                 } else if (colorIndex == 17) {
                     bold = true;
 
@@ -153,7 +156,12 @@ public class CFontRenderer extends CFont {
                     italic = false;
                     underline = false;
                     strikethrough = false;
-                    GlStateManager.color(color.getRed() / 255.0f, color.getGreen() / 255.0f, color.getBlue() / 255.0f, color.getAlpha() / 255.0f);
+                    GlStateManager.color(
+                            red / 255.0f,
+                            green / 255.0f,
+                            blue / 255.0f,
+                            alpha / 255.0f
+                    );
                     GlStateManager.bindTexture(tex.getGlTextureId());
                     currentData = this.charData;
                 }
@@ -173,7 +181,7 @@ public class CFontRenderer extends CFont {
         }
         GL11.glHint(GL11.GL_POLYGON_SMOOTH_HINT, GL11.GL_DONT_CARE);
         GlStateManager.popMatrix();
-        return (float) x / 2.0F;
+        return x / 2.0F;
     }
 
     @Override
@@ -226,20 +234,10 @@ public class CFontRenderer extends CFont {
         setupBoldItalicIDs();
     }
 
-    public void setAntiAlias(boolean antiAlias) {
-        super.setAntiAlias(antiAlias);
-        setupBoldItalicIDs();
-    }
-
-    public void setFractionalMetrics(boolean fractionalMetrics) {
-        super.setFractionalMetrics(fractionalMetrics);
-        setupBoldItalicIDs();
-    }
-
     private void setupBoldItalicIDs() {
-        this.texBold = setupTexture(this.font.deriveFont(Font.BOLD), this.antiAlias, this.fractionalMetrics, this.boldChars);
-        this.texItalic = setupTexture(this.font.deriveFont(Font.ITALIC), this.antiAlias, this.fractionalMetrics, this.italicChars);
-        this.texItalicBold = setupTexture(this.font.deriveFont(Font.BOLD | Font.ITALIC), this.antiAlias, this.fractionalMetrics, this.boldItalicChars);
+        this.texBold = setupTexture(this.font.deriveFont(Font.BOLD), this.boldChars);
+        this.texItalic = setupTexture(this.font.deriveFont(Font.ITALIC), this.italicChars);
+        this.texItalicBold = setupTexture(this.font.deriveFont(Font.BOLD | Font.ITALIC), this.boldItalicChars);
     }
 
     private void drawLine(double x, double y, double x1, double y1, float width) {
