@@ -17,6 +17,7 @@ public class CFonts {
     public static CFontRenderer SFPT_MEDIUM_24 = getFont("SFPT-Medium", 24);
     public static CFontRenderer SFPT_SEMIBOLD_42 = getFont("SFPT-Semibold", 42);
     public static CFontRenderer ARABICLOOKINGFONT = getFont("arabiclookingfont", 50);
+    public static CFontRenderer ARIAL_REGULAR_24 = getFont("Arial", 24);
 
     public static CFontRenderer getFont(String fontName, float size) {
         String key = fontName + ":" + size;
