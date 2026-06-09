@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.Packet;
 import net.minecraft.util.MathHelper;
 import today.vanta.client.event.impl.game.player.MotionEvent;
+import today.vanta.util.game.player.ChatUtil;
 import today.vanta.util.game.player.RotationUtil;
 import today.vanta.util.game.player.constructors.Rotation;
 
@@ -32,5 +33,9 @@ public interface IMinecraft {
         if (mc.thePlayer != null) {
             mc.thePlayer.sendQueue.addToSendQueue(packet);
         }
+    }
+
+    default void send(String message, Object... args) {
+        ChatUtil.send(message, args);
     }
 }
