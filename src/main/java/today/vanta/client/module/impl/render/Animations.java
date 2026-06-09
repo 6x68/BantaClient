@@ -24,6 +24,10 @@ public class Animations extends Module {
             .name("German No-bob")
             .value(false)
             .build();
+    public final BooleanSetting noSway = BooleanSetting.builder()
+            .name("Remove Hand Sway")
+            .value(false)
+            .build();
 
     public Animations() {
         super("Animations", "Modifies Minecraft block animations.", Category.RENDER);
