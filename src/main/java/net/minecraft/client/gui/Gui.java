@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
+import today.vanta.util.game.render.font.impl.BitMapFontRenderer;
 
 public class Gui {
     public static final ResourceLocation optionsBackground = new ResourceLocation("textures/gui/options_background.png");
@@ -94,11 +95,11 @@ public class Gui {
         GlStateManager.enableTexture2D();
     }
 
-    public void drawCenteredString(FontRenderer fontRendererIn, String text, int x, int y, int color) {
+    public void drawCenteredString(BitMapFontRenderer fontRendererIn, String text, int x, int y, int color) {
         fontRendererIn.drawStringWithShadow(text, (float) (x - fontRendererIn.getStringWidth(text) / 2), (float) y, color);
     }
 
-    public void drawString(FontRenderer fontRendererIn, String text, int x, int y, int color) {
+    public void drawString(BitMapFontRenderer fontRendererIn, String text, int x, int y, int color) {
         fontRendererIn.drawStringWithShadow(text, (float) x, (float) y, color);
     }
 

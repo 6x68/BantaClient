@@ -1,7 +1,7 @@
 package net.optifine.gui;
 
 import com.mojang.authlib.exceptions.InvalidCredentialsException;
-import net.minecraft.client.gui.FontRenderer;
+import today.vanta.util.game.render.font.impl.BitMapFontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
@@ -19,7 +19,7 @@ public class GuiScreenCapeOF extends GuiScreenOF {
     private long messageHideTimeMs;
     private String linkUrl;
     private GuiButtonOF buttonCopyLink;
-    private final FontRenderer fontRenderer;
+    private final BitMapFontRenderer fontRenderer;
 
     public GuiScreenCapeOF(GuiScreen parentScreenIn) {
         this.fontRenderer = Config.getMinecraft().fontRendererObj;

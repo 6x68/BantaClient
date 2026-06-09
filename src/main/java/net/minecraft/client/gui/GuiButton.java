@@ -5,6 +5,7 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
+import today.vanta.util.game.render.font.impl.BitMapFontRenderer;
 
 public class GuiButton extends Gui {
     protected static final ResourceLocation buttonTextures = new ResourceLocation("textures/gui/widgets.png");
@@ -49,7 +50,7 @@ public class GuiButton extends Gui {
 
     public void drawButton(Minecraft mc, int mouseX, int mouseY) {
         if (this.visible) {
-            FontRenderer fontrenderer = mc.fontRendererObj;
+            BitMapFontRenderer fontrenderer = mc.fontRendererObj;
             mc.getTextureManager().bindTexture(buttonTextures);
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             this.hovered = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;

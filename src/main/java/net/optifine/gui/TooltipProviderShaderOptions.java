@@ -1,6 +1,6 @@
 package net.optifine.gui;
 
-import net.minecraft.client.gui.FontRenderer;
+import today.vanta.util.game.render.font.impl.BitMapFontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.src.Config;
@@ -86,7 +86,7 @@ public class TooltipProviderShaderOptions extends TooltipProviderOptions {
     }
 
     private String[] makeTooltipLines(int width, List<String> args) {
-        FontRenderer fontrenderer = Config.getMinecraft().fontRendererObj;
+        BitMapFontRenderer fontrenderer = Config.getMinecraft().fontRendererObj;
         List<String> list = new ArrayList();
 
         for (int i = 0; i < args.size(); ++i) {

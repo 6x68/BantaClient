@@ -8,7 +8,7 @@ import today.vanta.util.client.network.NetworkUtil;
 import today.vanta.util.client.network.account.Account;
 import today.vanta.util.client.network.account.AccountSavingUtil;
 import today.vanta.util.game.render.RenderUtil;
-import today.vanta.util.game.render.font.CFontRenderer;
+import today.vanta.util.game.render.font.impl.GlyphFontRenderer;
 import today.vanta.util.game.sound.Sounds;
 
 import java.awt.*;
@@ -20,7 +20,7 @@ public class AccountComponent extends Component {
     private BufferedImage bufferedImage;
     private int skinTextureId;
 
-    public AccountComponent(Account account, float x, float y, float width, float height, CFontRenderer font) {
+    public AccountComponent(Account account, float x, float y, float width, float height, GlyphFontRenderer font) {
         super(account.username, x, y, width, height, font);
         this.account = account;
 

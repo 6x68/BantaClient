@@ -11,7 +11,7 @@ import today.vanta.util.client.network.MicrosoftUtil;
 import today.vanta.util.client.network.account.Account;
 import today.vanta.util.client.network.account.AccountSavingUtil;
 import today.vanta.util.game.render.RenderUtil;
-import today.vanta.util.game.render.font.CFontRenderer;
+import today.vanta.util.game.render.font.impl.GlyphFontRenderer;
 import today.vanta.util.game.render.font.CFonts;
 
 import java.awt.*;
@@ -23,8 +23,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class AltLoginScreen extends GuiScreen {
-    private final CFontRenderer smallTitle = CFonts.SFPT_SEMIBOLD_20;
-    private final CFontRenderer buttonText = CFonts.SFPT_MEDIUM_18;
+    private final GlyphFontRenderer smallTitle = CFonts.SFPT_SEMIBOLD_20;
+    private final GlyphFontRenderer buttonText = CFonts.SFPT_MEDIUM_18;
 
     private final List<Component> components = new ArrayList<>();
 

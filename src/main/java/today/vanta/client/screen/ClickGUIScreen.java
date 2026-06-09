@@ -16,7 +16,7 @@ import today.vanta.client.setting.impl.NumberSetting;
 import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.client.screen.ScreenSavingUtil;
 import today.vanta.util.game.render.RenderUtil;
-import today.vanta.util.game.render.font.CFontRenderer;
+import today.vanta.util.game.render.font.impl.GlyphFontRenderer;
 import today.vanta.util.game.render.font.CFonts;
 import today.vanta.util.system.math.MathUtil;
 import today.vanta.util.system.VantaFile;
@@ -27,9 +27,9 @@ import java.util.*;
 import java.util.List;
 
 public class ClickGUIScreen extends GuiScreen {
-    private final CFontRenderer medium = CFonts.getFont("SFPT-Semibold", 20);
-    private final CFontRenderer regular = CFonts.getFont("SFPT-Medium", 18);
-    private final CFontRenderer sett = CFonts.getFont("SFPT-Medium", 16);
+    private final GlyphFontRenderer medium = CFonts.getFont("SFPT-Semibold", 20);
+    private final GlyphFontRenderer regular = CFonts.getFont("SFPT-Medium", 18);
+    private final GlyphFontRenderer sett = CFonts.getFont("SFPT-Medium", 16);
 
     private final float panelWidth = 120;
 

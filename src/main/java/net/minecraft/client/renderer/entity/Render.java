@@ -2,7 +2,7 @@ package net.minecraft.client.renderer.entity;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
+import today.vanta.util.game.render.font.impl.BitMapFontRenderer;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -281,7 +281,7 @@ public abstract class Render<T extends Entity> implements IEntityRenderer {
         }
     }
 
-    public FontRenderer getFontRendererFromRenderManager() {
+    public BitMapFontRenderer getFontRendererFromRenderManager() {
         return this.renderManager.getFontRenderer();
     }
 
@@ -289,7 +289,7 @@ public abstract class Render<T extends Entity> implements IEntityRenderer {
         double d0 = entityIn.getDistanceSqToEntity(this.renderManager.livingPlayer);
 
         if (d0 <= (double) (maxDistance * maxDistance)) {
-            FontRenderer fontrenderer = this.getFontRendererFromRenderManager();
+            BitMapFontRenderer fontrenderer = this.getFontRendererFromRenderManager();
             float f = 1.6F;
             float f1 = 0.016666668F * f;
             GlStateManager.pushMatrix();

@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
+import today.vanta.util.game.render.font.impl.BitMapFontRenderer;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ public class GuiUtilRenderComponents {
         return !p_178909_1_ && !Minecraft.getMinecraft().gameSettings.chatColours ? EnumChatFormatting.getTextWithoutFormattingCodes(p_178909_0_) : p_178909_0_;
     }
 
-    public static List<IChatComponent> splitText(IChatComponent p_178908_0_, int p_178908_1_, FontRenderer p_178908_2_, boolean p_178908_3_, boolean p_178908_4_) {
+    public static List<IChatComponent> splitText(IChatComponent p_178908_0_, int p_178908_1_, BitMapFontRenderer p_178908_2_, boolean p_178908_3_, boolean p_178908_4_) {
         int i = 0;
         IChatComponent ichatcomponent = new ChatComponentText("");
         List<IChatComponent> list = Lists.newArrayList();

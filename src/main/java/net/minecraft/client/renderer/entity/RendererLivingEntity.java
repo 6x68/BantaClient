@@ -3,7 +3,7 @@ package net.minecraft.client.renderer.entity;
 import com.google.common.collect.Lists;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.FontRenderer;
+import today.vanta.util.game.render.font.impl.BitMapFontRenderer;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelSpider;
 import net.minecraft.client.renderer.*;
@@ -25,7 +25,6 @@ import net.optifine.shaders.Shaders;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
-import today.vanta.util.game.events.EventState;
 
 import java.nio.FloatBuffer;
 import java.util.List;
@@ -251,7 +250,7 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
             ScorePlayerTeam scoreplayerteam = (ScorePlayerTeam) entityLivingBaseIn.getTeam();
 
             if (scoreplayerteam != null) {
-                String s = FontRenderer.getFormatFromString(scoreplayerteam.getColorPrefix());
+                String s = BitMapFontRenderer.getFormatFromString(scoreplayerteam.getColorPrefix());
 
                 if (s.length() >= 2) {
                     i = this.getFontRendererFromRenderManager().getColorCode(s.charAt(1));
@@ -532,7 +531,7 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
                     GlStateManager.alphaFunc(516, 0.1F);
 
                     if (entity.isSneaking()) {
-                        FontRenderer fontrenderer = this.getFontRendererFromRenderManager();
+                        BitMapFontRenderer fontrenderer = this.getFontRendererFromRenderManager();
                         GlStateManager.pushMatrix();
                         GlStateManager.translate((float) x, (float) y + entity.height + 0.5F - (entity.isChild() ? entity.height / 2.0F : 0.0F), (float) z);
                         GL11.glNormal3f(0.0F, 1.0F, 0.0F);

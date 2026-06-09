@@ -2,7 +2,7 @@ package net.minecraft.client.renderer.entity;
 
 import net.minecraft.block.*;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
+import today.vanta.util.game.render.font.impl.BitMapFontRenderer;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
@@ -471,11 +471,11 @@ public class RenderItem implements IResourceManagerReloadListener {
         }
     }
 
-    public void renderItemOverlays(FontRenderer fr, ItemStack stack, int xPosition, int yPosition) {
+    public void renderItemOverlays(BitMapFontRenderer fr, ItemStack stack, int xPosition, int yPosition) {
         this.renderItemOverlayIntoGUI(fr, stack, xPosition, yPosition, null);
     }
 
-    public void renderItemOverlayIntoGUI(FontRenderer fr, ItemStack stack, int xPosition, int yPosition, String text) {
+    public void renderItemOverlayIntoGUI(BitMapFontRenderer fr, ItemStack stack, int xPosition, int yPosition, String text) {
         if (stack != null) {
             if (stack.stackSize != 1 || text != null) {
                 String s = text == null ? String.valueOf(stack.stackSize) : text;

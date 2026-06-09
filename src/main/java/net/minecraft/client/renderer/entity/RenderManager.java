@@ -5,7 +5,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.client.gui.FontRenderer;
+import today.vanta.util.game.render.font.impl.BitMapFontRenderer;
 import net.minecraft.client.model.*;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.culling.ICamera;
@@ -44,7 +44,7 @@ public class RenderManager {
     private Map<Class, Render> entityRenderMap = Maps.newHashMap();
     private final Map<String, RenderPlayer> skinMap = Maps.newHashMap();
     private final RenderPlayer playerRenderer;
-    private FontRenderer textRenderer;
+    private BitMapFontRenderer textRenderer;
     private double renderPosX;
     private double renderPosY;
     private double renderPosZ;
@@ -161,7 +161,7 @@ public class RenderManager {
         }
     }
 
-    public void cacheActiveRenderInfo(World worldIn, FontRenderer textRendererIn, Entity livingPlayerIn, Entity pointedEntityIn, GameSettings optionsIn, float partialTicks) {
+    public void cacheActiveRenderInfo(World worldIn, BitMapFontRenderer textRendererIn, Entity livingPlayerIn, Entity pointedEntityIn, GameSettings optionsIn, float partialTicks) {
         this.worldObj = worldIn;
         this.options = optionsIn;
         this.livingPlayer = livingPlayerIn;
@@ -363,7 +363,7 @@ public class RenderManager {
         return d0 * d0 + d1 * d1 + d2 * d2;
     }
 
-    public FontRenderer getFontRenderer() {
+    public BitMapFontRenderer getFontRenderer() {
         return this.textRenderer;
     }
 

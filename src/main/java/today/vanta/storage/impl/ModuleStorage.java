@@ -25,24 +25,7 @@ public class ModuleStorage extends Storage<Module> {
     public List<String> changelog = new ArrayList<>();
 
     public ModuleStorage() {
-        changelog.add("[+] Added ClientBrand (auto-updating for Lunar brand)");
-        changelog.add("[+] Added 'X offset' & 'Y offset' to Arraylist");
-        changelog.add("[+] Added 'German No-bob' to Animations");
-        changelog.add("[+] Added more animations to Animations");
-        changelog.add("[+] Added Mospixel LongJump");
-        changelog.add("[+] Added a 'Hold' auto-block");
-        changelog.add("[+] Added Mospixel Speed");
-        changelog.add("[+] Added BlockCounter");
-        changelog.add("[+] Added NoSlowdown");
-        changelog.add("[+] Added KeepSprint");
-        changelog.add("[+] Added FastSneak");
-        changelog.add("[+] Added Disabler");
-        changelog.add("[+] Added Fly");
-        changelog.add("[~] Updated ViaVersion to 5.9.1");
-        changelog.add("[#] Fixed MovementFix strafing when unnecessary");
-        changelog.add("[#] Gave MovementFix a suffix");
-        changelog.add("[#] Fixed Arraylist offsets");
-        changelog.add("[#] Fixed GCD flaw");
+        //changelog.add("[+]");
     }
 
     @Override

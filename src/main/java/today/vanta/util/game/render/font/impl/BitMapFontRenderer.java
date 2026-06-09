@@ -1,4 +1,4 @@
-package net.minecraft.client.gui;
+package today.vanta.util.game.render.font.impl;
 
 import com.ibm.icu.text.ArabicShaping;
 import com.ibm.icu.text.ArabicShapingException;
@@ -20,13 +20,14 @@ import net.optifine.render.GlBlendState;
 import net.optifine.util.FontUtils;
 import org.apache.commons.io.IOUtils;
 import org.lwjgl.opengl.GL11;
+import today.vanta.util.game.render.font.IRenderer;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
-public class FontRenderer implements IResourceManagerReloadListener {
+public class BitMapFontRenderer implements IResourceManagerReloadListener, IRenderer {
     private static final ResourceLocation[] unicodePageLocations = new ResourceLocation[256];
     private final int[] charWidth = new int[256];
     public int FONT_HEIGHT = 9;
@@ -56,7 +57,7 @@ public class FontRenderer implements IResourceManagerReloadListener {
     private boolean blend = false;
     private final GlBlendState oldBlendState = new GlBlendState();
 
-    public FontRenderer(GameSettings gameSettingsIn, ResourceLocation location, TextureManager textureManagerIn, boolean unicode) {
+    public BitMapFontRenderer(GameSettings gameSettingsIn, ResourceLocation location, TextureManager textureManagerIn, boolean unicode) {
         this.gameSettings = gameSettingsIn;
         this.locationFontTextureBase = location;
         this.locationFontTexture = location;
@@ -264,15 +265,22 @@ public class FontRenderer implements IResourceManagerReloadListener {
         }
     }
 
-    public int drawStringWithShadow(String text, float x, float y, int color) {
+    @Override
+    public float drawStringWithShadow(String text, float x, float y, int color) {
         return this.drawString(text, x, y, color, true);
     }
 
-    public int drawString(String text, int x, int y, int color) {
+    @Override
+    public int getFontHeight() {
+        return FONT_HEIGHT;
+    }
+
+    public float drawString(String text, int x, int y, int color) {
         return this.drawString(text, (float) x, (float) y, color, false);
     }
 
-    public int drawString(String text, float x, float y, int color, boolean dropShadow) {
+    @Override
+    public float drawString(String text, float x, float y, int color, boolean dropShadow) {
         this.enableAlpha();
 
         if (this.blend) {
@@ -492,6 +500,7 @@ public class FontRenderer implements IResourceManagerReloadListener {
         }
     }
 
+    @Override
     public int getStringWidth(String text) {
         if (text == null) {
             return 0;

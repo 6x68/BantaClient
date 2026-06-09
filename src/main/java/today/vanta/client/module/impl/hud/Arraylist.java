@@ -11,7 +11,8 @@ import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.events.EventPriority;
 import today.vanta.util.game.render.RenderUtil;
-import today.vanta.util.game.render.font.CFontRenderer;
+import today.vanta.util.game.render.font.IRenderer;
+import today.vanta.util.game.render.font.impl.GlyphFontRenderer;
 import today.vanta.util.game.render.font.CFonts;
 
 import java.awt.*;
@@ -36,12 +37,19 @@ public class Arraylist extends Module {
             .places(0)
             .build();
 
+    private final StringSetting font = StringSetting.builder()
+            .name("Font")
+            .value("SFPT")
+            .values("SFPT", "Minecraft", "Exhibition")
+            .listener((setting, oldValue, newValue) -> setFont())
+            .build();
+
     private final StringSetting fontStyle = StringSetting.builder()
             .name("Font style")
             .value("Medium")
             .values("Light", "Italic", "Medium", "Semibold", "Bold", "Heavy")
             .listener((setting, oldValue, newValue) -> setFont())
-            .build();
+            .build().hide(() -> !font.getValue().equals("SFPT"));
 
     private final StringSetting moduleCase = StringSetting.builder()
             .name("Module case")
@@ -57,7 +65,7 @@ public class Arraylist extends Module {
             .places(0)
             .suffix("px")
             .listener((setting, oldValue, newValue) -> setFont())
-            .build();
+            .build().hide(() -> !font.getValue().equals("SFPT"));
 
     private final BooleanSetting
             fontShadow = BooleanSetting.builder()
@@ -102,10 +110,20 @@ public class Arraylist extends Module {
         setEnabled(true);
     }
 
-    private CFontRenderer font = CFonts.SFPT_MEDIUM_24;
+    private IRenderer arraylistFont = CFonts.SFPT_MEDIUM_24;
 
     private void setFont() {
-        font = CFonts.getFont("SFPT-" + fontStyle.getValue(), fontSize.getValue().intValue());
+        switch (font.getValue()) {
+            case "Exhibition":
+                arraylistFont = mc.exhiFontRendererObj;
+                break;
+            case "Minecraft":
+                arraylistFont = mc.fontRendererObj;
+                break;
+            default:
+                arraylistFont = CFonts.getFont("SFPT-" + fontStyle.getValue(), fontSize.getValue().intValue());
+                break;
+        }
     }
 
     @EventListen(priority = EventPriority.LOWEST)
@@ -123,7 +141,7 @@ public class Arraylist extends Module {
 
                     return add;
                 }).sorted(Comparator.comparingDouble(
-                        m -> font.getStringWidth(getModuleName((Module) m))
+                        m -> arraylistFont.getStringWidth(getModuleName((Module) m))
                 ).reversed()).collect(Collectors.toList());
 
         float y = yValue.getValue().floatValue();
@@ -131,8 +149,8 @@ public class Arraylist extends Module {
             Module module = modules.get(i);
             String name = getModuleName(module);
 
-            float modWidth = font.getStringWidth(name);
-            float modHeight = font.getFontHeight();
+            float modWidth = arraylistFont.getStringWidth(name);
+            float modHeight = arraylistFont.getFontHeight();
 
             float x = event.scaledResolution.getScaledWidth() - modWidth - xValue.getValue().floatValue() - 2.5f;
 
@@ -173,7 +191,7 @@ public class Arraylist extends Module {
                             // bottom for each middle module
                             Module nextModule = modules.get(i + 1);
                             String nextName = getModuleName(nextModule);
-                            float nextModWidth = font.getStringWidth(nextName);
+                            float nextModWidth = arraylistFont.getStringWidth(nextName);
                             float nextX = event.scaledResolution.getScaledWidth() - nextModWidth - 5;
                             float nextRectX = nextX - xValue.getValue().floatValue();
 
@@ -206,12 +224,12 @@ public class Arraylist extends Module {
             }
 
             if (fontShadow.getValue()) {
-                font.drawStringWithShadow(name, x, y + 0.5f, fg);
+                arraylistFont.drawStringWithShadow(name, x, y + 0.5f, fg);
             } else {
-                font.drawString(name, x, y + 0.5f, fg);
+                arraylistFont.drawString(name, x, y + 0.5f, fg);
             }
 
-            y += font.getFontHeight() + (background.getValue() ? 3 : 0) + 2;
+            y += arraylistFont.getFontHeight() + (background.getValue() ? 3 : 0) + 2;
         }
     }
 

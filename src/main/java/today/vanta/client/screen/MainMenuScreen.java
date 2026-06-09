@@ -9,7 +9,7 @@ import today.vanta.client.screen.component.Component;
 import today.vanta.client.screen.component.impl.ButtonComponent;
 import today.vanta.util.client.IClient;
 import today.vanta.util.game.render.RenderUtil;
-import today.vanta.util.game.render.font.CFontRenderer;
+import today.vanta.util.game.render.font.impl.GlyphFontRenderer;
 import today.vanta.util.game.render.font.CFonts;
 
 import java.awt.*;
@@ -18,10 +18,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainMenuScreen extends GuiScreen {
-    private final CFontRenderer roundedSemibold10 = CFonts.SFPT_SEMIBOLD_20;
-    private final CFontRenderer roundedMedium9 = CFonts.SFPT_MEDIUM_18;
-    private final CFontRenderer smallTitle = CFonts.SFPT_SEMIBOLD_20;
-    private final CFontRenderer changesFont = CFonts.SFPT_MEDIUM_18;
+    private final GlyphFontRenderer roundedSemibold10 = CFonts.SFPT_SEMIBOLD_20;
+    private final GlyphFontRenderer roundedMedium9 = CFonts.SFPT_MEDIUM_18;
+    private final GlyphFontRenderer smallTitle = CFonts.SFPT_SEMIBOLD_20;
+    private final GlyphFontRenderer changesFont = CFonts.SFPT_MEDIUM_18;
 
     private final List<Component> buttons = new ArrayList<>();
 

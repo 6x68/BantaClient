@@ -37,7 +37,7 @@ public class NoSlowdown extends Module {
     private final BooleanSetting
             shouldSprint = BooleanSetting.builder()
             .name("Should sprint")
-            .value(false)
+            .value(true)
             .build();
 
     public NoSlowdown() {
@@ -60,12 +60,12 @@ public class NoSlowdown extends Module {
                 mc.gameSettings.keyBindSprint.pressed = false;
                 mc.thePlayer.setSprinting(false);
             }
+
             event.forward = forwardMultiplier.getValue().floatValue();
             event.strafe = strafeMultiplier.getValue().floatValue();
-
-
         }
     }
+
     @Override
     public void onDisable() {
         if (Vanta.instance.moduleStorage.getT(Sprint.class).isEnabled()) {
