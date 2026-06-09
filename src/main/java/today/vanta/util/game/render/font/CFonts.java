@@ -11,16 +11,26 @@ public class CFonts {
     private static final Map<String, Font> FONT_CACHE = new ConcurrentHashMap<>();
     private static final Map<String, GlyphFontRenderer> RENDERER_CACHE = new ConcurrentHashMap<>();
 
+    // Helvetica Neue
     public static GlyphFontRenderer HN_MEDIUM_24 = getFont("HN-Medium", 24);
     public static GlyphFontRenderer HN_REGULAR_48 = getFont("HN-Regular", 48);
 
+    // SF Pro Text
     public static GlyphFontRenderer SFPT_MEDIUM_18 = getFont("SFPT-Medium", 18);
     public static GlyphFontRenderer SFPT_SEMIBOLD_20 = getFont("SFPT-Semibold", 20);
     public static GlyphFontRenderer SFPT_MEDIUM_24 = getFont("SFPT-Medium", 24);
     public static GlyphFontRenderer SFPT_SEMIBOLD_42 = getFont("SFPT-Semibold", 42);
-    public static GlyphFontRenderer ARABICLOOKINGFONT = getFont("arabiclookingfont", 50);
-    public static GlyphFontRenderer CREATO_REGULAR = getFont("CreatoDisplay-Regular", 20);
-    public static GlyphFontRenderer CREATO_MEDIUM = getFont("CreatoDisplay-Medium", 20);
+
+    // Ramadhan Karim
+    public static GlyphFontRenderer RK_REGULAR_50 = getFont("RK-Regular", 50);
+
+    // Creato-Display
+    //public static GlyphFontRenderer CD_REGULAR_20 = getFont("CD-Regular", 20);
+    //public static GlyphFontRenderer CD_MEDIUM_20 = getFont("CD-Medium", 20);
+    //public static GlyphFontRenderer CD_LIGHT_20 = getFont("CD-LIGHT", 20);
+
+    // Arial
+    //public static GlyphFontRenderer A_REGULAR = getFont("A-REGULAR", 18);
 
     public static GlyphFontRenderer getFont(String fontName, float size) {
         String key = fontName + ":" + size;

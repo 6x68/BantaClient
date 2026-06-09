@@ -35,7 +35,7 @@ public class Watermark extends Module {
                 CFonts.HN_MEDIUM_24.drawString("Jello", 5, 5 + CFonts.HN_REGULAR_48.getFontHeight() - 1, new Color(255, 255, 255, 185));
                 break;
             case "My Eyes":
-                CFonts.ARABICLOOKINGFONT.drawHorizontalGradientString("Abdelrahman Al-Rashid Client (Miniblox Bypass Edition)", 5, 0, Color.BLACK, Color.RED, 1, 150);
+                CFonts.RK_REGULAR_50.drawHorizontalGradientString("Abdelrahman Al-Rashid Client (Miniblox Bypass Edition)", 5, 0, Color.BLACK, Color.RED, 1, 150);
                 break;
         }
     }
