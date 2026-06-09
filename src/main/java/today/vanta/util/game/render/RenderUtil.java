@@ -10,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import today.vanta.Vanta;
+import today.vanta.util.system.math.ColorUtil;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -200,22 +201,22 @@ public class RenderUtil {
         GL11.glShadeModel(GL11.GL_SMOOTH);
         GL11.glBegin(GL11.GL_QUADS);
 
-        {
+        { // Top left
             color(topColor);
             GL11.glVertex2d(x, y);
         }
 
-        {
+        { // Top right
             color(bottomColor);
             GL11.glVertex2d(x + width, y);
         }
 
-        {
+        { // Bottom right
             color(bottomColor);
             GL11.glVertex2d(x + width, y + height);
         }
 
-        {
+        { // Bottom left
             color(topColor);
             GL11.glVertex2d(x, y + height);
         }
@@ -224,6 +225,49 @@ public class RenderUtil {
         GL11.glShadeModel(GL11.GL_FLAT);
 
         stop();
+    }
+
+    public static void horizontal_grad_outline(double x, double y, double width, double height, float lineWidth, Color leftColor, Color rightColor) {
+        start();
+
+        GL11.glShadeModel(GL11.GL_SMOOTH);
+        GL11.glLineWidth(lineWidth);
+
+        GL11.glBegin(GL11.GL_LINE_LOOP);
+
+        { // Top left
+            color(leftColor);
+            GL11.glVertex2d(x, y);
+        }
+
+        { // Top right
+            color(rightColor);
+            GL11.glVertex2d(x + width, y);
+        }
+
+        { // Bottom right
+            color(rightColor);
+            GL11.glVertex2d(x + width, y + height);
+        }
+
+        { // Bottom left
+            color(leftColor);
+            GL11.glVertex2d(x, y + height);
+        }
+
+        GL11.glEnd();
+        GL11.glShadeModel(GL11.GL_FLAT);
+
+        stop();
+    }
+
+    public static void animated_horizontal_grad_outline(double x, double y, double width, double height, float lineWidth, Color startColor, Color endColor, double speed, int spacing) {
+        long time = (long) (System.currentTimeMillis() * speed);
+
+        int color1 = ColorUtil.getGradientColor(startColor, endColor, Math.abs(Math.sin(((time) % 2000) / 2000.0 * Math.PI)));
+        int color2 = ColorUtil.getGradientColor(startColor, endColor, Math.abs(Math.sin(((time + spacing) % 2000) / 2000.0 * Math.PI)));
+
+        horizontal_grad_outline(x, y, width, height, lineWidth, new Color(color1, true), new Color(color2, true));
     }
 
     public static void player_head(EntityPlayer target, float x, float y, float headSize) {
