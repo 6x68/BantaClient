@@ -27,7 +27,6 @@ import java.util.*;
 import java.util.List;
 
 public class ClickGUIScreen extends GuiScreen {
-
     private final CFontRenderer medium = CFonts.getFont("SFPT-Semibold", 20);
     private final CFontRenderer regular = CFonts.getFont("SFPT-Medium", 18);
     private final CFontRenderer sett = CFonts.getFont("SFPT-Medium", 16);
