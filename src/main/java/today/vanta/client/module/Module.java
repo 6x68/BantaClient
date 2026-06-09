@@ -5,7 +5,9 @@ import today.vanta.client.event.impl.client.ModuleDisableEvent;
 import today.vanta.client.event.impl.client.ModuleEnableEvent;
 import today.vanta.client.setting.Setting;
 import today.vanta.util.game.IMinecraft;
+import today.vanta.util.system.math.ColorUtil;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +22,8 @@ public abstract class Module implements IMinecraft {
 
     public String displayName;
     public String[] displayNames;
+
+    public final Color color = new Color(ColorUtil.randomPrettyColor());
 
     public boolean frozen; //When true, module is not toggleable.
 

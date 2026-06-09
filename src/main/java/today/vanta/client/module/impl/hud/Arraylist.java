@@ -16,6 +16,7 @@ import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.events.EventPriority;
 import today.vanta.util.game.render.RenderUtil;
 import today.vanta.util.game.render.font.CFonts;
+import today.vanta.util.system.math.ColorUtil;
 
 import java.awt.*;
 import java.util.Comparator;
@@ -42,7 +43,9 @@ public class Arraylist extends Module {
     private final StringSetting line = Setting.of("Line", "Full", "Full", "Left", "Right", "Top", "Top+right", "None");
 
     private final NumberSetting backgroundAlpha = Setting.of("Background alpha", 100, 0, 255).hide(() -> !background.getValue());
-    private final StringSetting moduleCase = Setting.of("Module case", "Default", "Default", "Lowercase", "Uppercase");
+    private final StringSetting
+            moduleCase = Setting.of("Module case", "Default", "Default", "Lowercase", "Uppercase"),
+            colorMode = Setting.of("Color mode", "Theme", "Theme", "Rainbow", "Random", "Category", "Fade");
 
     public Arraylist() {
         super("Arraylist", "Draws an arraylist of modules.", Category.HUD);
@@ -90,14 +93,31 @@ public class Arraylist extends Module {
                 ).reversed()).collect(Collectors.toList());
 
         float y = yOffset.getValue().floatValue();
+        int offset = 0;
         for (int i = 0; i < modules.size(); i++) {
             Module module = modules.get(i);
             String name = getModuleName(module);
 
             float modWidth = arraylistFontRenderer.getStringWidth(name);
-            float modHeight = arraylistFontRenderer.getFontHeight();
 
             float x = event.scaledResolution.getScaledWidth() - modWidth - xOffset.getValue().floatValue() - 2.5f;
+
+            Color color = fg;
+
+            switch (colorMode.getValue()) {
+                case "Category":
+                    color = module.category.color;
+                    break;
+                case "Random":
+                    color = module.color;
+                    break;
+                case "Rainbow":
+                    color = new Color(ColorUtil.getRainbow(3000, (int) (offset * 150L)));
+                    break;
+                case "Fade":
+                    color = new Color(ColorUtil.fadeBetween(fg.getRGB(), fg.darker().darker().getRGB(), offset * 150L));
+                    break;
+            }
 
             if (background.getValue()) {
                 float rectX = x - 2;
@@ -113,25 +133,25 @@ public class Arraylist extends Module {
                     case "Top":
                         if (first) {
                             // top
-                            RenderUtil.rectangle(rectX, rectY - 1, rectWidth, 1, fg);
+                            RenderUtil.rectangle(rectX, rectY - 1, rectWidth, 1, color);
                         }
 
                         if (line.getValue().equals("Top+right")) {
                             // right side
-                            RenderUtil.rectangle(rectX + rectWidth, rectY - 1, 1, rectHeight + 1, fg);
+                            RenderUtil.rectangle(rectX + rectWidth, rectY - 1, 1, rectHeight + 1, color);
                         }
                         break;
                     case "Full":
                         if (first) {
                             // top
-                            RenderUtil.rectangle(rectX, rectY - 1, rectWidth, 1, fg);
+                            RenderUtil.rectangle(rectX, rectY - 1, rectWidth, 1, color);
                             // top left corner
-                            RenderUtil.rectangle(rectX - 1, rectY - 1, 1, 1, fg);
+                            RenderUtil.rectangle(rectX - 1, rectY - 1, 1, 1, color);
                         }
 
                         if (last) {
                             // bottom for last module
-                            RenderUtil.rectangle(rectX, rectY + rectHeight, rectWidth, 1, fg);
+                            RenderUtil.rectangle(rectX, rectY + rectHeight, rectWidth, 1, color);
                         } else {
                             // bottom for each middle module
                             Module nextModule = modules.get(i + 1);
@@ -142,35 +162,36 @@ public class Arraylist extends Module {
 
                             float widthToNext = nextRectX - rectX;
 
-                            RenderUtil.rectangle(rectX, rectY + rectHeight, widthToNext, 1, fg);
+                            RenderUtil.rectangle(rectX, rectY + rectHeight, widthToNext, 1, color);
                         }
 
                         // left side
-                        RenderUtil.rectangle(rectX - 1, rectY, 1, rectHeight, fg);
+                        RenderUtil.rectangle(rectX - 1, rectY, 1, rectHeight, color);
                         // bottom left corner
-                        RenderUtil.rectangle(rectX - 1, rectY + rectHeight, 1, 1, fg);
+                        RenderUtil.rectangle(rectX - 1, rectY + rectHeight, 1, 1, color);
 
                         // right side
-                        RenderUtil.rectangle(rectX + rectWidth, rectY - 1, 1, rectHeight + 2, fg);
+                        RenderUtil.rectangle(rectX + rectWidth, rectY - 1, 1, rectHeight + 2, color);
                         break;
 
                     case "Left":
                         // left side
-                        RenderUtil.rectangle(rectX - 1, rectY, 1, rectHeight, fg);
+                        RenderUtil.rectangle(rectX - 1, rectY, 1, rectHeight, color);
                         break;
 
                     case "Right":
                         // right side
-                        RenderUtil.rectangle(rectX + rectWidth, rectY, 1, rectHeight, fg);
+                        RenderUtil.rectangle(rectX + rectWidth, rectY, 1, rectHeight, color);
                         break;
                 }
 
                 RenderUtil.rectangle(rectX, rectY, rectWidth, rectHeight, bg);
             }
 
-            arraylistFontRenderer.drawString(name, x, y + 0.5f, fg, fontShadow.getValue());
+            arraylistFontRenderer.drawString(name, x, y + 0.5f, color, fontShadow.getValue());
 
             y += background.getValue() ? arraylistFontRenderer.getBoxHeight() : arraylistFontRenderer.getFontHeight() + 2;
+            offset++;
         }
     }
 
