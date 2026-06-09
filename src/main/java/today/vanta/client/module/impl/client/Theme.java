@@ -14,6 +14,8 @@ public class Theme extends Module {
         super("Theme", "Manage the client's colors.", Category.CLIENT);
         hideFromArraylist = true;
         frozen = true;
+
+        theme.addListener((setting, oldValue, newValue) -> setColorArray());
     }
 
     public void setColorArray() {
