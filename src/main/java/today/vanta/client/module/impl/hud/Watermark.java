@@ -2,7 +2,6 @@ package today.vanta.client.module.impl.hud;
 
 import today.vanta.Vanta;
 import today.vanta.client.event.impl.game.render.Render2DEvent;
-import today.vanta.client.event.impl.game.world.UpdateEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.module.impl.client.Theme;
@@ -16,9 +15,6 @@ import today.vanta.util.game.render.font.CFonts;
 import java.awt.*;
 
 public class Watermark extends Module {
-    private static Color epstein = new Color(0, 0, 0, 255);
-    private float tick;
-
     private final StringSetting style = Setting.of("Style", "Vanta", "Vanta", "Jello", "My Eyes"); //travis scott reference?
 
     public Watermark() {
@@ -39,11 +35,15 @@ public class Watermark extends Module {
                 CFonts.HN_MEDIUM_24.drawString("Jello", 5, 5 + CFonts.HN_REGULAR_48.getFontHeight() - 1, new Color(255, 255, 255, 185));
                 break;
             case "My Eyes":
-                CFonts.ARABICLOOKINGFONT.drawStringWithShadow("Abdelrahman Al-Rashid Client (Miniblox Bypass Edition)", 5, 0, epstein);
+                CFonts.ARABICLOOKINGFONT.drawHorizontalGradientString("Abdelrahman Al-Rashid Client (Miniblox Bypass Edition)", 5, 0, Color.BLACK, Color.RED, 1, 150);
                 break;
         }
     }
 
+    //private static Color epstein = new Color(0, 0, 0, 255);
+    //private float tick;
+
+    /*
     @EventListen
     private void onUpdate(UpdateEvent event) {
         tick++;
@@ -91,4 +91,5 @@ public class Watermark extends Module {
             tick = 1;
         }
     }
+     */
 }
