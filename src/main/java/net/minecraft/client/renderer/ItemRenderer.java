@@ -31,9 +31,8 @@ import net.optifine.DynamicLights;
 import net.optifine.reflect.Reflector;
 import net.optifine.shaders.Shaders;
 import org.lwjgl.opengl.GL11;
-import today.vanta.Vanta;
+import today.vanta.client.event.impl.game.render.BobArmEvent;
 import today.vanta.client.event.impl.game.render.PerformBlockEvent;
-import today.vanta.client.module.impl.render.Animations;
 
 public class ItemRenderer {
     private static final ResourceLocation RES_MAP_BACKGROUND = new ResourceLocation("textures/map/map_background.png");
@@ -101,9 +100,13 @@ public class ItemRenderer {
     }
 
     private void rotateWithPlayerRotations(EntityPlayerSP entityplayerspIn, float partialTicks) {
-        if (Vanta.instance.moduleStorage.getT(Animations.class).isEnabled() && (Vanta.instance.moduleStorage.getT(Animations.class).noSway.getValue())) {
+        BobArmEvent event = new BobArmEvent();
+        event.call();
+
+        if (event.cancelled) {
             return;
         }
+
         float f = entityplayerspIn.prevRenderArmPitch + (entityplayerspIn.renderArmPitch - entityplayerspIn.prevRenderArmPitch) * partialTicks;
         float f1 = entityplayerspIn.prevRenderArmYaw + (entityplayerspIn.renderArmYaw - entityplayerspIn.prevRenderArmYaw) * partialTicks;
         GlStateManager.rotate((entityplayerspIn.rotationPitch - f) * 0.1F, 1.0F, 0.0F, 0.0F);
