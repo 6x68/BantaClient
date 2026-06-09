@@ -1,8 +1,6 @@
 package today.vanta.client.module.impl.hud;
 
 import net.minecraft.client.gui.GuiChat;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import today.vanta.Vanta;
@@ -11,6 +9,7 @@ import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.module.impl.client.Theme;
 import today.vanta.client.processor.impl.TargetProcessor;
+import today.vanta.client.setting.impl.NumberSetting;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.player.InventoryUtil;
 import today.vanta.util.game.render.RenderUtil;
@@ -20,14 +19,26 @@ import java.awt.*;
 
 public class BlockCounter extends Module {
     private static final Color BACKGROUND = new Color(20, 20, 20, 200);
-    private static final Color NO = new Color(0, 0, 0, 255);
 
-    private float x = 20, y = 70;
-    private static final float WIDTH = 75;
+    private static final float WIDTH = 90;
     private static final float HEIHT = 40;
 
     private boolean dragging;
     private float dragX, dragY;
+
+    private final NumberSetting x = NumberSetting.builder()
+            .name("X position")
+            .value(20)
+            .min(0)
+            .max(2000)
+            .build();
+
+    private final NumberSetting y = NumberSetting.builder()
+            .name("Y position")
+            .value(70)
+            .min(0)
+            .max(2000)
+            .build();
 
     public BlockCounter() {
         super("BlockCounter", "Block information.", Category.HUD);
@@ -52,15 +63,15 @@ public class BlockCounter extends Module {
 
     private void handleDragging(float mouseX, float mouseY) {
         if (Mouse.isButtonDown(0)) {
-            if (!dragging && RenderUtil.hovered(mouseX, mouseY, x, y, WIDTH, HEIHT)) {
+            if (!dragging && RenderUtil.hovered(mouseX, mouseY, x.getValue().floatValue(), y.getValue().floatValue(), WIDTH, HEIHT)) {
                 dragging = true;
-                dragX = mouseX - x;
-                dragY = mouseY - y;
+                dragX = mouseX - x.getValue().floatValue();
+                dragY = mouseY - y.getValue().floatValue();
             }
 
             if (dragging) {
-                x = mouseX - dragX;
-                y = mouseY - dragY;
+                x.setValue(mouseX - dragX);
+                y.setValue(mouseY - dragY);
             }
         } else {
             dragging = false;
@@ -70,6 +81,9 @@ public class BlockCounter extends Module {
     private void draw() {
         Color color = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
         int blocksinHotbar = InventoryUtil.getHotbarBlockCount();
+
+        float x = this.x.getValue().floatValue();
+        float y = this.y.getValue().floatValue();
 
         RenderUtil.rectangle(x, y, WIDTH, HEIHT, BACKGROUND);
         double scale = 2.4;
