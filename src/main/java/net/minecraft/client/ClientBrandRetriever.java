@@ -1,16 +1,11 @@
 package net.minecraft.client;
 
-import today.vanta.Vanta;
-import today.vanta.client.module.impl.misc.ClientBrand;
+import today.vanta.client.event.impl.game.ClientBrandEvent;
 
 public class ClientBrandRetriever {
     public static String getClientModName() {
-        String brand = "Benjamin Netanyahu";
-        if (Vanta.instance.moduleStorage.getT(ClientBrand.class).isEnabled()) {
-            brand = Vanta.instance.moduleStorage.getT(ClientBrand.class).brand.getValue();
-        } else {
-            brand = "Benjamin Netanyahu";
-        }
-        return brand;
+        ClientBrandEvent event = new ClientBrandEvent("vanilla");
+        event.call();
+        return event.brand;
     }
 }
