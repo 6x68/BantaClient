@@ -30,7 +30,7 @@ public class CFonts {
     //public static GlyphFontRenderer CD_LIGHT_20 = getFont("CD-LIGHT", 20);
 
     // Arial
-    //public static GlyphFontRenderer A_REGULAR = getFont("A-REGULAR", 18);
+    //public static GlyphFontRenderer A_REGULAR_18 = getFont("A-REGULAR", 18);
 
     public static GlyphFontRenderer getFont(String fontName, float size) {
         String key = fontName + ":" + size;
