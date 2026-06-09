@@ -1,7 +1,9 @@
 package today.vanta.client.screen;
 
 import imgui.ImGui;
+import imgui.flag.ImGuiCond;
 import net.minecraft.client.gui.GuiScreen;
+import org.lwjgl.input.Keyboard;
 import today.vanta.Vanta;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
@@ -17,6 +19,7 @@ import today.vanta.util.game.render.RenderUtil;
 import today.vanta.util.system.lwjgl.imgui.ImGuiImpl;
 
 import java.awt.*;
+import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
@@ -24,6 +27,7 @@ public class ImGuiClickGUIScreen extends GuiScreen implements IClient {
     private Category currentCategory = Category.COMBAT;
     private final Map<Category, Module> lastModulePerCategory = new EnumMap<>(Category.class);
     private Module currentModule;
+    private Module listeningModule = null;
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
@@ -38,7 +42,7 @@ public class ImGuiClickGUIScreen extends GuiScreen implements IClient {
         }
 
         ImGuiImpl.draw(() -> {
-            ImGui.setNextWindowSize(600, 425);
+            ImGui.setNextWindowSize(600, 425, ImGuiCond.Once);
             if (ImGui.begin(CLIENT_NAME)) {
                 if (ImGui.beginChild("categories", 150, 0, true)) {
                     float fullWidth = ImGui.getContentRegionAvailX();
@@ -87,6 +91,41 @@ public class ImGuiClickGUIScreen extends GuiScreen implements IClient {
                             currentModule.setEnabled(!currentModule.isEnabled());
                         }
                         ImGui.separator();
+
+                        if (currentModule.displayNames.length > 1 && !currentModule.hideFromArraylist) {
+                            if (ImGui.button("Display name: " + currentModule.displayName, fullWidth, 20)) {
+                                currentModule.next();
+                            }
+                        }
+
+                        if (!currentModule.frozen) {
+                            String keyName = Keyboard.getKeyName(currentModule.key);
+                            if (listeningModule != null && listeningModule.equals(currentModule)) {
+                                keyName = "...";
+                            }
+                            if (ImGui.button("Keybind: " + keyName, fullWidth, 20)) {
+                                listeningModule = currentModule;
+                            }
+                        }
+
+                        if (!currentModule.frozen && !currentModule.category.equals(Category.CLIENT)) {
+                            if (ImGui.button("Hide on arraylist: " + (currentModule.hideFromArraylist ? "enabled" : "disabled"), fullWidth, 20)) {
+                                currentModule.hideFromArraylist = !currentModule.hideFromArraylist;
+                            }
+                        }
+
+                        if (ImGui.button("Save in config: " + (currentModule.addToConfig ? "enabled" : "disabled"), fullWidth, 20)) {
+                            currentModule.addToConfig = !currentModule.addToConfig;
+                        }
+
+                        if (currentModule.getSuffix() != null && !currentModule.hideFromArraylist) {
+                            if (ImGui.button("Show suffix: " + (currentModule.addSuffix ? "enabled" : "disabled"), fullWidth, 20)) {
+                                currentModule.addSuffix = !currentModule.addSuffix;
+                            }
+                        }
+
+                        if (!currentModule.settings.isEmpty())
+                            ImGui.separator();
 
                         for (Setting<?> setting : currentModule.settings) {
                             if (setting.isHidden()) continue;
@@ -211,5 +250,22 @@ public class ImGuiClickGUIScreen extends GuiScreen implements IClient {
             }
             ImGui.end();
         });
+    }
+
+    @Override
+    protected void keyTyped(char typedChar, int keyCode) throws IOException {
+        if (listeningModule != null) {
+            if (keyCode == 14) {
+                listeningModule.key = 0;
+            } else {
+                String keyName = Keyboard.getKeyName(keyCode);
+                if (keyName != null && !keyName.isEmpty()) {
+                    listeningModule.key = keyCode;
+                }
+            }
+            listeningModule = null;
+        } else {
+            super.keyTyped(typedChar, keyCode);
+        }
     }
 }
