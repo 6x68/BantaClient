@@ -20,11 +20,14 @@ import java.awt.*;
 
 public class BlockCounter extends Module {
     private static final Color BACKGROUND = new Color(20, 20, 20, 200);
+    private static final Color windowPane = new Color(50, 50, 50, 255);
     private static final Color NO = new Color(0, 0, 0, 255);
 
     private float x = 20, y = 70;
-    private static final float WIDTH = 75;
-    private static final float HEIHT = 40;
+    private static final float WIDTH = 80;
+    private static final float HEIHT = 15;
+    private static final float windowWidth = 80;
+    private static final float windowHeight = 15;
 
     private boolean dragging;
     private float dragX, dragY;
@@ -89,6 +92,32 @@ public class BlockCounter extends Module {
 
         if (dragging) {
             RenderUtil.rectangle(x - 0.5, y - 0.5, WIDTH + 1, HEIHT + 1, false, color);
+        }
+    }
+
+    private void drawWindow() {
+        Color color = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
+        int blocksinHotbar = InventoryUtil.getHotbarBlockCount();
+        RenderUtil.rectangle(x, y - 10, WIDTH, 10f, windowPane);
+        float textWidth = CFonts.SFPT_MEDIUM_18.getStringWidth("Block Counter");
+        CFonts.SFPT_MEDIUM_18.drawStringWithShadow("Block Counter", x + (WIDTH / 2) - (textWidth / 2) - 7,y- 10,color);
+        RenderUtil.rectangle(x, y, WIDTH, HEIHT, BACKGROUND);
+        double scale = 0.65;
+
+        double itemX = x + 20;
+        double itemY = y - HEIHT + 20;
+
+        GL11.glPushMatrix();
+        GL11.glTranslated(itemX, itemY, 0);
+        GL11.glScaled(scale, scale, 1.0);
+        GL11.glTranslated(-itemX, -itemY, 0);
+        mc.renderItem.renderItemIntoGUIFullBright(mc.thePlayer.getCurrentEquippedItem(), (int)x + 94, (int)y - 18);
+        GL11.glPopMatrix();
+
+        CFonts.SFPT_SEMIBOLD_20.drawStringWithShadow("Blocks: " + blocksinHotbar, x + 1.5f, y + 2,color );
+
+        if (dragging) {
+            RenderUtil.rectangle(x - 0.5, y - 10.5, WIDTH + 1, HEIHT + 11, false, color);
         }
     }
 }
