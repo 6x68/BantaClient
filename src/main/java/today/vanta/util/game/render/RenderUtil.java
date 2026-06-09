@@ -5,7 +5,6 @@ import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -20,9 +19,6 @@ import java.util.Base64;
 
 import static org.lwjgl.opengl.GL11.*;
 
-/**
- * @author liticane
- */
 public class RenderUtil {
     private static final Minecraft mc = Minecraft.getMinecraft();
 
@@ -30,13 +26,13 @@ public class RenderUtil {
         return mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
     }
 
-    public static void rectangle(double x, double y, double width, double height, boolean filled, Color color) {
+    public static void rectangle(double x, double y, double width, double height, boolean filled, Color color, float lineWidth) {
         start();
 
         if (color != null)
             color(color);
 
-        GL11.glLineWidth(2.0f);
+        GL11.glLineWidth(lineWidth);
         GlStateManager.glBegin(filled ? GL_TRIANGLE_FAN : GL_LINE_LOOP);
 
         GL11.glVertex2d(x, y);
@@ -46,6 +42,10 @@ public class RenderUtil {
 
         GlStateManager.glEnd();
         stop();
+    }
+
+    public static void rectangle(double x, double y, double width, double height, boolean filled, Color color) {
+        rectangle(x, y, width, height, true, color, 2.0f);
     }
 
     public static void rectangle(double x, double y, double width, double height, Color color) {

@@ -49,9 +49,9 @@ public class ESP extends Module {
             float height = (float) (bounds.maxY - bounds.minY);
             if (width <= 0.0F || height <= 0.0F) continue;
 
-            RenderUtil.rectangle(x - 0.5f, y - 0.5f, width + 1, height + 1, false, Color.BLACK);
-            RenderUtil.rectangle(x, y, width, height, false, color);
-            RenderUtil.rectangle(x + 0.5f, y + 0.5f, width - 1, height - 1, false, Color.BLACK);
+            RenderUtil.rectangle(x - 0.5f, y - 0.5f, width + 1, height + 1, false, Color.BLACK, 1.0f);
+            RenderUtil.rectangle(x, y, width, height, false, color, 1.0f);
+            RenderUtil.rectangle(x + 0.5f, y + 0.5f, width - 1, height - 1, false, Color.BLACK, 1.0f);
         }
     }
 
