@@ -23,7 +23,7 @@ public class BlockCounter extends Module {
     private static final Color NO = new Color(0, 0, 0, 255);
 
     private float x = 20, y = 70;
-    private static final float WIDTH = 130;
+    private static final float WIDTH = 75;
     private static final float HEIHT = 40;
 
     private boolean dragging;

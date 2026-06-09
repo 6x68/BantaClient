@@ -60,6 +60,7 @@ public class ModuleStorage extends Storage<Module> {
         list.add(new MovementFix());
         list.add(new NoSlowdown());
         list.add(new FastSneak());
+        list.add(new Fly());
 
         // Player
         list.add(new Scaffold());

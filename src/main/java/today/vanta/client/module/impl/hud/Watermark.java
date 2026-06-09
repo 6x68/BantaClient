@@ -42,7 +42,7 @@ public class Watermark extends Module {
                 CFonts.HN_MEDIUM_24.drawString("Jello", 5, 5 + CFonts.HN_REGULAR_48.getFontHeight() - 1, new Color(255, 255, 255, 185));
                 break;
             case "My Eyes":
-                CFonts.ARABICLOOKINGFONT.drawStringWithShadow("Vanta Client ft. Aditya & ", 5, 0, epstein);
+                CFonts.ARABICLOOKINGFONT.drawStringWithShadow("Abdelrahman Al-Rashid Client (Miniblox Bypass Edition)", 5, 0, epstein);
                 break;
         }
     }
