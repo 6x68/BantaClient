@@ -99,7 +99,7 @@ public class LongJump extends Module {
                     }
 
                     if (canDisable && mc.thePlayer.onGround) {
-                        super.setEnabled(false);
+                        setEnabled(false);
                     }
 
                     break;

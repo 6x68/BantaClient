@@ -114,5 +114,4 @@ public abstract class Module implements IMinecraft {
     public Setting<?> getSettingByName(String input) {
         return settings.stream().filter(s -> s.name.equalsIgnoreCase(input)).findFirst().orElse(null);
     }
-
 }

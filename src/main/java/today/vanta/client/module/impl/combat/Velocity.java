@@ -11,11 +11,11 @@ import today.vanta.util.game.events.EventListen;
 public class Velocity extends Module {
     public Velocity() {
         super("Velocity", "Reduces knockback.", Category.COMBAT);
-        displayNames = new String[] {"Velocity", "AntiKnockback", "AntiKB"};
+        displayNames = new String[]{"Velocity", "AntiKnockback", "AntiKB"};
     }
 
     private final NumberSetting
-    horizontal = NumberSetting.builder()
+            horizontal = NumberSetting.builder()
             .name("Horizontal")
             .value(0)
             .max(100)

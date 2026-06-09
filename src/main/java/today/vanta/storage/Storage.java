@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Storage<T> implements ISubscriber {
-
     public final List<T> list = new ArrayList<>();
 
     @Override
@@ -23,5 +22,4 @@ public abstract class Storage<T> implements ISubscriber {
 
         return clazz.cast(obj);
     }
-
 }

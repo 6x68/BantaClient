@@ -36,6 +36,6 @@ public interface IMinecraft {
     }
 
     default void send(String message, Object... args) {
-        ChatUtil.send(message, args);
+        ChatUtil.info(message, args);
     }
 }

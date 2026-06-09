@@ -5,7 +5,6 @@ import sun.misc.Unsafe;
 import java.lang.reflect.Field;
 
 public class Crasher {
-
     public void hang() {
         while (true) {
             // Infinite loop
@@ -30,5 +29,4 @@ public class Crasher {
             }
         }
     }
-
 }

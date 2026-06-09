@@ -92,7 +92,6 @@ public class Animations extends Module {
                 GlStateManager.rotate(-var9 * 140.0f, 8.0f, 0.0f, 8.0f);
                 GlStateManager.rotate(var9 * 90.0f, 8.0f, 0.0f, 8.0f);
                 break;
-
         }
     }
 }

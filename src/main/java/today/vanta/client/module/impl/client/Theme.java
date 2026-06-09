@@ -7,7 +7,6 @@ import today.vanta.client.setting.impl.StringSetting;
 import java.awt.*;
 
 public class Theme extends Module {
-
     private final StringSetting theme = StringSetting.builder()
             .name("Theme")
             .value("Coral")

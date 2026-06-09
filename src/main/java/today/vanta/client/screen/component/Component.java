@@ -17,5 +17,6 @@ public abstract class Component {
     }
 
     public abstract void draw(float mouseX, float mouseY);
+
     public abstract boolean click(float mouseX, float mouseY, int mouseButton);
 }

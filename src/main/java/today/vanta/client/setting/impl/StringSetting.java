@@ -9,6 +9,7 @@ import java.util.List;
 public class StringSetting extends Setting<String> {
     public String[] allValues;
     public boolean expanded;
+
     private StringSetting(String name, String value, String[] allValues) {
         super(name, value);
         this.allValues = allValues;
@@ -80,5 +81,4 @@ public class StringSetting extends Setting<String> {
             return setting;
         }
     }
-
 }

@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class NetworkUtil {
-
     public static String getHead(String uuid, int size) {
         return "https://minotar.net/helm/" + uuid +  "/" + size  + ".png";
     }
@@ -17,5 +16,4 @@ public class NetworkUtil {
         byte[] bytes = org.apache.commons.io.IOUtils.toByteArray(is);
         return Base64.encodeBase64String(bytes);
     }
-
 }

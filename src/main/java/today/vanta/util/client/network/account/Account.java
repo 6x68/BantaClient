@@ -1,7 +1,6 @@
 package today.vanta.util.client.network.account;
 
 public class Account {
-
     public String username, password;
     public String token = "";
     public String skin = AccountSavingUtil.getSteveHead();
@@ -23,5 +22,4 @@ public class Account {
     public boolean isCracked() {
         return password.isEmpty();
     }
-
 }

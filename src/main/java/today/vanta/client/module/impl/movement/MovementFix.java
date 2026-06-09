@@ -29,7 +29,7 @@ public class MovementFix extends Module {
             .build();
 
     public MovementFix() {
-        super("MovementFix", "Fixes your yaw when in combat", Category.MOVEMENT);
+        super("MovementFix", "Fixes your movement when in combat.", Category.MOVEMENT);
         displayNames = new String[]{"MovementFix", "MovementCorrection", "CorrectMovement", "MoveFix"};
     }
 

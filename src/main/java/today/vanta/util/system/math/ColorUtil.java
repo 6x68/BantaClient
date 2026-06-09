@@ -4,7 +4,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class ColorUtil {
-
     public static int applyAlpha(int color, float alpha) {
         return (int) (alpha * 255.0F) << 24 | color & 16777215;
     }
@@ -39,5 +38,4 @@ public class ColorUtil {
 
         return isDark || isBrown;
     }
-
 }

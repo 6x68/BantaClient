@@ -9,6 +9,7 @@ import java.awt.*;
 
 public class LabelComponent extends Component {
     private boolean onlyText = false;
+
     public LabelComponent(String text, float x, float y, float width, float height, CFontRenderer font) {
         super(text, x, y, width, height, font);
     }

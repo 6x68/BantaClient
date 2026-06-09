@@ -50,5 +50,4 @@ public class BooleanSetting extends Setting<Boolean> {
             return setting;
         }
     }
-
 }

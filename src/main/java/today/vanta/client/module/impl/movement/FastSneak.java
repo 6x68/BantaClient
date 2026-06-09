@@ -7,7 +7,7 @@ import today.vanta.util.game.events.EventListen;
 
 public class FastSneak extends Module {
     public FastSneak() {
-        super("FastSneak","Removes Sneak Slowdown", Category.MOVEMENT);
+        super("FastSneak","Removes sneaking slowdown.", Category.MOVEMENT);
     }
 
     @EventListen

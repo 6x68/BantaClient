@@ -173,6 +173,7 @@ public class KillAura extends Module {
 
     @EventListen
     private void onSprint(KeepSprintEvent event) {
+        if (Vanta.instance.moduleStorage.getT(KeepSprint.class).isEnabled()) return;
         if (keepSprint.getValue()) {
             event.greater = false;
         }

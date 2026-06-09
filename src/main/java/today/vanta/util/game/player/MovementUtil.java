@@ -5,7 +5,6 @@ import today.vanta.client.event.impl.game.player.MoveInputEvent;
 import today.vanta.util.game.IMinecraft;
 
 public class MovementUtil implements IMinecraft {
-
     public static boolean isMoving() {
         return mc.thePlayer.moveForward != 0 || mc.thePlayer.moveStrafing != 0;
     }

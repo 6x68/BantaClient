@@ -3,6 +3,7 @@ package today.vanta.util.client.network.account;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import today.vanta.Vanta;
+import today.vanta.storage.impl.ConfigStorage;
 import today.vanta.util.client.network.NetworkUtil;
 import today.vanta.util.system.EncryptUtil;
 import today.vanta.util.system.VantaFile;
@@ -12,7 +13,6 @@ import java.lang.reflect.Type;
 import java.util.*;
 
 public class AccountSavingUtil {
-
     public static File ACCOUNT_FILE = VantaFile.getFile("accounts.json");
     public static List<Account> ACCOUNTS = new ArrayList<>();
     public static Account CURRENT_ACCOUNT = null;
@@ -23,7 +23,7 @@ public class AccountSavingUtil {
         try (Reader reader = new FileReader(ACCOUNT_FILE)) {
             Type type = new TypeToken<Map<String, JsonObject>>() {
             }.getType();
-            Map<String, JsonObject> accountMap = Vanta.instance.configStorage.GSON.fromJson(reader, type);
+            Map<String, JsonObject> accountMap = ConfigStorage.GSON.fromJson(reader, type);
             Vanta.instance.logger.info("Loading alt accounts {}", ACCOUNT_FILE.getName());
 
             for (Map.Entry<String, JsonObject> entry : accountMap.entrySet()) {
@@ -62,7 +62,7 @@ public class AccountSavingUtil {
             }
 
             Vanta.instance.logger.info("Saving alt accounts {}", ACCOUNT_FILE.getName());
-            Vanta.instance.configStorage.GSON.toJson(categoryMap, writer);
+            ConfigStorage.GSON.toJson(categoryMap, writer);
             writer.flush();
         } catch (IOException e) {
             Vanta.instance.logger.warn("Error occurred when saving {} {}", ACCOUNT_FILE.getName(), e.getMessage());

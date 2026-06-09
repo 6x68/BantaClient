@@ -18,12 +18,8 @@ public class ChatUtil implements IMinecraft {
         mc.thePlayer.addChatMessage(new ChatComponentText(message));
     }
 
-    public static void send(String message, Object... args) {
-        send(Prefix.INFO, message, args);
-    }
-
     public static void info(String message, Object... args) {
-        send(message, args);
+        send(Prefix.INFO, message, args);
     }
 
     public static void error(String message, Object... args) {

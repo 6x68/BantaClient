@@ -109,7 +109,7 @@ public class Arraylist extends Module {
     }
 
     @EventListen(priority = EventPriority.LOWEST)
-    public void onRender(Render2DEvent event) {
+    private void onRender(Render2DEvent event) {
         Color fg = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
         Color bg = new Color(0, 0, 0, backgroundAlpha.getValue().intValue());
 

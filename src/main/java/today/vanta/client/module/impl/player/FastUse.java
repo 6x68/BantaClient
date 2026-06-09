@@ -25,7 +25,7 @@ public class FastUse extends Module {
             .build();
 
     public FastUse() {
-        super("FastUse", "Makes you use items faster", Category.PLAYER);
+        super("FastUse", "Makes you use items faster.", Category.PLAYER);
         displayNames = new String[]{"FastUse", "FastPlace", "NoClickDelay"};
     }
 

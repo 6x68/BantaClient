@@ -1,7 +1,6 @@
 package today.vanta.util.system.math;
 
 public class Counter {
-
     private long lastTimestamp = System.currentTimeMillis();
 
     public long getElapsedTime() {

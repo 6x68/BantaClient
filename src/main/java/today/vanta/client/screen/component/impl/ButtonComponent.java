@@ -9,6 +9,7 @@ import java.awt.*;
 
 public class ButtonComponent extends Component {
     private boolean onlyText = false;
+
     public ButtonComponent(String text, float x, float y, float width, float height, CFontRenderer font) {
         super(text, x, y, width, height, font);
     }

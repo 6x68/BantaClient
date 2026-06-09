@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.function.BooleanSupplier;
 
 public class Setting<T> {
-
     private final List<SettingChangeListener<T>> listeners = new ArrayList<>();
     private BooleanSupplier hidden = () -> false;
     public String name;
