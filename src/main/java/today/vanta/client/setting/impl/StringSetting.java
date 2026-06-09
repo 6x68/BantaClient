@@ -36,6 +36,15 @@ public class StringSetting extends Setting<String> {
         return 0;
     }
 
+    public void addValue(String value) {
+        String[] newValues = new String[allValues.length + 1];
+
+        System.arraycopy(allValues, 0, newValues, 0, allValues.length);
+        newValues[allValues.length] = value;
+
+        allValues = newValues;
+    }
+
     public static StringSettingBuilder builder() {
         return new StringSettingBuilder();
     }
