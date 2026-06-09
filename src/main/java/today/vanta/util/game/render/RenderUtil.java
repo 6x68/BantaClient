@@ -194,6 +194,38 @@ public class RenderUtil {
         stop();
     }
 
+    public static void horizontal_grad(double x, double y, double width, double height, Color topColor, Color bottomColor) {
+        start();
+
+        GL11.glShadeModel(GL11.GL_SMOOTH);
+        GL11.glBegin(GL11.GL_QUADS);
+
+        {
+            color(topColor);
+            GL11.glVertex2d(x, y);
+        }
+
+        {
+            color(bottomColor);
+            GL11.glVertex2d(x + width, y);
+        }
+
+        {
+            color(bottomColor);
+            GL11.glVertex2d(x + width, y + height);
+        }
+
+        {
+            color(topColor);
+            GL11.glVertex2d(x, y + height);
+        }
+
+        GL11.glEnd();
+        GL11.glShadeModel(GL11.GL_FLAT);
+
+        stop();
+    }
+
     public static void player_head(EntityPlayer target, float x, float y, float headSize) {
         ResourceLocation skinLocation = ((AbstractClientPlayer) target).getLocationSkin();
         mc.getTextureManager().bindTexture(skinLocation);
