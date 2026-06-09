@@ -31,4 +31,12 @@ public class ClientBrand extends Module {
     private void onUpdate(ClientBrandEvent event) {
         event.brand = brand.getValue();
     }
+
+    @Override
+    public void onEnable() {
+        if (!message && mc.thePlayer != null) {
+            ChatUtil.warn("You must rejoin for the brand to show up!");
+            message = true;
+        }
+    }
 }
