@@ -5,6 +5,7 @@ import net.minecraft.client.renderer.texture.DynamicTexture;
 import org.lwjgl.opengl.GL11;
 import today.vanta.util.game.render.font.CFont;
 import today.vanta.util.game.render.font.IRenderer;
+import today.vanta.util.system.math.ColorUtil;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -45,6 +46,103 @@ public class GlyphFontRenderer extends CFont implements IRenderer {
     public float drawStringWithShadow(String text, float x, float y, int color) {
         float shadowWidth = drawString(text, x + 1, y + 1, color, true);
         return Math.max(shadowWidth, drawString(text, x, y, color, false));
+    }
+
+    @Override
+    public float drawHorizontalGradientString(String text, float x, float y, Color startColor, Color endColor, double speed, int spacing) {
+        if (text == null) return 0.0F;
+
+        x -= 1;
+        y -= 2;
+
+        CharData[] currentData = this.charData;
+
+        boolean bold = false;
+        boolean italic = false;
+        boolean strikethrough = false;
+        boolean underline = false;
+
+        x *= 2.0F;
+        y *= 2.0F;
+        y += 3;
+
+        GlStateManager.pushMatrix();
+        GlStateManager.scale(0.5D, 0.5D, 0.5D);
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GlStateManager.enableTexture2D();
+        GlStateManager.bindTexture(tex.getGlTextureId());
+
+        int size = text.length();
+
+        long time = (long) (System.currentTimeMillis() * speed);
+
+        for (int i = 0; i < size; i++) {
+            char character = text.charAt(i);
+
+            if ((character == '§') && (i + 1 < size)) {
+                int colorIndex = colorCodeCharacters.indexOf(text.charAt(i + 1));
+
+                if (colorIndex < 16 || colorIndex == 21) {
+                    bold = false;
+                    italic = false;
+                    underline = false;
+                    strikethrough = false;
+                    GlStateManager.bindTexture(tex.getGlTextureId());
+                    currentData = this.charData;
+                } else if (colorIndex == 17) { // Bold
+                    bold = true;
+                    if (italic) {
+                        GlStateManager.bindTexture(texItalicBold.getGlTextureId());
+                        currentData = this.boldItalicChars;
+                    } else {
+                        GlStateManager.bindTexture(texBold.getGlTextureId());
+                        currentData = this.boldChars;
+                    }
+                } else if (colorIndex == 18) {
+                    strikethrough = true;
+                } else if (colorIndex == 19) {
+                    underline = true;
+                } else if (colorIndex == 20) { // Italic
+                    italic = true;
+                    if (bold) {
+                        GlStateManager.bindTexture(texItalicBold.getGlTextureId());
+                        currentData = this.boldItalicChars;
+                    } else {
+                        GlStateManager.bindTexture(texItalic.getGlTextureId());
+                        currentData = this.italicChars;
+                    }
+                }
+                i++;
+            } else if ((character < currentData.length) && (character >= 0)) {
+                double offset = (time + (i * spacing)) % 2000 / 2000.0;
+                double factor = Math.abs(Math.sin(offset * Math.PI));
+
+                int colorRGB = ColorUtil.getGradientColor(startColor, endColor, factor);
+
+                int cr = (colorRGB >> 16) & 0xFF;
+                int cg = (colorRGB >> 8) & 0xFF;
+                int cb = colorRGB & 0xFF;
+                int ca = (colorRGB >> 24) & 0xFF;
+
+                GlStateManager.color(cr / 255.0F, cg / 255.0F, cb / 255.0F, ca / 255.0F);
+
+                GlStateManager.glBegin(GL11.GL_TRIANGLES);
+                drawChar(currentData, character, x, y);
+                GlStateManager.glEnd();
+
+                if (strikethrough)
+                    drawLine(x, y + (double) currentData[character].height / 2, x + currentData[character].width - 8.0D, y + (double) currentData[character].height / 2, 1.0F);
+                if (underline)
+                    drawLine(x, y + currentData[character].height - 2.0D, x + currentData[character].width - 8.0D, y + currentData[character].height - 2.0D, 1.0F);
+
+                x += currentData[character].width - 8 + this.charOffset;
+            }
+        }
+
+        GL11.glHint(GL11.GL_POLYGON_SMOOTH_HINT, GL11.GL_DONT_CARE);
+        GlStateManager.popMatrix();
+        return x / 2.0F;
     }
 
     @Override

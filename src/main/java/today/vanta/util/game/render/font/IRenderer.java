@@ -7,6 +7,8 @@ public interface IRenderer {
 
     float drawStringWithShadow(String text, float x, float y, int color);
 
+    float drawHorizontalGradientString(String text, float x, float y, Color startColor, Color endColor, double speed, int spacing);
+
     default float drawString(String text, float x, float y, int color) {
         return drawString(text, x, y, color, false);
     }

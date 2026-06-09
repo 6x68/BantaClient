@@ -38,4 +38,15 @@ public class ColorUtil {
 
         return isDark || isBrown;
     }
+
+    public static int getGradientColor(Color color1, Color color2, double step) {
+        step = Math.max(0.0, Math.min(1.0, step));
+
+        int r = (int) (color1.getRed() + (color2.getRed() - color1.getRed()) * step);
+        int g = (int) (color1.getGreen() + (color2.getGreen() - color1.getGreen()) * step);
+        int b = (int) (color1.getBlue() + (color2.getBlue() - color1.getBlue()) * step);
+        int a = (int) (color1.getAlpha() + (color2.getAlpha() - color1.getAlpha()) * step);
+
+        return (a << 24) | (r << 16) | (g << 8) | b;
+    }
 }
