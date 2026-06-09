@@ -1,6 +1,9 @@
 package today.vanta.client.module.impl.hud;
 
 import net.minecraft.client.gui.GuiChat;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemSword;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import today.vanta.Vanta;
@@ -52,7 +55,11 @@ public class BlockCounter extends Module {
             return;
         }
 
-        if (mc.thePlayer.getCurrentEquippedItem() == null) return;
+        ItemStack heldItem = mc.thePlayer.getCurrentEquippedItem();
+
+        if (heldItem == null || !(heldItem.getItem() instanceof ItemBlock)) {
+            return;
+        }
 
         if (mc.currentScreen instanceof GuiChat) {
             handleDragging(event.mouseX, event.mouseY);
