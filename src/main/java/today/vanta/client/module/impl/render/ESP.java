@@ -29,7 +29,7 @@ public class ESP extends Module {
             .build();
 
     public ESP() {
-        super("ESP", "Extra-sensory perception", Category.RENDER);
+        super("ESP", "Extra-sensory perception.", Category.RENDER);
     }
 
     @EventListen

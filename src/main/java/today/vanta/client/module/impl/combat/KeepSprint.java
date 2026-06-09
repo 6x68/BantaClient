@@ -7,7 +7,7 @@ import today.vanta.util.game.events.EventListen;
 
 public class KeepSprint extends Module {
     public KeepSprint() {
-        super("KeepSprint", "Removes Attack Slowdown", Category.COMBAT);
+        super("KeepSprint", "Removes attack slowdown.", Category.COMBAT);
     }
 
     @EventListen

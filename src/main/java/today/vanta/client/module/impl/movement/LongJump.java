@@ -110,8 +110,11 @@ public class LongJump extends Module {
 
     @Override
     public void onEnable() {
+        if (mc.thePlayer == null) return;
+
         offGroundTicks = 0;
         canDisable = false;
+
         if (mc.thePlayer.onGround) {
             mc.thePlayer.jump();
         }
@@ -119,9 +122,7 @@ public class LongJump extends Module {
 
     @Override
     public void onDisable() {
-        if (mc.thePlayer == null) {
-            return;
-        }
+        if (mc.thePlayer == null) return;
 
         mc.timer.timerSpeed = 1.0f;
         MovementUtil.stop();
