@@ -23,7 +23,7 @@ public class Arraylist extends Module {
     private final NumberSetting xValue = NumberSetting.builder()
             .name("X offset")
             .value(5)
-            .min(1)
+            .min(0)
             .max(25)
             .places(0)
             .build();
