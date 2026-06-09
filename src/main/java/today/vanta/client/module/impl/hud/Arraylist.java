@@ -76,8 +76,9 @@ public class Arraylist extends Module {
 
     @EventListen(priority = EventPriority.LOWEST)
     private void onRender(Render2DEvent event) {
-        Color fg = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
-        Color bg = new Color(0, 0, 0, backgroundAlpha.getValue().intValue());
+        Color primaryColor = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
+        Color secondaryColor = Vanta.instance.moduleStorage.getT(Theme.class).colors[1];
+        Color backgroundColor = new Color(0, 0, 0, backgroundAlpha.getValue().intValue());
 
         List<Module> modules = Vanta.instance.moduleStorage.list.stream().
                 filter(m -> {
@@ -102,7 +103,7 @@ public class Arraylist extends Module {
 
             float x = event.scaledResolution.getScaledWidth() - modWidth - xOffset.getValue().floatValue() - 2.5f;
 
-            Color color = fg;
+            Color color = primaryColor;
 
             switch (colorMode.getValue()) {
                 case "Category":
@@ -115,7 +116,7 @@ public class Arraylist extends Module {
                     color = new Color(ColorUtil.getRainbow(3000, (int) (offset * 150L)));
                     break;
                 case "Fade":
-                    color = new Color(ColorUtil.fadeBetween(fg.getRGB(), fg.darker().darker().getRGB(), offset * 150L));
+                    color = new Color(ColorUtil.fadeBetween(primaryColor.getRGB(), secondaryColor.getRGB(), offset * 150L));
                     break;
             }
 
@@ -185,7 +186,7 @@ public class Arraylist extends Module {
                         break;
                 }
 
-                RenderUtil.rectangle(rectX, rectY, rectWidth, rectHeight, bg);
+                RenderUtil.rectangle(rectX, rectY, rectWidth, rectHeight, backgroundColor);
             }
 
             arraylistFontRenderer.drawString(name, x, y + 0.5f, color, fontShadow.getValue());

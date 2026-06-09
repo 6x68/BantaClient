@@ -25,6 +25,7 @@ public class ModuleStorage extends Storage<Module> {
     public List<String> changelog = new ArrayList<>();
 
     public ModuleStorage() {
+        changelog.add("[+] Added 'Color mode' option to Arraylist");
         changelog.add("[+] Added 'Font' option to Arraylist");
         changelog.add("[+] Added AutoDisable");
         changelog.add("[#] Fixed Arraylist height offsets");
