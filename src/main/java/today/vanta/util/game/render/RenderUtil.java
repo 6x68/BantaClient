@@ -45,7 +45,7 @@ public class RenderUtil {
     }
 
     public static void rectangle(double x, double y, double width, double height, boolean filled, Color color) {
-        rectangle(x, y, width, height, true, color, 2.0f);
+        rectangle(x, y, width, height, filled, color, 2.0f);
     }
 
     public static void rectangle(double x, double y, double width, double height, Color color) {
