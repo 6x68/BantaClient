@@ -13,7 +13,7 @@ public class ClientBrand extends Module {
     private final StringSetting brand = StringSetting.builder()
             .name("Brand")
             .value("vanilla")
-            .values("vanilla")
+            .values("vanilla", "lunarclient:v2.22.8-2623")
             .build();
 
     public ClientBrand() {
