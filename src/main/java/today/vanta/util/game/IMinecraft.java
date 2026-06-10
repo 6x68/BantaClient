@@ -12,24 +12,22 @@ public interface IMinecraft {
     Minecraft mc = Minecraft.getMinecraft();
 
     default void setRotations(Rotation rotations, MotionEvent event) {
-        float gcd = RotationUtil.getMouseGCD();
-        float yawDiff = MathHelper.wrapAngleTo180_float(rotations.yaw - rotations.lastYaw);
-        float pitchDiff = rotations.pitch - rotations.lastPitch;
+        Rotation lastRotations = new Rotation(rotations.lastYaw, rotations.lastPitch);
 
-        yawDiff = Math.round(yawDiff / gcd) * gcd;
-        pitchDiff = Math.round(pitchDiff / gcd) * gcd;
+        float yawDiff = MathHelper.wrapAngleTo180_float(rotations.yaw - lastRotations.yaw);
+        float wrappedYaw = rotations.lastYaw + yawDiff;
+        Rotation adjustedRotations = new Rotation(wrappedYaw, rotations.pitch);
 
-        float targetYaw = rotations.lastYaw + yawDiff;
-        float targetPitch = MathHelper.clamp_float(rotations.lastPitch + pitchDiff, -90, 90);
+        Rotation gcd = RotationUtil.gcd(adjustedRotations, lastRotations);
 
-        mc.thePlayer.prevRenderYawOffset = targetYaw;
+        mc.thePlayer.prevRenderYawOffset = gcd.yaw;
 
-        event.yaw = targetYaw;
-        event.pitch = targetPitch;
+        event.yaw = gcd.yaw;
+        event.pitch = gcd.pitch;
 
-        mc.thePlayer.rotationYawHead = event.yaw;
-        mc.thePlayer.renderYawOffset = event.yaw;
-        mc.thePlayer.rotationPitchHead = event.pitch;
+        mc.thePlayer.rotationYawHead = gcd.yaw;
+        mc.thePlayer.renderYawOffset = gcd.yaw;
+        mc.thePlayer.rotationPitchHead = gcd.pitch;
     }
 
     default void sendPacket(Packet<?> packet) {

@@ -10,6 +10,23 @@ import today.vanta.util.game.player.constructors.Rotation;
 import today.vanta.util.game.world.BlockCache;
 
 public class RotationUtil implements IMinecraft {
+    public static Rotation gcd(final Rotation rotation) {
+        final Rotation previousRotation = new Rotation(mc.thePlayer.prevRotationYaw, mc.thePlayer.prevRotationPitch);
+        return gcd(rotation, previousRotation);
+    }
+
+    public static Rotation gcd(final Rotation rotation, final Rotation previousRotation) {
+        final float sensitivity = mc.gameSettings.mouseSensitivity;
+        final float multiplier = sensitivity * 0.6f + 0.2f;
+        final float deltaScale = 8.0f * 0.15f;
+        final float step = multiplier * deltaScale;
+        final float deltaYaw = rotation.yaw - previousRotation.yaw;
+        final float deltaPitch = rotation.pitch - previousRotation.pitch;
+        final float yaw = previousRotation.yaw + (float) Math.round(deltaYaw / step) * step;
+        final float pitch = previousRotation.pitch + (float) Math.round(deltaPitch / step) * step;
+        return new Rotation(yaw, MathHelper.clamp_float(pitch, -90.0f, 90.0f));
+    }
+
     public static Rotation getSimpleRotations(EntityLivingBase target) {
         double diffX = target.posX - mc.thePlayer.posX;
         double diffY = target.posY + target.getEyeHeight() - (mc.thePlayer.posY + mc.thePlayer.getEyeHeight());
@@ -19,7 +36,7 @@ public class RotationUtil implements IMinecraft {
         float yaw = (float) Math.toDegrees(Math.atan2(diffZ, diffX)) - 90.0F;
         float pitch = (float) -Math.toDegrees(Math.atan2(diffY, dist));
 
-        return new Rotation(yaw, pitch);
+        return new Rotation(MathHelper.wrapAngleTo180_float(yaw), MathHelper.clamp_float(pitch, -90, 90));
     }
 
     public static Rotation getSimpleRotations(BlockPos blockPos) {
@@ -31,7 +48,7 @@ public class RotationUtil implements IMinecraft {
         float yaw = (float) Math.toDegrees(Math.atan2(diffZ, diffX)) - 90.0F;
         float pitch = (float) -Math.toDegrees(Math.atan2(diffY, dist));
 
-        return new Rotation(yaw, pitch);
+        return new Rotation(MathHelper.wrapAngleTo180_float(yaw), MathHelper.clamp_float(pitch, -90, 90));
     }
 
     public static Rotation getSimpleRotations(BlockCache blockCache, Rotation lastRotations) {
@@ -48,7 +65,7 @@ public class RotationUtil implements IMinecraft {
         yaw = smooth(lastRotations.yaw, yaw, 30);
         pitch = smooth(lastRotations.pitch, pitch, 20);
 
-        return new Rotation(yaw, pitch);
+        return new Rotation(MathHelper.wrapAngleTo180_float(yaw), MathHelper.clamp_float(pitch, -90, 90));
     }
 
     public static Rotation getGodbridgeRotations(BlockCache blockCache, Rotation lastRotations) {
@@ -86,7 +103,7 @@ public class RotationUtil implements IMinecraft {
         yaw = smooth(lastRotations.yaw, yaw, 30);
         pitch = smooth(lastRotations.pitch, pitch, 20);
 
-        return new Rotation(yaw, pitch);
+        return new Rotation(MathHelper.wrapAngleTo180_float(yaw), MathHelper.clamp_float(pitch, -90, 90));
     }
 
     public static Rotation getStaticRotations(BlockCache blockCache, Rotation lastRotations) {
@@ -102,7 +119,7 @@ public class RotationUtil implements IMinecraft {
                 yaw = 90;
                 break;
         }
-        return new Rotation(yaw, 75.5f);
+        return new Rotation(MathHelper.wrapAngleTo180_float(yaw), 75.5f);
     }
 
     public static Rotation getForwardRotations(BlockCache blockCache, Rotation lastRotations) {
@@ -114,16 +131,6 @@ public class RotationUtil implements IMinecraft {
         if (diff > max) diff = max;
         if (diff < -max) diff = -max;
         return current + diff;
-    }
-
-    /**
-     * From the minecraft code {@link net.minecraft.client.renderer.EntityRenderer#updateRenderer}
-     *
-     * @return Returns a GCD mouse fix value.
-     */
-    public static float getMouseGCD() {
-        float f = mc.gameSettings.mouseSensitivity * 0.6F + 0.2F;
-        return (f * f * f * 8.0F) * 0.15F;
     }
 
     /**
