@@ -44,10 +44,10 @@ public class KillAura extends Module {
 
     public final BooleanSetting
             raytrace = Setting.of("Raytrace", true),
-            noSwing = Setting.of("No swing", false),
+            noSwing = Setting.of("No swing", false).hide(() -> !swingMode.getValue().equals("Blatant")),
             sprintReset = Setting.of("Sprint reset", true),
-            swingOnHurtTime = Setting.of("Only Hurtime swing", false),
-            keepSprint = Setting.of("Keep sprint", false).hide(sprintReset::getValue);
+            keepSprint = Setting.of("Keep sprint", false).hide(sprintReset::getValue),
+            swingOnHurtTime = Setting.of("Swing on hurt-time", false);
 
     private float previousAttackRange;
 
@@ -214,6 +214,7 @@ public class KillAura extends Module {
                         } else {
                             mc.thePlayer.sendQueue.addToSendQueue(new C0APacketAnimation());
                         }
+
                         switch (swingMode.getValue()) {
                             case "Legit":
                                 mc.clickMouse();
