@@ -47,14 +47,11 @@ public class ViaMCP {
     private AsyncVersionSlider asyncVersionSlider;
 
     public ViaMCP() {
-        ViaLoadingBase.ViaLoadingBaseBuilder.create()
-                .runDirectory(new File("ViaMCP"))
-                .nativeVersion(NATIVE_VERSION)
-                .onProtocolReload(protocolVersion -> {
-                    if (getAsyncVersionSlider() != null) {
-                        getAsyncVersionSlider().setVersion(protocolVersion.getVersion());
-                    }
-                }).build();
+        ViaLoadingBase.ViaLoadingBaseBuilder.create().runDirectory(new File("ViaMCP")).nativeVersion(NATIVE_VERSION).onProtocolReload(protocolVersion -> {
+            if (getAsyncVersionSlider() != null) {
+                getAsyncVersionSlider().setVersion(protocolVersion.getVersion());
+            }
+        }).build();
 
         fixTransactions();
         //fixHypixelLogin();
@@ -62,34 +59,24 @@ public class ViaMCP {
 
     private void fixTransactions() {
         // We handle the differences between those versions in the net code, so we can make the Via handlers pass through
-        Via.getManager().getProtocolManager().addMappingLoaderFuture(Protocol1_17To1_16_4.class, () -> {
-            final Protocol1_17To1_16_4 protocol = Via.getManager().getProtocolManager().getProtocol(Protocol1_17To1_16_4.class);
-            if (protocol == null) return;
-            protocol.replaceClientbound(ClientboundPackets1_17.PING, wrapper -> {
-                wrapper.setPacketType(ClientboundPackets1_16_2.CONTAINER_ACK);
-            });
-            protocol.replaceServerbound(ServerboundPackets1_16_2.CONTAINER_ACK, wrapper -> {
-                wrapper.setPacketType(ServerboundPackets1_17.PONG);
-            });
-        });
+        final Protocol1_17To1_16_4 protocol = Via.getManager().getProtocolManager().getProtocol(Protocol1_17To1_16_4.class);
+        protocol.registerClientbound(ClientboundPackets1_17.PING, ClientboundPackets1_16_2.CONTAINER_ACK, wrapper -> {}, true);
+        protocol.registerServerbound(ServerboundPackets1_16_2.CONTAINER_ACK, ServerboundPackets1_17.PONG, wrapper -> {}, true);
     }
 
     private void fixHypixelLogin() {
-        Via.getManager().getProtocolManager().addMappingLoaderFuture(Protocol1_20_3To1_20_2.class, () -> {
-            final Protocol1_20_3To1_20_2 protocol = Via.getManager().getProtocolManager().getProtocol(Protocol1_20_3To1_20_2.class);
-            if (protocol == null) return;
-            protocol.registerServerbound(State.LOGIN, ServerboundLoginPackets.LOGIN_ACKNOWLEDGED.getId(), ServerboundLoginPackets.LOGIN_ACKNOWLEDGED.getId(), packetWrapper -> {
-                this.user = packetWrapper.user();
-            }, true);
-            protocol.registerServerbound(State.LOGIN, ServerboundLoginPackets.HELLO.getId(), ServerboundLoginPackets.HELLO.getId(), packetWrapper -> {
-                packetWrapper.cancel();
-                PacketWrapper packet = PacketWrapper.create(ServerboundLoginPackets.HELLO, packetWrapper.user());
-                GameProfile profile = Minecraft.getMinecraft().getSession().getProfile();
-                packet.write(Types.STRING, profile.getName());
-                UUID uuid = profile.getId();
-                packet.write(Types.UUID, profile.getId());
-                packet.sendToServer(Protocol1_20_3To1_20_2.class);
-            }, true);
+        Protocol1_20_3To1_20_2 protocol1_20_3To1_20_2 = Via.getManager().getProtocolManager().getProtocol(Protocol1_20_3To1_20_2.class);
+        protocol1_20_3To1_20_2.registerServerbound(State.LOGIN, ServerboundLoginPackets.LOGIN_ACKNOWLEDGED, packetWrapper -> {
+            this.user = packetWrapper.user();
+        });
+        protocol1_20_3To1_20_2.registerServerbound(State.LOGIN, ServerboundLoginPackets.HELLO, packetWrapper -> {
+            packetWrapper.cancel();
+            PacketWrapper packet = PacketWrapper.create(ServerboundLoginPackets.HELLO, packetWrapper.user());
+            GameProfile profile = Minecraft.getMinecraft().getSession().getProfile();
+            packet.write(Types.STRING, profile.getName());
+            UUID uuid = profile.getId();
+            packet.write(Types.UUID, profile.getId());
+            packet.sendToServer(Protocol1_20_3To1_20_2.class);
         });
     }
 
