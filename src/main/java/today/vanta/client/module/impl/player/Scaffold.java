@@ -164,6 +164,35 @@ public class Scaffold extends Module {
                 }
             }
 
+            if (TargetProcessor.getInstance().cache != null && lastRots != null) {
+                switch (rotationMode.getValue()) {
+                    case "Simple":
+                        rots = RotationUtil.getSimpleRotations(TargetProcessor.getInstance().cache, lastRots);
+                        break;
+
+                    case "Godbridge":
+                        rots = RotationUtil.getGodbridgeRotations(TargetProcessor.getInstance().cache, lastRots);
+                        break;
+
+                    case "Static":
+                        rots = RotationUtil.getStaticRotations(TargetProcessor.getInstance().cache, lastRots);
+                        break;
+
+                    case "Forward":
+                        rots = RotationUtil.getForwardRotations(TargetProcessor.getInstance().cache, lastRots);
+                        break;
+                }
+
+                setRotations(rots, event);
+                lastRots = new Rotation(event.yaw, event.pitch);
+            } else {
+                if (lastRots != null) {
+                    rots = lastRots;
+                    setRotations(rots, event);
+                    lastRots = new Rotation(event.yaw, event.pitch);
+                }
+            }
+
             if (mc.thePlayer != null && mc.thePlayer.getHeldItem() != null && TargetProcessor.getInstance().cache != null) {
                 ItemStack heldItemStack = mc.thePlayer.getHeldItem();
 
@@ -172,35 +201,6 @@ public class Scaffold extends Module {
                         mc.thePlayer.swingItem();
                     }
                 }
-            }
-        }
-
-        if (TargetProcessor.getInstance().cache != null && lastRots != null) {
-            switch (rotationMode.getValue()) {
-                case "Simple":
-                    rots = RotationUtil.getSimpleRotations(TargetProcessor.getInstance().cache, lastRots);
-                    break;
-
-                case "Godbridge":
-                    rots = RotationUtil.getGodbridgeRotations(TargetProcessor.getInstance().cache, lastRots);
-                    break;
-
-                case "Static":
-                    rots = RotationUtil.getStaticRotations(TargetProcessor.getInstance().cache, lastRots);
-                    break;
-
-                case "Forward":
-                    rots = RotationUtil.getForwardRotations(TargetProcessor.getInstance().cache, lastRots);
-                    break;
-            }
-
-            setRotations(rots, event);
-            lastRots = new Rotation(event.yaw, event.pitch);
-        } else {
-            if (lastRots != null) {
-                rots = lastRots;
-                setRotations(rots, event);
-                lastRots = new Rotation(event.yaw, event.pitch);
             }
         }
     }
