@@ -53,6 +53,10 @@ public class BlockCounter extends Module {
 
         if (mc.currentScreen instanceof GuiChat) {
             handleDragging(event.mouseX, event.mouseY);
+        } else if (mc.currentScreen != null) {
+            return;
+        } else if (!TargetProcessor.getInstance().scaffold.isEnabled()) {
+            return;
         }
 
         draw();

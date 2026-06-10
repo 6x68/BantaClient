@@ -253,14 +253,17 @@ public class KillAura extends Module {
                     break;
             }
         } else {
-            switch (autoBlockMode.getValue()) {
-                case "Vanilla":
-                case "Hold":
-                    stopVanillaBlock();
-                    break;
-                case "Packet":
-                    stopPacketBlock();
-                    break;
+            if (isBlocking) {
+                mc.getNetHandler().addToSendQueue(new C07PacketPlayerDigging(
+                        C07PacketPlayerDigging.Action.RELEASE_USE_ITEM,
+                        BlockPos.ORIGIN,
+                        EnumFacing.DOWN));
+
+                if (mc.thePlayer.isUsingItem()) {
+                    mc.thePlayer.stopUsingItem();
+                }
+
+                isBlocking = false;
             }
         }
     }
@@ -302,9 +305,9 @@ public class KillAura extends Module {
 
     @Override
     public void onDisable() {
-        if (isBlocking) {
+        if (isBlocking)
             performBlock(false);
-        }
+
         isAttacking = false;
         rots = null;
     }

@@ -57,6 +57,10 @@ public class TargetHUD extends Module {
 
         if (mc.currentScreen instanceof GuiChat) {
             handleDragging(event.mouseX, event.mouseY);
+        } else if (mc.currentScreen != null) {
+            return;
+        } else if (TargetProcessor.getInstance().target != null) {
+            return;
         }
 
         draw();
