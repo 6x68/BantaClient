@@ -43,7 +43,7 @@ public class MovementFix extends Module {
 
     @EventListen
     private void onJump(JumpEvent event) {
-        if (getRotations() == null) return;
+        if (!shouldFix()) return;
         if (isExempted()) return;
         event.yaw = getRotations().yaw;
     }
