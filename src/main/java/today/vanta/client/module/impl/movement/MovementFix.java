@@ -25,18 +25,21 @@ public class MovementFix extends Module {
 
     @EventListen
     private void onMoveInput(MoveInputEvent event) {
+        if (getRotations() == null) return;
         if (isExempted()) return;
         MovementUtil.correctMovement(event, getRotations().yaw);
     }
 
     @EventListen
     private void onStrafe(MoveFlyingEvent event) {
+        if (getRotations() == null) return;
         if (isExempted()) return;
         event.yaw = getRotations().yaw;
     }
 
     @EventListen
     private void onJump(JumpEvent event) {
+        if (getRotations() == null) return;
         if (isExempted()) return;
         event.yaw = getRotations().yaw;
     }

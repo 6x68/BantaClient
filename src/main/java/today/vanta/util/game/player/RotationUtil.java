@@ -51,7 +51,7 @@ public class RotationUtil implements IMinecraft {
         return new Rotation(MathHelper.wrapAngleTo180_float(yaw), MathHelper.clamp_float(pitch, -90, 90));
     }
 
-    public static Rotation getSimpleRotations(BlockCache blockCache, Rotation lastRotations) {
+    public static Rotation getSimpleRotations(BlockCache blockCache) {
         double diffX = blockCache.pos.getX() + 0.5 - mc.thePlayer.posX;
         double diffY = blockCache.pos.getY() + 0.5 - (mc.thePlayer.posY + mc.thePlayer.getEyeHeight());
         double diffZ = blockCache.pos.getZ() + 0.5 - mc.thePlayer.posZ;
@@ -62,10 +62,22 @@ public class RotationUtil implements IMinecraft {
 
         float yaw = (float) Math.toDegrees(Math.atan2(diffZ, diffX)) - 90;
         float pitch = (float) -Math.toDegrees(Math.atan2(diffY, dist));
-        yaw = smooth(lastRotations.yaw, yaw, 30);
-        pitch = smooth(lastRotations.pitch, pitch, 20);
 
-        return new Rotation(MathHelper.wrapAngleTo180_float(yaw), MathHelper.clamp_float(pitch, -90, 90));
+        return new Rotation(MathHelper.wrapAngleTo180_float(yaw), MathHelper.clamp_float(pitch, -90.0f, 90.0f));
+    }
+
+    public static Rotation getSimpleRotations(BlockCache blockCache, Rotation lastRotations) {
+        Rotation rots = getSimpleRotations(blockCache);
+
+        float yaw = rots.yaw;
+        float pitch = rots.pitch;
+
+        if (lastRotations != null) {
+            yaw = smooth(lastRotations.yaw, yaw, 30);
+            pitch = smooth(lastRotations.pitch, pitch, 20);
+        }
+
+        return new Rotation(MathHelper.wrapAngleTo180_float(yaw), MathHelper.clamp_float(pitch, -90.0f, 90.0f));
     }
 
     public static Rotation getGodbridgeRotations(BlockCache blockCache, Rotation lastRotations) {

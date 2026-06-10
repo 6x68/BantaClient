@@ -51,7 +51,8 @@ public class Scaffold extends Module {
     private final BooleanSetting
             keepY = Setting.of("Keep Y", false).hide(() -> rotationMode.getValue().equals("Godbridge")),
             speedKeepY = Setting.of("Keep Y on Speed", false).hide(() -> rotationMode.getValue().equals("Godbridge") || keepY.getValue()),
-            downwards = Setting.of("Downwards", false).hide(() -> rotationMode.getValue().equals("Godbridge"));
+            downwards = Setting.of("Downwards", false).hide(() -> rotationMode.getValue().equals("Godbridge")),
+            smoothRotations = Setting.of("Smooth rotations", false).hide(() -> rotationMode.getValue().equals("Godbridge"));
 
     private final DistanceCounter distCounter = new DistanceCounter();
     private int targetDistance = 7;
@@ -143,6 +144,37 @@ public class Scaffold extends Module {
         }
     }
 
+    @EventListen(priority = EventPriority.HIGHEST)
+    private void onRotation(MotionEvent event) {
+        if (TargetProcessor.getInstance().cache != null && lastRots != null) {
+            switch (rotationMode.getValue()) {
+                case "Simple":
+                    rots = smoothRotations.getValue() ? RotationUtil.getSimpleRotations(TargetProcessor.getInstance().cache, lastRots) : RotationUtil.getSimpleRotations(TargetProcessor.getInstance().cache);
+                    break;
+
+                case "Godbridge":
+                    rots = RotationUtil.getGodbridgeRotations(TargetProcessor.getInstance().cache, lastRots);
+                    break;
+
+                case "Static":
+                    rots = RotationUtil.getStaticRotations(TargetProcessor.getInstance().cache, lastRots);
+                    break;
+
+                case "Forward":
+                    rots = RotationUtil.getForwardRotations(TargetProcessor.getInstance().cache, lastRots);
+                    break;
+            }
+
+            RotationProcessor.getInstance().setTargetRotation(rots);
+            lastRots = rots;
+        } else {
+            if (lastRots != null) {
+                rots = lastRots;
+                RotationProcessor.getInstance().setTargetRotation(rots);
+            }
+        }
+    }
+
     @EventListen
     private void onMotion(MotionEvent event) {
         if (event.state.equals(EventState.PRE)) {
@@ -162,35 +194,6 @@ public class Scaffold extends Module {
                     case "Always":
                         mc.gameSettings.keyBindSneak.pressed = true;
                         break;
-                }
-            }
-
-            if (TargetProcessor.getInstance().cache != null && lastRots != null) {
-                switch (rotationMode.getValue()) {
-                    case "Simple":
-                        rots = RotationUtil.getSimpleRotations(TargetProcessor.getInstance().cache, lastRots);
-                        break;
-
-                    case "Godbridge":
-                        rots = RotationUtil.getGodbridgeRotations(TargetProcessor.getInstance().cache, lastRots);
-                        break;
-
-                    case "Static":
-                        rots = RotationUtil.getStaticRotations(TargetProcessor.getInstance().cache, lastRots);
-                        break;
-
-                    case "Forward":
-                        rots = RotationUtil.getForwardRotations(TargetProcessor.getInstance().cache, lastRots);
-                        break;
-                }
-
-                RotationProcessor.getInstance().setTargetRotation(rots);
-                lastRots = new Rotation(event.yaw, event.pitch);
-            } else {
-                if (lastRots != null) {
-                    rots = lastRots;
-                    RotationProcessor.getInstance().setTargetRotation(rots);
-                    lastRots = new Rotation(event.yaw, event.pitch);
                 }
             }
 
@@ -230,6 +233,9 @@ public class Scaffold extends Module {
 
         distCounter.reset();
         unSneakCounter.reset();
+
+        rots = null;
+        lastRots = null;
     }
 
     @Override

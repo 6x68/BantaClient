@@ -8,6 +8,7 @@ import today.vanta.client.event.impl.game.player.RotationLookEvent;
 import today.vanta.client.processor.Processor;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.events.EventPriority;
+import today.vanta.util.game.events.EventState;
 import today.vanta.util.game.player.RotationUtil;
 import today.vanta.util.game.player.constructors.Rotation;
 
@@ -26,6 +27,8 @@ public class RotationProcessor extends Processor {
 
     private RotateState state = RotateState.INACTIVE;
 
+    private int lastUpdateTick;
+
     @EventListen(priority = EventPriority.HIGHEST)
     private void onFrame(FrameEvent event) {
         if (mc.thePlayer == null) {
@@ -43,7 +46,7 @@ public class RotationProcessor extends Processor {
 
     @EventListen(priority = EventPriority.HIGHEST)
     private void onMotion(MotionEvent event) {
-        if (mc.thePlayer == null) {
+        if (mc.thePlayer == null || event.state == EventState.POST) {
             rotations = null;
             return;
         }
@@ -52,6 +55,8 @@ public class RotationProcessor extends Processor {
             rotations = new Rotation(event.yaw, event.pitch);
             return;
         }
+
+        if (currentRotation == null || lastSentRotation == null) return;
 
         float yawDelta  = (float) ((double) currentRotation.yaw - lastSentRotation.yaw);
         float pitchDelta = (float) ((double) currentRotation.pitch - lastSentRotation.pitch);
@@ -62,7 +67,7 @@ public class RotationProcessor extends Processor {
         mc.thePlayer.renderPitchHead = currentRotation.pitch;
         mc.thePlayer.rotationYawHead = currentRotation.yaw;
 
-        if (state == RotateState.AIMING && isClose(currentRotation, targetRotation, 0.4f)) {
+        if (state == RotateState.AIMING && lastUpdateTick != mc.thePlayer.ticksExisted && isClose(currentRotation, targetRotation, 0.4f)) {
             state = RotateState.RETURNING;
             targetRotation = returnRotation;
         } else if (state == RotateState.RETURNING && isClose(currentRotation, returnRotation, 0.1f)) {
@@ -84,16 +89,17 @@ public class RotationProcessor extends Processor {
     }
 
     public void setTargetRotation(Rotation target) {
-        if (mc.thePlayer == null) {
+        if (mc.thePlayer == null || target == null) {
             return;
         }
 
         this.targetRotation = target;
+        this.currentRotation = target;
+        this.lastUpdateTick = mc.thePlayer.ticksExisted;
         this.returnRotation = new Rotation(mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch);
 
         if (state == RotateState.INACTIVE) {
             this.lastRotation = this.returnRotation;
-            this.currentRotation = this.returnRotation;
         }
 
         this.lastSentRotation = new Rotation(mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch);
