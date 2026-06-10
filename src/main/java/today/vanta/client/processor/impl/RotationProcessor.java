@@ -1,6 +1,8 @@
 package today.vanta.client.processor.impl;
 
+import net.minecraft.util.MathHelper;
 import today.vanta.Vanta;
+import today.vanta.client.event.impl.game.FrameEvent;
 import today.vanta.client.event.impl.game.player.MotionEvent;
 import today.vanta.client.event.impl.game.player.RotationLookEvent;
 import today.vanta.client.processor.Processor;
@@ -12,20 +14,110 @@ import today.vanta.util.game.player.constructors.Rotation;
 public class RotationProcessor extends Processor {
     public Rotation rotations;
 
+    private Rotation targetRotation;
+    private Rotation currentRotation;
+    private Rotation lastRotation;
+    private Rotation returnRotation;
+    private Rotation lastSentRotation;
+
+    private enum RotateState {
+        INACTIVE, AIMING, RETURNING
+    }
+
+    private RotateState state = RotateState.INACTIVE;
+
+    @EventListen(priority = EventPriority.HIGHEST)
+    private void onFrame(FrameEvent event) {
+        if (mc.thePlayer == null) {
+            state = RotateState.INACTIVE;
+            return;
+        }
+
+        if (state == RotateState.INACTIVE) {
+            return;
+        }
+
+        lastRotation = currentRotation;
+        currentRotation = targetRotation;
+    }
+
     @EventListen(priority = EventPriority.HIGHEST)
     private void onMotion(MotionEvent event) {
-        if (mc.thePlayer != null) {
-            rotations = new Rotation(event.yaw, event.pitch);
-        } else {
+        if (mc.thePlayer == null) {
             rotations = null;
+            return;
+        }
+
+        if (state == RotateState.INACTIVE) {
+            rotations = new Rotation(event.yaw, event.pitch);
+            return;
+        }
+
+        float yawDelta  = (float) ((double) currentRotation.yaw - lastSentRotation.yaw);
+        float pitchDelta = (float) ((double) currentRotation.pitch - lastSentRotation.pitch);
+
+        event.yaw = lastSentRotation.yaw + yawDelta;
+        event.pitch = lastSentRotation.pitch + pitchDelta;
+
+        mc.thePlayer.renderPitchHead = currentRotation.pitch;
+        mc.thePlayer.rotationYawHead = currentRotation.yaw;
+
+        if (state == RotateState.AIMING && isClose(currentRotation, targetRotation, 0.4f)) {
+            state = RotateState.RETURNING;
+            targetRotation = returnRotation;
+        } else if (state == RotateState.RETURNING && isClose(currentRotation, returnRotation, 0.1f)) {
+            state = RotateState.INACTIVE;
+            targetRotation = null;
+            currentRotation = null;
+            lastRotation = null;
+            returnRotation = null;
         }
     }
 
     @EventListen(priority = EventPriority.HIGHEST)
-    private void onLook(RotationLookEvent event) { //sets the server-side mouse over object to the rotations
-        if (rotations != null) {
+    private void onLook(RotationLookEvent event) {
+        if (state != RotateState.INACTIVE && currentRotation != null) {
+            event.rotationVector = RotationUtil.getVectorForRotation(currentRotation.pitch, currentRotation.yaw);
+        } else if (rotations != null) {
             event.rotationVector = RotationUtil.getVectorForRotation(rotations.pitch, rotations.yaw);
         }
+    }
+
+    public void setTargetRotation(Rotation target) {
+        if (mc.thePlayer == null) {
+            return;
+        }
+
+        this.targetRotation = target;
+        this.returnRotation = new Rotation(mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch);
+
+        if (state == RotateState.INACTIVE) {
+            this.lastRotation = this.returnRotation;
+            this.currentRotation = this.returnRotation;
+        }
+
+        this.lastSentRotation = new Rotation(mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch);
+        this.state = RotateState.AIMING;
+    }
+
+    public Rotation getCurrentRotation() {
+        if (this.currentRotation != null) {
+            return this.currentRotation;
+        }
+        if (mc.thePlayer != null) {
+            return new Rotation(mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch);
+        }
+        return new Rotation(0, 0);
+    }
+
+    public boolean isActive() {
+        return this.state != RotateState.INACTIVE;
+    }
+
+    private static boolean isClose(Rotation a, Rotation b, float threshold) {
+        float deltaYaw = Math.abs(MathHelper.wrapAngleTo180_float(a.yaw - b.yaw));
+        float deltaPitch = Math.abs(a.pitch - b.pitch);
+        return deltaYaw < threshold && deltaPitch < threshold;
     }
 
     public static RotationProcessor getInstance() {

@@ -13,6 +13,7 @@ import today.vanta.client.event.impl.game.player.SprintEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.module.impl.movement.Speed;
+import today.vanta.client.processor.impl.RotationProcessor;
 import today.vanta.client.processor.impl.TargetProcessor;
 import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.BooleanSetting;
@@ -183,12 +184,12 @@ public class Scaffold extends Module {
                         break;
                 }
 
-                setRotations(rots, event);
+                RotationProcessor.getInstance().setTargetRotation(rots);
                 lastRots = new Rotation(event.yaw, event.pitch);
             } else {
                 if (lastRots != null) {
                     rots = lastRots;
-                    setRotations(rots, event);
+                    RotationProcessor.getInstance().setTargetRotation(rots);
                     lastRots = new Rotation(event.yaw, event.pitch);
                 }
             }

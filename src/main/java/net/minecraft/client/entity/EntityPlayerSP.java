@@ -55,6 +55,12 @@ public class EntityPlayerSP extends AbstractClientPlayer {
     public float timeInPortal;
     public float prevTimeInPortal;
 
+    /**
+     * Rotation of the player head for rendering.
+     * Property: @RotationProcessor
+     */
+    public float renderPitchHead, prevRenderPitchHead;
+
     public EntityPlayerSP(Minecraft mcIn, World worldIn, NetHandlerPlayClient netHandler, StatFileWriter statFile) {
         super(worldIn, netHandler.getGameProfile());
         this.sendQueue = netHandler;
@@ -93,6 +99,9 @@ public class EntityPlayerSP extends AbstractClientPlayer {
     }
 
     public void onUpdateWalkingPlayer() {
+        this.prevRenderPitchHead = this.renderPitchHead;
+        this.renderPitchHead = this.rotationPitch;
+
         final MotionEvent motionEvent = new MotionEvent(this.posX, this.getEntityBoundingBox().minY, this.posZ, this.rotationYaw, this.rotationPitch, this.onGround);
         motionEvent.state = EventState.PRE;
         motionEvent.call();

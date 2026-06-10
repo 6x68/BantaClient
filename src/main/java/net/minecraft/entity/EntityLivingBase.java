@@ -6,6 +6,7 @@ import com.google.common.collect.Maps;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.ai.attributes.*;
 import net.minecraft.entity.item.EntityItem;
@@ -30,6 +31,7 @@ import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import today.vanta.client.event.impl.game.player.EntityMotionEvent;
+import today.vanta.client.processor.impl.RotationProcessor;
 
 import java.util.*;
 
@@ -61,8 +63,6 @@ public abstract class EntityLivingBase extends Entity {
     public float prevRenderYawOffset;
     public float rotationYawHead;
     public float prevRotationYawHead;
-    public float rotationPitchHead;
-    public float prevRotationPitchHead;
     public float jumpMovementFactor = 0.02F;
     protected EntityPlayer attackingPlayer;
     protected int recentlyHit;
@@ -108,7 +108,6 @@ public abstract class EntityLivingBase extends Entity {
         this.randomUnused2 = (float) Math.random() * 12398.0F;
         this.rotationYaw = (float) (Math.random() * Math.PI * 2.0D);
         this.rotationYawHead = this.rotationYaw;
-        this.rotationPitchHead = this.rotationPitch;
         this.stepHeight = 0.6F;
     }
 
@@ -245,7 +244,6 @@ public abstract class EntityLivingBase extends Entity {
         this.prevMovedDistance = this.movedDistance;
         this.prevRenderYawOffset = this.renderYawOffset;
         this.prevRotationYawHead = this.rotationYawHead;
-        this.prevRotationPitchHead = this.rotationPitchHead;
         this.prevRotationYaw = this.rotationYaw;
         this.prevRotationPitch = this.rotationPitch;
         this.worldObj.theProfiler.endSection();
@@ -1267,20 +1265,24 @@ public abstract class EntityLivingBase extends Entity {
         this.onLivingUpdate();
         double d0 = this.posX - this.prevPosX;
         double d1 = this.posZ - this.prevPosZ;
-        float f = (float) (d0 * d0 + d1 * d1);
-        float f1 = this.renderYawOffset;
-        float f2 = 0.0F;
+        float distance = (float) (d0 * d0 + d1 * d1);
+        float renderYaw = this.renderYawOffset;
+        float theta = 0.0F;
         this.prevOnGroundSpeedFactor = this.onGroundSpeedFactor;
         float f3 = 0.0F;
 
-        if (f > 0.0025000002F) {
+        if (distance > 0.0025F) {
             f3 = 1.0F;
-            f2 = (float) Math.sqrt(f) * 3.0F;
-            f1 = (float) MathHelper.atan2(d1, d0) * 180.0F / (float) Math.PI - 90.0F;
+            theta = (float) Math.sqrt(distance) * 3.0F;
+            renderYaw = (float) MathHelper.atan2(d1, d0) * 180.0F / (float) Math.PI - 90.0F;
         }
 
         if (this.swingProgress > 0.0F) {
-            f1 = this.rotationYaw;
+            renderYaw = this.rotationYaw;
+        }
+
+        if (this.swingProgress > 0.0F) {
+            renderYaw = (this instanceof EntityPlayerSP ? RotationProcessor.getInstance().getCurrentRotation().yaw : this.rotationYaw);
         }
 
         if (!this.onGround) {
@@ -1289,7 +1291,7 @@ public abstract class EntityLivingBase extends Entity {
 
         this.onGroundSpeedFactor += (f3 - this.onGroundSpeedFactor) * 0.3F;
         this.worldObj.theProfiler.startSection("headTurn");
-        f2 = this.updateDistance(f1, f2);
+        theta = this.updateDistance(renderYaw, theta);
         this.worldObj.theProfiler.endSection();
         this.worldObj.theProfiler.startSection("rangeChecks");
 
@@ -1326,34 +1328,40 @@ public abstract class EntityLivingBase extends Entity {
         }
 
         this.worldObj.theProfiler.endSection();
-        this.movedDistance += f2;
+        this.movedDistance += theta;
     }
 
-    protected float updateDistance(float p_110146_1_, float p_110146_2_) {
-        float f = MathHelper.wrapAngleTo180_float(p_110146_1_ - this.renderYawOffset);
-        this.renderYawOffset += f * 0.3F;
-        float f1 = MathHelper.wrapAngleTo180_float(this.rotationYaw - this.renderYawOffset);
-        boolean flag = f1 < -90.0F || f1 >= 90.0F;
+    protected float updateDistance(float renderYaw, float theta) {
+        float difference = MathHelper.wrapAngleTo180_float(renderYaw - this.renderYawOffset);
+        this.renderYawOffset += difference * 0.3F;
 
-        if (f1 < -75.0F) {
-            f1 = -75.0F;
+        float off = MathHelper.wrapAngleTo180_float(
+                (this instanceof EntityPlayerSP
+                        ? RotationProcessor.getInstance().getCurrentRotation().yaw
+                        : this.rotationYaw) - this.renderYawOffset
+        );
+
+        boolean flag = off < -90.0F || off >= 90.0F;
+
+        if (off < -75.0F) {
+            off = -75.0F;
         }
 
-        if (f1 >= 75.0F) {
-            f1 = 75.0F;
+        if (off >= 75.0F) {
+            off = 75.0F;
         }
 
-        this.renderYawOffset = this.rotationYaw - f1;
+        this.renderYawOffset = (this instanceof EntityPlayerSP ? RotationProcessor.getInstance().getCurrentRotation().yaw : this.rotationYaw) - off;
 
-        if (f1 * f1 > 2500.0F) {
-            this.renderYawOffset += f1 * 0.2F;
+        if (off * off > 2500.0F) {
+            this.renderYawOffset += off * 0.2F;
         }
 
         if (flag) {
-            p_110146_2_ *= -1.0F;
+            theta *= -1.0F;
         }
 
-        return p_110146_2_;
+        return theta;
     }
 
     public void onLivingUpdate() {

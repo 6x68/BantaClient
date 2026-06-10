@@ -12,6 +12,7 @@ import today.vanta.client.event.impl.game.player.MotionEvent;
 import today.vanta.client.event.impl.game.player.SprintEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
+import today.vanta.client.processor.impl.RotationProcessor;
 import today.vanta.client.processor.impl.TargetProcessor;
 import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.BooleanSetting;
@@ -118,7 +119,7 @@ public class KillAura extends Module {
 
         if (TargetProcessor.getInstance().target != null) {
             rots = RotationUtil.getSimpleRotations(TargetProcessor.getInstance().target);
-            setRotations(rots, event);
+            RotationProcessor.getInstance().setTargetRotation(rots);
         }
     }
 
