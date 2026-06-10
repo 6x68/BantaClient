@@ -72,9 +72,8 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 import org.lwjgl.opengl.GLContext;
 import org.lwjgl.util.glu.Project;
-import today.vanta.Vanta;
+import today.vanta.client.event.impl.game.FrameEvent;
 import today.vanta.client.event.impl.game.render.DrawScreenEvent;
-import today.vanta.client.module.impl.render.Animations;
 import today.vanta.util.system.lwjgl.imgui.ImGuiImpl;
 
 import java.io.IOException;
@@ -986,6 +985,10 @@ public class EntityRenderer implements IResourceManagerReloadListener {
         Config.renderPartialTicks = partialTicks;
         this.frameInit();
         boolean flag = Display.isActive();
+
+        if (mc.thePlayer != null && mc.theWorld != null) {
+            new FrameEvent(partialTicks).call();
+        }
 
         if (!flag && this.mc.gameSettings.pauseOnLostFocus && (!this.mc.gameSettings.touchscreen || !Mouse.isButtonDown(1))) {
             if (Minecraft.getSystemTime() - this.prevFrameTime > 500L) {
