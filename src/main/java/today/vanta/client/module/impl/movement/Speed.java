@@ -49,7 +49,7 @@ public class Speed extends Module {
                         case "Strafe":
                             if (mc.thePlayer.onGround) {
                                 mc.thePlayer.jump();
-                                MovementUtil.strafe(0.32);
+                                MovementUtil.strafe();
                             }
                             break;
                     }
