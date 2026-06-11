@@ -11,7 +11,7 @@ import today.vanta.util.game.player.MovementUtil;
 
 public class Speed extends Module {
     private final StringSetting
-            mode = Setting.of("Mode", "NCP", "OldNCP", "Mospixel-Tick"),
+            mode = Setting.of("Mode", "NCP", "OldNCP", "Mospixel-Tick", "NCP"),
             oncpmode = Setting.of("OldNCP Mode", "Y-Port", "Y-Port", "Strafe").hide(() -> !mode.getValue().equals("OldNCP"));
 
     public Speed() {
