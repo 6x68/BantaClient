@@ -86,6 +86,7 @@ public class TargetHUD extends Module {
     private float barWidth = WIDTH;
     private float ghostBarWidth = WIDTH;
     private float targetWidth = WIDTH;
+    private float targetWidth2 = WIDTH;
     private Animation animation;
     private Animation ghostAnimation;
 
@@ -117,12 +118,12 @@ public class TargetHUD extends Module {
 
             animation.start();
         }
-        if (ghostWidth != targetWidth) {
-            targetWidth = ghostWidth;
+        if (ghostWidth != targetWidth2) {
+            targetWidth2 = ghostWidth;
 
             ghostAnimation = Animation.create(
                     ghostBarWidth,
-                    targetWidth,
+                    targetWidth2,
                     300,
                     Easing.LINEAR,
                     val -> ghostBarWidth = val
