@@ -15,6 +15,8 @@ import today.vanta.client.setting.impl.NumberSetting;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.render.RenderUtil;
 import today.vanta.util.game.render.font.CFonts;
+import today.vanta.util.system.math.animation.Animation;
+import today.vanta.util.system.math.animation.Easing;
 
 import java.awt.*;
 
@@ -81,8 +83,11 @@ public class TargetHUD extends Module {
         }
     }
 
+    private float barWidth = WIDTH;
+    private float targetWidth = WIDTH;
+    private Animation animation;
+
     private void draw() {
-        float healthWidth = WIDTH * (localTarget.getHealth() / localTarget.getMaxHealth());
         Color color = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
         Color color2 = Vanta.instance.moduleStorage.getT(Theme.class).colors[1];
 
@@ -91,9 +96,26 @@ public class TargetHUD extends Module {
 
         RenderUtil.rectangle(x, y, WIDTH, HEIHT, BACKGROUND);
         RenderUtil.player_head((EntityPlayer) localTarget, x, y, 36f);
-        CFonts.SFPT_MEDIUM_20.drawStringWithShadow(localTarget.getName(), x + 38, y + 4,Color.WHITE );
+        CFonts.SFPT_MEDIUM_20.drawStringWithShadow(localTarget.getName(), x + 38, y + 4, Color.WHITE);
         CFonts.SFPT_REGULAR_18.drawStringWithShadow(String.format("%.1f", localTarget.getHealth()), x + 38, y + 15, Color.WHITE);
-        RenderUtil.horizontal_grad(x, y + 36, healthWidth, 4f, color2,color);
+
+        float healthWidth = WIDTH * (localTarget.getHealth() / localTarget.getMaxHealth());
+
+        if (healthWidth != targetWidth) {
+            targetWidth = healthWidth;
+
+            animation = Animation.create(
+                    barWidth,
+                    targetWidth,
+                    250,
+                    Easing.LINEAR,
+                    val -> barWidth = val
+            );
+
+            animation.start();
+        }
+
+        RenderUtil.horizontal_grad(x, y + 36, barWidth, 4f, color2, color);
 
         if (dragging && mc.currentScreen instanceof GuiChat) {
             RenderUtil.rectangle(x - 0.5, y - 0.5, WIDTH + 1, HEIHT + 1, false, color);
