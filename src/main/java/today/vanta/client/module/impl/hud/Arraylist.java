@@ -1,6 +1,8 @@
 package today.vanta.client.module.impl.hud;
 
 import today.vanta.Vanta;
+import today.vanta.client.event.impl.client.ModuleDisableEvent;
+import today.vanta.client.event.impl.client.ModuleEnableEvent;
 import today.vanta.client.event.impl.game.render.Render2DEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
@@ -13,24 +15,28 @@ import today.vanta.client.setting.impl.BooleanSetting;
 import today.vanta.client.setting.impl.NumberSetting;
 import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.events.EventListen;
-import today.vanta.util.game.events.EventPriority;
 import today.vanta.util.game.render.RenderUtil;
 import today.vanta.util.game.render.font.CFonts;
 import today.vanta.util.system.math.ColorUtil;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class Arraylist extends Module {
+    private static final Pattern SPACE_OUT_PATTERN_1 = Pattern.compile("(?<=[a-z])(?=[A-Z])");
+    private static final Pattern SPACE_OUT_PATTERN_2 = Pattern.compile("(?<=[a-z])(?=[A-Z])|(?<=[A-Za-z])(?=\\d)");
+
     private final NumberSetting
             xOffset = Setting.of("X offset", 5, 0, 25),
             yOffset = Setting.of("Y offset", 5, 0, 25);
 
     private final StringSetting
             font = Setting.of("Font", "SFPT", "SFPT", "Minecraft", "Exhibition"),
-            fontStyle = Setting.of("Font style", "Medium", "Light", "Italic", "Medium", "Semibold", "Bold", "Heavy");
+            fontStyle = Setting.of("Font style", "Medium", "Light", "Medium", "Semibold", "Bold", "Heavy", "Regular");
 
     private final NumberSetting fontSize = Setting.of("Font size", 24, 10, 42, "px").hide(() -> !font.getValue().equals("SFPT"));
 
@@ -47,6 +53,8 @@ public class Arraylist extends Module {
             moduleCase = Setting.of("Module case", "Default", "Default", "Lowercase", "Uppercase"),
             colorMode = Setting.of("Color mode", "Theme", "Theme", "Rainbow", "Random", "Category", "Fade");
 
+    private final List<Module> enabledModules = new ArrayList<>();
+
     public Arraylist() {
         super("Arraylist", "Draws an arraylist of modules.", Category.HUD);
         displayNames = new String[]{"Arraylist", "ArrayList", "ModuleList"};
@@ -56,6 +64,8 @@ public class Arraylist extends Module {
         font.addListener(((setting, oldValue, newValue) -> setFont()));
         fontStyle.addListener(((setting, oldValue, newValue) -> setFont()));
         fontSize.addListener(((setting, oldValue, newValue) -> setFont()));
+
+        setFont();
     }
 
     private ArraylistRenderer arraylistFontRenderer = new GlyphRenderer(CFonts.SFPT_MEDIUM_24);
@@ -72,31 +82,42 @@ public class Arraylist extends Module {
                 arraylistFontRenderer = new GlyphRenderer(CFonts.getFont("SFPT-" + fontStyle.getValue(), fontSize.getValue().intValue()));
                 break;
         }
+
+        resortModules();
     }
 
-    @EventListen(priority = EventPriority.LOWEST)
+    @EventListen
+    private void onModuleDisable(ModuleDisableEvent event) {
+        enabledModules.remove(event.module);
+        resortModules();
+    }
+
+    @EventListen
+    private void onModEnable(ModuleEnableEvent event) {
+        if (!event.module.hideFromArraylist && !enabledModules.contains(event.module)) {
+            enabledModules.add(event.module);
+        }
+        resortModules();
+    }
+
+    private void resortModules() {
+        if (enabledModules.isEmpty()) return;
+        enabledModules.sort(Comparator.comparingDouble(
+                m -> arraylistFontRenderer.getStringWidth(getModuleName((Module) m))
+        ).reversed());
+    }
+
+    @EventListen
     private void onRender(Render2DEvent event) {
+        if (enabledModules.isEmpty()) return;
+
         Color primaryColor = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
         Color secondaryColor = Vanta.instance.moduleStorage.getT(Theme.class).colors[1];
         Color backgroundColor = new Color(0, 0, 0, backgroundAlpha.getValue().intValue());
 
-        List<Module> modules = Vanta.instance.moduleStorage.list.stream().
-                filter(m -> {
-                    boolean add = m.isEnabled();
-
-                    if (m.hideFromArraylist) {
-                        add = false;
-                    }
-
-                    return add;
-                }).sorted(Comparator.comparingDouble(
-                        m -> arraylistFontRenderer.getStringWidth(getModuleName((Module) m))
-                ).reversed()).collect(Collectors.toList());
-
         float y = yOffset.getValue().floatValue();
-        int offset = 0;
-        for (int i = 0; i < modules.size(); i++) {
-            Module module = modules.get(i);
+        for (int i = 0; i < enabledModules.size(); i++) {
+            Module module = enabledModules.get(i);
             String name = getModuleName(module);
 
             float modWidth = arraylistFontRenderer.getStringWidth(name);
@@ -113,21 +134,21 @@ public class Arraylist extends Module {
                     color = module.color;
                     break;
                 case "Rainbow":
-                    color = new Color(ColorUtil.getRainbow(3000, (int) (offset * 150L)));
+                    color = new Color(ColorUtil.getRainbow(3000, (int) (i * 150L)));
                     break;
                 case "Fade":
-                    color = new Color(ColorUtil.fadeBetween(primaryColor.getRGB(), secondaryColor.getRGB(), offset * 150L));
+                    color = new Color(ColorUtil.fadeBetween(primaryColor.getRGB(), secondaryColor.getRGB(), i * 150L));
                     break;
             }
 
             if (background.getValue()) {
                 float rectX = x - 2;
                 float rectY = y;
-                float rectWidth = modWidth + 4.5f;
+                float rectWidth = modWidth + 5;
                 float rectHeight = arraylistFontRenderer.getBoxHeight();
 
                 boolean first = i == 0;
-                boolean last = i == modules.size() - 1;
+                boolean last = i == enabledModules.size() - 1;
 
                 switch (line.getValue()) {
                     case "Top+right":
@@ -155,7 +176,7 @@ public class Arraylist extends Module {
                             RenderUtil.rectangle(rectX, rectY + rectHeight, rectWidth, 1, color);
                         } else {
                             // bottom for each middle module
-                            Module nextModule = modules.get(i + 1);
+                            Module nextModule = enabledModules.get(i + 1);
                             String nextName = getModuleName(nextModule);
                             float nextModWidth = arraylistFontRenderer.getStringWidth(nextName);
                             float nextX = event.scaledResolution.getScaledWidth() - nextModWidth - 5;
@@ -192,7 +213,6 @@ public class Arraylist extends Module {
             arraylistFontRenderer.drawString(name, x, y + 0.5f, color, fontShadow.getValue());
 
             y += background.getValue() ? arraylistFontRenderer.getBoxHeight() : arraylistFontRenderer.getFontHeight() + 2;
-            offset++;
         }
     }
 
@@ -203,13 +223,13 @@ public class Arraylist extends Module {
         if (module.getSuffix() != null && module.addSuffix && suffixes.getValue()) {
             suffix = module.getSuffix();
             if (spaceOut.getValue()) {
-                suffix = suffix.replaceAll("(?<=[a-z])(?=[A-Z])", " ");
+                suffix = SPACE_OUT_PATTERN_1.matcher(suffix).replaceAll(" ");
             }
             name += "§f" + suffix;
         }
 
         if (spaceOut.getValue()) {
-            name = name.replaceAll("(?<=[a-z])(?=[A-Z])|(?<=[A-Za-z])(?=\\d)", " ");
+            name = SPACE_OUT_PATTERN_2.matcher(name).replaceAll(" ");
         } else {
             name = name.replace("§", " §");
         }
@@ -220,6 +240,7 @@ public class Arraylist extends Module {
                 break;
             case "Uppercase":
                 name = name.toUpperCase();
+                name = name.replace("§F", "§f");
                 break;
         }
 
