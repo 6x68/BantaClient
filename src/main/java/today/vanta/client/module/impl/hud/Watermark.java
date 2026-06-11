@@ -1,23 +1,34 @@
 package today.vanta.client.module.impl.hud;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.EnumChatFormatting;
 import today.vanta.Vanta;
 import today.vanta.client.event.impl.game.render.Render2DEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.module.impl.client.Theme;
+import today.vanta.client.module.impl.hud.arraylist.BitMapRenderer;
 import today.vanta.client.setting.Setting;
+import today.vanta.client.setting.impl.BooleanSetting;
 import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.client.IClient;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.events.EventPriority;
 import today.vanta.util.game.render.RenderUtil;
 import today.vanta.util.game.render.font.CFonts;
+import today.vanta.util.game.render.font.impl.BitMapFontRenderer;
 
 import java.awt.*;
+import java.time.Clock;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Formatter;
 
 public class Watermark extends Module {
-    private final StringSetting style = Setting.of("Style", "Vanta", "Vanta", "Compact", "Jello", "My Eyes"); //travis scott reference?
+
+    private final StringSetting style = Setting.of("Style", "Vanta", "Vanta", "Compact", "Jello", "My Eyes", "Char", "Exhi"); //travis scott reference? // shut the fuck up!
+    private final BooleanSetting mcfont = Setting.of("Standard Minecraft Font", true).hide(() -> !style.getValue().equals("Exhi"));
 
     public Watermark() {
         super("Watermark", "Draws a watermark of the client.", Category.HUD);
@@ -27,6 +38,11 @@ public class Watermark extends Module {
 
     @EventListen(priority = EventPriority.LOWEST)
     private void onRender(Render2DEvent event) {
+        BitMapRenderer exhiFont = new BitMapRenderer(mc.exhiFontRendererObj);
+        BitMapRenderer mcFont = new BitMapRenderer(mc.fontRendererObj);
+        String firstCharacter = String.valueOf(IClient.CLIENT_NAME.charAt(0));
+        float length = CFonts.SFPT_SEMIBOLD_42.getStringWidth(firstCharacter) - 1;
+        String watermarkfull = IClient.CLIENT_NAME.substring(1);
         Color[] colors = Vanta.instance.moduleStorage.getT(Theme.class).colors;
 
         float x = 5;
@@ -68,6 +84,24 @@ public class Watermark extends Module {
                 break;
             case "My Eyes":
                 CFonts.RK_REGULAR_50.drawHorizontalGradientString("Abdelrahman Al-Rashid Client (Miniblox Bypass Edition)", x, y, colors[0], colors[1], 1, 150);
+                break;
+            case "Char":
+                CFonts.SFPT_SEMIBOLD_42.drawStringWithShadow(firstCharacter, x, y, colors[0]);
+                CFonts.SFPT_SEMIBOLD_42.drawStringWithShadow(watermarkfull, x+ length, y, Color.WHITE);
+                break;
+            case "Exhi":
+                Formatter format = new Formatter();
+                Calendar gfg_calender = Calendar.getInstance();
+                format = new Formatter();
+                format.format("%tl:%tM %Tp", gfg_calender,
+                        gfg_calender,gfg_calender);
+                if (mcfont.getValue()) {
+                    mcFont.drawString(firstCharacter, 2, 2, colors[0], true);
+                    mcFont.drawString(watermarkfull + EnumChatFormatting.GRAY + " [" + EnumChatFormatting.WHITE + format + EnumChatFormatting.GRAY + "] " + "[" + EnumChatFormatting.WHITE + mc.getDebugFPS() + " FPS" + EnumChatFormatting.GRAY + "]", 8, 2, Color.WHITE, true);
+                } else {
+                    exhiFont.drawString(firstCharacter,2,2,colors[0],true);
+                    exhiFont.drawString(watermarkfull + EnumChatFormatting.GRAY + " [" + EnumChatFormatting.WHITE +format+ EnumChatFormatting.GRAY + "] "  + "[" + EnumChatFormatting.WHITE +mc.getDebugFPS()+ " FPS" + EnumChatFormatting.GRAY + "]",9,2,Color.WHITE,true);
+                }
                 break;
         }
     }
