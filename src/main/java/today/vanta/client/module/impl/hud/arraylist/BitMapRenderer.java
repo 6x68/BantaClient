@@ -21,6 +21,6 @@ public class BitMapRenderer extends ArraylistRenderer {
 
     @Override
     public float getBoxHeight() {
-        return getFontHeight() + 2;
+        return getFontHeight() + 3;
     }
 }
