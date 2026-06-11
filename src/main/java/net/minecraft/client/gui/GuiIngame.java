@@ -34,7 +34,9 @@ import net.minecraft.util.*;
 import net.minecraft.world.border.WorldBorder;
 import net.optifine.CustomColors;
 import today.vanta.Vanta;
+import today.vanta.client.event.impl.game.render.BobArmEvent;
 import today.vanta.client.event.impl.game.render.Render2DEvent;
+import today.vanta.client.event.impl.game.render.RenderCrosshairEvent;
 import today.vanta.client.module.impl.render.Animations;
 import today.vanta.util.game.render.font.impl.BitMapFontRenderer;
 
@@ -407,7 +409,10 @@ public class GuiIngame extends Gui {
     }
 
     protected boolean showCrosshair() {
-        if (Vanta.instance.moduleStorage.getT(Animations.class).isEnabled()) {
+        RenderCrosshairEvent event = new RenderCrosshairEvent();
+        event.call();
+
+        if (event.cancelled) {
             return false;
         }
         if (this.mc.gameSettings.showDebugInfo && !this.mc.thePlayer.hasReducedDebug() && !this.mc.gameSettings.reducedDebugInfo) {

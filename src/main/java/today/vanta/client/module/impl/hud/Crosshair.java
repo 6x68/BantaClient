@@ -1,6 +1,9 @@
 package today.vanta.client.module.impl.hud;
 
+import net.minecraft.client.renderer.entity.Render;
+import today.vanta.client.event.impl.game.render.BobArmEvent;
 import today.vanta.client.event.impl.game.render.Render2DEvent;
+import today.vanta.client.event.impl.game.render.RenderCrosshairEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.setting.Setting;
@@ -17,6 +20,10 @@ public class Crosshair extends Module {
     private final NumberSetting spacemove = Setting.of("Moving Space", 7,2,16);
     public Crosshair() {
         super("Crosshair", "Looks like CSGO.", Category.HUD);
+    }
+    @EventListen
+    private void onRenderCrosshair(RenderCrosshairEvent event) {
+        event.cancelled = true;
     }
 
     @EventListen

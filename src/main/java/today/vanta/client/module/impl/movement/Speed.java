@@ -88,8 +88,10 @@ public class Speed extends Module {
                     break;
                 case "Miniblox-Ground":
                     if (mc.thePlayer.onGround) {
-                        MovementUtil.strafe(0.3f);
+                        MovementUtil.strafe(0.16f);
                     }
+                    mc.thePlayer.setSprinting(false);
+
                     break;
             }
         }
