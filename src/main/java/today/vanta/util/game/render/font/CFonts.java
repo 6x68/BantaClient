@@ -17,9 +17,13 @@ public class CFonts {
 
     // SF Pro Text
     public static GlyphFontRenderer SFPT_MEDIUM_18 = getFont("SFPT-Medium", 18);
+    public static GlyphFontRenderer SFPT_MEDIUM_20 = getFont("SFPT-Medium", 20);
     public static GlyphFontRenderer SFPT_SEMIBOLD_20 = getFont("SFPT-Semibold", 20);
     public static GlyphFontRenderer SFPT_MEDIUM_24 = getFont("SFPT-Medium", 24);
     public static GlyphFontRenderer SFPT_SEMIBOLD_42 = getFont("SFPT-Semibold", 42);
+    public static GlyphFontRenderer SFPT_REGULAR_18 = getFont("SFPT-Regular", 18);
+    public static GlyphFontRenderer SFPT_REGULAR_20 = getFont("SFPT-Regular", 20);
+    public static GlyphFontRenderer SFPT_REGULAR_24 = getFont("SFPT-Regular", 24);
 
     // Ramadhan Karim
     public static GlyphFontRenderer RK_REGULAR_50 = getFont("RK-Regular", 50);

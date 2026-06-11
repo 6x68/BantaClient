@@ -84,15 +84,16 @@ public class TargetHUD extends Module {
     private void draw() {
         float healthWidth = WIDTH * (localTarget.getHealth() / localTarget.getMaxHealth());
         Color color = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
+        Color color2 = Vanta.instance.moduleStorage.getT(Theme.class).colors[1];
 
         float x = this.x.getValue().floatValue();
         float y = this.y.getValue().floatValue();
 
         RenderUtil.rectangle(x, y, WIDTH, HEIHT, BACKGROUND);
         RenderUtil.player_head((EntityPlayer) localTarget, x, y, 36f);
-        CFonts.SFPT_SEMIBOLD_20.drawStringWithShadow(localTarget.getName(), x + 38, y + 4,color );
-        CFonts.SFPT_SEMIBOLD_20.drawStringWithShadow(String.format("%.1f", localTarget.getHealth()), x + 38, y + 15, Color.WHITE);
-        RenderUtil.rectangle(x, y + 36, healthWidth, 4f, color);
+        CFonts.SFPT_MEDIUM_20.drawStringWithShadow(localTarget.getName(), x + 38, y + 4,Color.WHITE );
+        CFonts.SFPT_REGULAR_18.drawStringWithShadow(String.format("%.1f", localTarget.getHealth()), x + 38, y + 15, Color.WHITE);
+        RenderUtil.horizontal_grad(x, y + 36, healthWidth, 4f, color2,color);
 
         if (dragging) {
             RenderUtil.rectangle(x - 0.5, y - 0.5, WIDTH + 1, HEIHT + 1, false, color);
