@@ -101,8 +101,7 @@ public class ClickGUIScreen extends GuiScreen {
                             } else if (setting instanceof NumberSetting) {
                                 ignoreThis += 20;
                             } else if (setting instanceof StringSetting) {
-                                StringSetting dropdown = (StringSetting) setting;
-                                ignoreThis += dropdown.expanded ? 12 + dropdown.allValues.length * 9 : 12;
+                                ignoreThis += 14;
                             } else if (setting instanceof MultiStringSetting) {
                                 MultiStringSetting selector = (MultiStringSetting) setting;
                                 ignoreThis += selector.expanded ? 12 + selector.allValues.length * 9 : 12;
@@ -255,28 +254,15 @@ public class ClickGUIScreen extends GuiScreen {
 
                                 y += 20;
                             } else if (setting instanceof StringSetting) {
-                                StringSetting dropdown = (StringSetting) setting;
-                                float settingHeight = dropdown.expanded ? 12 + dropdown.allValues.length * 9 : 12;
-                                boolean hover2 = RenderUtil.hovered(mouseX, mouseY, x + 1.5f, y, panelWidth - 3, settingHeight);
-                                RenderUtil.rectangle(x + 1.5f, y, panelWidth - 3, settingHeight, hover2 ? new Color(40, 40, 40) : new Color(35, 35, 35));
-                                sett.drawString(setting.name, x + 5, y + 1.5f, -1);
-                                float bX = x + panelWidth - 14;
+                                StringSetting button = (StringSetting) setting;
+                                RenderUtil.rectangle(x + 1.5f, y, panelWidth - 3, 14, hover ? new Color(40, 40, 40) : new Color(35, 35, 35));
+                                sett.drawString(setting.name, x + 5, y + 2.5f, -1);
 
-                                RenderUtil.rectangle(bX - sett.getStringWidth(dropdown.getValue()) - 2, y + 1.5f, sett.getStringWidth(dropdown.getValue()) + 4, 9 + (dropdown.expanded ? dropdown.allValues.length * 9 : 0), new Color(45, 45, 45));
-                                sett.drawString(dropdown.getValue(), bX - sett.getStringWidth(dropdown.getValue()), y + 1.5f, -1);
+                                float bX = x + panelWidth - 5;
+                                RenderUtil.rectangle(bX - sett.getStringWidth(button.getValue()) - 2, y + 2.5, sett.getStringWidth(button.getValue()) + 4, 9, new Color(45, 45, 45));
+                                sett.drawString(button.getValue(), bX - sett.getStringWidth(button.getValue()), y + 2.5f, -1);
 
-                                sett.drawString(dropdown.expanded ? "-" : "+", bX + 4.5f, y + 1.5f, -1);
-
-                                if (dropdown.expanded) {
-                                    float yOffset = y + 8;
-                                    for (String mode : dropdown.allValues) {
-                                        boolean hoverMode = RenderUtil.hovered(mouseX, mouseY, bX - sett.getStringWidth(mode), yOffset + 2.5f, sett.getStringWidth(dropdown.getValue()) + 1, 9);
-                                        boolean selected = dropdown.getValue().equals(mode);
-                                        sett.drawString(mode, bX - sett.getStringWidth(mode), yOffset + 2.5f, hoverMode ? selected ? color1.darker() : Color.LIGHT_GRAY : selected ? color1 : Color.WHITE);
-                                        yOffset += 9;
-                                    }
-                                }
-                                y += settingHeight;
+                                y += 14;
                             } else if (setting instanceof MultiStringSetting) {
                                 MultiStringSetting selector = (MultiStringSetting) setting;
                                 float settingHeight = selector.expanded ? 12 + selector.allValues.length * 9 : 12;
@@ -408,26 +394,21 @@ public class ClickGUIScreen extends GuiScreen {
                             } else if (setting instanceof NumberSetting) {
                                 y += 20;
                             } else if (setting instanceof StringSetting) {
-                                StringSetting dropdown = (StringSetting) setting;
-                                float settingHeight = dropdown.expanded ? 12 + dropdown.allValues.length * 9 : 12;
-                                boolean hoverDrop = RenderUtil.hovered(mouseX, mouseY, position.x + 1.5f, y, panelWidth - 3, 12);
+                                StringSetting button = (StringSetting) setting;
 
-                                if (hoverDrop && (mouseButton == 0 || mouseButton == 1)) {
-                                    dropdown.expanded = !dropdown.expanded;
-                                }
-
-                                if (dropdown.expanded) {
-                                    float bX = x + panelWidth - 14;
-                                    float yOffset = y + 8;
-                                    for (String mode : dropdown.allValues) {
-                                        boolean hoverMode = RenderUtil.hovered(mouseX, mouseY, bX - sett.getStringWidth(mode), yOffset + 2.5f, sett.getStringWidth(dropdown.getValue()) + 1, 9);
-                                        if (hoverMode && mouseButton == 0) {
-                                            dropdown.setValue(mode);
-                                        }
-                                        yOffset += 9;
+                                float bX = x + panelWidth - 5;
+                                if (RenderUtil.hovered(mouseX, mouseY, bX - sett.getStringWidth(button.getValue()) - 2, y + 2.5f, sett.getStringWidth(button.getValue()) + 4, 9)) {
+                                    switch (mouseButton) {
+                                        case 0:
+                                            button.next();
+                                            break;
+                                        case 1:
+                                            button.previous();
+                                            break;
                                     }
                                 }
-                                y += settingHeight;
+
+                                y += 14;
                             } else if (setting instanceof MultiStringSetting) {
                                 MultiStringSetting selector = (MultiStringSetting) setting;
                                 float settingHeight = selector.expanded ? 12 + selector.allValues.length * 9 : 12;
