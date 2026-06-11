@@ -102,7 +102,7 @@ public class BlockCounter extends Module {
         CFonts.SFPT_SEMIBOLD_20.drawStringWithShadow("Blocks", x + 38, y + 4, color);
         CFonts.SFPT_SEMIBOLD_20.drawStringWithShadow(String.valueOf(blocksinHotbar), x + 38, y + 15, Color.WHITE);
 
-        if (dragging) {
+        if (dragging && mc.currentScreen instanceof GuiChat) {
             RenderUtil.rectangle(x - 0.5, y - 0.5, WIDTH + 1, HEIHT + 1, false, color);
         }
     }

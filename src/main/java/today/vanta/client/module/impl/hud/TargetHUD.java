@@ -95,7 +95,7 @@ public class TargetHUD extends Module {
         CFonts.SFPT_REGULAR_18.drawStringWithShadow(String.format("%.1f", localTarget.getHealth()), x + 38, y + 15, Color.WHITE);
         RenderUtil.horizontal_grad(x, y + 36, healthWidth, 4f, color2,color);
 
-        if (dragging) {
+        if (dragging && mc.currentScreen instanceof GuiChat) {
             RenderUtil.rectangle(x - 0.5, y - 0.5, WIDTH + 1, HEIHT + 1, false, color);
         }
     }
