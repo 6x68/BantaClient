@@ -2520,7 +2520,7 @@ public class GameSettings {
         RENDER_DISTANCE("options.renderDistance", true, false, 2.0F, 16.0F, 1.0F),
         VIEW_BOBBING("options.viewBobbing", false, true),
         ANAGLYPH("options.anaglyph", false, true),
-        FRAMERATE_LIMIT("options.framerateLimit", true, false, 0.0F, 260.0F, 5.0F),
+        FRAMERATE_LIMIT("options.framerateLimit", true, false, 0.0F, 510.0F, 5.0F),
         FBO_ENABLE("options.fboEnable", false, true),
         RENDER_CLOUDS("options.renderClouds", false, false),
         GRAPHICS("options.graphics", false, false),
