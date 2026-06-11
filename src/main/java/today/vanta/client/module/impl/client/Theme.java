@@ -8,7 +8,7 @@ import today.vanta.client.setting.impl.StringSetting;
 import java.awt.*;
 
 public class Theme extends Module {
-    private final StringSetting theme = Setting.of("Theme", "Coral", "Coral", "Capri", "Twilight", "Margo", "Lust", "Light", "ShadowNotro");
+    private final StringSetting theme = Setting.of("Theme", "Coral", "Coral", "Capri", "Twilight", "Margo", "Lust", "Light", "ShadowNotro", "Moral");
 
     public Theme() {
         super("Theme", "Manage the client's colors.", Category.CLIENT);
@@ -40,6 +40,9 @@ public class Theme extends Module {
                 break;
             case "ShadowNotro":
                 colors = new Color[]{new Color(255, 0, 181), new Color(28, 0, 100)};
+                break;
+            case "Moral":
+                colors = new Color[]{new Color(147, 251, 157, 1), new Color(9, 199, 251, 1)};
                 break;
         }
     }

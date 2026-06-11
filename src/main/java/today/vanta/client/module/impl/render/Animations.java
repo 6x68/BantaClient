@@ -16,7 +16,7 @@ import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.events.EventState;
 
 public class Animations extends Module {
-    private final StringSetting mode = Setting.of("Mode", "1.7", "1.7", "Interia", "Exhibition", "Sigma", "Stella", "Smooth");
+    private final StringSetting mode = Setting.of("Mode", "1.7", "1.7", "Interia", "Exhibition", "Exhibition Tilt", "Sigma", "Stella", "Smooth");
 
     private final BooleanSetting
             noBob = Setting.of("German No-bob", false),
@@ -72,8 +72,15 @@ public class Animations extends Module {
             case "Exhibition":
                 GL11.glTranslated(-0.04D, 0.13D, 0.0D);
                 renderer.transformFirstPersonItem(f / 2.5F, 0.0f);
-                GlStateManager.rotate(-var9 * 40.0F / 2.0F, var9 / 2.0F, 1.0F, 4.0F);
+                GlStateManager.rotate(-var9 * 40.0F / 2.0F, var9 / 2.0F, 1.0F, 4.0F * 0.2f);
                 GlStateManager.rotate(-var9 * 30.0F, 1.0F, var9 / 3.0F, -0.0F);
+                renderer.doBlockTransformations();
+                break;
+            case "Exhibition Tilt":
+                GL11.glTranslated(-0.04D, 0.13D, 0.0D);
+                renderer.transformFirstPersonItem(f / 2.5F, 0.0f);
+                GlStateManager.rotate(-var9 * 12.0F / 1.0F, var9 / 2.0F, 1.0F, 4.0F * 0.2f);
+                GlStateManager.rotate(-var9 * 12.0F, 1.0F, var9 / 3.0F, -0.0F);
                 renderer.doBlockTransformations();
                 break;
             case "Interia":

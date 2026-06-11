@@ -40,6 +40,9 @@ public class NoSlowdown extends Module {
             if (!shouldSprint.getValue()) {
                 mc.gameSettings.keyBindSprint.pressed = false;
                 mc.thePlayer.setSprinting(false);
+            } else {
+                mc.gameSettings.keyBindSprint.pressed = true;
+                mc.thePlayer.setSprinting(true);
             }
 
             event.forward = forwardMultiplier.getValue().floatValue();
