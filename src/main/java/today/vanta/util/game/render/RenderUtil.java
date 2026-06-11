@@ -4,8 +4,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureUtil;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
@@ -268,6 +270,10 @@ public class RenderUtil {
         int color2 = ColorUtil.getGradientColor(startColor, endColor, Math.abs(Math.sin(((time + spacing) % 2000) / 2000.0 * Math.PI)));
 
         horizontal_grad_outline(x, y, width, height, lineWidth, new Color(color1, true), new Color(color2, true));
+    }
+
+    public static void RenderEntity(int posX, int posY, int scale, float mouseX, float mouseY, EntityLivingBase entity) {
+        GuiInventory.drawEntityOnScreen(posX,posY,scale,mouseX,mouseY,entity);
     }
 
     public static void player_head(EntityPlayer target, float x, float y, float headSize) {
