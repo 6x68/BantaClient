@@ -84,8 +84,10 @@ public class TargetHUD extends Module {
     }
 
     private float barWidth = WIDTH;
+    private float ghostBarWidth = WIDTH;
     private float targetWidth = WIDTH;
     private Animation animation;
+    private Animation ghostAnimation;
 
     private void draw() {
         Color color = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
@@ -100,6 +102,7 @@ public class TargetHUD extends Module {
         CFonts.SFPT_REGULAR_18.drawStringWithShadow(String.format("%.1f", localTarget.getHealth()), x + 38, y + 15, Color.WHITE);
 
         float healthWidth = WIDTH * (localTarget.getHealth() / localTarget.getMaxHealth());
+        float ghostWidth = WIDTH * (localTarget.getHealth() / localTarget.getMaxHealth());
 
         if (healthWidth != targetWidth) {
             targetWidth = healthWidth;
@@ -107,14 +110,29 @@ public class TargetHUD extends Module {
             animation = Animation.create(
                     barWidth,
                     targetWidth,
-                    250,
+                    150,
                     Easing.LINEAR,
                     val -> barWidth = val
             );
 
             animation.start();
         }
+        if (ghostWidth != targetWidth) {
+            targetWidth = ghostWidth;
 
+            ghostAnimation = Animation.create(
+                    ghostBarWidth,
+                    targetWidth,
+                    300,
+                    Easing.LINEAR,
+                    val -> ghostBarWidth = val
+            );
+
+            ghostAnimation.start();
+        }
+
+
+        RenderUtil.rectangle(x, y + 36, ghostBarWidth, 4f, color2);
         RenderUtil.horizontal_grad(x, y + 36, barWidth, 4f, color2, color);
 
         if (dragging && mc.currentScreen instanceof GuiChat) {
