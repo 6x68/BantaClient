@@ -18,7 +18,9 @@ import today.vanta.util.client.screen.ScreenSavingUtil;
 import today.vanta.util.game.render.RenderUtil;
 import today.vanta.util.game.render.font.impl.GlyphFontRenderer;
 import today.vanta.util.game.render.font.CFonts;
+import today.vanta.util.system.math.ColorUtil;
 import today.vanta.util.system.math.MathUtil;
+import today.vanta.util.system.math.animation.SmoothValue;
 import today.vanta.util.system.VantaFile;
 
 import java.awt.*;
@@ -32,11 +34,16 @@ public class ClickGUIScreen extends GuiScreen {
     private final GlyphFontRenderer sett = CFonts.getFont("SFPT-Medium", 16);
 
     private final float panelWidth = 120;
+    private final Map<String, SmoothValue> smoothMap = new HashMap<>();
 
     private boolean dragging = false;
     private float dragOffsetX = 0, dragOffsetY = 0;
     private Category draggedCategory = null;
     private Module listeningModule = null;
+
+    private SmoothValue smooth(String key, float initial, float speed) {
+        return smoothMap.computeIfAbsent(key, k -> new SmoothValue(initial, speed));
+    }
 
     public ClickGUIScreen() {
         if (!ScreenSavingUtil.loadConfig(VantaFile.getFile("clickgui.json"))) {
@@ -102,10 +109,14 @@ public class ClickGUIScreen extends GuiScreen {
                                 ignoreThis += 20;
                             } else if (setting instanceof StringSetting) {
                                 StringSetting dropdown = (StringSetting) setting;
-                                ignoreThis += dropdown.expanded ? 12 + dropdown.allValues.length * 9 : 12;
+                                float expandTarget = dropdown.expanded ? 1f : 0f;
+                                float expandProgress = smooth(module.name + ":" + setting.name + ":expand", expandTarget, 10f).target(expandTarget).get();
+                                ignoreThis += 12 + expandProgress * dropdown.allValues.length * 9;
                             } else if (setting instanceof MultiStringSetting) {
                                 MultiStringSetting selector = (MultiStringSetting) setting;
-                                ignoreThis += selector.expanded ? 12 + selector.allValues.length * 9 : 12;
+                                float expandTarget = selector.expanded ? 1f : 0f;
+                                float expandProgress = smooth(module.name + ":" + setting.name + ":mexpand", expandTarget, 10f).target(expandTarget).get();
+                                ignoreThis += 12 + expandProgress * selector.allValues.length * 9;
                             }
                         }
                     }
@@ -167,8 +178,9 @@ public class ClickGUIScreen extends GuiScreen {
 
                         boolean hidden = module.hideFromArraylist;
                         float bXHidden = x + panelWidth - 5;
-                        RenderUtil.rectangle(bXHidden - 17, y + 3.5f, 17, 7, hidden ? color1.brighter() : new Color(0xA3A3A3));
-                        RenderUtil.rectangle(hidden ? bXHidden - 8 : bXHidden - 17 - 1, y + 2.5f, 9, 9, hidden ? color1 : new Color(0xFFFFFF));
+                        float hp = smooth(module.name + ":hide", hidden ? 1f : 0f, 15f).target(hidden ? 1f : 0f).get();
+                        RenderUtil.rectangle(bXHidden - 17, y + 3.5f, 17, 7, new Color(ColorUtil.getGradientColor(new Color(0xA3A3A3), color1.brighter(), hp), true));
+                        RenderUtil.rectangle(MathUtil.lerp(hp, bXHidden - 17 - 1, bXHidden - 8), y + 2.5f, 9, 9, new Color(ColorUtil.getGradientColor(new Color(0xFFFFFF), color1, hp), true));
 
                         y += 14;
                     }
@@ -179,8 +191,9 @@ public class ClickGUIScreen extends GuiScreen {
 
                     boolean save = module.addToConfig;
                     float bXSave = x + panelWidth - 5;
-                    RenderUtil.rectangle(bXSave - 17, y + 3.5f, 17, 7, save ? color1.brighter() : new Color(0xA3A3A3));
-                    RenderUtil.rectangle(save ? bXSave - 8 : bXSave - 17 - 1, y + 2.5f, 9, 9, save ? color1 : new Color(0xFFFFFF));
+                    float sp = smooth(module.name + ":save", save ? 1f : 0f, 15f).target(save ? 1f : 0f).get();
+                    RenderUtil.rectangle(bXSave - 17, y + 3.5f, 17, 7, new Color(ColorUtil.getGradientColor(new Color(0xA3A3A3), color1.brighter(), sp), true));
+                    RenderUtil.rectangle(MathUtil.lerp(sp, bXSave - 17 - 1, bXSave - 8), y + 2.5f, 9, 9, new Color(ColorUtil.getGradientColor(new Color(0xFFFFFF), color1, sp), true));
 
                     y += 14;
 
@@ -191,8 +204,9 @@ public class ClickGUIScreen extends GuiScreen {
 
                         boolean suffix = module.addSuffix;
                         float bXSuffix = x + panelWidth - 5;
-                        RenderUtil.rectangle(bXSuffix - 17, y + 3.5f, 17, 7, suffix ? color1.brighter() : new Color(0xA3A3A3));
-                        RenderUtil.rectangle(suffix ? bXSuffix - 8 : bXSuffix - 17 - 1, y + 2.5f, 9, 9, suffix ? color1 : new Color(0xFFFFFF));
+                        float sfp = smooth(module.name + ":suffix", suffix ? 1f : 0f, 15f).target(suffix ? 1f : 0f).get();
+                        RenderUtil.rectangle(bXSuffix - 17, y + 3.5f, 17, 7, new Color(ColorUtil.getGradientColor(new Color(0xA3A3A3), color1.brighter(), sfp), true));
+                        RenderUtil.rectangle(MathUtil.lerp(sfp, bXSuffix - 17 - 1, bXSuffix - 8), y + 2.5f, 9, 9, new Color(ColorUtil.getGradientColor(new Color(0xFFFFFF), color1, sfp), true));
 
                         y += 14;
                     }
@@ -213,8 +227,9 @@ public class ClickGUIScreen extends GuiScreen {
                                 RenderUtil.rectangle(x + 1.5f, y, panelWidth - 3, 14, hover ? new Color(40, 40, 40) : new Color(35, 35, 35));
 
                                 float bX = x + panelWidth - 5;
-                                RenderUtil.rectangle(bX - 17, y + 3.5, 17, 7, toggle.getValue() ? color1.brighter() : new Color(0xA3A3A3));
-                                RenderUtil.rectangle(toggle.getValue() ? bX - 8 : bX - 17 - 1, y + 2.5, 9, 9, toggle.getValue() ? color1 : new Color(0xFFFFFF));
+                                float tp = smooth(module.name + ":" + setting.name, toggle.getValue() ? 1f : 0f, 15f).target(toggle.getValue() ? 1f : 0f).get();
+                                RenderUtil.rectangle(bX - 17, y + 3.5, 17, 7, new Color(ColorUtil.getGradientColor(new Color(0xA3A3A3), color1.brighter(), tp), true));
+                                RenderUtil.rectangle(MathUtil.lerp(tp, bX - 17 - 1, bX - 8), y + 2.5, 9, 9, new Color(ColorUtil.getGradientColor(new Color(0xFFFFFF), color1, tp), true));
 
                                 sett.drawString(setting.name, x + 5, y + 2.5f, -1);
                                 y += 14;
@@ -224,17 +239,18 @@ public class ClickGUIScreen extends GuiScreen {
                                 float value = slider.getValue().floatValue();
                                 float min = slider.min.floatValue();
                                 float max = slider.max.floatValue();
-                                float width = Math.min(Math.max((value - min) / (max - min), 0), 1) * 111;
+                                float targetWidth = Math.min(Math.max((value - min) / (max - min), 0), 1) * 111;
+                                float animWidth = smooth(module.name + ":" + setting.name + ":slider", targetWidth, 12f).target(targetWidth).get();
 
                                 RenderUtil.rectangle(x + 1.5f, y, panelWidth - 3, 20, hover ? new Color(40, 40, 40) : new Color(35, 35, 35));
 
                                 RenderUtil.rectangle(x + 5, y + 14, 111, 3, color1.darker());
-                                RenderUtil.rectangle(x + 5, y + 14, width, 3, color1);
+                                RenderUtil.rectangle(x + 5, y + 14, animWidth, 3, color1);
 
-                                float handleX = x + 5 + width - 2;
-                                if (width >= 111) {
+                                float handleX = x + 5 + animWidth - 2;
+                                if (animWidth >= 111) {
                                     handleX = x + 5 + 108 - 2;
-                                } else if (width <= 5) {
+                                } else if (animWidth <= 5) {
                                     handleX = x + 5;
                                 }
                                 RenderUtil.rectangle(handleX, y + 14 - 1, 5, 5, new Color(0xFFFFFF));
@@ -256,49 +272,61 @@ public class ClickGUIScreen extends GuiScreen {
                                 y += 20;
                             } else if (setting instanceof StringSetting) {
                                 StringSetting dropdown = (StringSetting) setting;
-                                float settingHeight = dropdown.expanded ? 12 + dropdown.allValues.length * 9 : 12;
+                                float expandTarget = dropdown.expanded ? 1f : 0f;
+                                float expandProgress = smooth(module.name + ":" + setting.name + ":expand", expandTarget, 10f).target(expandTarget).get();
+                                float expandedItems = dropdown.allValues.length * 9;
+                                float settingHeight = 12 + expandProgress * expandedItems;
                                 boolean hover2 = RenderUtil.hovered(mouseX, mouseY, x + 1.5f, y, panelWidth - 3, settingHeight);
                                 RenderUtil.rectangle(x + 1.5f, y, panelWidth - 3, settingHeight, hover2 ? new Color(40, 40, 40) : new Color(35, 35, 35));
                                 sett.drawString(setting.name, x + 5, y + 1.5f, -1);
                                 float bX = x + panelWidth - 14;
 
-                                RenderUtil.rectangle(bX - sett.getStringWidth(dropdown.getValue()) - 2, y + 1.5f, sett.getStringWidth(dropdown.getValue()) + 4, 9 + (dropdown.expanded ? dropdown.allValues.length * 9 : 0), new Color(45, 45, 45));
+                                RenderUtil.rectangle(bX - sett.getStringWidth(dropdown.getValue()) - 2, y + 1.5f, sett.getStringWidth(dropdown.getValue()) + 4, 9 + expandProgress * expandedItems, new Color(45, 45, 45));
                                 sett.drawString(dropdown.getValue(), bX - sett.getStringWidth(dropdown.getValue()), y + 1.5f, -1);
 
                                 sett.drawString(dropdown.expanded ? "-" : "+", bX + 4.5f, y + 1.5f, -1);
 
-                                if (dropdown.expanded) {
-                                    float yOffset = y + 8;
-                                    for (String mode : dropdown.allValues) {
-                                        boolean hoverMode = RenderUtil.hovered(mouseX, mouseY, bX - sett.getStringWidth(mode), yOffset + 2.5f, sett.getStringWidth(dropdown.getValue()) + 1, 9);
-                                        boolean selected = dropdown.getValue().equals(mode);
-                                        sett.drawString(mode, bX - sett.getStringWidth(mode), yOffset + 2.5f, hoverMode ? selected ? color1.darker() : Color.LIGHT_GRAY : selected ? color1 : Color.WHITE);
-                                        yOffset += 9;
-                                    }
+                                if (expandProgress > 0.01f) {
+                                    float finalY = y;
+                                    RenderUtil.scissor(x + 1.5f, y + 8, panelWidth - 3, expandProgress * expandedItems + 4, () -> {
+                                        float yOffset = finalY + 8;
+                                        for (String mode : dropdown.allValues) {
+                                            boolean hoverMode = RenderUtil.hovered(mouseX, mouseY, bX - sett.getStringWidth(mode), yOffset + 2.5f, sett.getStringWidth(dropdown.getValue()) + 1, 9);
+                                            boolean selected = dropdown.getValue().equals(mode);
+                                            sett.drawString(mode, bX - sett.getStringWidth(mode), yOffset + 2.5f, hoverMode ? selected ? color1.darker() : Color.LIGHT_GRAY : selected ? color1 : Color.WHITE);
+                                            yOffset += 9;
+                                        }
+                                    });
                                 }
                                 y += settingHeight;
                             } else if (setting instanceof MultiStringSetting) {
                                 MultiStringSetting selector = (MultiStringSetting) setting;
-                                float settingHeight = selector.expanded ? 12 + selector.allValues.length * 9 : 12;
+                                float expandTarget = selector.expanded ? 1f : 0f;
+                                float expandProgress = smooth(module.name + ":" + setting.name + ":mexpand", expandTarget, 10f).target(expandTarget).get();
+                                float expandedItems = selector.allValues.length * 9;
+                                float settingHeight = 12 + expandProgress * expandedItems;
                                 boolean hover2 = RenderUtil.hovered(mouseX, mouseY, x + 1.5f, y, panelWidth - 3, settingHeight);
                                 RenderUtil.rectangle(x + 1.5f, y, panelWidth - 3, settingHeight, hover2 ? new Color(40, 40, 40) : new Color(35, 35, 35));
                                 sett.drawString(setting.name, x + 5, y + 1.5f, -1);
                                 float bX = x + panelWidth - 14;
                                 String enabled = selector.getValue().length + " Enabled";
 
-                                RenderUtil.rectangle(bX - sett.getStringWidth(enabled) - 2, y + 1.5f, sett.getStringWidth(enabled) + 4, 9 + (selector.expanded ? selector.allValues.length * 9 : 0), new Color(45, 45, 45));
+                                RenderUtil.rectangle(bX - sett.getStringWidth(enabled) - 2, y + 1.5f, sett.getStringWidth(enabled) + 4, 9 + expandProgress * expandedItems, new Color(45, 45, 45));
                                 sett.drawString(enabled, bX - sett.getStringWidth(enabled), y + 1.5f, -1);
 
                                 sett.drawString(selector.expanded ? "-" : "+", bX + 4.5f, y + 1.5f, -1);
 
-                                if (selector.expanded) {
-                                    float yOffset = y + 8;
-                                    for (String mode : selector.allValues) {
-                                        boolean hoverMode = RenderUtil.hovered(mouseX, mouseY, bX - sett.getStringWidth(mode), yOffset + 2.5f, sett.getStringWidth(enabled) + 1, 9);
-                                        boolean enabledMode = selector.isEnabled(mode);
-                                        sett.drawString(mode, bX - sett.getStringWidth(mode), yOffset + 2.5f, hoverMode ? enabledMode ? color1.darker() : Color.LIGHT_GRAY : enabledMode ? color1 : Color.WHITE);
-                                        yOffset += 9;
-                                    }
+                                if (expandProgress > 0.01f) {
+                                    float finalY = y;
+                                    RenderUtil.scissor(x + 1.5f, y + 8, panelWidth - 3, expandProgress * expandedItems + 4, () -> {
+                                        float yOffset = finalY + 8;
+                                        for (String mode : selector.allValues) {
+                                            boolean hoverMode = RenderUtil.hovered(mouseX, mouseY, bX - sett.getStringWidth(mode), yOffset + 2.5f, sett.getStringWidth(enabled) + 1, 9);
+                                            boolean enabledMode = selector.isEnabled(mode);
+                                            sett.drawString(mode, bX - sett.getStringWidth(mode), yOffset + 2.5f, hoverMode ? enabledMode ? color1.darker() : Color.LIGHT_GRAY : enabledMode ? color1 : Color.WHITE);
+                                            yOffset += 9;
+                                        }
+                                    });
                                 }
                                 y += settingHeight;
                             }
