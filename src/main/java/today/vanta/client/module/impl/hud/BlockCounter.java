@@ -5,6 +5,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
+import org.w3c.dom.css.Rect;
 import today.vanta.Vanta;
 import today.vanta.client.event.impl.game.render.DrawScreenEvent;
 import today.vanta.client.module.Category;
@@ -17,6 +18,7 @@ import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.player.InventoryUtil;
 import today.vanta.util.game.render.RenderUtil;
 import today.vanta.util.game.render.font.CFonts;
+import today.vanta.util.game.render.shape.impl.Rectangle;
 
 import java.awt.*;
 
@@ -86,7 +88,11 @@ public class BlockCounter extends Module {
         float x = this.x.getValue().floatValue();
         float y = this.y.getValue().floatValue();
 
-        RenderUtil.rectangle(x, y, WIDTH, HEIHT, BACKGROUND);
+        Rectangle
+                .create(x, y, WIDTH, HEIHT)
+                .color(BACKGROUND)
+                .draw();
+
         double scale = 2.4;
 
         double itemX = x;
@@ -103,7 +109,11 @@ public class BlockCounter extends Module {
         CFonts.SFPT_SEMIBOLD_20.drawStringWithShadow(String.valueOf(blocksinHotbar), x + 38, y + 15, Color.WHITE);
 
         if (dragging && mc.currentScreen instanceof GuiChat) {
-            RenderUtil.rectangle(x - 0.5, y - 0.5, WIDTH + 1, HEIHT + 1, false, color);
+            Rectangle
+                    .create(x - 0.5, y - 0.5, WIDTH + 1, HEIHT + 1)
+                    .outline(true)
+                    .color(color)
+                    .draw();
         }
     }
 }

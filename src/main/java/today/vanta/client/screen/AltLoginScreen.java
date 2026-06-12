@@ -10,9 +10,9 @@ import today.vanta.client.screen.component.impl.ButtonComponent;
 import today.vanta.util.client.network.MicrosoftUtil;
 import today.vanta.util.client.network.account.Account;
 import today.vanta.util.client.network.account.AccountSavingUtil;
-import today.vanta.util.game.render.RenderUtil;
 import today.vanta.util.game.render.font.impl.GlyphFontRenderer;
 import today.vanta.util.game.render.font.CFonts;
+import today.vanta.util.game.render.shape.impl.Rectangle;
 
 import java.awt.*;
 import java.io.IOException;
@@ -58,14 +58,20 @@ public class AltLoginScreen extends GuiScreen {
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
 
-        RenderUtil.rectangle(0, 0, width, height, new Color(20, 20, 20));
+        Rectangle
+                .create(0, 0, width, height)
+                .color(new Color(20, 20, 20))
+                .draw();
 
         buttonText.drawString("(Alt accounts) Left click to login, right click to delete.", 5, 5, new Color(125, 125, 125).getRGB());
 
         float middleX = width / 2f;
         float middleY = height / 2f;
 
-        RenderUtil.rectangle(middleX - 143 / 2f, middleY - 16, 143, 14 * components.size() + 18, new Color(30, 30, 30));
+        Rectangle
+                .create(middleX - 143 / 2f, middleY - 16, 143, 14 * components.size() + 18)
+                .color(new Color(30, 30, 30))
+                .draw();
         smallTitle.drawString(mc.session.getUsername(), middleX - 143 / 2f + 3, middleY - 18 + 4.5f, -1);
 
         components.forEach(c -> c.draw(mouseX, mouseY));

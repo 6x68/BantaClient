@@ -19,6 +19,7 @@ import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.MultiStringSetting;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.render.RenderUtil;
+import today.vanta.util.game.render.shape.impl.Rectangle;
 
 import java.awt.*;
 
@@ -49,9 +50,26 @@ public class ESP extends Module {
             float height = (float) (bounds.maxY - bounds.minY);
             if (width <= 0.0F || height <= 0.0F) continue;
 
-            RenderUtil.rectangle(x - 0.5f, y - 0.5f, width + 1, height + 1, false, Color.BLACK, 1.0f);
-            RenderUtil.rectangle(x, y, width, height, false, color, 1.0f);
-            RenderUtil.rectangle(x + 0.5f, y + 0.5f, width - 1, height - 1, false, Color.BLACK, 1.0f);
+            Rectangle
+                    .create(x - 0.5f, y - 0.5f, width + 1, height + 1)
+                    .outline(true)
+                    .color(Color.BLACK)
+                    .outlineWidth(1.0f)
+                    .draw();
+
+            Rectangle
+                    .create(x, y, width, height)
+                    .outline(true)
+                    .color(color)
+                    .outlineWidth(1.0f)
+                    .draw();
+
+            Rectangle
+                    .create(x + 0.5f, y + 0.5f, width - 1, height - 1)
+                    .outline(true)
+                    .color(Color.BLACK)
+                    .outlineWidth(1.0f)
+                    .draw();
         }
     }
 

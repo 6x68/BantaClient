@@ -15,14 +15,10 @@ import today.vanta.util.client.IClient;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.events.EventPriority;
 import today.vanta.util.game.player.MovementUtil;
-import today.vanta.util.game.render.RenderUtil;
 import today.vanta.util.game.render.font.CFonts;
-import today.vanta.util.game.render.font.impl.BitMapFontRenderer;
+import today.vanta.util.game.render.shape.impl.Rectangle;
 
 import java.awt.*;
-import java.time.Clock;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Formatter;
 
@@ -64,16 +60,43 @@ public class Watermark extends Module {
                 float fontWidth = CFonts.SFPT_MEDIUM_18.getStringWidth(text);
                 //float fontHeight = CFonts.SFPT_MEDIUM_18.getFontHeight();
 
-                float boxWidth =  fontWidth + 4 + 4;
+                float boxWidth = fontWidth + 4 + 4;
                 float boxHeight = 16;
 
-                RenderUtil.rectangle(x, y, boxWidth, boxHeight, new Color(0, 0, 0, 100));
-                RenderUtil.rectangle(x, y - 1, boxWidth, 1, colors[0]);
-                RenderUtil.rectangle(x - 1, y - 1, 1, 1, colors[0]);
-                RenderUtil.rectangle(x + boxWidth, y - 1, 1, 1, colors[0]);
-                RenderUtil.rectangle(x - 1, y, 1, boxHeight + 1, colors[0]);
-                RenderUtil.rectangle(x + boxWidth, y, 1, boxHeight + 1, colors[0]);
-                RenderUtil.rectangle(x, y + boxHeight, boxWidth, 1, colors[0]);
+                Rectangle
+                        .create(x, y, boxWidth, boxHeight)
+                        .color(new Color(0, 0, 0, 100))
+                        .draw();
+
+                Rectangle
+                        .create(x, y - 1, boxWidth, 1)
+                        .color(colors[0])
+                        .draw();
+
+                Rectangle
+                        .create(x - 1, y - 1, 1, 1)
+                        .color(colors[0])
+                        .draw();
+
+                Rectangle
+                        .create(x + boxWidth, y - 1, 1, 1)
+                        .color(colors[0])
+                        .draw();
+
+                Rectangle
+                        .create(x - 1, y, 1, boxHeight + 1)
+                        .color(colors[0])
+                        .draw();
+
+                Rectangle
+                        .create(x + boxWidth, y, 1, boxHeight + 1)
+                        .color(colors[0])
+                        .draw();
+
+                Rectangle
+                        .create(x, y + boxHeight, boxWidth, 1)
+                        .color(colors[0])
+                        .draw();
 
                 float textX = x + 4;
 
@@ -88,21 +111,20 @@ public class Watermark extends Module {
                 break;
             case "Char":
                 CFonts.SFPT_SEMIBOLD_42.drawStringWithShadow(firstCharacter, x, y, colors[0]);
-                CFonts.SFPT_SEMIBOLD_42.drawStringWithShadow(watermarkfull, x+ length, y, Color.WHITE);
+                CFonts.SFPT_SEMIBOLD_42.drawStringWithShadow(watermarkfull, x + length, y, Color.WHITE);
                 break;
             case "Exhi":
                 Formatter format = new Formatter();
                 Calendar gfg_calender = Calendar.getInstance();
-                format = new Formatter();
                 format.format("%tl:%tM %Tp", gfg_calender,
-                        gfg_calender,gfg_calender);
+                        gfg_calender, gfg_calender);
                 if (mcfont.getValue()) {
                     mcFont.drawString(firstCharacter, 2, 2, colors[0], true);
                     mcFont.drawString(watermarkfull + EnumChatFormatting.GRAY + " [" + EnumChatFormatting.WHITE + format + EnumChatFormatting.GRAY + "] " + "[" + EnumChatFormatting.WHITE + mc.getDebugFPS() + " FPS" + EnumChatFormatting.GRAY + "]", 8, 2, Color.WHITE, true);
                 } else {
-                    exhiFont.drawString(firstCharacter,2,2,colors[0],true);
-                    exhiFont.drawString(watermarkfull + EnumChatFormatting.GRAY + " [" + EnumChatFormatting.WHITE +format+ EnumChatFormatting.GRAY + "] "  + "[" + EnumChatFormatting.WHITE +mc.getDebugFPS()+ " FPS" + EnumChatFormatting.GRAY + "]",9,2,Color.WHITE,true);
-                    exhiFont.drawString("BPS: " + MovementUtil.getBPS(), 2, 12,Color.WHITE, true);
+                    exhiFont.drawString(firstCharacter, 2, 2, colors[0], true);
+                    exhiFont.drawString(watermarkfull + EnumChatFormatting.GRAY + " [" + EnumChatFormatting.WHITE + format + EnumChatFormatting.GRAY + "] " + "[" + EnumChatFormatting.WHITE + mc.getDebugFPS() + " FPS" + EnumChatFormatting.GRAY + "]", 9, 2, Color.WHITE, true);
+                    exhiFont.drawString("BPS: " + MovementUtil.getBPS(), 2, 12, Color.WHITE, true);
                 }
                 break;
         }

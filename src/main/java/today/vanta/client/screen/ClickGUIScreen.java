@@ -19,6 +19,9 @@ import today.vanta.util.client.screen.ScreenSavingUtil;
 import today.vanta.util.game.render.RenderUtil;
 import today.vanta.util.game.render.font.impl.GlyphFontRenderer;
 import today.vanta.util.game.render.font.CFonts;
+import today.vanta.util.game.render.shape.GradientMode;
+import today.vanta.util.game.render.shape.impl.GradientRectangle;
+import today.vanta.util.game.render.shape.impl.Rectangle;
 import today.vanta.util.system.math.ColorUtil;
 import today.vanta.util.system.math.MathUtil;
 import today.vanta.util.system.VantaFile;
@@ -76,13 +79,19 @@ public class ClickGUIScreen extends GuiScreen {
         }
 
         if (Vanta.instance.moduleStorage.getT(ClickGUI.class).darkenBackground.getValue()) {
-            RenderUtil.rectangle(0, 0, width, height, new Color(0, 0, 0, (int) (150 * globalAnim)));
+            Rectangle.create(0, 0, width, height)
+                    .color(new Color(0, 0, 0, (int) (150 * globalAnim)))
+                    .draw();
         }
 
         Color color1 = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
 
         if (Vanta.instance.moduleStorage.getT(ClickGUI.class).gradientBackground.getValue()) {
-            RenderUtil.rectangleGradientVertical(0, 0, width, height, new Color(0, 0, 0, (int) (150 * globalAnim)), new Color(color1.getRed(), color1.getGreen(), color1.getBlue(), (int) (150 * globalAnim)));
+            GradientRectangle.create(0, 0, width, height)
+                    .firstColor(new Color(0, 0, 0, (int) (150 * globalAnim)))
+                    .secondColor(new Color(color1.getRed(), color1.getGreen(), color1.getBlue(), (int) (150 * globalAnim)))
+                    .gradientMode(GradientMode.VERTICAL)
+                    .draw();
         }
 
         GlStateManager.pushMatrix();
@@ -97,7 +106,11 @@ public class ClickGUIScreen extends GuiScreen {
 
             position = drag(position, mouseX, mouseY, category, hoverCat);
 
-            RenderUtil.rectangle(position.x, position.y, panelWidth, panelHeight, new Color(30, 30, 30));
+            Rectangle
+                    .create(position.x, position.y, panelWidth, panelHeight)
+                    .color(new Color(30, 30, 30))
+                    .draw();
+
             medium.drawString(category.name, position.x + 3, position.y + 1.5f, Color.WHITE);
 
             float ignoreThis = 0;
@@ -144,7 +157,10 @@ public class ClickGUIScreen extends GuiScreen {
                 ignoreThis += moduleContentHeight * moduleAnim;
             }
 
-            RenderUtil.rectangle(position.x, position.y + 14, panelWidth, ignoreThis + 2, new Color(30, 30, 30));
+            Rectangle
+                    .create(position.x, position.y + 14, panelWidth, ignoreThis + 2)
+                    .color(new Color(30, 30, 30))
+                    .draw();
 
             float y = position.y + 14;
             float x = position.x;
@@ -156,7 +172,10 @@ public class ClickGUIScreen extends GuiScreen {
 
                 boolean hoverMod = RenderUtil.hovered(mouseX, mouseY, x + 1.5f, y + 1, panelWidth - 3, 14);
 
-                RenderUtil.rectangle(x + 1.5f, y, panelWidth - 3, 14, hoverMod ? new Color(50, 50, 50) : new Color(40, 40, 40));
+                Rectangle
+                        .create(x + 1.5f, y, panelWidth - 3, 14)
+                        .color(hoverMod ? new Color(50, 50, 50) : new Color(40, 40, 40))
+                        .draw();
 
                 regular.drawString(module.name, x + 5, y + 2, ColorUtil.interpolateColor(Color.WHITE, color1, getAnimationValue(module.name + "_enabled", module.isEnabled() ? 1f : 0f, 200, Easing.EASE_OUT_QUAD)));
                 regular.drawString(module.isExpanded() ? "-" : "+", x + panelWidth - regular.getStringWidth(module.isExpanded() ? "-" : "+") - 7, y + 1.5f, hoverMod ? Color.LIGHT_GRAY : Color.WHITE);
@@ -168,12 +187,18 @@ public class ClickGUIScreen extends GuiScreen {
                 if (moduleAnim > 0) {
                     if (module.displayNames.length > 1 && !module.hideFromArraylist) {
                         boolean hoverDisplayName = RenderUtil.hovered(mouseX, mouseY, x + 1.5f, y, panelWidth - 3, 14 * moduleAnim);
-                        RenderUtil.rectangle(x + 1.5f, y, panelWidth - 3, 14 * moduleAnim, hoverDisplayName ? new Color(42, 42, 42) : new Color(38, 38, 38));
+                        Rectangle
+                                .create(x + 1.5f, y, panelWidth - 3, 14 * moduleAnim)
+                                .color(hoverDisplayName ? new Color(42, 42, 42) : new Color(38, 38, 38))
+                                .draw();
                         if (moduleAnim > 0.5f) {
                             sett.drawString("Display name", x + 5, y + 2.5f, -1);
 
                             float bX = x + panelWidth - 5;
-                            RenderUtil.rectangle(bX - sett.getStringWidth(module.displayName) - 2, y + 2.5, sett.getStringWidth(module.displayName) + 4, 9, new Color(45, 45, 45));
+                            Rectangle
+                                    .create(bX - sett.getStringWidth(module.displayName) - 2, y + 2.5, sett.getStringWidth(module.displayName) + 4, 9)
+                                    .color(new Color(45, 45, 45))
+                                    .draw();
                             sett.drawString(module.displayName, bX - sett.getStringWidth(module.displayName), y + 2, -1);
                         }
 
@@ -182,7 +207,10 @@ public class ClickGUIScreen extends GuiScreen {
 
                     if (!module.frozen) {
                         boolean hoverKeybind = RenderUtil.hovered(mouseX, mouseY, x + 1.5f, y, panelWidth - 3, 14 * moduleAnim);
-                        RenderUtil.rectangle(x + 1.5f, y, panelWidth - 3, 14 * moduleAnim, hoverKeybind ? new Color(42, 42, 42) : new Color(38, 38, 38));
+                        Rectangle
+                                .create(x + 1.5f, y, panelWidth - 3, 14 * moduleAnim)
+                                .color(hoverKeybind ? new Color(42, 42, 42) : new Color(38, 38, 38))
+                                .draw();
 
                         if (moduleAnim > 0.5f) {
                             sett.drawString("Keybind", x + 5, y + 2.5f, -1);
@@ -197,7 +225,10 @@ public class ClickGUIScreen extends GuiScreen {
                             float animatedKBWidth = getAnimationValue(module + "_kb_width", targetKBWidth, 200, Easing.EASE_OUT_QUAD);
 
                             float bXKey = x + panelWidth - 5;
-                            RenderUtil.rectangle(bXKey - animatedKBWidth - 2, y + 2.5, animatedKBWidth + 4, 9, new Color(45, 45, 45));
+                            Rectangle
+                                    .create(bXKey - animatedKBWidth - 2, y + 2.5, animatedKBWidth + 4, 9)
+                                    .color(new Color(45, 45, 45))
+                                    .draw();
                             sett.drawString(keyName, bXKey - animatedKBWidth, y + 2, ColorUtil.interpolateColor(Color.WHITE, Color.GRAY, kbFade));
                         }
 
@@ -206,45 +237,76 @@ public class ClickGUIScreen extends GuiScreen {
 
                     if (!module.frozen && !module.category.equals(Category.CLIENT)) {
                         boolean hoverHide = RenderUtil.hovered(mouseX, mouseY, x + 1.5f, y, panelWidth - 3, 14 * moduleAnim);
-                        RenderUtil.rectangle(x + 1.5f, y, panelWidth - 3, 14 * moduleAnim, hoverHide ? new Color(42, 42, 42) : new Color(38, 38, 38));
+                        Rectangle
+                                .create(x + 1.5f, y, panelWidth - 3, 14 * moduleAnim)
+                                .color(hoverHide ? new Color(42, 42, 42) : new Color(38, 38, 38))
+                                .draw();
                         if (moduleAnim > 0.5f) {
                             sett.drawString("Hide on arraylist", x + 5, y + 2.5f, -1);
 
                             boolean hidden = module.hideFromArraylist;
                             float hiddenAnim = getAnimationValue(module + "_hidden", hidden ? 1f : 0f, 200, Easing.EASE_OUT_QUAD);
                             float bXHidden = x + panelWidth - 5;
-                            RenderUtil.rectangle(bXHidden - 17, y + 3.5f, 17, 7, ColorUtil.interpolateColor(new Color(0xA3A3A3), color1.brighter(), hiddenAnim));
-                            RenderUtil.rectangle(bXHidden - 17 - 1 + (9 * hiddenAnim), y + 2.5f, 9, 9, ColorUtil.interpolateColor(Color.WHITE, color1, hiddenAnim));
+                            Rectangle
+                                    .create(bXHidden - 17, y + 3.5f, 17, 7)
+                                    .color(ColorUtil.interpolateColor(new Color(0xA3A3A3), color1.brighter(), hiddenAnim))
+                                    .draw();
+
+                            Rectangle
+                                    .create(bXHidden - 17 - 1 + (9 * hiddenAnim), y + 2.5f, 9, 9)
+                                    .color(ColorUtil.interpolateColor(Color.WHITE, color1, hiddenAnim))
+                                    .draw();
                         }
 
                         y += 14 * moduleAnim;
                     }
 
                     boolean hoverSave = RenderUtil.hovered(mouseX, mouseY, x + 1.5f, y, panelWidth - 3, 14 * moduleAnim);
-                    RenderUtil.rectangle(x + 1.5f, y, panelWidth - 3, 14 * moduleAnim, hoverSave ? new Color(42, 42, 42) : new Color(38, 38, 38));
+                    Rectangle
+                            .create(x + 1.5f, y, panelWidth - 3, 14 * moduleAnim)
+                            .color(hoverSave ? new Color(42, 42, 42) : new Color(38, 38, 38))
+                            .draw();
                     if (moduleAnim > 0.5f) {
                         sett.drawString("Save in config", x + 5, y + 2.5f, -1);
 
                         boolean save = module.addToConfig;
                         float saveAnim = getAnimationValue(module + "_save", save ? 1f : 0f, 200, Easing.EASE_OUT_QUAD);
                         float bXSave = x + panelWidth - 5;
-                        RenderUtil.rectangle(bXSave - 17, y + 3.5f, 17, 7, ColorUtil.interpolateColor(new Color(0xA3A3A3), color1.brighter(), saveAnim));
-                        RenderUtil.rectangle(bXSave - 17 - 1 + (9 * saveAnim), y + 2.5f, 9, 9, ColorUtil.interpolateColor(Color.WHITE, color1, saveAnim));
+
+                        Rectangle
+                                .create(bXSave - 17, y + 3.5f, 17, 7)
+                                .color(ColorUtil.interpolateColor(new Color(0xA3A3A3), color1.brighter(), saveAnim))
+                                .draw();
+
+                        Rectangle
+                                .create(bXSave - 17 - 1 + (9 * saveAnim), y + 2.5f, 9, 9)
+                                .color(ColorUtil.interpolateColor(Color.WHITE, color1, saveAnim))
+                                .draw();
                     }
 
                     y += 14 * moduleAnim;
 
                     if (module.getSuffix() != null && !module.hideFromArraylist) {
                         boolean hoverSuffix = RenderUtil.hovered(mouseX, mouseY, x + 1.5f, y, panelWidth - 3, 14 * moduleAnim);
-                        RenderUtil.rectangle(x + 1.5f, y, panelWidth - 3, 14 * moduleAnim, hoverSuffix ? new Color(42, 42, 42) : new Color(38, 38, 38));
+                        Rectangle
+                                .create(x + 1.5f, y, panelWidth - 3, 14 * moduleAnim)
+                                .color(hoverSuffix ? new Color(42, 42, 42) : new Color(38, 38, 38))
+                                .draw();
                         if (moduleAnim > 0.5f) {
                             sett.drawString("Show suffix", x + 5, y + 2.5f, -1);
 
                             boolean suffix = module.addSuffix;
                             float suffixAnim = getAnimationValue(module + "_suffix", suffix ? 1f : 0f, 200, Easing.EASE_OUT_QUAD);
                             float bXSuffix = x + panelWidth - 5;
-                            RenderUtil.rectangle(bXSuffix - 17, y + 3.5f, 17, 7, ColorUtil.interpolateColor(new Color(0xA3A3A3), color1.brighter(), suffixAnim));
-                            RenderUtil.rectangle(bXSuffix - 17 - 1 + (9 * suffixAnim), y + 2.5f, 9, 9, ColorUtil.interpolateColor(Color.WHITE, color1, suffixAnim));
+                            Rectangle
+                                    .create(bXSuffix - 17, y + 3.5f, 17, 7)
+                                    .color(ColorUtil.interpolateColor(new Color(0xA3A3A3), color1.brighter(), suffixAnim))
+                                    .draw();
+
+                            Rectangle
+                                    .create(bXSuffix - 17 - 1 + (9 * suffixAnim), y + 2.5f, 9, 9)
+                                    .color(ColorUtil.interpolateColor(Color.WHITE, color1, suffixAnim))
+                                    .draw();
                         }
 
                         y += 14 * moduleAnim;
@@ -260,13 +322,23 @@ public class ClickGUIScreen extends GuiScreen {
 
                             if (setting instanceof BooleanSetting) {
                                 BooleanSetting toggle = (BooleanSetting) setting;
-                                RenderUtil.rectangle(x + 1.5f, y, panelWidth - 3, 14 * moduleAnim, hover ? new Color(40, 40, 40) : new Color(35, 35, 35));
+                                Rectangle
+                                        .create(x + 1.5f, y, panelWidth - 3, 14 * moduleAnim)
+                                        .color(hover ? new Color(40, 40, 40) : new Color(35, 35, 35))
+                                        .draw();
 
                                 if (moduleAnim > 0.5f) {
                                     float toggleAnim = getAnimationValue(toggle, toggle.getValue() ? 1f : 0f, 200, Easing.EASE_OUT_QUAD);
                                     float bX = x + panelWidth - 5;
-                                    RenderUtil.rectangle(bX - 17, y + 3.5, 17, 7, ColorUtil.interpolateColor(new Color(0xA3A3A3), color1.brighter(), toggleAnim));
-                                    RenderUtil.rectangle(bX - 17 - 1 + (9 * toggleAnim), y + 2.5, 9, 9, ColorUtil.interpolateColor(Color.WHITE, color1, toggleAnim));
+                                    Rectangle
+                                            .create(bX - 17, y + 3.5, 17, 7)
+                                            .color(ColorUtil.interpolateColor(new Color(0xA3A3A3), color1.brighter(), toggleAnim))
+                                            .draw();
+
+                                    Rectangle
+                                            .create(bX - 17 - 1 + (9 * toggleAnim), y + 2.5, 9, 9)
+                                            .color(ColorUtil.interpolateColor(Color.WHITE, color1, toggleAnim))
+                                            .draw();
 
                                     sett.drawString(setting.name, x + 5, y + 2.5f, -1);
                                 }
@@ -280,11 +352,20 @@ public class ClickGUIScreen extends GuiScreen {
                                 float max = slider.max.floatValue();
                                 float width = Math.min(Math.max((animatedValue - min) / (max - min), 0), 1) * 111;
 
-                                RenderUtil.rectangle(x + 1.5f, y, panelWidth - 3, 20 * moduleAnim, hover ? new Color(40, 40, 40) : new Color(35, 35, 35));
+                                Rectangle
+                                        .create(x + 1.5f, y, panelWidth - 3, 20 * moduleAnim)
+                                        .color(hover ? new Color(40, 40, 40) : new Color(35, 35, 35))
+                                        .draw();
 
                                 if (moduleAnim > 0.5f) {
-                                    RenderUtil.rectangle(x + 5, y + 14, 111, 3, color1.darker());
-                                    RenderUtil.rectangle(x + 5, y + 14, width, 3, color1);
+                                    Rectangle
+                                            .create(x + 5, y + 14, 111, 3)
+                                            .color(color1.darker())
+                                            .draw();
+                                    Rectangle
+                                            .create(x + 5, y + 14, width, 3)
+                                            .color(color1)
+                                            .draw();
 
                                     float handleX = x + 5 + width - 2;
                                     if (width >= 111) {
@@ -292,7 +373,10 @@ public class ClickGUIScreen extends GuiScreen {
                                     } else if (width <= 5) {
                                         handleX = x + 5;
                                     }
-                                    RenderUtil.rectangle(handleX, y + 14 - 1, 5, 5, new Color(0xFFFFFF));
+                                    Rectangle
+                                            .create(handleX, y + 14 - 1, 5, 5)
+                                            .color(Color.WHITE)
+                                            .draw();
 
                                     sett.drawString(setting.name, x + 5, y + 2.5f, -1);
 
@@ -316,7 +400,11 @@ public class ClickGUIScreen extends GuiScreen {
                                 float settingHeight = 12 + (selector.allValues.length * 9 * settingAnim);
 
                                 boolean hover2 = RenderUtil.hovered(mouseX, mouseY, x + 1.5f, y, panelWidth - 3, settingHeight * moduleAnim);
-                                RenderUtil.rectangle(x + 1.5f, y, panelWidth - 3, settingHeight * moduleAnim, hover2 ? new Color(40, 40, 40) : new Color(35, 35, 35));
+
+                                Rectangle
+                                        .create(x + 1.5f, y, panelWidth - 3, settingHeight * moduleAnim)
+                                        .color(hover2 ? new Color(40, 40, 40) : new Color(35, 35, 35))
+                                        .draw();
 
                                 if (moduleAnim > 0.5f) {
                                     sett.drawString(setting.name, x + 5, y + 1.5f, -1);
@@ -330,7 +418,10 @@ public class ClickGUIScreen extends GuiScreen {
                                     }
                                     float animatedWidth = getAnimationValue(setting + "_width", targetW, 200, Easing.EASE_OUT_QUAD);
 
-                                    RenderUtil.rectangle(bX - animatedWidth - 2, y + 1.5f, animatedWidth + 4, 9 + (selector.allValues.length * 9 * settingAnim), new Color(45, 45, 45));
+                                    Rectangle
+                                            .create(bX - animatedWidth - 2, y + 1.5f, animatedWidth + 4, 9 + (selector.allValues.length * 9 * settingAnim))
+                                            .color(new Color(45, 45, 45))
+                                            .draw();
                                     sett.drawString(selector.getValue(), bX - sett.getStringWidth(selector.getValue()), y + 1.5f, -1);
 
                                     sett.drawString(selector.expanded ? "-" : "+", bX + 4.5f, y + 1.5f, -1);
@@ -353,7 +444,10 @@ public class ClickGUIScreen extends GuiScreen {
                                 float settingHeight = 12 + (selector.allValues.length * 9 * settingAnim);
 
                                 boolean hover2 = RenderUtil.hovered(mouseX, mouseY, x + 1.5f, y, panelWidth - 3, settingHeight * moduleAnim);
-                                RenderUtil.rectangle(x + 1.5f, y, panelWidth - 3, settingHeight * moduleAnim, hover2 ? new Color(40, 40, 40) : new Color(35, 35, 35));
+                                Rectangle
+                                        .create(x + 1.5f, y, panelWidth - 3, settingHeight * moduleAnim)
+                                        .color(hover2 ? new Color(40, 40, 40) : new Color(35, 35, 35))
+                                        .draw();
 
                                 if (moduleAnim > 0.5f) {
                                     sett.drawString(setting.name, x + 5, y + 1.5f, -1);
@@ -367,8 +461,10 @@ public class ClickGUIScreen extends GuiScreen {
                                         }
                                     }
                                     float animatedWidth = getAnimationValue(setting + "_width", targetW, 200, Easing.EASE_OUT_QUAD);
-
-                                    RenderUtil.rectangle(bX - animatedWidth - 2, y + 1.5f, animatedWidth + 4, 9 + (selector.allValues.length * 9 * settingAnim), new Color(45, 45, 45));
+                                    Rectangle
+                                            .create(bX - animatedWidth - 2, y + 1.5f, animatedWidth + 4, 9 + (selector.allValues.length * 9 * settingAnim))
+                                            .color(new Color(45, 45, 45))
+                                            .draw();
                                     sett.drawString(enabled, bX - sett.getStringWidth(enabled), y + 1.5f, -1);
 
                                     sett.drawString(selector.expanded ? "-" : "+", bX + 4.5f, y + 1.5f, -1);

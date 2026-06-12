@@ -15,8 +15,8 @@ import today.vanta.client.setting.impl.BooleanSetting;
 import today.vanta.client.setting.impl.NumberSetting;
 import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.events.EventListen;
-import today.vanta.util.game.render.RenderUtil;
 import today.vanta.util.game.render.font.CFonts;
+import today.vanta.util.game.render.shape.impl.Rectangle;
 import today.vanta.util.system.math.ColorUtil;
 
 import java.awt.*;
@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class Arraylist extends Module {
     private static final Pattern SPACE_OUT_PATTERN_1 = Pattern.compile("(?<=[a-z])(?=[A-Z])");
@@ -156,25 +155,40 @@ public class Arraylist extends Module {
                     case "Top":
                         if (first) {
                             // top
-                            RenderUtil.rectangle(rectX, rectY - 1, rectWidth, 1, color);
+                            Rectangle
+                                    .create(rectX, rectY - 1, rectWidth, 1)
+                                    .color(color)
+                                    .draw();
                         }
 
                         if (line.getValue().equals("Top+right")) {
                             // right side
-                            RenderUtil.rectangle(rectX + rectWidth, rectY - 1, 1, rectHeight + 1, color);
+                            Rectangle
+                                    .create(rectX + rectWidth, rectY - 1, 1, rectHeight + 1)
+                                    .color(color)
+                                    .draw();
                         }
                         break;
                     case "Full":
                         if (first) {
                             // top
-                            RenderUtil.rectangle(rectX, rectY - 1, rectWidth, 1, color);
+                            Rectangle
+                                    .create(rectX, rectY - 1, rectWidth, 1)
+                                    .color(color)
+                                    .draw();
                             // top left corner
-                            RenderUtil.rectangle(rectX - 1, rectY - 1, 1, 1, color);
+                            Rectangle
+                                    .create(rectX - 1, rectY - 1, 1, 1)
+                                    .color(color)
+                                    .draw();
                         }
 
                         if (last) {
                             // bottom for last module
-                            RenderUtil.rectangle(rectX, rectY + rectHeight, rectWidth, 1, color);
+                            Rectangle
+                                    .create(rectX, rectY + rectHeight, rectWidth, 1)
+                                    .color(color)
+                                    .draw();
                         } else {
                             // bottom for each middle module
                             Module nextModule = enabledModules.get(i + 1);
@@ -185,30 +199,50 @@ public class Arraylist extends Module {
 
                             float widthToNext = nextRectX - rectX;
 
-                            RenderUtil.rectangle(rectX, rectY + rectHeight, widthToNext, 1, color);
+                            Rectangle
+                                    .create(rectX, rectY + rectHeight, widthToNext, 1)
+                                    .color(color)
+                                    .draw();
                         }
 
                         // left side
-                        RenderUtil.rectangle(rectX - 1, rectY, 1, rectHeight, color);
+                        Rectangle
+                                .create(rectX - 1, rectY, 1, rectHeight)
+                                .color(color)
+                                .draw();
                         // bottom left corner
-                        RenderUtil.rectangle(rectX - 1, rectY + rectHeight, 1, 1, color);
-
+                        Rectangle
+                                .create(rectX - 1, rectY + rectHeight, 1, 1)
+                                .color(color)
+                                .draw();
                         // right side
-                        RenderUtil.rectangle(rectX + rectWidth, rectY - 1, 1, rectHeight + 2, color);
+                        Rectangle
+                                .create(rectX + rectWidth, rectY - 1, 1, rectHeight + 2)
+                                .color(color)
+                                .draw();
                         break;
 
                     case "Left":
                         // left side
-                        RenderUtil.rectangle(rectX - 1, rectY, 1, rectHeight, color);
+                        Rectangle
+                                .create(rectX - 1, rectY, 1, rectHeight)
+                                .color(color)
+                                .draw();
                         break;
 
                     case "Right":
                         // right side
-                        RenderUtil.rectangle(rectX + rectWidth, rectY, 1, rectHeight, color);
+                        Rectangle
+                                .create(rectX + rectWidth, rectY, 1, rectHeight)
+                                .color(color)
+                                .draw();
                         break;
                 }
 
-                RenderUtil.rectangle(rectX, rectY, rectWidth, rectHeight, backgroundColor);
+                Rectangle
+                        .create(rectX, rectY, rectWidth, rectHeight)
+                        .color(backgroundColor)
+                        .draw();
             }
 
             arraylistFontRenderer.drawString(name, x, y + 0.5f, color, fontShadow.getValue());

@@ -9,10 +9,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import org.lwjgl.opengl.GL11;
 import today.vanta.Vanta;
-import today.vanta.util.game.render.shape.GradientMode;
-import today.vanta.util.game.render.shape.impl.GradientRectangle;
 import today.vanta.util.game.render.shape.impl.ImageRectangle;
-import today.vanta.util.game.render.shape.impl.Rectangle;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -27,30 +24,6 @@ public class RenderUtil {
 
     public static boolean hovered(float mouseX, float mouseY, float x, float y, float width, float height) {
         return mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
-    }
-
-    public static void rectangle(double x, double y, double width, double height, boolean filled, Color color, float lineWidth) {
-        Rectangle.create(x, y, width, height).outline(!filled).color(color).outlineWidth(lineWidth).draw();
-    }
-
-    public static void rectangle(double x, double y, double width, double height, boolean filled, Color color) {
-        Rectangle.create(x, y, width, height).outline(!filled).color(color).draw();
-    }
-
-    public static void rectangle(double x, double y, double width, double height, Color color) {
-        Rectangle.create(x, y, width, height).color(color).draw();
-    }
-
-    public static void rectangle(double x, double y, double width, double height, int color) {
-        Rectangle.create(x, y, width, height).color(new Color(color)).draw();
-    }
-
-    public static void rectangleGradientVertical(double x, double y, double width, double height, Color topColor, Color bottomColor) {
-        GradientRectangle.create(x, y, width, height).firstColor(topColor).gradientMode(GradientMode.VERTICAL).secondColor(bottomColor).draw();
-    }
-
-    public static void rectangleGradientHorizontal(double x, double y, double width, double height, Color topColor, Color bottomColor) {
-        GradientRectangle.create(x, y, width, height).firstColor(topColor).gradientMode(GradientMode.HORIZONTAL).secondColor(bottomColor).draw();
     }
 
     private static void start_scissor() {
@@ -79,18 +52,6 @@ public class RenderUtil {
         } finally {
             end_scissor();
         }
-    }
-
-    public static void image(int textureId, float x, float y, float width, float height, float u, float v, float uWidth, float uHeight, float tileWidth, float tileHeight) {
-        ImageRectangle.create(x, y, width, height, textureId)
-                .uv(u, v)
-                .uvSize(uWidth, uHeight)
-                .tileSize(tileWidth, tileHeight)
-                .draw();
-    }
-
-    public static void image(int textureId, float x, float y, float width, float height) {
-        ImageRectangle.create(x, y, width, height, textureId).draw();
     }
 
     public static void color(Color color) {

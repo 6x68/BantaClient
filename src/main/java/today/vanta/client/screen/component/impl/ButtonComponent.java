@@ -3,6 +3,7 @@ package today.vanta.client.screen.component.impl;
 import today.vanta.client.screen.component.Component;
 import today.vanta.util.game.render.RenderUtil;
 import today.vanta.util.game.render.font.impl.GlyphFontRenderer;
+import today.vanta.util.game.render.shape.impl.Rectangle;
 import today.vanta.util.game.sound.Sounds;
 
 import java.awt.*;
@@ -23,7 +24,10 @@ public class ButtonComponent extends Component {
     public void draw(float mouseX, float mouseY) {
         boolean hover = RenderUtil.hovered(mouseX, mouseY, x, y, width, height);
         if (!onlyText) {
-            RenderUtil.rectangle(x, y, width, height, hover ? new Color(40, 40, 40) : new Color(35, 35, 35));
+            Rectangle
+                    .create(x, y, width, height)
+                    .color(hover ? new Color(40, 40, 40) : new Color(35, 35, 35))
+                    .draw();
             font.drawYCenteredString(text, x + 3.5f, y + height / 2 - 2, Color.WHITE, false);
         } else {
             font.drawString(text, x, y - 2, hover ? Color.LIGHT_GRAY : Color.WHITE);

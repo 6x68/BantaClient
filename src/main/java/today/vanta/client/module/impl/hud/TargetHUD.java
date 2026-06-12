@@ -16,6 +16,8 @@ import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.render.RenderUtil;
 import today.vanta.util.game.render.font.CFonts;
+import today.vanta.util.game.render.shape.impl.GradientRectangle;
+import today.vanta.util.game.render.shape.impl.Rectangle;
 import today.vanta.util.system.math.animation.Animation;
 import today.vanta.util.system.math.animation.Easing;
 
@@ -108,7 +110,11 @@ public class TargetHUD extends Module {
                 width = 130;
                 height = 40;
 
-                RenderUtil.rectangle(x, y, width, height, BACKGROUND);
+                Rectangle
+                        .create(x, y, width, height)
+                        .color(BACKGROUND)
+                        .draw();
+
                 RenderUtil.renderHead((EntityPlayer) localTarget, x, y, 36f);
                 CFonts.SFPT_MEDIUM_20.drawStringWithShadow(localTarget.getName(), x + 38, y + 4, Color.WHITE);
                 CFonts.SFPT_REGULAR_18.drawStringWithShadow(String.format("%.1f", localTarget.getHealth()), x + 38, y + 15, Color.WHITE);
@@ -156,9 +162,21 @@ public class TargetHUD extends Module {
                     ghostAnimation.start();
                 }
 
-                RenderUtil.rectangle(x, y + 36, width, 4f, DARKER_BACKGROUND);
-                RenderUtil.rectangle(x, y + 36, ghostBarWidth, 4f, color.darker());
-                RenderUtil.rectangleGradientHorizontal(x, y + 36, barWidth, 4f, color2, color);
+                Rectangle
+                        .create(x, y + 36, width, 4f)
+                        .color(DARKER_BACKGROUND)
+                        .draw();
+
+                Rectangle
+                        .create(x, y + 36, ghostBarWidth, 4f)
+                        .color(color.darker())
+                        .draw();
+
+                GradientRectangle
+                        .create(x, y + 36, barWidth, 4f)
+                        .firstColor(color2)
+                        .secondColor(color)
+                        .draw();
                 break;
 
             case "Classic":
@@ -180,17 +198,34 @@ public class TargetHUD extends Module {
                     healthbarcol = new Color(250, 42, 68);
                 }
 
-                RenderUtil.rectangle(x, y, width, height, true, BACKGROUND);
+                Rectangle
+                        .create(x, y, width, height)
+                        .color(BACKGROUND)
+                        .draw();
+
                 RenderUtil.renderEntity((int) x + 15, (int) y + 52, 25, -30, 0, localTarget);
-                RenderUtil.rectangle(x + 37, y - (10f / 2) + (height / 2) + 10, healthbarwidth, 10f, DARKER_BACKGROUND);
-                RenderUtil.rectangle(x + 37, y - (10f / 2) + (height / 2) + 10, healthbar, 10f, healthbarcol);
+
+                Rectangle
+                        .create(x + 37, y - (10f / 2) + (height / 2) + 10, healthbarwidth, 10f)
+                        .color(DARKER_BACKGROUND)
+                        .draw();
+
+                Rectangle
+                        .create(x + 37, y - (10f / 2) + (height / 2) + 10, healthbar, 10f)
+                        .color(healthbarcol)
+                        .draw();
+
                 mc.fontRendererObj.drawStringWithShadow(health_str + " ❤", x + 37, y + 16, Color.WHITE);
                 mc.fontRendererObj.drawStringWithShadow(localTarget.getName(), x + 37, y + 2, Color.WHITE);
                 break;
         }
 
         if (dragging && mc.currentScreen instanceof GuiChat) {
-            RenderUtil.rectangle(x - 0.5, y - 0.5, width + 1, height + 1, false, color);
+            Rectangle
+                    .create(x - 0.5, y - 0.5, width + 1, height + 1)
+                    .color(color)
+                    .outline(true)
+                    .draw();
         }
     }
 }

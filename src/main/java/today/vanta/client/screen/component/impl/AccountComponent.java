@@ -9,6 +9,8 @@ import today.vanta.util.client.network.account.Account;
 import today.vanta.util.client.network.account.AccountSavingUtil;
 import today.vanta.util.game.render.RenderUtil;
 import today.vanta.util.game.render.font.impl.GlyphFontRenderer;
+import today.vanta.util.game.render.shape.impl.ImageRectangle;
+import today.vanta.util.game.render.shape.impl.Rectangle;
 import today.vanta.util.game.sound.Sounds;
 
 import java.awt.*;
@@ -23,7 +25,6 @@ public class AccountComponent extends Component {
     public AccountComponent(Account account, float x, float y, float width, float height, GlyphFontRenderer font) {
         super(account.username, x, y, width, height, font);
         this.account = account;
-
         refresh();
     }
 
@@ -32,9 +33,12 @@ public class AccountComponent extends Component {
         boolean hover = RenderUtil.hovered(mouseX, mouseY, x, y, width, height);
         boolean currentAccount = account.equals(AccountSavingUtil.CURRENT_ACCOUNT);
         Color color1 = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
-        RenderUtil.rectangle(x, y, width, height, hover ? new Color(40, 40, 40) : new Color(35, 35, 35));
+        Rectangle
+                .create(x, y, width, height)
+                .color(hover ? new Color(40, 40, 40) : new Color(35, 35, 35))
+                .draw();
         font.drawYCenteredString(text, x + height - 4 + 6, y + height / 2 - 2, currentAccount ? color1 : Color.WHITE, false);
-        RenderUtil.image(skinTextureId, (int) x + 4, (int) y + 2, (int) height - 4, (int) height - 4);
+        ImageRectangle.create(x + 4, y + 2, height - 4, height - 4, skinTextureId).draw();
     }
 
     @Override
