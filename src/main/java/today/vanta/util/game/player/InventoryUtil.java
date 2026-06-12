@@ -46,4 +46,22 @@ public class InventoryUtil implements IMinecraft {
         }
         return total;
     }
+
+    public static ItemStack getBestBlockStack() {
+        ItemStack currentStack = mc.thePlayer.inventory.getCurrentItem();
+
+        if (currentStack != null && currentStack.getItem() instanceof ItemBlock) {
+            return currentStack;
+        }
+
+        for (int i = 0; i < 9; i++) {
+            ItemStack stack = mc.thePlayer.inventory.getStackInSlot(i);
+
+            if (stack != null && stack.getItem() instanceof ItemBlock) {
+                return stack;
+            }
+        }
+
+        return null;
+    }
 }

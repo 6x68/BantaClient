@@ -47,9 +47,7 @@ public class BlockCounter extends Module {
             return;
         }
 
-        ItemStack heldItem = mc.thePlayer.getCurrentEquippedItem();
-
-        if (heldItem == null || !(heldItem.getItem() instanceof ItemBlock)) {
+        if (InventoryUtil.getHotbarBlockCount() == 0) {
             return;
         }
 
@@ -102,7 +100,7 @@ public class BlockCounter extends Module {
         GL11.glTranslated(itemX, itemY, 0);
         GL11.glScaled(scale, scale, 1.0);
         GL11.glTranslated(-itemX, -itemY, 0);
-        mc.renderItem.renderItemIntoGUIFullBright(mc.thePlayer.getCurrentEquippedItem(), (int) x, (int) y);
+        mc.renderItem.renderItemIntoGUIFullBright(InventoryUtil.getBestBlockStack(), (int) x, (int) y);
         GL11.glPopMatrix();
 
         CFonts.SFPT_SEMIBOLD_20.drawStringWithShadow("Blocks", x + 38, y + 4, color);

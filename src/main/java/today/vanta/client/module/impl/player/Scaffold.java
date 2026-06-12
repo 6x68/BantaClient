@@ -91,6 +91,11 @@ public class Scaffold extends Module {
     @EventListen(priority = EventPriority.HIGHEST)
     private void onRunTick(RunTickEvent event) {
         if (mc.thePlayer != null && event.state == EventState.PRE) {
+            if (InventoryUtil.getHotbarBlockCount() == 0) {
+                this.setEnabled(false);
+                return;
+            }
+
             if (sprintMode.getValue().equals("Always")) {
                 mc.gameSettings.keyBindSprint.pressed = true;
             }
@@ -241,6 +246,11 @@ public class Scaffold extends Module {
     @Override
     public void onEnable() {
         if (mc.thePlayer == null) {
+            return;
+        }
+
+        if (InventoryUtil.getHotbarBlockCount() == 0) {
+            this.setEnabled(false);
             return;
         }
 
