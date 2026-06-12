@@ -64,6 +64,7 @@ public class Arraylist extends Module {
         font.addListener(((setting, oldValue, newValue) -> setFont()));
         fontStyle.addListener(((setting, oldValue, newValue) -> setFont()));
         fontSize.addListener(((setting, oldValue, newValue) -> setFont()));
+        suffixes.addListener(((setting, oldValue, newValue) -> resortModules()));
 
         setFont();
     }
