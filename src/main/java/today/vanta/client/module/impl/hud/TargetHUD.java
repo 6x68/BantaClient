@@ -37,7 +37,7 @@ public class TargetHUD extends Module {
     private boolean dragging;
     private float dragX, dragY;
 
-    private final StringSetting mode = Setting.of("Mode", "Vanta", "Classic", "Vanta");
+    private final StringSetting mode = Setting.of("Mode", "Vanta", "Classic", "Vanta", "Adjust");
     private final NumberSetting
             x = Setting.of("X position", 20, 0, 2000),
             y = Setting.of("Y position", 20, 0, 2000);
@@ -94,6 +94,10 @@ public class TargetHUD extends Module {
     private float ghostBarWidth = width;
     private float targetWidth = width;
     private float targetWidth2 = width;
+    private float adtargetWidth = width - 4f;
+    private float adtargetWidth2 = width - 4f;
+    private float adghostBarWidth = width -4f;
+    private float adbarWidth = width -4f;
 
     private Animation animation;
     private Animation ghostAnimation;
@@ -163,17 +167,17 @@ public class TargetHUD extends Module {
                 }
 
                 Rectangle
-                        .create(x, y + 36, width, 4f)
+                        .create(x + 2.5f, y + 36, width - 2.5f, 4f)
                         .color(DARKER_BACKGROUND)
                         .draw();
 
                 Rectangle
-                        .create(x, y + 36, ghostBarWidth, 4f)
+                        .create(x + 2.5f, y + 36, ghostBarWidth, 4f)
                         .color(color.darker())
                         .draw();
 
                 GradientRectangle
-                        .create(x, y + 36, barWidth, 4f)
+                        .create(x + 2.5f, y + 36, barWidth, 4f)
                         .firstColor(color2)
                         .secondColor(color)
                         .draw();
@@ -217,6 +221,80 @@ public class TargetHUD extends Module {
 
                 mc.fontRendererObj.drawStringWithShadow(health_str + " ❤", x + 37, y + 16, Color.WHITE);
                 mc.fontRendererObj.drawStringWithShadow(localTarget.getName(), x + 37, y + 2, Color.WHITE);
+                break;
+            case "Adjust":
+                width = 100;
+                height = 30;
+                float barrrrwidth = width - 4f;
+
+                Rectangle
+                        .create(x, y, width, height)
+                        .color(BACKGROUND)
+                        .draw();
+
+                RenderUtil.renderHead((EntityPlayer) localTarget, x + 2, y + 2, 20f);
+                CFonts.SFPT_REGULAR_18.drawStringWithShadow(localTarget.getName(), x + 24, y + 1, Color.WHITE);
+                float length = CFonts.SFPT_REGULAR_16.getStringWidth(String.format("%.1f", mc.thePlayer.getHealth() -  localTarget.getHealth()));
+                CFonts.SFPT_REGULAR_16.drawStringWithShadow(String.format("%.1f", mc.thePlayer.getHealth() -  localTarget.getHealth()), x + 98 - (length), y + 15, Color.WHITE);
+
+                float adhealthWidth = barrrrwidth * (localTarget.getHealth() / localTarget.getMaxHealth());
+                float adghostWidth = barrrrwidth * (localTarget.getHealth() / localTarget.getMaxHealth());
+
+                if (adhealthWidth != adtargetWidth) {
+                    adtargetWidth = adhealthWidth;
+                    if (oldTarget != localTarget.getName()) {
+                        adbarWidth = adtargetWidth;
+                        can = true;
+                        oldTarget = localTarget.getName();
+                        return;
+                    }
+
+                    animation = Animation.create(
+                            adbarWidth,
+                            adtargetWidth,
+                            150,
+                            Easing.LINEAR,
+                            val -> adbarWidth = val
+                    );
+
+                    animation.start();
+                }
+                if (adghostWidth != adtargetWidth2) {
+                    adtargetWidth2 = adghostWidth;
+
+                    if (can) {
+                        adghostBarWidth = adtargetWidth2;
+                        oldTarget = localTarget.getName();
+                        can = false;
+                        return;
+                    }
+
+                    ghostAnimation = Animation.create(
+                            adghostBarWidth,
+                            adtargetWidth2,
+                            450,
+                            Easing.LINEAR,
+                            val -> adghostBarWidth = val
+                    );
+
+                    ghostAnimation.start();
+                }
+                float space = 24.5f;
+                Rectangle
+                        .create(x + 2, y + space, width - 4, 3f)
+                        .color(DARKER_BACKGROUND)
+                        .draw();
+
+                Rectangle
+                        .create(x + 2, y + space, adghostBarWidth, 3f)
+                        .color(color.darker())
+                        .draw();
+
+                GradientRectangle
+                        .create(x + 2, y + space, adbarWidth, 3f)
+                        .firstColor(color2)
+                        .secondColor(color)
+                        .draw();
                 break;
         }
 

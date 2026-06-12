@@ -87,6 +87,7 @@ public class ModuleStorage extends Storage<Module> {
         list.add(new TargetHUD());
         list.add(new BlockCounter());
         list.add(new Crosshair());
+        list.add(new TargetList());
 
         this.context = null;
     }

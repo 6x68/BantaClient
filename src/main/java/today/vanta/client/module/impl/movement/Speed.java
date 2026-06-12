@@ -7,11 +7,12 @@ import today.vanta.client.module.Module;
 import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.events.EventListen;
+import today.vanta.util.game.player.ChatUtil;
 import today.vanta.util.game.player.MovementUtil;
 
 public class Speed extends Module {
     private final StringSetting
-            mode = Setting.of("Mode", "NCP", "OldNCP", "Mospixel-Basic", "NCP", "Miniblox-Ground"),
+            mode = Setting.of("Mode", "NCP", "OldNCP", "Mospixel-Basic", "Mospixel", "NCP", "Miniblox-Ground"),
             oncpmode = Setting.of("OldNCP Mode", "Y-Port", "Y-Port", "Strafe").hide(() -> !mode.getValue().equals("OldNCP"));
 
     public Speed() {
@@ -71,9 +72,9 @@ public class Speed extends Module {
                         mc.thePlayer.jump();
                     }
                     //if (mc.thePlayer.onGround) {
-                    //  MoveUtil.strafe(0.3f);
+                    //  MovementUtil.strafe(0.3f);
                     //} else {
-                    //  MoveUtil.strafe(0.3f);
+                    //  MovementUtil.strafe(0.3f);
                     //}
 
                     if (offGroundTicks > 2) {
@@ -81,6 +82,35 @@ public class Speed extends Module {
                     }
                     if (mc.thePlayer.motionY < 0.17f && offGroundTicks > 3) {
                         mc.thePlayer.motionY -= 0.05f;
+                    }
+                    break;
+                case "Mospixel":
+//                    if (mc.thePlayer.onGround && !mc.gameSettings.keyBindJump.isKeyDown()) {
+//                        mc.thePlayer.jump();
+//                    }
+//                    if (mc.thePlayer.onGround) {
+//                        MovementUtil.strafe(0.39f);
+//                    }
+//                    if (mc.thePlayer.motionY < 0.421) {
+//                        MovementUtil.strafe(MovementUtil.getSpeed() * 1.03f);
+//                    }
+                    if (MovementUtil.isMoving()) {
+                        if (mc.thePlayer.onGround) {
+                            mc.thePlayer.jump();
+                        }
+                        if (offGroundTicks == 1) {
+                            MovementUtil.strafe(MovementUtil.getSpeed() + 0.00f);
+                        }
+                        if (mc.thePlayer.motionY < MovementUtil.getSpeed() + 0.000f && offGroundTicks > 1 && !mc.thePlayer.onGround) {
+                            MovementUtil.strafe(MovementUtil.getSpeed() + 0.000f);
+                        }
+                        if (mc.thePlayer.onGround) {
+                            MovementUtil.strafe(MovementUtil.getSpeed() + 0.000f);
+                        }
+
+                        if (mc.thePlayer.posY - mc.thePlayer.lastTickPosY <= 0.43f) {
+                                mc.thePlayer.motionY -= 0.015f;
+                        }
                     }
                     break;
                 case "Miniblox-Ground":

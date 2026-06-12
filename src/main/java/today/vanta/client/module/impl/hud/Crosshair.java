@@ -14,8 +14,8 @@ import java.awt.*;
 
 public class Crosshair extends Module {
     private final NumberSetting length = Setting.of("Length", 7, 4, 10, 0);
-    private final NumberSetting space = Setting.of("Static space", 5, 1, 15);
-    private final NumberSetting spaceMove = Setting.of("Moving space", 7, 2, 16);
+    private final NumberSetting space = Setting.of("Static space", 5, 0, 15);
+    private final NumberSetting spaceMove = Setting.of("Moving space", 7, 1, 16);
 
     public Crosshair() {
         super("Crosshair", "Looks like CSGO.", Category.HUD);
