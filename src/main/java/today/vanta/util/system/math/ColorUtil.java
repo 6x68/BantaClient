@@ -91,4 +91,13 @@ public class ColorUtil {
 
         return (a << 24) | (r << 16) | (g << 8) | b;
     }
+
+    public static Color interpolateColor(Color start, Color end, float progress) {
+        progress = Math.min(1.0f, Math.max(0.0f, progress));
+        int r = (int) (start.getRed() + (end.getRed() - start.getRed()) * progress);
+        int g = (int) (start.getGreen() + (end.getGreen() - start.getGreen()) * progress);
+        int b = (int) (start.getBlue() + (end.getBlue() - start.getBlue()) * progress);
+        int a = (int) (start.getAlpha() + (end.getAlpha() - start.getAlpha()) * progress);
+        return new Color(r, g, b, a);
+    }
 }
