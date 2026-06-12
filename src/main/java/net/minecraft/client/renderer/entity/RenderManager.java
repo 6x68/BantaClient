@@ -60,6 +60,7 @@ public class RenderManager {
     public double viewerPosZ;
     private boolean renderOutlines = false;
     private boolean renderShadow = true;
+    private boolean renderNames = true;
     private boolean debugBoundingBox = false;
     public Render renderRender = null;
 
@@ -206,6 +207,14 @@ public class RenderManager {
 
     public void setRenderShadow(boolean renderShadowIn) {
         this.renderShadow = renderShadowIn;
+    }
+
+    public boolean isRenderNames() {
+        return this.renderNames;
+    }
+
+    public void setRenderNames(boolean renderNamesIn) {
+        this.renderNames = renderNamesIn;
     }
 
     public void setDebugBoundingBox(boolean debugBoundingBoxIn) {

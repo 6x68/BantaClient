@@ -54,7 +54,7 @@ public abstract class Render<T extends Entity> implements IEntityRenderer {
     }
 
     protected boolean canRenderName(T entity) {
-        return entity.getAlwaysRenderNameTagForRender() && entity.hasCustomName();
+        return this.renderManager.isRenderNames() && entity.getAlwaysRenderNameTagForRender() && entity.hasCustomName();
     }
 
     protected void renderOffsetLivingLabel(T entityIn, double x, double y, double z, String str, float p_177069_9_, double p_177069_10_) {
