@@ -83,9 +83,6 @@ public class Speed extends Module {
                         mc.thePlayer.motionY -= 0.05f;
                     }
                     break;
-                case "Mospixel":
-
-                    break;
                 case "Miniblox-Ground":
                     if (mc.thePlayer.onGround) {
                         MovementUtil.strafe(0.16f);
