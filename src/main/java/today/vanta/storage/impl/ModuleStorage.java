@@ -7,6 +7,7 @@ import today.vanta.client.module.impl.client.*;
 import today.vanta.client.module.impl.hud.*;
 import today.vanta.client.module.impl.misc.ClientBrand;
 import today.vanta.client.module.impl.misc.Disabler;
+import today.vanta.client.module.impl.misc.Timer;
 import today.vanta.client.module.impl.movement.*;
 import today.vanta.client.module.impl.combat.*;
 import today.vanta.client.module.impl.player.*;
@@ -33,6 +34,7 @@ public class ModuleStorage extends Storage<Module> {
         changelog.add("[+] Added Crosshair module");
         changelog.add("[+] Added more themes");
         changelog.add("[+] Added AutoDisable");
+        changelog.add("[+] Added Timer");
         changelog.add("[#] Rewrote MovementFix & rotations");
         changelog.add("[#] Fixed Arraylist height offsets");
         changelog.add("[#] Finished ImGui ClickGui");
@@ -77,6 +79,7 @@ public class ModuleStorage extends Storage<Module> {
         // Misc
         list.add(new Disabler());
         list.add(new ClientBrand());
+        list.add(new Timer());
 
         //Hud
         list.add(new Arraylist());
