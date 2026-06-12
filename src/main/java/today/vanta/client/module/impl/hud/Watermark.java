@@ -14,6 +14,7 @@ import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.client.IClient;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.events.EventPriority;
+import today.vanta.util.game.player.MovementUtil;
 import today.vanta.util.game.render.RenderUtil;
 import today.vanta.util.game.render.font.CFonts;
 import today.vanta.util.game.render.font.impl.BitMapFontRenderer;
@@ -101,6 +102,7 @@ public class Watermark extends Module {
                 } else {
                     exhiFont.drawString(firstCharacter,2,2,colors[0],true);
                     exhiFont.drawString(watermarkfull + EnumChatFormatting.GRAY + " [" + EnumChatFormatting.WHITE +format+ EnumChatFormatting.GRAY + "] "  + "[" + EnumChatFormatting.WHITE +mc.getDebugFPS()+ " FPS" + EnumChatFormatting.GRAY + "]",9,2,Color.WHITE,true);
+                    exhiFont.drawString("BPS: " + MovementUtil.getBPS(), 2, 12,Color.WHITE, true);
                 }
                 break;
         }

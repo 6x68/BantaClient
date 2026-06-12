@@ -11,7 +11,7 @@ import today.vanta.util.game.player.MovementUtil;
 
 public class Speed extends Module {
     private final StringSetting
-            mode = Setting.of("Mode", "NCP", "OldNCP", "Mospixel-Tick", "NCP", "Miniblox-Ground"),
+            mode = Setting.of("Mode", "NCP", "OldNCP", "Mospixel-Basic", "NCP", "Miniblox-Ground"),
             oncpmode = Setting.of("OldNCP Mode", "Y-Port", "Y-Port", "Strafe").hide(() -> !mode.getValue().equals("OldNCP"));
 
     public Speed() {
@@ -66,7 +66,7 @@ public class Speed extends Module {
                     }
                     break;
 
-                case "Mospixel-Tick":
+                case "Mospixel-Basic":
                     if (mc.thePlayer.onGround && !mc.gameSettings.keyBindJump.isKeyDown()) {
                         mc.thePlayer.jump();
                     }
@@ -76,15 +76,15 @@ public class Speed extends Module {
                     //  MoveUtil.strafe(0.3f);
                     //}
 
-                    if (offGroundTicks == 1) {
-                        MovementUtil.strafe(0.35f);
-                    }
                     if (offGroundTicks > 2) {
                         //MovementUtil.strafe(0.3f);
                     }
                     if (mc.thePlayer.motionY < 0.17f && offGroundTicks > 3) {
                         mc.thePlayer.motionY -= 0.05f;
                     }
+                    break;
+                case "Mospixel":
+
                     break;
                 case "Miniblox-Ground":
                     if (mc.thePlayer.onGround) {
