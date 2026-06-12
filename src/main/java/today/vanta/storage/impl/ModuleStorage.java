@@ -34,6 +34,7 @@ public class ModuleStorage extends Storage<Module> {
         changelog.add("[+] Added Crosshair module");
         changelog.add("[+] Added more themes");
         changelog.add("[+] Added AutoDisable");
+        changelog.add("[+] Added Timer");
         changelog.add("[#] Rewrote MovementFix & rotations");
         changelog.add("[#] Fixed Arraylist height offsets");
         changelog.add("[#] Finished ImGui ClickGui");
