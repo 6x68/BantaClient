@@ -101,7 +101,8 @@ public class ClickGUIScreen extends GuiScreen {
                             } else if (setting instanceof NumberSetting) {
                                 ignoreThis += 20;
                             } else if (setting instanceof StringSetting) {
-                                ignoreThis += 14;
+                                StringSetting selector = (StringSetting) setting;
+                                ignoreThis += selector.expanded ? 12 + selector.allValues.length * 9 : 12;
                             } else if (setting instanceof MultiStringSetting) {
                                 MultiStringSetting selector = (MultiStringSetting) setting;
                                 ignoreThis += selector.expanded ? 12 + selector.allValues.length * 9 : 12;
@@ -254,15 +255,35 @@ public class ClickGUIScreen extends GuiScreen {
 
                                 y += 20;
                             } else if (setting instanceof StringSetting) {
-                                StringSetting button = (StringSetting) setting;
-                                RenderUtil.rectangle(x + 1.5f, y, panelWidth - 3, 14, hover ? new Color(40, 40, 40) : new Color(35, 35, 35));
-                                sett.drawString(setting.name, x + 5, y + 2.5f, -1);
+                                StringSetting selector = (StringSetting) setting;
+                                float settingHeight = selector.expanded ? 12 + selector.allValues.length * 9 : 12;
+                                boolean hover2 = RenderUtil.hovered(mouseX, mouseY, x + 1.5f, y, panelWidth - 3, settingHeight);
+                                RenderUtil.rectangle(x + 1.5f, y, panelWidth - 3, settingHeight, hover2 ? new Color(40, 40, 40) : new Color(35, 35, 35));
+                                sett.drawString(setting.name, x + 5, y + 1.5f, -1);
+                                float bX = x + panelWidth - 14;
 
-                                float bX = x + panelWidth - 5;
-                                RenderUtil.rectangle(bX - sett.getStringWidth(button.getValue()) - 2, y + 2.5, sett.getStringWidth(button.getValue()) + 4, 9, new Color(45, 45, 45));
-                                sett.drawString(button.getValue(), bX - sett.getStringWidth(button.getValue()), y + 2.5f, -1);
+                                float maxW = sett.getStringWidth(selector.getValue());
+                                if (selector.expanded) {
+                                    for (String mode : selector.allValues) {
+                                        maxW = Math.max(maxW, sett.getStringWidth(mode));
+                                    }
+                                }
 
-                                y += 14;
+                                RenderUtil.rectangle(bX - maxW - 2, y + 1.5f, maxW + 4, 9 + (selector.expanded ? selector.allValues.length * 9 : 0), new Color(45, 45, 45));
+                                sett.drawString(selector.getValue(), bX - sett.getStringWidth(selector.getValue()), y + 1.5f, -1);
+
+                                sett.drawString(selector.expanded ? "-" : "+", bX + 4.5f, y + 1.5f, -1);
+
+                                if (selector.expanded) {
+                                    float yOffset = y + 8;
+                                    for (String mode : selector.allValues) {
+                                        boolean hoverMode = RenderUtil.hovered(mouseX, mouseY, bX - maxW - 2, yOffset + 2.5f, maxW + 4, 9);
+                                        boolean enabledMode = selector.getValue().equals(mode);
+                                        sett.drawString(mode, bX - sett.getStringWidth(mode), yOffset + 2.5f, hoverMode ? enabledMode ? color1.darker() : Color.LIGHT_GRAY : enabledMode ? color1 : Color.WHITE);
+                                        yOffset += 9;
+                                    }
+                                }
+                                y += settingHeight;
                             } else if (setting instanceof MultiStringSetting) {
                                 MultiStringSetting selector = (MultiStringSetting) setting;
                                 float settingHeight = selector.expanded ? 12 + selector.allValues.length * 9 : 12;
@@ -272,7 +293,14 @@ public class ClickGUIScreen extends GuiScreen {
                                 float bX = x + panelWidth - 14;
                                 String enabled = selector.getValue().length + " Enabled";
 
-                                RenderUtil.rectangle(bX - sett.getStringWidth(enabled) - 2, y + 1.5f, sett.getStringWidth(enabled) + 4, 9 + (selector.expanded ? selector.allValues.length * 9 : 0), new Color(45, 45, 45));
+                                float maxW = sett.getStringWidth(enabled);
+                                if (selector.expanded) {
+                                    for (String mode : selector.allValues) {
+                                        maxW = Math.max(maxW, sett.getStringWidth(mode));
+                                    }
+                                }
+
+                                RenderUtil.rectangle(bX - maxW - 2, y + 1.5f, maxW + 4, 9 + (selector.expanded ? selector.allValues.length * 9 : 0), new Color(45, 45, 45));
                                 sett.drawString(enabled, bX - sett.getStringWidth(enabled), y + 1.5f, -1);
 
                                 sett.drawString(selector.expanded ? "-" : "+", bX + 4.5f, y + 1.5f, -1);
@@ -280,7 +308,7 @@ public class ClickGUIScreen extends GuiScreen {
                                 if (selector.expanded) {
                                     float yOffset = y + 8;
                                     for (String mode : selector.allValues) {
-                                        boolean hoverMode = RenderUtil.hovered(mouseX, mouseY, bX - sett.getStringWidth(mode), yOffset + 2.5f, sett.getStringWidth(enabled) + 1, 9);
+                                        boolean hoverMode = RenderUtil.hovered(mouseX, mouseY, bX - maxW - 2, yOffset + 2.5f, maxW + 4, 9);
                                         boolean enabledMode = selector.isEnabled(mode);
                                         sett.drawString(mode, bX - sett.getStringWidth(mode), yOffset + 2.5f, hoverMode ? enabledMode ? color1.darker() : Color.LIGHT_GRAY : enabledMode ? color1 : Color.WHITE);
                                         yOffset += 9;
@@ -394,25 +422,36 @@ public class ClickGUIScreen extends GuiScreen {
                             } else if (setting instanceof NumberSetting) {
                                 y += 20;
                             } else if (setting instanceof StringSetting) {
-                                StringSetting button = (StringSetting) setting;
+                                StringSetting selector = (StringSetting) setting;
+                                float settingHeight = selector.expanded ? 12 + selector.allValues.length * 9 : 12;
+                                boolean hover = RenderUtil.hovered(mouseX, mouseY, x + 1.5f, y, panelWidth - 3, 12);
 
-                                float bX = x + panelWidth - 5;
-                                if (RenderUtil.hovered(mouseX, mouseY, bX - sett.getStringWidth(button.getValue()) - 2, y + 2.5f, sett.getStringWidth(button.getValue()) + 4, 9)) {
-                                    switch (mouseButton) {
-                                        case 0:
-                                            button.next();
-                                            break;
-                                        case 1:
-                                            button.previous();
-                                            break;
-                                    }
+                                if (hover && (mouseButton == 0 || mouseButton == 1)) {
+                                    selector.expanded = !selector.expanded;
                                 }
 
-                                y += 14;
+                                if (selector.expanded) {
+                                    float bX = x + panelWidth - 14;
+
+                                    float maxW = sett.getStringWidth(selector.getValue());
+                                    for (String mode : selector.allValues) {
+                                        maxW = Math.max(maxW, sett.getStringWidth(mode));
+                                    }
+
+                                    float yOffset = y + 8;
+                                    for (String mode : selector.allValues) {
+                                        boolean hoverMode = RenderUtil.hovered(mouseX, mouseY, bX - maxW - 2, yOffset + 2.5f, maxW + 4, 9);
+                                        if (hoverMode && mouseButton == 0) {
+                                            selector.setValue(mode);
+                                        }
+                                        yOffset += 9;
+                                    }
+                                }
+                                y += settingHeight;
                             } else if (setting instanceof MultiStringSetting) {
                                 MultiStringSetting selector = (MultiStringSetting) setting;
                                 float settingHeight = selector.expanded ? 12 + selector.allValues.length * 9 : 12;
-                                boolean hover = RenderUtil.hovered(mouseX, mouseY, position.x + 1.5f, y, panelWidth - 3, 12);
+                                boolean hover = RenderUtil.hovered(mouseX, mouseY, x + 1.5f, y, panelWidth - 3, 12);
 
                                 if (hover && (mouseButton == 0 || mouseButton == 1)) {
                                     selector.expanded = !selector.expanded;
@@ -421,9 +460,15 @@ public class ClickGUIScreen extends GuiScreen {
                                 if (selector.expanded) {
                                     float bX = x + panelWidth - 14;
                                     String enabled = selector.getValue().length + " Enabled";
+
+                                    float maxW = sett.getStringWidth(enabled);
+                                    for (String mode : selector.allValues) {
+                                        maxW = Math.max(maxW, sett.getStringWidth(mode));
+                                    }
+
                                     float yOffset = y + 8;
                                     for (String mode : selector.allValues) {
-                                        boolean hoverMode = RenderUtil.hovered(mouseX, mouseY, bX - sett.getStringWidth(mode), yOffset + 2.5f, sett.getStringWidth(enabled) + 1, 9);
+                                        boolean hoverMode = RenderUtil.hovered(mouseX, mouseY, bX - maxW - 2, yOffset + 2.5f, maxW + 4, 9);
                                         if (hoverMode && mouseButton == 0) {
                                             List<String> values = new ArrayList<>(Arrays.asList(selector.getValue()));
 
