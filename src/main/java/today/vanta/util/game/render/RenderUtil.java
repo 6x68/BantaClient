@@ -12,7 +12,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import today.vanta.Vanta;
-import today.vanta.util.system.math.ColorUtil;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -165,7 +164,7 @@ public class RenderUtil {
         GlStateManager.popMatrix();
     }
 
-    public static void vertical_grad(double x, double y, double width, double height, Color topColor, Color bottomColor) {
+    public static void rectangleGradientVertical(double x, double y, double width, double height, Color topColor, Color bottomColor) {
         start();
 
         GL11.glShadeModel(GL11.GL_SMOOTH);
@@ -197,7 +196,7 @@ public class RenderUtil {
         stop();
     }
 
-    public static void horizontal_grad(double x, double y, double width, double height, Color topColor, Color bottomColor) {
+    public static void rectangleGradientHorizontal(double x, double y, double width, double height, Color topColor, Color bottomColor) {
         start();
 
         GL11.glShadeModel(GL11.GL_SMOOTH);
@@ -229,7 +228,7 @@ public class RenderUtil {
         stop();
     }
 
-    public static void horizontal_grad_outline(double x, double y, double width, double height, float lineWidth, Color leftColor, Color rightColor) {
+    public static void rectangleGradientHorizontal(double x, double y, double width, double height, float lineWidth, Color leftColor, Color rightColor) {
         start();
 
         GL11.glShadeModel(GL11.GL_SMOOTH);
@@ -263,20 +262,11 @@ public class RenderUtil {
         stop();
     }
 
-    public static void animated_horizontal_grad_outline(double x, double y, double width, double height, float lineWidth, Color startColor, Color endColor, double speed, int spacing) {
-        long time = (long) (System.currentTimeMillis() * speed);
-
-        int color1 = ColorUtil.getGradientColor(startColor, endColor, Math.abs(Math.sin(((time) % 2000) / 2000.0 * Math.PI)));
-        int color2 = ColorUtil.getGradientColor(startColor, endColor, Math.abs(Math.sin(((time + spacing) % 2000) / 2000.0 * Math.PI)));
-
-        horizontal_grad_outline(x, y, width, height, lineWidth, new Color(color1, true), new Color(color2, true));
+    public static void renderEntity(int posX, int posY, int scale, float mouseX, float mouseY, EntityLivingBase entity) {
+        GuiInventory.drawEntityOnScreen(posX, posY, scale, mouseX, mouseY, entity);
     }
 
-    public static void RenderEntity(int posX, int posY, int scale, float mouseX, float mouseY, EntityLivingBase entity) {
-        GuiInventory.drawEntityOnScreen(posX,posY,scale,mouseX,mouseY,entity);
-    }
-
-    public static void player_head(EntityPlayer target, float x, float y, float headSize) {
+    public static void renderHead(EntityPlayer target, float x, float y, float headSize) {
         ResourceLocation skinLocation = ((AbstractClientPlayer) target).getLocationSkin();
         mc.getTextureManager().bindTexture(skinLocation);
 

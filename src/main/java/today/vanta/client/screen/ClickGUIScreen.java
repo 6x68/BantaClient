@@ -82,7 +82,7 @@ public class ClickGUIScreen extends GuiScreen {
         Color color1 = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
 
         if (Vanta.instance.moduleStorage.getT(ClickGUI.class).gradientBackground.getValue()) {
-            RenderUtil.vertical_grad(0, 0, width, height, new Color(0, 0, 0, (int) (150 * globalAnim)), new Color(color1.getRed(), color1.getGreen(), color1.getBlue(), (int) (150 * globalAnim)));
+            RenderUtil.rectangleGradientVertical(0, 0, width, height, new Color(0, 0, 0, (int) (150 * globalAnim)), new Color(color1.getRed(), color1.getGreen(), color1.getBlue(), (int) (150 * globalAnim)));
         }
 
         GlStateManager.pushMatrix();

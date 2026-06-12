@@ -38,7 +38,7 @@ public class ImGuiClickGUIScreen extends GuiScreen implements IClient {
         Color color1 = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
 
         if (Vanta.instance.moduleStorage.getT(ClickGUI.class).gradientBackground.getValue()) {
-            RenderUtil.vertical_grad(0, 0, width, height, new Color(0,0,0,150), new Color(color1.getRed(),color1.getGreen(),color1.getBlue(),150));
+            RenderUtil.rectangleGradientVertical(0, 0, width, height, new Color(0,0,0,150), new Color(color1.getRed(),color1.getGreen(),color1.getBlue(),150));
         }
 
         ImGuiImpl.draw(() -> {
