@@ -26,7 +26,7 @@ import java.util.concurrent.Callable;
 
 public class TextureManager implements ITickable, IResourceManagerReloadListener {
     private static final Logger logger = LogManager.getLogger();
-    private final Map<ResourceLocation, ITextureObject> mapTextureObjects = Maps.newHashMap();
+    public final Map<ResourceLocation, ITextureObject> mapTextureObjects = Maps.newHashMap();
     private final List<ITickable> listTickables = Lists.newArrayList();
     private final Map<String, Integer> mapTextureCounters = Maps.newHashMap();
     private final IResourceManager theResourceManager;
