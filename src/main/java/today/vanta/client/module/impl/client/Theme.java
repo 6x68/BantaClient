@@ -42,7 +42,7 @@ public class Theme extends Module {
                 colors = new Color[]{new Color(255, 0, 181), new Color(28, 0, 100)};
                 break;
             case "Moral":
-                colors = new Color[]{new Color(147, 251, 157, 1), new Color(9, 199, 251, 1)};
+                colors = new Color[]{new Color(147, 251, 157), new Color(9, 199, 251)};
                 break;
         }
     }
