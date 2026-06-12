@@ -44,6 +44,10 @@ public class Animation {
         AnimationProcessor.getInstance().register(this);
     }
 
+    public void stop() {
+        this.finished = true;
+    }
+
     public void update() {
         if (!started || finished) return;
 
