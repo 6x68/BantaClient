@@ -26,12 +26,17 @@ public class ModuleStorage extends Storage<Module> {
 
     public ModuleStorage() {
         changelog.add("[+] Added 'Color mode' option to Arraylist");
-        changelog.add("[+] Added new 'ShadowNotro' theme");
         changelog.add("[+] Added 'Font' option to Arraylist");
-        changelog.add("[+] Added 'Compact' watermark");
+        changelog.add("[+] Added TargetHUD animations");
+        changelog.add("[+] Added ClickGui animations");
+        changelog.add("[+] Added more watermarks");
+        changelog.add("[+] Added Crosshair module");
+        changelog.add("[+] Added more themes");
         changelog.add("[+] Added AutoDisable");
+        changelog.add("[#] Rewrote MovementFix & rotations");
         changelog.add("[#] Fixed Arraylist height offsets");
         changelog.add("[#] Finished ImGui ClickGui");
+        changelog.add("[#] Fixed auto-block");
     }
 
     @Override
