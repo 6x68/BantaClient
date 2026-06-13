@@ -122,9 +122,22 @@ public class MovementUtil implements IMinecraft {
         event.forward = (float) Math.round(bestMovement[1]);
         event.strafe = (float) Math.round(bestMovement[2]);
     }
+
+
     public static double getBPS() {
         double bps = (Math.hypot(mc.thePlayer.posX - mc.thePlayer.prevPosX, mc.thePlayer.posZ - mc.thePlayer.prevPosZ) * mc.timer.timerSpeed) * 20;
         return Math.round(bps * 100.0) / 100.0;
         // lost my calculation so i used the tenacity one :D
+    }
+
+    public static double getBaseMoveSpeed() {
+        double baseSpeed = mc.thePlayer.isSprinting() ? 0.28630206268501246 : 0.2202643217126144;
+        if (mc.thePlayer.isPotionActive(Potion.moveSpeed)) {
+            int amplifier = mc.thePlayer.getActivePotionEffect(Potion.moveSpeed).getAmplifier() +
+                    1 - (mc.thePlayer.isPotionActive(Potion.moveSlowdown) ? mc.thePlayer.getActivePotionEffect(Potion.moveSlowdown).getAmplifier() + 1 : 0);
+            baseSpeed *= 1.0 + 0.2 * amplifier;
+        }
+
+        return baseSpeed;
     }
 }

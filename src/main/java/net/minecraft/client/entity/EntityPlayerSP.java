@@ -692,4 +692,12 @@ public class EntityPlayerSP extends AbstractClientPlayer {
             this.motionZ += forward * f2 + strafe * f1;
         }
     }
+
+    @Override
+    public void moveEntity(double x, double y, double z) {
+        MoveEvent moveEvent = new MoveEvent(x, y, z);
+        moveEvent.call();
+
+        super.moveEntity(moveEvent.x, moveEvent.y, moveEvent.z);
+    }
 }
