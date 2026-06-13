@@ -14,6 +14,7 @@ import java.awt.*;
 
 public class Crosshair extends Module {
     private final NumberSetting length = Setting.of("Length", 7, 4, 10, 0);
+    private final NumberSetting width = Setting.of("Width", 0.5f, 0.5f, 2, 5);
     private final NumberSetting space = Setting.of("Static space", 5, 0, 15);
     private final NumberSetting spaceMove = Setting.of("Moving space", 7, 1, 16);
 
@@ -34,6 +35,7 @@ public class Crosshair extends Module {
 
         float spacing = space.getValue().floatValue();
         Color color = Color.WHITE;
+        Color black = Color.BLACK;
         float y = (float) mc.displayHeight / 4;
         float x = (float) mc.displayWidth / 4;
 

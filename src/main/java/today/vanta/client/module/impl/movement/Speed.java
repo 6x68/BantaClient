@@ -94,23 +94,21 @@ public class Speed extends Module {
 //                    if (mc.thePlayer.motionY < 0.421) {
 //                        MovementUtil.strafe(MovementUtil.getSpeed() * 1.03f);
 //                    }
-                    if (MovementUtil.isMoving()) {
-                        if (mc.thePlayer.onGround) {
-                            mc.thePlayer.jump();
-                        }
-                        if (offGroundTicks == 1) {
-                            MovementUtil.strafe(MovementUtil.getSpeed() + 0.00f);
-                        }
-                        if (mc.thePlayer.motionY < MovementUtil.getSpeed() + 0.000f && offGroundTicks > 1 && !mc.thePlayer.onGround) {
-                            MovementUtil.strafe(MovementUtil.getSpeed() + 0.000f);
-                        }
-                        if (mc.thePlayer.onGround) {
-                            MovementUtil.strafe(MovementUtil.getSpeed() + 0.000f);
-                        }
+                    if (mc.thePlayer.onGround && !mc.gameSettings.keyBindJump.isKeyDown()) {
+                        mc.thePlayer.jump();
+                    }
+                    if (offGroundTicks == 2) {
+                        MovementUtil.strafe(0.33f);
+                        ChatUtil.send(ChatUtil.Prefix.INFO, String.valueOf(MovementUtil.getBPS()));
+                    } else {
+                        MovementUtil.strafe();
+                    }
+                    if (offGroundTicks > 12 && mc.thePlayer.motionY < 0.421f) {
+                        mc.thePlayer.motionY -= 0.07f;
+                    }
 
-                        if (mc.thePlayer.posY - mc.thePlayer.lastTickPosY <= 0.43f) {
-                                mc.thePlayer.motionY -= 0.015f;
-                        }
+                    if (!MovementUtil.isMoving()) {
+                        MovementUtil.stop();
                     }
                     break;
                 case "Miniblox-Ground":
@@ -129,6 +127,7 @@ public class Speed extends Module {
         mc.gameSettings.keyBindSprint.pressed = false;
         mc.gameSettings.keyBindJump.pressed = false;
         mc.timer.timerSpeed = 1.0f;
+        offGroundTicks = 0;
     }
 
     @Override

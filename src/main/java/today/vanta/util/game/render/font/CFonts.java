@@ -23,6 +23,8 @@ public class CFonts {
     public static GlyphFontRenderer SFPT_SEMIBOLD_42 = getFont("SFPT-Semibold", 42);
     public static GlyphFontRenderer SFPT_REGULAR_18 = getFont("SFPT-Regular", 18);
     public static GlyphFontRenderer SFPT_REGULAR_16 = getFont("SFPT-Regular", 16);
+    public static GlyphFontRenderer SFPT_REGULAR_15 = getFont("SFPT-Regular", 15);
+    public static GlyphFontRenderer SFPT_REGULAR_14 = getFont("SFPT-Regular", 14);
     public static GlyphFontRenderer SFPT_REGULAR_20 = getFont("SFPT-Regular", 20);
     public static GlyphFontRenderer SFPT_REGULAR_24 = getFont("SFPT-Regular", 24);
 

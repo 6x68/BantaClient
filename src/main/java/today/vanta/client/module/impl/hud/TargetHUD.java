@@ -3,6 +3,7 @@ package today.vanta.client.module.impl.hud;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemSword;
 import org.lwjgl.input.Mouse;
 import today.vanta.Vanta;
 import today.vanta.client.event.impl.game.render.DrawScreenEvent;
@@ -14,6 +15,7 @@ import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.NumberSetting;
 import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.events.EventListen;
+import today.vanta.util.game.player.ChatUtil;
 import today.vanta.util.game.render.RenderUtil;
 import today.vanta.util.game.render.font.CFonts;
 import today.vanta.util.game.render.shape.impl.GradientRectangle;
@@ -22,6 +24,7 @@ import today.vanta.util.system.math.animation.Animation;
 import today.vanta.util.system.math.animation.Easing;
 
 import java.awt.*;
+import java.util.Arrays;
 
 public class TargetHUD extends Module {
     private static final Color BACKGROUND = new Color(20, 20, 20, 200);
@@ -233,9 +236,9 @@ public class TargetHUD extends Module {
                         .draw();
 
                 RenderUtil.renderHead((EntityPlayer) localTarget, x + 2, y + 2, 20f);
-                CFonts.SFPT_REGULAR_18.drawStringWithShadow(localTarget.getName(), x + 24, y + 1, Color.WHITE);
-                float length = CFonts.SFPT_REGULAR_16.getStringWidth(String.format("%.1f", mc.thePlayer.getHealth() -  localTarget.getHealth()));
-                CFonts.SFPT_REGULAR_16.drawStringWithShadow(String.format("%.1f", mc.thePlayer.getHealth() -  localTarget.getHealth()), x + 98 - (length), y + 15, Color.WHITE);
+                CFonts.SFPT_REGULAR_16.drawStringWithShadow(localTarget.getName(), x + 24, y + 1, Color.WHITE);
+                float length = CFonts.SFPT_REGULAR_14.getStringWidth(String.format("%.1f", mc.thePlayer.getHealth() -  localTarget.getHealth()));
+                CFonts.SFPT_REGULAR_14.drawStringWithShadow(String.format("%.1f", mc.thePlayer.getHealth() -  localTarget.getHealth()), x + 98 - (length), y + 15, Color.WHITE);
 
                 float adhealthWidth = barrrrwidth * (localTarget.getHealth() / localTarget.getMaxHealth());
                 float adghostWidth = barrrrwidth * (localTarget.getHealth() / localTarget.getMaxHealth());
@@ -290,10 +293,9 @@ public class TargetHUD extends Module {
                         .color(color.darker())
                         .draw();
 
-                GradientRectangle
+                Rectangle
                         .create(x + 2, y + space, adbarWidth, 3f)
-                        .firstColor(color2)
-                        .secondColor(color)
+                        .color(color)
                         .draw();
                 break;
         }
