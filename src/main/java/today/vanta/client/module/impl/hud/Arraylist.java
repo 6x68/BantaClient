@@ -141,113 +141,113 @@ public class Arraylist extends Module {
                     break;
             }
 
+            float rectX = x - 2;
+            float rectY = y;
+            float rectWidth = modWidth + 5;
+            float rectHeight = arraylistFontRenderer.getBoxHeight();
+
             if (background.getValue()) {
-                float rectX = x - 2;
-                float rectY = y;
-                float rectWidth = modWidth + 5;
-                float rectHeight = arraylistFontRenderer.getBoxHeight();
-
-                boolean first = i == 0;
-                boolean last = i == enabledModules.size() - 1;
-
-                switch (line.getValue()) {
-                    case "Top+right":
-                    case "Top":
-                        if (first) {
-                            // top
-                            Rectangle
-                                    .create(rectX, rectY - 1, rectWidth, 1)
-                                    .color(color)
-                                    .draw();
-                        }
-
-                        if (line.getValue().equals("Top+right")) {
-                            // right side
-                            Rectangle
-                                    .create(rectX + rectWidth, rectY - 1, 1, rectHeight + 1)
-                                    .color(color)
-                                    .draw();
-                        }
-                        break;
-                    case "Full":
-                        if (first) {
-                            // top
-                            Rectangle
-                                    .create(rectX, rectY - 1, rectWidth, 1)
-                                    .color(color)
-                                    .draw();
-                            // top left corner
-                            Rectangle
-                                    .create(rectX - 1, rectY - 1, 1, 1)
-                                    .color(color)
-                                    .draw();
-                        }
-
-                        if (last) {
-                            // bottom for last module
-                            Rectangle
-                                    .create(rectX, rectY + rectHeight, rectWidth, 1)
-                                    .color(color)
-                                    .draw();
-                        } else {
-                            // bottom for each middle module
-                            Module nextModule = enabledModules.get(i + 1);
-                            String nextName = getModuleName(nextModule);
-                            float nextModWidth = arraylistFontRenderer.getStringWidth(nextName);
-                            float nextX = event.scaledResolution.getScaledWidth() - nextModWidth - 5;
-                            float nextRectX = nextX - xOffset.getValue().floatValue();
-
-                            float widthToNext = nextRectX - rectX;
-
-                            Rectangle
-                                    .create(rectX, rectY + rectHeight, widthToNext, 1)
-                                    .color(color)
-                                    .draw();
-                        }
-
-                        // left side
-                        Rectangle
-                                .create(rectX - 1, rectY, 1, rectHeight)
-                                .color(color)
-                                .draw();
-                        // bottom left corner
-                        Rectangle
-                                .create(rectX - 1, rectY + rectHeight, 1, 1)
-                                .color(color)
-                                .draw();
-                        // right side
-                        Rectangle
-                                .create(rectX + rectWidth, rectY - 1, 1, rectHeight + 2)
-                                .color(color)
-                                .draw();
-                        break;
-
-                    case "Left":
-                        // left side
-                        Rectangle
-                                .create(rectX - 1, rectY, 1, rectHeight)
-                                .color(color)
-                                .draw();
-                        break;
-
-                    case "Right":
-                        // right side
-                        Rectangle
-                                .create(rectX + rectWidth, rectY, 1, rectHeight)
-                                .color(color)
-                                .draw();
-                        break;
-                }
-
                 Rectangle
                         .create(rectX, rectY, rectWidth, rectHeight)
                         .color(backgroundColor)
                         .draw();
             }
 
+            boolean first = i == 0;
+            boolean last = i == enabledModules.size() - 1;
+
+            switch (line.getValue()) {
+                case "Top+right":
+                case "Top":
+                    if (first) {
+                        // top
+                        Rectangle
+                                .create(rectX, rectY - 1, rectWidth, 1)
+                                .color(color)
+                                .draw();
+                    }
+
+                    if (line.getValue().equals("Top+right")) {
+                        // right side
+                        Rectangle
+                                .create(rectX + rectWidth, rectY - 1, 1, rectHeight + 1)
+                                .color(color)
+                                .draw();
+                    }
+                    break;
+                case "Full":
+                    if (first) {
+                        // top
+                        Rectangle
+                                .create(rectX, rectY - 1, rectWidth, 1)
+                                .color(color)
+                                .draw();
+                        // top left corner
+                        Rectangle
+                                .create(rectX - 1, rectY - 1, 1, 1)
+                                .color(color)
+                                .draw();
+                    }
+
+                    if (last) {
+                        // bottom for last module
+                        Rectangle
+                                .create(rectX, rectY + rectHeight, rectWidth, 1)
+                                .color(color)
+                                .draw();
+                    } else {
+                        // bottom for each middle module
+                        Module nextModule = enabledModules.get(i + 1);
+                        String nextName = getModuleName(nextModule);
+                        float nextModWidth = arraylistFontRenderer.getStringWidth(nextName);
+                        float nextX = event.scaledResolution.getScaledWidth() - nextModWidth - 5;
+                        float nextRectX = nextX - xOffset.getValue().floatValue();
+
+                        float widthToNext = nextRectX - rectX;
+
+                        Rectangle
+                                .create(rectX, rectY + rectHeight, widthToNext, 1)
+                                .color(color)
+                                .draw();
+                    }
+
+                    // left side
+                    Rectangle
+                            .create(rectX - 1, rectY, 1, rectHeight)
+                            .color(color)
+                            .draw();
+                    // bottom left corner
+                    Rectangle
+                            .create(rectX - 1, rectY + rectHeight, 1, 1)
+                            .color(color)
+                            .draw();
+                    // right side
+                    Rectangle
+                            .create(rectX + rectWidth, rectY - 1, 1, rectHeight + 2)
+                            .color(color)
+                            .draw();
+                    break;
+
+                case "Left":
+                    // left side
+                    Rectangle
+                            .create(rectX - 1, rectY, 1, rectHeight)
+                            .color(color)
+                            .draw();
+                    break;
+
+                case "Right":
+                    // right side
+                    Rectangle
+                            .create(rectX + rectWidth, rectY, 1, rectHeight)
+                            .color(color)
+                            .draw();
+                    break;
+            }
+
             arraylistFontRenderer.drawString(name, x, y + 0.5f, color, fontShadow.getValue());
 
-            y += background.getValue() ? arraylistFontRenderer.getBoxHeight() : arraylistFontRenderer.getFontHeight() + 2;
+            y += (background.getValue() || !line.getValue().equals("None")) ? arraylistFontRenderer.getBoxHeight() : arraylistFontRenderer.getFontHeight() + 2;
         }
     }
 
