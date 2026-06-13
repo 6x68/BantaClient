@@ -23,7 +23,7 @@ public class TargetList extends Module {
     }
 
     @EventListen
-    public void onRender2D(Render2DEvent event) {
+    private void onRender2D(Render2DEvent event) {
         Rectangle
                 .create(80,20,100,10)
                 .color(DARKER_BACKGROUND)

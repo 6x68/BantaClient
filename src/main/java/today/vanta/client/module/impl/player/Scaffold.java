@@ -89,10 +89,10 @@ public class Scaffold extends Module {
     }
 
     @EventListen
-    public void onTick(UpdateEvent event) {
+    private void onTick(UpdateEvent event) {
         if (!mc.thePlayer.onGround) {
             tick++;
-            ChatUtil.send(ChatUtil.Prefix.INFO, String.valueOf(tick));
+            send("{}", tick);
         } else {
             tick = 0;
         }

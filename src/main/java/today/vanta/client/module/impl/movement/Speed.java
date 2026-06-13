@@ -39,14 +39,14 @@ public class Speed extends Module {
     }
 
     @EventListen
-    public void onRender2D(Render2DEvent event) {
+    private void onRender2D(Render2DEvent event) {
         if (flag) {
             mc.fontRendererObj.drawString("Detected flag! Ticks left: "+ String.valueOf(60-tick),565, 400, 0xFFFFFF,true);
         }
     }
 
     @EventListen
-    public void onPacket(ReceivePacketEvent event) {
+    private void onPacket(ReceivePacketEvent event) {
         if (event.packet instanceof S08PacketPlayerPosLook) {
             flag = true;
         }
