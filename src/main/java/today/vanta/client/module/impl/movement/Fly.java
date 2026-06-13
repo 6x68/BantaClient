@@ -15,8 +15,8 @@ import today.vanta.util.game.player.MovementUtil;
 public class Fly extends Module {
     private final StringSetting mode = Setting.of("Mode", "Vanilla", "Vanilla", "Miniblox", "Teleport");
 
-    private final NumberSetting distance = Setting.of("TP distance", 3, 0, 10, "m");
-    private final NumberSetting ticks = Setting.of("TP ticks", 10, 0, 20);
+    private final NumberSetting distance = Setting.of("TP distance", 3, 0, 10, "m").hide(() -> !mode.getValue().equals("Teleport"));
+    private final NumberSetting ticks = Setting.of("TP ticks", 10, 0, 20).hide(() -> !mode.getValue().equals("Teleport"));
 
     public Fly() {
         super("Fly", "Allows you to fly like a pelican.", Category.MOVEMENT);

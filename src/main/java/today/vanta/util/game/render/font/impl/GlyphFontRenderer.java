@@ -52,9 +52,6 @@ public class GlyphFontRenderer extends CFont implements IRenderer {
     public float drawHorizontalGradientString(String text, float x, float y, Color startColor, Color endColor, double speed, int spacing) {
         if (text == null) return 0.0F;
 
-        x -= 1;
-        y -= 2;
-
         CharData[] currentData = this.charData;
 
         boolean bold = false;
@@ -67,7 +64,6 @@ public class GlyphFontRenderer extends CFont implements IRenderer {
 
         x *= 2.0F;
         y *= 2.0F;
-        y += 3;
 
         GlStateManager.pushMatrix();
         GlStateManager.scale(0.5D, 0.5D, 0.5D);
@@ -171,9 +167,6 @@ public class GlyphFontRenderer extends CFont implements IRenderer {
 
     @Override
     public float drawString(String text, float x, float y, int color, boolean shadow) {
-        x -= 1;
-        y -= 2;
-
         if (text == null)
             return 0.0F;
 
@@ -199,8 +192,6 @@ public class GlyphFontRenderer extends CFont implements IRenderer {
 
         x *= 2.0F;
         y *= 2.0F;
-
-        y += 3;
 
         GlStateManager.pushMatrix();
         GlStateManager.scale(0.5D, 0.5D, 0.5D);

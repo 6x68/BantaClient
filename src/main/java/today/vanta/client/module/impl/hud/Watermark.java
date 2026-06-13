@@ -48,59 +48,6 @@ public class Watermark extends Module {
                 CFonts.SFPT_MEDIUM_18.drawStringWithShadow(IClient.CLIENT_VERSION, x, y + 18 + 3, Color.WHITE);
                 break;
 
-            case "Compact":
-                String text = "§fV§rA§fNTA" + " | Steve | §r120§f FPS | mc.hypixel.net";
-                text = text.replace("Steve", mc.session.getUsername());
-                text = text.replace("120", String.valueOf(Minecraft.getDebugFPS()));
-                text = text.replace("mc.hypixel.net", mc.getCurrentServerData() == null ? "singleplayer" : mc.getCurrentServerData().serverIP);
-                text = text.toLowerCase();
-
-                float fontWidth = CFonts.SFPT_MEDIUM_18.getStringWidth(text);
-                //float fontHeight = CFonts.SFPT_MEDIUM_18.getFontHeight();
-
-                float boxWidth = fontWidth + 4 + 4;
-                float boxHeight = 16;
-
-                Rectangle
-                        .create(x, y, boxWidth, boxHeight)
-                        .color(new Color(0, 0, 0, 100))
-                        .draw();
-
-                Rectangle
-                        .create(x, y - 1, boxWidth, 1)
-                        .color(colors[0])
-                        .draw();
-
-                Rectangle
-                        .create(x - 1, y - 1, 1, 1)
-                        .color(colors[0])
-                        .draw();
-
-                Rectangle
-                        .create(x + boxWidth, y - 1, 1, 1)
-                        .color(colors[0])
-                        .draw();
-
-                Rectangle
-                        .create(x - 1, y, 1, boxHeight + 1)
-                        .color(colors[0])
-                        .draw();
-
-                Rectangle
-                        .create(x + boxWidth, y, 1, boxHeight + 1)
-                        .color(colors[0])
-                        .draw();
-
-                Rectangle
-                        .create(x, y + boxHeight, boxWidth, 1)
-                        .color(colors[0])
-                        .draw();
-
-                float textX = x + 4;
-
-                CFonts.SFPT_MEDIUM_18.drawString(text, textX, y + 2.5f, colors[0]);
-                break;
-
             case "Jello":
                 CFonts.HN_REGULAR_48.drawString(IClient.CLIENT_NAME, x, y, new Color(255, 255, 255, 185));
                 CFonts.HN_MEDIUM_24.drawString("Jello", x, y + CFonts.HN_REGULAR_48.getFontHeight() - 1, new Color(255, 255, 255, 185));

@@ -111,7 +111,7 @@ public class ClickGUIScreen extends GuiScreen {
                     .color(new Color(30, 30, 30))
                     .draw();
 
-            medium.drawString(category.name, position.x + 3, position.y + 1.5f, Color.WHITE);
+            medium.drawString(category.name, position.x + 3, position.y + 1, Color.WHITE);
 
             float ignoreThis = 0;
             for (Module module : Vanta.instance.moduleStorage.getModulesByCategory(category)) {
@@ -177,8 +177,8 @@ public class ClickGUIScreen extends GuiScreen {
                         .color(hoverMod ? new Color(50, 50, 50) : new Color(40, 40, 40))
                         .draw();
 
-                regular.drawString(module.name, x + 5, y + 2, ColorUtil.interpolateColor(Color.WHITE, color1, getAnimationValue(module.name + "_enabled", module.isEnabled() ? 1f : 0f, 200, Easing.EASE_OUT_QUAD)));
-                regular.drawString(module.isExpanded() ? "-" : "+", x + panelWidth - regular.getStringWidth(module.isExpanded() ? "-" : "+") - 7, y + 1.5f, hoverMod ? Color.LIGHT_GRAY : Color.WHITE);
+                regular.drawString(module.name, x + 3, y + 1, ColorUtil.interpolateColor(Color.WHITE, color1, getAnimationValue(module.name + "_enabled", module.isEnabled() ? 1f : 0f, 200, Easing.EASE_OUT_QUAD)));
+                regular.drawString(module.isExpanded() ? "-" : "+", x + panelWidth - regular.getStringWidth(module.isExpanded() ? "-" : "+") - 7, y + 1, hoverMod ? Color.LIGHT_GRAY : Color.WHITE);
 
                 y += 14;
 
@@ -192,14 +192,14 @@ public class ClickGUIScreen extends GuiScreen {
                                 .color(hoverDisplayName ? new Color(42, 42, 42) : new Color(38, 38, 38))
                                 .draw();
                         if (moduleAnim > 0.5f) {
-                            sett.drawString("Display name", x + 5, y + 2.5f, -1);
+                            sett.drawString("Display name", x + 3, y + 2, -1);
 
                             float bX = x + panelWidth - 5;
                             Rectangle
                                     .create(bX - sett.getStringWidth(module.displayName) - 2, y + 2.5, sett.getStringWidth(module.displayName) + 4, 9)
                                     .color(new Color(45, 45, 45))
                                     .draw();
-                            sett.drawString(module.displayName, bX - sett.getStringWidth(module.displayName), y + 2, -1);
+                            sett.drawString(module.displayName, bX - sett.getStringWidth(module.displayName) - 0.5f, y + 1.5f, -1);
                         }
 
                         y += 14 * moduleAnim;
@@ -213,7 +213,7 @@ public class ClickGUIScreen extends GuiScreen {
                                 .draw();
 
                         if (moduleAnim > 0.5f) {
-                            sett.drawString("Keybind", x + 5, y + 2.5f, -1);
+                            sett.drawString("Keybind", x + 3, y + 2, -1);
 
                             String keyName = Keyboard.getKeyName(module.key);
                             float kbFade = getAnimationValue(module + "_kb_fade", (listeningModule != null && listeningModule.equals(module)) ? 1f : 0f, 200, Easing.LINEAR);
@@ -229,7 +229,7 @@ public class ClickGUIScreen extends GuiScreen {
                                     .create(bXKey - animatedKBWidth - 2, y + 2.5, animatedKBWidth + 4, 9)
                                     .color(new Color(45, 45, 45))
                                     .draw();
-                            sett.drawString(keyName, bXKey - animatedKBWidth, y + 2, ColorUtil.interpolateColor(Color.WHITE, Color.GRAY, kbFade));
+                            sett.drawString(keyName, bXKey - animatedKBWidth - 1, y + 2, ColorUtil.interpolateColor(Color.WHITE, Color.GRAY, kbFade));
                         }
 
                         y += 14 * moduleAnim;
@@ -242,7 +242,7 @@ public class ClickGUIScreen extends GuiScreen {
                                 .color(hoverHide ? new Color(42, 42, 42) : new Color(38, 38, 38))
                                 .draw();
                         if (moduleAnim > 0.5f) {
-                            sett.drawString("Hide on arraylist", x + 5, y + 2.5f, -1);
+                            sett.drawString("Hide on arraylist", x + 3, y + 2, -1);
 
                             boolean hidden = module.hideFromArraylist;
                             float hiddenAnim = getAnimationValue(module + "_hidden", hidden ? 1f : 0f, 200, Easing.EASE_OUT_QUAD);
@@ -267,7 +267,7 @@ public class ClickGUIScreen extends GuiScreen {
                             .color(hoverSave ? new Color(42, 42, 42) : new Color(38, 38, 38))
                             .draw();
                     if (moduleAnim > 0.5f) {
-                        sett.drawString("Save in config", x + 5, y + 2.5f, -1);
+                        sett.drawString("Save in config", x + 3, y + 2, -1);
 
                         boolean save = module.addToConfig;
                         float saveAnim = getAnimationValue(module + "_save", save ? 1f : 0f, 200, Easing.EASE_OUT_QUAD);
@@ -293,7 +293,7 @@ public class ClickGUIScreen extends GuiScreen {
                                 .color(hoverSuffix ? new Color(42, 42, 42) : new Color(38, 38, 38))
                                 .draw();
                         if (moduleAnim > 0.5f) {
-                            sett.drawString("Show suffix", x + 5, y + 2.5f, -1);
+                            sett.drawString("Show suffix", x + 3, y + 2, -1);
 
                             boolean suffix = module.addSuffix;
                             float suffixAnim = getAnimationValue(module + "_suffix", suffix ? 1f : 0f, 200, Easing.EASE_OUT_QUAD);
@@ -340,7 +340,7 @@ public class ClickGUIScreen extends GuiScreen {
                                             .color(ColorUtil.interpolateColor(Color.WHITE, color1, toggleAnim))
                                             .draw();
 
-                                    sett.drawString(setting.name, x + 5, y + 2.5f, -1);
+                                    sett.drawString(setting.name, x + 3, y + 2, -1);
                                 }
                                 y += 14 * moduleAnim;
                             } else if (setting instanceof NumberSetting) {
@@ -378,11 +378,11 @@ public class ClickGUIScreen extends GuiScreen {
                                             .color(Color.WHITE)
                                             .draw();
 
-                                    sett.drawString(setting.name, x + 5, y + 2.5f, -1);
+                                    sett.drawString(setting.name, x + 3, y + 2, -1);
 
                                     String format = "%." + slider.places + "f";
                                     String formattedValue = String.format(format, value) + slider.suffix;
-                                    sett.drawString(formattedValue, x + panelWidth - 5 - sett.getStringWidth(formattedValue), y + 1.5f, -1);
+                                    sett.drawString(formattedValue, x + panelWidth - 5 - sett.getStringWidth(formattedValue), y + 2, -1);
                                 }
 
                                 if (RenderUtil.hovered(mouseX, mouseY, x + 5, y, 112, 18) && Mouse.isButtonDown(0)) {
@@ -407,7 +407,7 @@ public class ClickGUIScreen extends GuiScreen {
                                         .draw();
 
                                 if (moduleAnim > 0.5f) {
-                                    sett.drawString(setting.name, x + 5, y + 1.5f, -1);
+                                    sett.drawString(setting.name, x + 3, y + 1, -1);
                                     float bX = x + panelWidth - 14;
 
                                     float targetW = sett.getStringWidth(selector.getValue());
@@ -422,9 +422,9 @@ public class ClickGUIScreen extends GuiScreen {
                                             .create(bX - animatedWidth - 2, y + 1.5f, animatedWidth + 4, 9 + (selector.allValues.length * 9 * settingAnim))
                                             .color(new Color(45, 45, 45))
                                             .draw();
-                                    sett.drawString(selector.getValue(), bX - sett.getStringWidth(selector.getValue()), y + 1.5f, -1);
+                                    sett.drawString(selector.getValue(), bX - sett.getStringWidth(selector.getValue()) - 0.5f, y + 1, -1);
 
-                                    sett.drawString(selector.expanded ? "-" : "+", bX + 4.5f, y + 1.5f, -1);
+                                    sett.drawString(selector.expanded ? "-" : "+", bX + 3.5f, y + 1, -1);
 
                                     if (settingAnim > 0.1f) {
                                         float yOffset = y + 8;
@@ -432,7 +432,7 @@ public class ClickGUIScreen extends GuiScreen {
                                             if (yOffset + 9 > y + settingHeight) break;
                                             boolean hoverMode = RenderUtil.hovered(mouseX, mouseY, bX - animatedWidth - 2, yOffset + 2.5f, animatedWidth + 4, 9);
                                             boolean enabledMode = selector.getValue().equals(mode);
-                                            sett.drawString(mode, bX - sett.getStringWidth(mode), yOffset + 2.5f, hoverMode ? enabledMode ? color1.darker() : Color.LIGHT_GRAY : enabledMode ? color1 : Color.WHITE);
+                                            sett.drawString(mode, bX - sett.getStringWidth(mode) - 0.5f, yOffset + 1, hoverMode ? enabledMode ? color1.darker() : Color.LIGHT_GRAY : enabledMode ? color1 : Color.WHITE);
                                             yOffset += 9;
                                         }
                                     }
@@ -450,7 +450,7 @@ public class ClickGUIScreen extends GuiScreen {
                                         .draw();
 
                                 if (moduleAnim > 0.5f) {
-                                    sett.drawString(setting.name, x + 5, y + 1.5f, -1);
+                                    sett.drawString(setting.name, x + 3, y + 1, -1);
                                     float bX = x + panelWidth - 14;
                                     String enabled = selector.getValue().length + " Enabled";
 
@@ -465,9 +465,9 @@ public class ClickGUIScreen extends GuiScreen {
                                             .create(bX - animatedWidth - 2, y + 1.5f, animatedWidth + 4, 9 + (selector.allValues.length * 9 * settingAnim))
                                             .color(new Color(45, 45, 45))
                                             .draw();
-                                    sett.drawString(enabled, bX - sett.getStringWidth(enabled), y + 1.5f, -1);
+                                    sett.drawString(enabled, bX - sett.getStringWidth(enabled) - 0.5f, y + 1, -1);
 
-                                    sett.drawString(selector.expanded ? "-" : "+", bX + 4.5f, y + 1.5f, -1);
+                                    sett.drawString(selector.expanded ? "-" : "+", bX + 4, y + 1, -1);
 
                                     if (settingAnim > 0.1f) {
                                         float yOffset = y + 8;
@@ -475,7 +475,7 @@ public class ClickGUIScreen extends GuiScreen {
                                             if (yOffset + 9 > y + settingHeight) break;
                                             boolean hoverMode = RenderUtil.hovered(mouseX, mouseY, bX - animatedWidth - 2, yOffset + 2.5f, animatedWidth + 4, 9);
                                             boolean enabledMode = selector.isEnabled(mode);
-                                            sett.drawString(mode, bX - sett.getStringWidth(mode), yOffset + 2.5f, hoverMode ? enabledMode ? color1.darker() : Color.LIGHT_GRAY : enabledMode ? color1 : Color.WHITE);
+                                            sett.drawString(mode, bX - sett.getStringWidth(mode) - 0.5f, yOffset + 1, hoverMode ? enabledMode ? color1.darker() : Color.LIGHT_GRAY : enabledMode ? color1 : Color.WHITE);
                                             yOffset += 9;
                                         }
                                     }

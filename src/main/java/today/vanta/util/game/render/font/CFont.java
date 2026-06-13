@@ -47,7 +47,7 @@ public class CFont {
         FontMetrics fontMetrics = g.getFontMetrics();
         int charHeight = 0;
         int positionX = 0;
-        int positionY = 1;
+        int positionY = 0;
         for (int i = 0; i < chars.length; i++) {
             char ch = (char) i;
             CharData charData = new CharData();
@@ -114,7 +114,6 @@ public class CFont {
         }
         return width / 2;
     }
-
 
     public Font getFont() {
         return this.font;

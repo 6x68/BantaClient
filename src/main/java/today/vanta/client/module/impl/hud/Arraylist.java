@@ -115,9 +115,12 @@ public class Arraylist extends Module {
         Color secondaryColor = Vanta.instance.moduleStorage.getT(Theme.class).colors[1];
         Color backgroundColor = new Color(0, 0, 0, backgroundAlpha.getValue().intValue());
 
+        enabledModules.removeIf(module -> module.hideFromArraylist);
+
         float y = yOffset.getValue().floatValue();
         for (int i = 0; i < enabledModules.size(); i++) {
             Module module = enabledModules.get(i);
+
             String name = getModuleName(module);
 
             float modWidth = arraylistFontRenderer.getStringWidth(name);

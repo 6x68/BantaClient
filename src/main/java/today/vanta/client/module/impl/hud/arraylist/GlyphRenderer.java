@@ -11,7 +11,7 @@ public class GlyphRenderer extends ArraylistRenderer {
 
     @Override
     public void drawString(String text, float x, float y, Color color, boolean shadow) {
-        super.drawString(text, x, y - 1, color, shadow);
+        super.drawString(text, x - 1, y - 1, color, shadow);
     }
 
     @Override
