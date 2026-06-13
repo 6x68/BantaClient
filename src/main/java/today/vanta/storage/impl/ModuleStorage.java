@@ -29,8 +29,8 @@ public class ModuleStorage extends Storage<Module> {
         changelog.add("[+] Added 'Spoof' item switch mode to Scaffold");
         changelog.add("[+] Added 'Color mode' option to Arraylist");
         changelog.add("[+] Added 'Font' option to Arraylist");
-        changelog.add("[+] Added 'Teleport' mode to Fly");
         changelog.add("[+] Added TargetHUD animations");
+        changelog.add("[+] Added 'Teleport' mode to Fly");
         changelog.add("[+] Added ClickGui animations");
         changelog.add("[+] Added more watermarks");
         changelog.add("[+] Added Crosshair module");
