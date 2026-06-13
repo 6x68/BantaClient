@@ -99,7 +99,7 @@ public class Speed extends Module {
                     }
                     if (offGroundTicks == 2) {
                         MovementUtil.strafe(0.33f);
-                        ChatUtil.send(ChatUtil.Prefix.INFO, String.valueOf(MovementUtil.getBPS()));
+//                        ChatUtil.send(ChatUtil.Prefix.INFO, String.valueOf(MovementUtil.getBPS()));
                     } else {
                         MovementUtil.strafe();
                     }
