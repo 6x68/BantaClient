@@ -2,12 +2,15 @@ package today.vanta.client.module.impl.player;
 
 import net.minecraft.block.BlockAir;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.play.client.C09PacketHeldItemChange;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
 import org.lwjgl.input.Keyboard;
 import today.vanta.Vanta;
 import today.vanta.client.event.impl.game.RunTickEvent;
+import today.vanta.client.event.impl.game.network.SendPacketEvent;
 import today.vanta.client.event.impl.game.player.MotionEvent;
 import today.vanta.client.event.impl.game.player.SprintEvent;
 import today.vanta.client.event.impl.game.world.UpdateEvent;
@@ -33,7 +36,7 @@ import java.util.Random;
 public class Scaffold extends Module {
     private final StringSetting
             rotationMode = Setting.of("Rotation mode", "Simple", "Simple", "Godbridge", "Static", "Forward"),
-            itemSwitchMode = Setting.of("Item spoof", "Switch", "Switch", "None"),
+            itemSwitchMode = Setting.of("Item spoof", "Switch", "Switch", "Spoof", "None"),
             towerMode = Setting.of("Tower mode", "Jump", "Jump", "Motion", "Low"),
             sprintMode = Setting.of("Sprint mode", "Manual", "None", "Always");
 
@@ -61,6 +64,7 @@ public class Scaffold extends Module {
 
     private Rotation lastRots, rots;
     private double posY;
+    private int lastSlot = -1;
 
     public Scaffold() {
         super("Scaffold", "Bridges for you.", Category.PLAYER);
@@ -110,7 +114,21 @@ public class Scaffold extends Module {
                 mc.gameSettings.keyBindSprint.pressed = true;
             }
 
-            if (mc.thePlayer.getHeldItem() == null) {
+            if (itemSwitchMode.getValue().equals("Spoof")) {
+                int blockSlot = -1;
+                for (int i = 0; i < 9; i++) {
+                    ItemStack stack = mc.thePlayer.inventory.getStackInSlot(i);
+                    if (stack != null && stack.getItem() instanceof ItemBlock && stack.stackSize > 0) {
+                        blockSlot = i;
+                        break;
+                    }
+                }
+
+                if (blockSlot != -1 && lastSlot != blockSlot) {
+                    lastSlot = blockSlot;
+                    sendPacket(new C09PacketHeldItemChange(blockSlot));
+                }
+            } else if (mc.thePlayer.getHeldItem() == null) {
                 switch (itemSwitchMode.getValue()) {
                     case "Switch":
                         InventoryUtil.switchToNextSlot();
@@ -201,12 +219,17 @@ public class Scaffold extends Module {
     }
 
     @EventListen
-    private void onMotion(MotionEvent event) {
-        if (mc.thePlayer.onGround) {
-            tick = 0;
-        } else {
-            tick++;
+    private void onPacket(SendPacketEvent event) {
+        if (itemSwitchMode.getValue().equals("Spoof") && event.packet instanceof C09PacketHeldItemChange) {
+            C09PacketHeldItemChange packet = (C09PacketHeldItemChange) event.packet;
+            if (packet.getSlotId() != lastSlot) {
+                event.cancelled = true;
+            }
         }
+    }
+
+    @EventListen
+    private void onMotion(MotionEvent event) {
         if (event.state.equals(EventState.PRE)) {
             if (sneak.getValue()) {
                 switch (sneakMode.getValue()) {
@@ -227,10 +250,14 @@ public class Scaffold extends Module {
                 }
             }
 
-            if (mc.thePlayer != null && mc.thePlayer.getHeldItem() != null && TargetProcessor.getInstance().cache != null) {
+            if (mc.thePlayer != null && TargetProcessor.getInstance().cache != null) {
                 ItemStack heldItemStack = mc.thePlayer.getHeldItem();
 
-                if (rots != null && heldItemStack != null) {
+                if (itemSwitchMode.getValue().equals("Spoof") && lastSlot != -1) {
+                    heldItemStack = mc.thePlayer.inventory.getStackInSlot(lastSlot);
+                }
+
+                if (rots != null && heldItemStack != null && heldItemStack.getItem() instanceof ItemBlock) {
                     if (mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, heldItemStack, TargetProcessor.getInstance().cache.pos, TargetProcessor.getInstance().cache.facing, new Vec3(TargetProcessor.getInstance().cache.pos))) {
                         mc.thePlayer.swingItem();
                     }
@@ -261,11 +288,16 @@ public class Scaffold extends Module {
         KeyBinding.setKeyBindState(mc.gameSettings.keyBindSprint.getKeyCode(), Keyboard.isKeyDown(mc.gameSettings.keyBindSprint.getKeyCode()));
         KeyBinding.setKeyBindState(mc.gameSettings.keyBindSneak.getKeyCode(), Keyboard.isKeyDown(mc.gameSettings.keyBindSneak.getKeyCode()));
 
+        if (itemSwitchMode.getValue().equals("Spoof") && lastSlot != -1 && lastSlot != mc.thePlayer.inventory.currentItem) {
+            sendPacket(new C09PacketHeldItemChange(mc.thePlayer.inventory.currentItem));
+        }
+
         distCounter.reset();
         unSneakCounter.reset();
 
         rots = null;
         lastRots = null;
+        lastSlot = -1;
     }
 
     @Override
@@ -281,11 +313,19 @@ public class Scaffold extends Module {
 
         lastRots = new Rotation(RotationUtil.getAdjustedYaw(), 80.7f);
         posY = mc.thePlayer.posY - 0.9;
+        lastSlot = -1;
 
-        switch (itemSwitchMode.getValue()) {
-            case "Switch":
-                InventoryUtil.switchToNextSlot();
-                break;
+        if (itemSwitchMode.getValue().equals("Spoof")) {
+            for (int i = 0; i < 9; i++) {
+                ItemStack stack = mc.thePlayer.inventory.getStackInSlot(i);
+                if (stack != null && stack.getItem() instanceof ItemBlock && stack.stackSize > 0) {
+                    lastSlot = i;
+                    sendPacket(new C09PacketHeldItemChange(i));
+                    break;
+                }
+            }
+        } else if (itemSwitchMode.getValue().equals("Switch")) {
+            InventoryUtil.switchToNextSlot();
         }
     }
 
