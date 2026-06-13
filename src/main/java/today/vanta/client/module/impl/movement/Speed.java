@@ -1,6 +1,10 @@
 package today.vanta.client.module.impl.movement;
 
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.network.play.server.S08PacketPlayerPosLook;
+import today.vanta.client.event.impl.game.network.ReceivePacketEvent;
 import today.vanta.client.event.impl.game.player.MotionEvent;
+import today.vanta.client.event.impl.game.render.Render2DEvent;
 import today.vanta.client.event.impl.game.world.UpdateEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
@@ -21,6 +25,9 @@ public class Speed extends Module {
     }
 
     private int offGroundTicks;
+    ScaledResolution sr = new ScaledResolution(mc);
+    private int tick;
+    private boolean flag;
 
     @EventListen
     private void onMotionEvent(MotionEvent event) {
@@ -32,7 +39,28 @@ public class Speed extends Module {
     }
 
     @EventListen
+    public void onRender2D(Render2DEvent event) {
+        if (flag) {
+            mc.fontRendererObj.drawString("Detected flag! Ticks left: "+ String.valueOf(60-tick),565, 400, 0xFFFFFF,true);
+        }
+    }
+
+    @EventListen
+    public void onPacket(ReceivePacketEvent event) {
+        if (event.packet instanceof S08PacketPlayerPosLook) {
+            flag = true;
+        }
+    }
+
+    @EventListen
     private void onUpdate(UpdateEvent event) {
+        if (flag) {
+            tick++;
+        }
+        if (tick > 60) {
+            tick = 0;
+            flag = false;
+        }
         if (MovementUtil.isMoving()) {
             mc.gameSettings.keyBindSprint.pressed = true;
 
@@ -85,6 +113,13 @@ public class Speed extends Module {
                     }
                     break;
                 case "Mospixel":
+                    if (flag && tick >= 60) {
+                        tick = 0;
+                        flag = false;
+                    }
+                    if (flag) {
+                        return;
+                    }
 //                    if (mc.thePlayer.onGround && !mc.gameSettings.keyBindJump.isKeyDown()) {
 //                        mc.thePlayer.jump();
 //                    }
@@ -128,6 +163,9 @@ public class Speed extends Module {
         mc.gameSettings.keyBindJump.pressed = false;
         mc.timer.timerSpeed = 1.0f;
         offGroundTicks = 0;
+        tick = 0;
+        flag = false;
+
     }
 
     @Override

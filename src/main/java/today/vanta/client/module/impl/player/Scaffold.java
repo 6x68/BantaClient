@@ -10,6 +10,7 @@ import today.vanta.Vanta;
 import today.vanta.client.event.impl.game.RunTickEvent;
 import today.vanta.client.event.impl.game.player.MotionEvent;
 import today.vanta.client.event.impl.game.player.SprintEvent;
+import today.vanta.client.event.impl.game.world.UpdateEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.module.impl.movement.Speed;
@@ -22,10 +23,7 @@ import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.events.EventPriority;
 import today.vanta.util.game.events.EventState;
-import today.vanta.util.game.player.DistanceCounter;
-import today.vanta.util.game.player.InventoryUtil;
-import today.vanta.util.game.player.MovementUtil;
-import today.vanta.util.game.player.RotationUtil;
+import today.vanta.util.game.player.*;
 import today.vanta.util.game.player.constructors.Rotation;
 import today.vanta.util.game.world.BlockCache;
 import today.vanta.util.system.math.Counter;
@@ -36,7 +34,7 @@ public class Scaffold extends Module {
     private final StringSetting
             rotationMode = Setting.of("Rotation mode", "Simple", "Simple", "Godbridge", "Static", "Forward"),
             itemSwitchMode = Setting.of("Item spoof", "Switch", "Switch", "None"),
-            towerMode = Setting.of("Tower mode", "Jump", "Jump", "Motion"),
+            towerMode = Setting.of("Tower mode", "Jump", "Jump", "Motion", "Low"),
             sprintMode = Setting.of("Sprint mode", "Manual", "None", "Always");
 
     private final BooleanSetting sneak = Setting.of("Sneak", false).hide(() -> rotationMode.getValue().equals("Godbridge"));
@@ -56,6 +54,8 @@ public class Scaffold extends Module {
 
     private final DistanceCounter distCounter = new DistanceCounter();
     private int targetDistance = 7;
+    private int tick;
+    private boolean cantick;
 
     private final Counter unSneakCounter = new Counter(), sneakCounter = new Counter();
 
@@ -88,6 +88,16 @@ public class Scaffold extends Module {
         });
     }
 
+    @EventListen
+    public void onTick(UpdateEvent event) {
+        if (!mc.thePlayer.onGround) {
+            tick++;
+            ChatUtil.send(ChatUtil.Prefix.INFO, String.valueOf(tick));
+        } else {
+            tick = 0;
+        }
+    }
+
     @EventListen(priority = EventPriority.HIGHEST)
     private void onRunTick(RunTickEvent event) {
         if (mc.thePlayer != null && event.state == EventState.PRE) {
@@ -111,9 +121,19 @@ public class Scaffold extends Module {
             if (!MovementUtil.isMoving() && mc.gameSettings.keyBindJump.isKeyDown() && !mc.gameSettings.keyBindJump.isPressed()) {
                 switch (towerMode.getValue()) {
                     case "Motion":
-                        mc.thePlayer.motionY = 0.42;
+                        mc.thePlayer.motionY = 0.5;
+                        break;
+                    case "Low":
+                        if (tick < 2) {
+                            mc.thePlayer.motionY = 0.4198499917984999;
+                        }
+                        if (tick > 3) {
+                            mc.thePlayer.motionY -= 0.06f;
+                            tick = 0;
+                        }
                         break;
                 }
+            } else {
             }
 
             if (rotationMode.getValue().equals("Godbridge")) {
@@ -182,6 +202,11 @@ public class Scaffold extends Module {
 
     @EventListen
     private void onMotion(MotionEvent event) {
+        if (mc.thePlayer.onGround) {
+            tick = 0;
+        } else {
+            tick++;
+        }
         if (event.state.equals(EventState.PRE)) {
             if (sneak.getValue()) {
                 switch (sneakMode.getValue()) {

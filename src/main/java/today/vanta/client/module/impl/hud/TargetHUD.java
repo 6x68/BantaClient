@@ -170,17 +170,17 @@ public class TargetHUD extends Module {
                 }
 
                 Rectangle
-                        .create(x + 2.5f, y + 36, width - 2.5f, 4f)
+                        .create(x , y + 36, width - 2.5f, 4f)
                         .color(DARKER_BACKGROUND)
                         .draw();
 
                 Rectangle
-                        .create(x + 2.5f, y + 36, ghostBarWidth, 4f)
+                        .create(x, y + 36, ghostBarWidth, 4f)
                         .color(color.darker())
                         .draw();
 
                 GradientRectangle
-                        .create(x + 2.5f, y + 36, barWidth, 4f)
+                        .create(x, y + 36, barWidth, 4f)
                         .firstColor(color2)
                         .secondColor(color)
                         .draw();

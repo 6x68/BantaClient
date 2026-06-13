@@ -14,7 +14,7 @@ import java.awt.*;
 
 public class Crosshair extends Module {
     private final NumberSetting length = Setting.of("Length", 7, 4, 10, 0);
-    private final NumberSetting width = Setting.of("Width", 0.5f, 0.5f, 2, 5);
+    private final NumberSetting width = Setting.of("Width", 0.5f, 0.5f, 2, 1);
     private final NumberSetting space = Setting.of("Static space", 5, 0, 15);
     private final NumberSetting spaceMove = Setting.of("Moving space", 7, 1, 16);
 
@@ -38,28 +38,30 @@ public class Crosshair extends Module {
         Color black = Color.BLACK;
         float y = (float) mc.displayHeight / 4;
         float x = (float) mc.displayWidth / 4;
-
+        float w = width.getValue().floatValue();
+        float wout = w + 1;
         if (MovementUtil.isMoving()) {
             spacing = spaceMove.getValue().intValue();
         }
 
+
         Rectangle
-                .create(x + spacing, y - 0.5f, length.getValue().doubleValue(), 1)
+                .create(x + spacing, y - (w / 2), length.getValue().doubleValue(), w)
                 .color(color)
                 .draw();
 
         Rectangle
-                .create(x - spacing - length.getValue().doubleValue(), y - 0.5f, length.getValue().doubleValue(), 1)
+                .create(x - spacing - length.getValue().doubleValue(), y - (w / 2), length.getValue().doubleValue(), w)
                 .color(color)
                 .draw();
 
         Rectangle
-                .create(x - 0.5f, y + spacing, 1, length.getValue().doubleValue())
+                .create(x - (w / 2), y + spacing, w, length.getValue().doubleValue())
                 .color(color)
                 .draw();
 
         Rectangle
-                .create(x - 0.5f, y - spacing - length.getValue().doubleValue(), 1, length.getValue().doubleValue())
+                .create(x - (w / 2), y - spacing - length.getValue().doubleValue(), w, length.getValue().doubleValue())
                 .color(color)
                 .draw();
     }
