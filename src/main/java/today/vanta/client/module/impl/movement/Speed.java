@@ -41,7 +41,7 @@ public class Speed extends Module {
     @EventListen
     private void onRender2D(Render2DEvent event) {
         if (flag) {
-            mc.fontRendererObj.drawString("Detected flag! Ticks left: "+ String.valueOf(60-tick),565, 400, 0xFFFFFF,true);
+            mc.fontRendererObj.drawString("Detected flag! Ticks left: " + (60 - tick), 565, 400, 0xFFFFFF, true);
         }
     }
 
@@ -57,11 +57,13 @@ public class Speed extends Module {
         if (flag) {
             tick++;
         }
+
         if (tick > 60) {
             tick = 0;
             flag = false;
         }
-        if (MovementUtil.isMoving()) {
+
+        if (MovementUtil.isMoving() && !mc.thePlayer.isInWater()) {
             mc.gameSettings.keyBindSprint.pressed = true;
 
             switch (mode.getValue()) {
@@ -165,7 +167,6 @@ public class Speed extends Module {
         offGroundTicks = 0;
         tick = 0;
         flag = false;
-
     }
 
     @Override
