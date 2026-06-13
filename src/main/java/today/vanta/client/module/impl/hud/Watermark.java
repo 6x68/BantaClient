@@ -1,6 +1,5 @@
 package today.vanta.client.module.impl.hud;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.EnumChatFormatting;
 import today.vanta.Vanta;
 import today.vanta.client.event.impl.game.render.Render2DEvent;
@@ -15,14 +14,13 @@ import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.events.EventPriority;
 import today.vanta.util.game.player.MovementUtil;
 import today.vanta.util.game.render.font.CFonts;
-import today.vanta.util.game.render.shape.impl.Rectangle;
 
 import java.awt.*;
 import java.util.Calendar;
 import java.util.Formatter;
 
 public class Watermark extends Module {
-    private final StringSetting style = Setting.of("Style", "Vanta", "Vanta", "Compact", "Jello", "Char", "Exhi", "Adjust"); //travis scott reference? // shut the fuck up!
+    private final StringSetting style = Setting.of("Style", "Vanta", "Vanta", "Jello", "Char", "Exhi", "Adjust");
     private final BooleanSetting mcfont = Setting.of("Vanilla font", true).hide(() -> !style.getValue().equals("Exhi"));
 
     public Watermark() {
