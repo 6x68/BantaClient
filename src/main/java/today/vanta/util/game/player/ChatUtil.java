@@ -1,11 +1,16 @@
 package today.vanta.util.game.player;
 
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
 import today.vanta.util.game.IMinecraft;
 
 import java.util.regex.Matcher;
 
 public class ChatUtil implements IMinecraft {
+    private static void addChatMessage(IChatComponent component, int line) {
+        mc.ingameGUI.getChatGUI().printChatMessageWithOptionalDeletion(component, line);
+    }
+
     public static void send(Prefix prefix, String message, Object... args) {
         for (Object arg : args) {
             message = message.replaceFirst("\\{}",
@@ -15,7 +20,7 @@ public class ChatUtil implements IMinecraft {
         message = prefix.prefix + message;
         message = message.replace('&', '§');
 
-        mc.thePlayer.addChatMessage(new ChatComponentText(message));
+        addChatMessage(new ChatComponentText(message), 1);
     }
 
     public static void info(String message, Object... args) {
