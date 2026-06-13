@@ -26,8 +26,10 @@ public class ModuleStorage extends Storage<Module> {
     public List<String> changelog = new ArrayList<>();
 
     public ModuleStorage() {
+        changelog.add("[+] Added 'Spoof' item switch mode to Scaffold");
         changelog.add("[+] Added 'Color mode' option to Arraylist");
         changelog.add("[+] Added 'Font' option to Arraylist");
+        changelog.add("[+] Added 'Teleport' mode to Fly");
         changelog.add("[+] Added TargetHUD animations");
         changelog.add("[+] Added ClickGui animations");
         changelog.add("[+] Added more watermarks");
@@ -37,6 +39,7 @@ public class ModuleStorage extends Storage<Module> {
         changelog.add("[+] Added Timer");
         changelog.add("[#] Rewrote MovementFix & rotations");
         changelog.add("[#] Fixed Arraylist height offsets");
+        changelog.add("[#] Fixed speed working in water");
         changelog.add("[#] Finished ImGui ClickGui");
         changelog.add("[#] Fixed auto-block");
     }
