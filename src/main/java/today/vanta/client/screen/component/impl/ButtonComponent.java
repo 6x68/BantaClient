@@ -10,6 +10,7 @@ import java.awt.*;
 
 public class ButtonComponent extends Component {
     private boolean onlyText = false;
+    boolean hashovered = false;
 
     public ButtonComponent(String text, float x, float y, float width, float height, GlyphFontRenderer font) {
         super(text, x, y, width, height, font);
@@ -31,6 +32,15 @@ public class ButtonComponent extends Component {
             font.drawYCenteredString(text, x + 3.5f, y + height / 2 - 2, Color.WHITE, false);
         } else {
             font.drawString(text, x, y - 2, hover ? Color.LIGHT_GRAY : Color.WHITE);
+        }
+
+        if (hashovered && !hover) {
+            hashovered = false;
+        }
+
+        if (hover && !hashovered) {
+            Sounds.HOVER.play();
+            hashovered = true;
         }
     }
 

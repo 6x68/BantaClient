@@ -10,5 +10,12 @@
     "sounds": [
       "nigger"
     ]
+  },
+
+  "hover": {
+    "category": "master",
+    "sounds": [
+      "hover"
+    ]
   }
 }
