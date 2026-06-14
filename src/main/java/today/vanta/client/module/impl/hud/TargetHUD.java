@@ -1,8 +1,10 @@
 package today.vanta.client.module.impl.hud;
 
 import net.minecraft.client.gui.GuiChat;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import org.lwjgl.input.Mouse;
 import today.vanta.Vanta;
@@ -16,6 +18,7 @@ import today.vanta.client.setting.impl.NumberSetting;
 import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.player.ChatUtil;
+import today.vanta.util.game.player.InventoryUtil;
 import today.vanta.util.game.render.RenderUtil;
 import today.vanta.util.game.render.font.CFonts;
 import today.vanta.util.game.render.shape.impl.GradientRectangle;
@@ -99,8 +102,8 @@ public class TargetHUD extends Module {
     private float targetWidth2 = width;
     private float adtargetWidth = width - 4f;
     private float adtargetWidth2 = width - 4f;
-    private float adghostBarWidth = width -4f;
-    private float adbarWidth = width -4f;
+    private float adghostBarWidth = width - 4f;
+    private float adbarWidth = width - 4f;
 
     private Animation animation;
     private Animation ghostAnimation;
@@ -170,7 +173,7 @@ public class TargetHUD extends Module {
                 }
 
                 Rectangle
-                        .create(x , y + 36, width - 2.5f, 4f)
+                        .create(x, y + 36, width - 2.5f, 4f)
                         .color(DARKER_BACKGROUND)
                         .draw();
 
@@ -230,16 +233,6 @@ public class TargetHUD extends Module {
                 height = 30;
                 float barrrrwidth = width - 4f;
 
-                Rectangle
-                        .create(x, y, width, height)
-                        .color(BACKGROUND)
-                        .draw();
-
-                RenderUtil.renderHead((EntityPlayer) localTarget, x + 2, y + 2, 20f);
-                CFonts.SFPT_REGULAR_16.drawStringWithShadow(localTarget.getName(), x + 24, y + 1, Color.WHITE);
-                float length = CFonts.SFPT_REGULAR_14.getStringWidth(String.format("%.1f", mc.thePlayer.getHealth() -  localTarget.getHealth()));
-                CFonts.SFPT_REGULAR_14.drawStringWithShadow(String.format("%.1f", mc.thePlayer.getHealth() -  localTarget.getHealth()), x + 98 - (length), y + 15, Color.WHITE);
-
                 float adhealthWidth = barrrrwidth * (localTarget.getHealth() / localTarget.getMaxHealth());
                 float adghostWidth = barrrrwidth * (localTarget.getHealth() / localTarget.getMaxHealth());
 
@@ -282,7 +275,18 @@ public class TargetHUD extends Module {
 
                     ghostAnimation.start();
                 }
+
                 float space = 24.5f;
+                float length = CFonts.SFPT_REGULAR_14.getStringWidth(String.format("%.1f", mc.thePlayer.getHealth() - localTarget.getHealth()));
+
+                Rectangle
+                        .create(x, y, width, height)
+                        .color(BACKGROUND)
+                        .draw();
+
+                RenderUtil.renderHead((EntityPlayer) localTarget, x + 2, y + 2, 20f);
+                CFonts.SFPT_REGULAR_16.drawStringWithShadow(localTarget.getName(), x + 24, y + 1, Color.WHITE);
+
                 Rectangle
                         .create(x + 2, y + space, width - 4, 3f)
                         .color(DARKER_BACKGROUND)
@@ -297,6 +301,40 @@ public class TargetHUD extends Module {
                         .create(x + 2, y + space, adbarWidth, 3f)
                         .color(color)
                         .draw();
+
+                float itemX = x + 20 + 2;
+                float itemY = y + 10;
+
+                ItemStack currentItem = ((EntityPlayer) localTarget).inventory.getCurrentItem();
+                if (currentItem != null) {
+                    renderScaledItem(currentItem, (int) itemX + 1, (int) itemY + 1, 0.65f);
+                }
+
+                ItemStack slot3 = ((EntityPlayer) localTarget).inventory.armorItemInSlot(3);
+                if (slot3 != null) {
+                    itemX += 10 + 1;
+                    renderScaledItem(slot3, (int) itemX, (int) itemY, 0.75f);
+                }
+
+                ItemStack slot2 = ((EntityPlayer) localTarget).inventory.armorItemInSlot(2);
+                if (slot2 != null) {
+                    itemX += 10 + 1;
+                    renderScaledItem(slot2, (int) itemX, (int) itemY, 0.75f);
+                }
+
+                ItemStack slot1 = ((EntityPlayer) localTarget).inventory.armorItemInSlot(1);
+                if (slot1 != null) {
+                    itemX += 10 + 1;
+                    renderScaledItem(slot1, (int) itemX, (int) itemY, 0.75f);
+                }
+
+                ItemStack slot0 = ((EntityPlayer) localTarget).inventory.armorItemInSlot(0);
+                if (slot0 != null) {
+                    itemX += 10 + 1;
+                    renderScaledItem(slot0, (int) itemX, (int) itemY, 0.75f);
+                }
+
+                CFonts.SFPT_REGULAR_14.drawStringWithShadow(String.format("%.1f", mc.thePlayer.getHealth() - localTarget.getHealth()), x + width - (length) - 3, y + 15, Color.WHITE);
                 break;
         }
 
@@ -307,5 +345,17 @@ public class TargetHUD extends Module {
                     .outline(true)
                     .draw();
         }
+    }
+
+    private void renderScaledItem(ItemStack stack, float x, float y, float scale) {
+        if (stack == null) return;
+
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(x, y, 0);
+        GlStateManager.scale(scale, scale, scale);
+
+        mc.renderItem.renderItemIntoGUIFullBright(stack, 0, 0);
+
+        GlStateManager.popMatrix();
     }
 }
