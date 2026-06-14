@@ -277,7 +277,7 @@ public class TargetHUD extends Module {
                 }
 
                 float space = 24.5f;
-                float length = CFonts.SFPT_REGULAR_14.getStringWidth(String.format("%.1f", mc.thePlayer.getHealth() - localTarget.getHealth()));
+                float length = CFonts.getFont("T-Regular", 14).getStringWidth(String.format("%.1f", mc.thePlayer.getHealth() - localTarget.getHealth()));
 
                 Rectangle
                         .create(x, y, width, height)
@@ -285,7 +285,7 @@ public class TargetHUD extends Module {
                         .draw();
 
                 RenderUtil.renderHead((EntityPlayer) localTarget, x + 2, y + 2, 20f);
-                CFonts.SFPT_REGULAR_16.drawStringWithShadow(localTarget.getName(), x + 24, y + 1, Color.WHITE);
+                CFonts.getFont("T-Regular", 16).drawStringWithShadow(localTarget.getName(), x + 24, y + 1, Color.WHITE);
 
                 Rectangle
                         .create(x + 2, y + space, width - 4, 3f)
@@ -302,11 +302,12 @@ public class TargetHUD extends Module {
                         .color(color)
                         .draw();
 
-                float itemX = x + 20 + 2;
+                float itemX = x + 10 + 2;
                 float itemY = y + 10;
 
                 ItemStack currentItem = ((EntityPlayer) localTarget).inventory.getCurrentItem();
                 if (currentItem != null) {
+                    itemX += 10 + 1;
                     renderScaledItem(currentItem, (int) itemX + 1, (int) itemY + 1, 0.65f);
                 }
 
@@ -334,7 +335,7 @@ public class TargetHUD extends Module {
                     renderScaledItem(slot0, (int) itemX, (int) itemY, 0.75f);
                 }
 
-                CFonts.SFPT_REGULAR_14.drawStringWithShadow(String.format("%.1f", mc.thePlayer.getHealth() - localTarget.getHealth()), x + width - (length) - 3, y + 15, Color.WHITE);
+                CFonts.getFont("T-Regular", 14).drawStringWithShadow(String.format("%.1f", mc.thePlayer.getHealth() - localTarget.getHealth()), x + width - (length) - 4, y + 15, Color.WHITE);
                 break;
         }
 

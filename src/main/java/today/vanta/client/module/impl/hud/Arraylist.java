@@ -34,10 +34,10 @@ public class Arraylist extends Module {
             yOffset = Setting.of("Y offset", 5, 0, 25);
 
     private final StringSetting
-            font = Setting.of("Font", "SFPT", "SFPT", "Minecraft", "Exhibition"),
-            fontStyle = Setting.of("Font style", "Medium", "Light", "Medium", "Semibold", "Bold", "Heavy", "Regular");
+            font = Setting.of("Font", "SFPT", "SFPT", "Tahoma", "Minecraft", "Exhibition"),
+            fontStyle = Setting.of("Font style", "Medium", "Light", "Medium", "Semibold", "Bold", "Heavy", "Regular").hide(() -> !font.getValue().equals("SFPT"));
 
-    private final NumberSetting fontSize = Setting.of("Font size", 24, 10, 42, "px").hide(() -> !font.getValue().equals("SFPT"));
+    private final NumberSetting fontSize = Setting.of("Font size", 24, 10, 42, "px").hide(() -> !font.getValue().equals("SFPT") && !font.getValue().equals("Tahoma"));
 
     private final BooleanSetting
             fontShadow = Setting.of("Font shadow", true),
@@ -77,6 +77,9 @@ public class Arraylist extends Module {
                 break;
             case "Minecraft":
                 arraylistFontRenderer = new BitMapRenderer(mc.fontRendererObj);
+                break;
+            case "Tahoma":
+                arraylistFontRenderer = new GlyphRenderer(CFonts.getFont("T-Regular", fontSize.getValue().intValue()));
                 break;
             default:
                 arraylistFontRenderer = new GlyphRenderer(CFonts.getFont("SFPT-" + fontStyle.getValue(), fontSize.getValue().intValue()));

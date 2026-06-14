@@ -2,8 +2,10 @@ package today.vanta.util.game.render.font;
 
 import today.vanta.util.game.render.font.impl.GlyphFontRenderer;
 
-import java.awt.*;
+import java.awt.Font;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -23,21 +25,7 @@ public class CFonts {
     public static GlyphFontRenderer SFPT_SEMIBOLD_42 = getFont("SFPT-Semibold", 42);
     public static GlyphFontRenderer SFPT_REGULAR_18 = getFont("SFPT-Regular", 18);
     public static GlyphFontRenderer SFPT_REGULAR_16 = getFont("SFPT-Regular", 16);
-    public static GlyphFontRenderer SFPT_REGULAR_15 = getFont("SFPT-Regular", 15);
     public static GlyphFontRenderer SFPT_REGULAR_14 = getFont("SFPT-Regular", 14);
-    public static GlyphFontRenderer SFPT_REGULAR_20 = getFont("SFPT-Regular", 20);
-    public static GlyphFontRenderer SFPT_REGULAR_24 = getFont("SFPT-Regular", 24);
-
-    // Ramadhan Karim
-    public static GlyphFontRenderer RK_REGULAR_50 = getFont("RK-Regular", 50);
-
-    // Creato-Display
-    //public static GlyphFontRenderer CD_REGULAR_20 = getFont("CD-Regular", 20);
-    //public static GlyphFontRenderer CD_MEDIUM_20 = getFont("CD-Medium", 20);
-    //public static GlyphFontRenderer CD_LIGHT_20 = getFont("CD-LIGHT", 20);
-
-    // Arial
-    //public static GlyphFontRenderer A_REGULAR_18 = getFont("A-REGULAR", 18);
 
     public static GlyphFontRenderer getFont(String fontName, float size) {
         String key = fontName + ":" + size;
@@ -50,11 +38,13 @@ public class CFonts {
 
     private static Font getAwtFont(String fontName, float size) {
         Font baseFont = FONT_CACHE.computeIfAbsent(fontName, name -> {
-            try (InputStream fontStream = CFonts.class.getResourceAsStream("/assets/vanta/fonts/" + name)) {
-                if (fontStream != null) {
-                    return Font.createFont(Font.TRUETYPE_FONT, fontStream);
+            for (String candidate : getFontCandidates(name)) {
+                try (InputStream in = CFonts.class.getResourceAsStream("/assets/vanta/fonts/" + candidate)) {
+                    if (in != null) {
+                        return Font.createFont(Font.TRUETYPE_FONT, in);
+                    }
+                } catch (Exception ignored) {
                 }
-            } catch (Exception ignored) {
             }
 
             return new Font("SansSerif", Font.PLAIN, 12);
@@ -75,5 +65,24 @@ public class CFonts {
         }
 
         return size;
+    }
+
+    private static List<String> getFontCandidates(String name) {
+        String lower = name.toLowerCase();
+
+        if (lower.endsWith(".ttf") || lower.endsWith(".otf")) {
+            String base = name.substring(0, name.length() - 4);
+
+            return Arrays.asList(
+                    name,
+                    lower.endsWith(".ttf") ? base + ".otf" : base + ".ttf"
+            );
+        }
+
+        return Arrays.asList(
+                name,
+                name + ".ttf",
+                name + ".otf"
+        );
     }
 }

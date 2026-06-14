@@ -73,7 +73,7 @@ public class Watermark extends Module {
                 break;
 
             case "Adjust":
-                CFonts.SFPT_MEDIUM_20.drawStringWithShadow("§r§l" + firstChar + "§f" + watermarkText, 2, 2, colors[0]);
+                CFonts.getFont("T-Regular", 20).drawStringWithShadow("§r" + firstChar + "§f" + watermarkText, 2, 2, colors[0]);
                 break;
         }
     }
