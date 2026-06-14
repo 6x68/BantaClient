@@ -37,7 +37,7 @@ public class KillAura extends Module {
             attackRange = Setting.of("Attack range", 3.4, 1, 6, 1, "m"),
             searchRange = Setting.of("Search range", 4.3, 1, 7, 1, "m");
 
-    public final MultiStringSetting entities = Setting.of("Entities", new String[]{"Players"}, new String[]{"Players", "Animals", "Monsters"});
+    public final MultiStringSetting entities = Setting.of("Entities", new String[]{"Players"}, new String[]{"Players", "Animals", "Mobs", "Miscellaneous"});
 
     private final NumberSetting
             maxCPS = Setting.of("Max CPS", 11, 1, 20),

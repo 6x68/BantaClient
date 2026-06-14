@@ -4,10 +4,14 @@ import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.ThreadDownloadImageData;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.*;
 import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityVillager;
+import net.minecraft.entity.passive.IAnimals;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.util.ResourceLocation;
 import today.vanta.Vanta;
 import today.vanta.client.processor.impl.TargetProcessor;
@@ -91,16 +95,16 @@ public class EntityUtil implements IMinecraft {
 
         boolean validType = false;
 
-        if (entity instanceof EntityPlayer && entities.isEnabled("Players")) {
-            validType = true;
-        }
+        if (entity instanceof EntityPlayer && entities.isEnabled("Players")) validType = true;
 
-        if ((entity instanceof EntityAnimal || entity instanceof EntityVillager) && entities.isEnabled("Animals")) {
-            validType = true;
-        }
+        else if (entity instanceof IAnimals && entities.isEnabled("Animals")) validType = true;
 
-        if (entity instanceof EntityMob && entities.isEnabled("Monsters")) {
-            validType = true;
+        else if (entity instanceof IMob && entities.isEnabled("Mobs")) validType = true;
+
+        else if (entities.isEnabled("Miscellaneous")) {
+            if (entity instanceof EntityArmorStand) {
+                validType = true;
+            }
         }
 
         return validType;

@@ -31,7 +31,6 @@ import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import today.vanta.client.event.impl.game.player.EntityMotionEvent;
-import today.vanta.client.event.impl.game.render.SwingAnimationEvent;
 import today.vanta.client.processor.impl.RotationProcessor;
 
 import java.util.*;
