@@ -26,6 +26,7 @@ public class ModuleStorage extends Storage<Module> {
     public List<String> changelog = new ArrayList<>();
 
     public ModuleStorage() {
+        changelog.add("[+] Added 'Smooth swing' & 'Swing speed' to Animations");
         changelog.add("[+] Added 'Spoof' item switch mode to Scaffold");
         changelog.add("[+] Added 'Color mode' option to Arraylist");
         changelog.add("[+] Added 'Font' option to Arraylist");
