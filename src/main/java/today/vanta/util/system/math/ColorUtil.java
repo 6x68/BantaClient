@@ -11,12 +11,12 @@ public class ColorUtil {
         return (int) (alpha * 255.0F) << 24 | color & 16777215;
     }
 
-    public static int randomPrettyColor() {
-        float hue = random.nextFloat();
-        float saturation = 0.8f;
-        float brightness = 1.0f;
-
-        return Color.HSBtoRGB(hue, saturation, brightness) & 0xFFFFFF;
+    public static int randomColor() {
+        return new Color(
+                random.nextInt(256),
+                random.nextInt(256),
+                random.nextInt(256)
+        ).getRGB() & 0xFFFFFF;
     }
 
     public static int getRainbow(int speed, int offset) {

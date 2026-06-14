@@ -23,7 +23,7 @@ public abstract class Module implements IMinecraft {
     public String displayName;
     public String[] displayNames;
 
-    public final Color color = new Color(ColorUtil.randomPrettyColor());
+    public final Color color = new Color(ColorUtil.randomColor());
 
     public boolean frozen; //When true, module is not toggleable.
 
