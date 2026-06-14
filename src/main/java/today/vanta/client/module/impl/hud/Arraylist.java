@@ -94,7 +94,7 @@ public class Arraylist extends Module {
 
     @EventListen
     private void onModEnable(ModuleEnableEvent event) {
-        if (!event.module.hideFromArraylist && !enabledModules.contains(event.module)) {
+        if (!enabledModules.contains(event.module)) {
             enabledModules.add(event.module);
         }
         resortModules();
@@ -111,20 +111,28 @@ public class Arraylist extends Module {
     private void onRender(Render2DEvent event) {
         if (enabledModules.isEmpty()) return;
 
+        List<Module> visibleModules = new ArrayList<>();
+
+        for (Module module : enabledModules) {
+            if (!module.hideFromArraylist) {
+                visibleModules.add(module);
+            }
+        }
+
+        if (visibleModules.isEmpty()) {
+            return;
+        }
+
         Color primaryColor = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
         Color secondaryColor = Vanta.instance.moduleStorage.getT(Theme.class).colors[1];
         Color backgroundColor = new Color(0, 0, 0, backgroundAlpha.getValue().intValue());
 
-        enabledModules.removeIf(module -> module.hideFromArraylist);
-
         float y = yOffset.getValue().floatValue();
-        for (int i = 0; i < enabledModules.size(); i++) {
-            Module module = enabledModules.get(i);
-
+        int counter = 0;
+        for (Module module : visibleModules) {
             String name = getModuleName(module);
 
             float modWidth = arraylistFontRenderer.getStringWidth(name);
-
             float x = event.scaledResolution.getScaledWidth() - modWidth - xOffset.getValue().floatValue() - 2.5f;
 
             Color color = primaryColor;
@@ -137,10 +145,10 @@ public class Arraylist extends Module {
                     color = module.color;
                     break;
                 case "Rainbow":
-                    color = new Color(ColorUtil.getRainbow(3000, (int) (i * 150L)));
+                    color = new Color(ColorUtil.getRainbow(3000, (int) (counter * 150L)));
                     break;
                 case "Fade":
-                    color = new Color(ColorUtil.fadeBetween(primaryColor.getRGB(), secondaryColor.getRGB(), i * 150L));
+                    color = new Color(ColorUtil.fadeBetween(primaryColor.getRGB(), secondaryColor.getRGB(), counter * 150L));
                     break;
             }
 
@@ -156,8 +164,8 @@ public class Arraylist extends Module {
                         .draw();
             }
 
-            boolean first = i == 0;
-            boolean last = i == enabledModules.size() - 1;
+            boolean first = counter == 0;
+            boolean last = counter == visibleModules.size() - 1;
 
             switch (line.getValue()) {
                 case "Top+right":
@@ -200,7 +208,10 @@ public class Arraylist extends Module {
                                 .draw();
                     } else {
                         // bottom for each middle module
-                        Module nextModule = enabledModules.get(i + 1);
+                        Module nextModule = last
+                                ? null
+                                : visibleModules.get(counter + 1);
+
                         String nextName = getModuleName(nextModule);
                         float nextModWidth = arraylistFontRenderer.getStringWidth(nextName);
                         float nextX = event.scaledResolution.getScaledWidth() - nextModWidth - 5;
@@ -251,6 +262,7 @@ public class Arraylist extends Module {
             arraylistFontRenderer.drawString(name, x, y + 0.5f, color, fontShadow.getValue());
 
             y += (background.getValue() || !line.getValue().equals("None")) ? arraylistFontRenderer.getBoxHeight() : arraylistFontRenderer.getFontHeight() + 2;
+            counter++;
         }
     }
 
