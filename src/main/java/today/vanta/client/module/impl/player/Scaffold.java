@@ -96,7 +96,6 @@ public class Scaffold extends Module {
     private void onTick(UpdateEvent event) {
         if (!mc.thePlayer.onGround) {
             tick++;
-            send("{}", tick);
         } else {
             tick = 0;
         }
