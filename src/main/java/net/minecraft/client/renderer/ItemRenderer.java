@@ -33,6 +33,7 @@ import net.optifine.shaders.Shaders;
 import org.lwjgl.opengl.GL11;
 import today.vanta.client.event.impl.game.render.BobArmEvent;
 import today.vanta.client.event.impl.game.render.PerformBlockEvent;
+import today.vanta.client.event.impl.game.render.RenderItemSwingEvent;
 
 public class ItemRenderer {
     private static final ResourceLocation RES_MAP_BACKGROUND = new ResourceLocation("textures/map/map_background.png");
@@ -220,7 +221,7 @@ public class ItemRenderer {
         GlStateManager.enableCull();
     }
 
-    private void doItemUsedTransformations(float swingProgress) {
+    public void doItemUsedTransformations(float swingProgress) {
         float f = -0.4F * MathHelper.sin(MathHelper.sqrt_float(swingProgress) * (float) Math.PI);
         float f1 = 0.2F * MathHelper.sin(MathHelper.sqrt_float(swingProgress) * (float) Math.PI * 2.0F);
         float f2 = -0.2F * MathHelper.sin(swingProgress * (float) Math.PI);
@@ -332,8 +333,13 @@ public class ItemRenderer {
                             this.doBowTransformations(partialTicks, abstractclientplayer);
                     }
                 } else {
-                    this.doItemUsedTransformations(f1);
-                    this.transformFirstPersonItem(f, f1);
+                    RenderItemSwingEvent renderItemSwingEvent = new RenderItemSwingEvent(this, partialTicks, f, f1);
+                    renderItemSwingEvent.call();
+
+                    if (!renderItemSwingEvent.cancelled) {
+                        this.doItemUsedTransformations(f1);
+                        this.transformFirstPersonItem(f, f1);
+                    }
                 }
 
                 this.renderItem(abstractclientplayer, this.itemToRender, ItemCameraTransforms.TransformType.FIRST_PERSON);

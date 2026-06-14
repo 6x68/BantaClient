@@ -2,11 +2,13 @@ package today.vanta.client.module.impl.render;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.potion.Potion;
 import net.minecraft.util.MathHelper;
 import org.lwjgl.opengl.GL11;
 import today.vanta.client.event.impl.game.player.MotionEvent;
 import today.vanta.client.event.impl.game.render.BobArmEvent;
 import today.vanta.client.event.impl.game.render.PerformBlockEvent;
+import today.vanta.client.event.impl.game.render.RenderItemSwingEvent;
 import today.vanta.client.event.impl.game.render.SwingAnimationEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
@@ -19,11 +21,12 @@ import today.vanta.util.game.events.EventState;
 
 public class Animations extends Module {
     private final StringSetting mode = Setting.of("Mode", "1.7", "1.7", "Interia", "Exhibition", "Exhibition Tilt", "Sigma", "Stella", "Smooth");
-    public final NumberSetting slow = Setting.of("Slowdown", 0,0,10,0);
+    private final NumberSetting swingSpeed = Setting.of("Swing speed", 1, 0.1, 3.0, 1);
 
     private final BooleanSetting
             noBob = Setting.of("German No-bob", false),
-            noSway = Setting.of("No hand sway", false);
+            noSway = Setting.of("No hand sway", false),
+            smoothSwing = Setting.of("Smooth swing", false);
 
     public Animations() {
         super("Animations", "Modifies Minecraft block animations.", Category.RENDER);
@@ -35,13 +38,22 @@ public class Animations extends Module {
     }
 
     @EventListen
-    private void onSwingAnimation(SwingAnimationEvent event) {
-        if (slow.getValue().intValue() == 0) {
-            event.cancelled = false;
-            return;
-        } else {
+    private void onItemSwing(RenderItemSwingEvent event) {
+        if (smoothSwing.getValue()) {
             event.cancelled = true;
+            event.renderer.doItemUsedTransformations(0);
+            event.renderer.transformFirstPersonItem(event.equippedProgress, event.swingProgress);
         }
+    }
+
+    @EventListen
+    private void onSwingAnimation(SwingAnimationEvent event) {
+        event.cancelled = true;
+        event.swingSpeed = mc.thePlayer.isPotionActive(Potion.digSpeed)
+                ? 6 - (1 + mc.thePlayer.getActivePotionEffect(Potion.digSpeed).getAmplifier())
+                : (int) ((mc.thePlayer.isPotionActive(Potion.digSlowdown)
+                          ? 6 + (1 + mc.thePlayer.getActivePotionEffect(Potion.digSlowdown).getAmplifier()) * 2
+                          : 6) * (1.0 / swingSpeed.getValue().doubleValue()));
     }
 
     @EventListen
@@ -111,5 +123,10 @@ public class Animations extends Module {
                 GlStateManager.rotate(var9 * 90.0f, 8.0f, 0.0f, 8.0f);
                 break;
         }
+    }
+
+    @Override
+    public String getSuffix() {
+        return mode.getValue();
     }
 }

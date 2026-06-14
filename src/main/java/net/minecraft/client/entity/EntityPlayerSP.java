@@ -26,6 +26,7 @@ import net.minecraft.util.*;
 import net.minecraft.world.IInteractionObject;
 import net.minecraft.world.World;
 import today.vanta.client.event.impl.game.player.*;
+import today.vanta.client.event.impl.game.render.SwingAnimationEvent;
 import today.vanta.client.event.impl.game.world.UpdateEvent;
 import today.vanta.util.game.events.EventState;
 
@@ -699,5 +700,17 @@ public class EntityPlayerSP extends AbstractClientPlayer {
         moveEvent.call();
 
         super.moveEntity(moveEvent.x, moveEvent.y, moveEvent.z);
+    }
+
+    @Override
+    public int getArmSwingAnimationEnd() {
+        SwingAnimationEvent event = new SwingAnimationEvent();
+        event.call();
+
+        if (event.cancelled) {
+            return event.swingSpeed;
+        }
+
+        return super.getArmSwingAnimationEnd();
     }
 }
