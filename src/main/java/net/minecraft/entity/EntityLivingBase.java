@@ -30,8 +30,13 @@ import net.minecraft.scoreboard.Team;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import today.vanta.Vanta;
 import today.vanta.client.event.impl.game.player.EntityMotionEvent;
+import today.vanta.client.event.impl.game.render.BobArmEvent;
+import today.vanta.client.event.impl.game.render.SwingAnimationEvent;
+import today.vanta.client.module.impl.render.Animations;
 import today.vanta.client.processor.impl.RotationProcessor;
+import today.vanta.util.game.player.ChatUtil;
 
 import java.util.*;
 
@@ -906,7 +911,16 @@ public abstract class EntityLivingBase extends Entity {
     }
 
     private int getArmSwingAnimationEnd() {
-        return this.isPotionActive(Potion.digSpeed) ? 6 - (1 + this.getActivePotionEffect(Potion.digSpeed).getAmplifier()) : (this.isPotionActive(Potion.digSlowdown) ? 6 + (1 + this.getActivePotionEffect(Potion.digSlowdown).getAmplifier()) * 2 : 6);
+        BobArmEvent event = new BobArmEvent();
+        event.call();
+        if (event.cancelled) {
+            ChatUtil.send(ChatUtil.Prefix.INFO, "not");
+            return 6 + Vanta.instance.moduleStorage.getT(Animations.class).slow.getValue().intValue();
+        } else {
+//            return this.isPotionActive(Potion.digSpeed) ? 6 - (1 + this.getActivePotionEffect(Potion.digSpeed).getAmplifier()) : (this.isPotionActive(Potion.digSlowdown) ? 6 + (1 + this.getActivePotionEffect(Potion.digSlowdown).getAmplifier()) * 2 : 6);
+            return 6 + Vanta.instance.moduleStorage.getT(Animations.class).slow.getValue().intValue();
+        }
+
     }
 
     public void swingItem() {

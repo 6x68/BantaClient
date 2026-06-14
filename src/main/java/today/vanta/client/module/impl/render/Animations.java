@@ -7,16 +7,19 @@ import org.lwjgl.opengl.GL11;
 import today.vanta.client.event.impl.game.player.MotionEvent;
 import today.vanta.client.event.impl.game.render.BobArmEvent;
 import today.vanta.client.event.impl.game.render.PerformBlockEvent;
+import today.vanta.client.event.impl.game.render.SwingAnimationEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.BooleanSetting;
+import today.vanta.client.setting.impl.NumberSetting;
 import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.events.EventState;
 
 public class Animations extends Module {
     private final StringSetting mode = Setting.of("Mode", "1.7", "1.7", "Interia", "Exhibition", "Exhibition Tilt", "Sigma", "Stella", "Smooth");
+    public final NumberSetting slow = Setting.of("Slowdown", 0,0,10,0);
 
     private final BooleanSetting
             noBob = Setting.of("German No-bob", false),
@@ -29,6 +32,16 @@ public class Animations extends Module {
     @EventListen
     private void onBob(BobArmEvent event) {
         event.cancelled = noSway.getValue();
+    }
+
+    @EventListen
+    private void onSwingAnimation(SwingAnimationEvent event) {
+        if (slow.getValue().intValue() == 0) {
+            event.cancelled = false;
+            return;
+        } else {
+            event.cancelled = true;
+        }
     }
 
     @EventListen
