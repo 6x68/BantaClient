@@ -117,7 +117,7 @@ public class ImGuiClickGUIScreen extends GuiScreen implements IClient {
                             }
                         }
 
-                        if (!currentModule.frozen && !currentModule.category.equals(Category.CLIENT)) {
+                        if (!currentModule.frozen) {
                             if (ImGui.button("Hide on arraylist: " + (currentModule.hideFromArraylist ? "enabled" : "disabled"), fullWidth, 20)) {
                                 currentModule.hideFromArraylist = !currentModule.hideFromArraylist;
                             }

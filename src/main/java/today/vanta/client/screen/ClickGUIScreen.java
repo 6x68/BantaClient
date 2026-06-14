@@ -127,7 +127,7 @@ public class ClickGUIScreen extends GuiScreen {
                     moduleContentHeight += 14;
                 if (!module.frozen)
                     moduleContentHeight += 14;
-                if (!module.frozen && !module.category.equals(Category.CLIENT))
+                if (!module.frozen)
                     moduleContentHeight += 14;
                 moduleContentHeight += 14;
                 if (module.getSuffix() != null && !module.hideFromArraylist)
@@ -235,7 +235,7 @@ public class ClickGUIScreen extends GuiScreen {
                         y += 14 * moduleAnim;
                     }
 
-                    if (!module.frozen && !module.category.equals(Category.CLIENT)) {
+                    if (!module.frozen) {
                         boolean hoverHide = RenderUtil.hovered(mouseX, mouseY, x + 1.5f, y, panelWidth - 3, 14 * moduleAnim);
                         Rectangle
                                 .create(x + 1.5f, y, panelWidth - 3, 14 * moduleAnim)
@@ -546,7 +546,7 @@ public class ClickGUIScreen extends GuiScreen {
                         y += 14 * moduleAnim;
                     }
 
-                    if (!module.frozen && !module.category.equals(Category.CLIENT)) {
+                    if (!module.frozen) {
                         float bXHidden = x + panelWidth - 5;
                         boolean hoverHide = RenderUtil.hovered(mouseX, mouseY, bXHidden - 17, y + 3.5f, 17, 7);
                         if (hoverHide && mouseButton == 0) {
