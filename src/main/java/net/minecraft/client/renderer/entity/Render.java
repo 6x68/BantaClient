@@ -2,6 +2,7 @@ package net.minecraft.client.renderer.entity;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import today.vanta.client.event.impl.game.render.RenderNametagsEvent;
 import today.vanta.util.game.render.font.impl.BitMapFontRenderer;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.GlStateManager;
@@ -58,6 +59,13 @@ public abstract class Render<T extends Entity> implements IEntityRenderer {
     }
 
     protected void renderOffsetLivingLabel(T entityIn, double x, double y, double z, String str, float p_177069_9_, double p_177069_10_) {
+        RenderNametagsEvent event = new RenderNametagsEvent(entityIn, x, y, z);
+        event.call();
+
+        if (event.cancelled) {
+            return;
+        }
+
         this.renderLivingLabel(entityIn, str, x, y, z, 64);
     }
 

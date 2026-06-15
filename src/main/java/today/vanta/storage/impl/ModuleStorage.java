@@ -37,6 +37,7 @@ public class ModuleStorage extends Storage<Module> {
         changelog.add("[+] Added Crosshair module");
         changelog.add("[+] Added more themes");
         changelog.add("[+] Added AutoDisable");
+        changelog.add("[+] Added Nametags");
         changelog.add("[+] Added Timer");
         changelog.add("[#] Rewrote MovementFix & rotations");
         changelog.add("[#] Fixed Arraylist height offsets");
@@ -79,6 +80,7 @@ public class ModuleStorage extends Storage<Module> {
         list.add(new ESP());
         list.add(new Ambience());
         list.add(new Animations());
+        list.add(new Nametags());
 
         // Misc
         list.add(new Disabler());
