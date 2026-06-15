@@ -41,9 +41,9 @@ public class RenderItem implements IResourceManagerReloadListener {
     private boolean notRenderingEffectsInGUI = true;
     public float zLevel;
     private final ItemModelMesher itemModelMesher;
-    private final TextureManager textureManager;
+    public final TextureManager textureManager;
     private ModelResourceLocation modelLocation = null;
-    private boolean renderItemGui = false;
+    public boolean renderItemGui = false;
     public ModelManager modelManager = null;
     private boolean renderModelHasEmissive = false;
     private boolean renderModelEmissive = false;
@@ -376,37 +376,6 @@ public class RenderItem implements IResourceManagerReloadListener {
             ibakedmodel.getItemCameraTransforms().applyTransform(ItemCameraTransforms.TransformType.GUI);
         }
 
-        this.renderItem(stack, ibakedmodel);
-        GlStateManager.disableAlpha();
-        GlStateManager.disableRescaleNormal();
-        GlStateManager.disableLighting();
-        GlStateManager.popMatrix();
-        this.textureManager.bindTexture(TextureMap.locationBlocksTexture);
-        this.textureManager.getTexture(TextureMap.locationBlocksTexture).restoreLastBlurMipmap();
-        this.renderItemGui = false;
-    }
-
-    public void renderItemIntoGUIFullBright(ItemStack stack, int x, int y) {
-        this.renderItemGui = true;
-        IBakedModel ibakedmodel = this.itemModelMesher.getItemModel(stack);
-        GlStateManager.pushMatrix();
-        this.textureManager.bindTexture(TextureMap.locationBlocksTexture);
-        this.textureManager.getTexture(TextureMap.locationBlocksTexture).setBlurMipmap(false, false);
-        GlStateManager.enableRescaleNormal();
-        GlStateManager.enableAlpha();
-        GlStateManager.alphaFunc(516, 0.1F);
-        GlStateManager.enableBlend();
-        GlStateManager.blendFunc(770, 771);
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        this.setupGuiTransform(x, y, ibakedmodel.isGui3d());
-
-        if (Reflector.ForgeHooksClient_handleCameraTransforms.exists()) {
-            ibakedmodel = (IBakedModel) Reflector.call(Reflector.ForgeHooksClient_handleCameraTransforms, new Object[]{ibakedmodel, ItemCameraTransforms.TransformType.GUI});
-        } else {
-            ibakedmodel.getItemCameraTransforms().applyTransform(ItemCameraTransforms.TransformType.GUI);
-        }
-
-        GlStateManager.disableLighting();
         this.renderItem(stack, ibakedmodel);
         GlStateManager.disableAlpha();
         GlStateManager.disableRescaleNormal();

@@ -81,7 +81,7 @@ public class BlockCounter extends Module {
 
     private void draw() {
         Color color = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
-        int blocksinHotbar = InventoryUtil.getHotbarBlockCount();
+        int blocks = InventoryUtil.getHotbarBlockCount();
 
         float x = this.x.getValue().floatValue();
         float y = this.y.getValue().floatValue();
@@ -91,20 +91,10 @@ public class BlockCounter extends Module {
                 .color(BACKGROUND)
                 .draw();
 
-        double scale = 2.4;
-
-        double itemX = x;
-        double itemY = y - 0.5;
-
-        GL11.glPushMatrix();
-        GL11.glTranslated(itemX, itemY, 0);
-        GL11.glScaled(scale, scale, 1.0);
-        GL11.glTranslated(-itemX, -itemY, 0);
-        mc.renderItem.renderItemIntoGUIFullBright(InventoryUtil.getBestBlockStack(), (int) x, (int) y);
-        GL11.glPopMatrix();
+        RenderUtil.renderScaledItem(InventoryUtil.getBestBlockStack(), x, y + 0.5f, 2.4f);
 
         CFonts.SFPT_SEMIBOLD_20.drawStringWithShadow("Blocks", x + 38, y + 4, color);
-        CFonts.SFPT_SEMIBOLD_20.drawStringWithShadow(String.valueOf(blocksinHotbar), x + 38, y + 15, Color.WHITE);
+        CFonts.SFPT_SEMIBOLD_20.drawStringWithShadow(String.valueOf(blocks), x + 38, y + 15, Color.WHITE);
 
         if (dragging && mc.currentScreen instanceof GuiChat) {
             Rectangle

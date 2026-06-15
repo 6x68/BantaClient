@@ -5,10 +5,16 @@ import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.optifine.reflect.Reflector;
 import org.lwjgl.opengl.GL11;
 import today.vanta.Vanta;
+import today.vanta.util.game.IMinecraft;
 import today.vanta.util.game.render.shape.impl.ImageRectangle;
 
 import javax.imageio.ImageIO;
@@ -123,6 +129,67 @@ public class RenderUtil {
         } catch (Exception e) {
             Vanta.instance.logger.error("Failed to create an image from base64.");
             return null;
+        }
+    }
+
+    public static void renderScaledItem(ItemStack stack, float x, float y, float scale) {
+        if (stack == null) return;
+
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(x, y, 0);
+        GlStateManager.scale(scale, scale, scale);
+
+        renderItemIntoGUIFullBright(stack, 0, 0);
+
+        GlStateManager.popMatrix();
+    }
+
+    public static void renderItemIntoGUIFullBright(ItemStack stack, float x, float y) {
+        mc.renderItem.renderItemGui = true;
+        IBakedModel ibakedmodel = mc.renderItem.getItemModelMesher().getItemModel(stack);
+        GlStateManager.pushMatrix();
+        mc.renderItem.textureManager.bindTexture(TextureMap.locationBlocksTexture);
+        mc.renderItem.textureManager.getTexture(TextureMap.locationBlocksTexture).setBlurMipmap(false, false);
+        GlStateManager.enableRescaleNormal();
+        GlStateManager.enableAlpha();
+        GlStateManager.alphaFunc(516, 0.1F);
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(770, 771);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        setupGuiTransform(x, y, ibakedmodel.isGui3d());
+
+        if (Reflector.ForgeHooksClient_handleCameraTransforms.exists()) {
+            ibakedmodel = (IBakedModel) Reflector.call(Reflector.ForgeHooksClient_handleCameraTransforms, new Object[]{ibakedmodel, ItemCameraTransforms.TransformType.GUI});
+        } else {
+            ibakedmodel.getItemCameraTransforms().applyTransform(ItemCameraTransforms.TransformType.GUI);
+        }
+
+        GlStateManager.disableLighting();
+        mc.renderItem.renderItem(stack, ibakedmodel);
+        GlStateManager.disableAlpha();
+        GlStateManager.disableRescaleNormal();
+        GlStateManager.disableLighting();
+        GlStateManager.popMatrix();
+        mc.renderItem.textureManager.bindTexture(TextureMap.locationBlocksTexture);
+        mc.renderItem.textureManager.getTexture(TextureMap.locationBlocksTexture).restoreLastBlurMipmap();
+        mc.renderItem.renderItemGui = false;
+    }
+
+    private static void setupGuiTransform(float xPosition, float yPosition, boolean isGui3d) {
+        GlStateManager.translate(xPosition, yPosition, 100.0F + mc.renderItem.zLevel);
+        GlStateManager.translate(8.0F, 8.0F, 0.0F);
+        GlStateManager.scale(1.0F, 1.0F, -1.0F);
+        GlStateManager.scale(0.5F, 0.5F, 0.5F);
+
+        if (isGui3d) {
+            GlStateManager.scale(40.0F, 40.0F, 40.0F);
+            GlStateManager.rotate(210.0F, 1.0F, 0.0F, 0.0F);
+            GlStateManager.rotate(-135.0F, 0.0F, 1.0F, 0.0F);
+            GlStateManager.enableLighting();
+        } else {
+            GlStateManager.scale(64.0F, 64.0F, 64.0F);
+            GlStateManager.rotate(180.0F, 1.0F, 0.0F, 0.0F);
+            GlStateManager.disableLighting();
         }
     }
 }

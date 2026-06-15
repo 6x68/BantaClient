@@ -1,11 +1,9 @@
 package today.vanta.client.module.impl.hud;
 
 import net.minecraft.client.gui.GuiChat;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemSword;
 import org.lwjgl.input.Mouse;
 import today.vanta.Vanta;
 import today.vanta.client.event.impl.game.render.DrawScreenEvent;
@@ -17,8 +15,6 @@ import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.NumberSetting;
 import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.events.EventListen;
-import today.vanta.util.game.player.ChatUtil;
-import today.vanta.util.game.player.InventoryUtil;
 import today.vanta.util.game.render.RenderUtil;
 import today.vanta.util.game.render.font.CFonts;
 import today.vanta.util.game.render.shape.impl.GradientRectangle;
@@ -27,7 +23,6 @@ import today.vanta.util.system.math.animation.Animation;
 import today.vanta.util.system.math.animation.Easing;
 
 import java.awt.*;
-import java.util.Arrays;
 
 public class TargetHUD extends Module {
     private static final Color BACKGROUND = new Color(20, 20, 20, 200);
@@ -308,31 +303,31 @@ public class TargetHUD extends Module {
                 ItemStack currentItem = ((EntityPlayer) localTarget).inventory.getCurrentItem();
                 if (currentItem != null) {
                     itemX += 10 + 1;
-                    renderScaledItem(currentItem, (int) itemX + 1, (int) itemY + 1, 0.65f);
+                    RenderUtil.renderScaledItem(currentItem, itemX + 1, itemY + 1, 0.65f);
                 }
 
                 ItemStack slot3 = ((EntityPlayer) localTarget).inventory.armorItemInSlot(3);
                 if (slot3 != null) {
                     itemX += 10 + 1;
-                    renderScaledItem(slot3, (int) itemX, (int) itemY, 0.75f);
+                    RenderUtil.renderScaledItem(slot3, itemX, itemY, 0.75f);
                 }
 
                 ItemStack slot2 = ((EntityPlayer) localTarget).inventory.armorItemInSlot(2);
                 if (slot2 != null) {
                     itemX += 10 + 1;
-                    renderScaledItem(slot2, (int) itemX, (int) itemY, 0.75f);
+                    RenderUtil.renderScaledItem(slot2, itemX, itemY, 0.75f);
                 }
 
                 ItemStack slot1 = ((EntityPlayer) localTarget).inventory.armorItemInSlot(1);
                 if (slot1 != null) {
                     itemX += 10 + 1;
-                    renderScaledItem(slot1, (int) itemX, (int) itemY, 0.75f);
+                    RenderUtil.renderScaledItem(slot1, itemX, itemY, 0.75f);
                 }
 
                 ItemStack slot0 = ((EntityPlayer) localTarget).inventory.armorItemInSlot(0);
                 if (slot0 != null) {
                     itemX += 10 + 1;
-                    renderScaledItem(slot0, (int) itemX, (int) itemY, 0.75f);
+                    RenderUtil.renderScaledItem(slot0, itemX, itemY, 0.75f);
                 }
 
                 CFonts.getFont("T-Regular", 14).drawStringWithShadow(String.format("%.1f", mc.thePlayer.getHealth() - localTarget.getHealth()), x + width - (length) - 4, y + 15, Color.WHITE);
@@ -346,17 +341,5 @@ public class TargetHUD extends Module {
                     .outline(true)
                     .draw();
         }
-    }
-
-    private void renderScaledItem(ItemStack stack, float x, float y, float scale) {
-        if (stack == null) return;
-
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(x, y, 0);
-        GlStateManager.scale(scale, scale, scale);
-
-        mc.renderItem.renderItemIntoGUIFullBright(stack, 0, 0);
-
-        GlStateManager.popMatrix();
     }
 }
