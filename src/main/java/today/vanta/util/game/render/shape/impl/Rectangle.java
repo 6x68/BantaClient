@@ -1,11 +1,10 @@
 package today.vanta.util.game.render.shape.impl;
 
-import com.sun.istack.internal.NotNull;
 import org.lwjgl.opengl.GL11;
-import today.vanta.util.game.render.shape.GradientMode;
 import today.vanta.util.game.render.RenderUtil;
 import today.vanta.util.game.render.shape.Shape;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -27,7 +26,7 @@ public class Rectangle extends Shape {
         return new Rectangle(x, y, width, height);
     }
 
-    public Rectangle color(@NotNull Color color) {
+    public Rectangle color(@Nonnull Color color) {
         this.color = color;
         return this;
     }

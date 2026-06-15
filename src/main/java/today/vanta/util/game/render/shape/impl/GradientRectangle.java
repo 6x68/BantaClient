@@ -1,11 +1,11 @@
 package today.vanta.util.game.render.shape.impl;
 
-import com.sun.istack.internal.NotNull;
 import org.lwjgl.opengl.GL11;
 import today.vanta.util.game.render.RenderUtil;
 import today.vanta.util.game.render.shape.GradientMode;
 import today.vanta.util.game.render.shape.Shape;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 
 import static org.lwjgl.opengl.GL11.GL_LINE_LOOP;
@@ -30,17 +30,17 @@ public class GradientRectangle extends Shape {
         return new GradientRectangle(x, y, width, height);
     }
 
-    public GradientRectangle firstColor(@NotNull Color firstColor) {
+    public GradientRectangle firstColor(@Nonnull Color firstColor) {
         this.firstColor = firstColor;
         return this;
     }
 
-    public GradientRectangle secondColor(@NotNull Color secondColor) {
+    public GradientRectangle secondColor(@Nonnull Color secondColor) {
         this.secondColor = secondColor;
         return this;
     }
 
-    public GradientRectangle gradientMode(@NotNull GradientMode gradientMode) {
+    public GradientRectangle gradientMode(@Nonnull GradientMode gradientMode) {
         this.gradientMode = gradientMode;
         return this;
     }

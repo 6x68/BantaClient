@@ -1,8 +1,6 @@
 package today.vanta.util.game.render.shape.impl;
 
-import com.sun.istack.internal.NotNull;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.util.ResourceLocation;
@@ -10,6 +8,7 @@ import org.lwjgl.opengl.GL11;
 import today.vanta.util.game.render.RenderUtil;
 import today.vanta.util.game.render.shape.Shape;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 
 public class ImageRectangle extends Shape {
@@ -54,7 +53,7 @@ public class ImageRectangle extends Shape {
         return this;
     }
 
-    public ImageRectangle color(@NotNull Color color) {
+    public ImageRectangle color(@Nonnull Color color) {
         this.color = color;
         return this;
     }

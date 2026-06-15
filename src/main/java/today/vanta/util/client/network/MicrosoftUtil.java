@@ -1,7 +1,6 @@
 package today.vanta.util.client.network;
 
 import com.google.gson.*;
-import com.sun.istack.internal.NotNull;
 import com.sun.net.httpserver.HttpServer;
 import net.minecraft.util.Session;
 import org.apache.commons.io.IOUtils;
@@ -20,6 +19,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+
+import javax.annotation.Nonnull;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.net.URI;
@@ -188,7 +189,7 @@ public final class MicrosoftUtil {
         }, executor);
     }
 
-    @NotNull
+    @Nonnull
     private static JsonObject getEntity(String accessToken) {
         final JsonObject entity = new JsonObject();
         final JsonObject properties = new JsonObject();
