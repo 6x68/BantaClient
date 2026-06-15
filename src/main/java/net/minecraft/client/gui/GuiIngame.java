@@ -460,7 +460,7 @@ public class GuiIngame extends Gui {
         int i1 = collection.size() * this.getFontRenderer().FONT_HEIGHT;
         int j1 = scaledRes.getScaledHeight() / 2 + i1 / 3;
         int k1 = 3;
-        int l1 = scaledRes.getScaledWidth() - i - k1;
+        int l1 = scaledRes.getScaledWidth() / 11 - i - k1;
         int j = 0;
 
         for (Score score1 : collection) {
@@ -469,7 +469,7 @@ public class GuiIngame extends Gui {
             String s1 = ScorePlayerTeam.formatPlayerName(scoreplayerteam1, score1.getPlayerName());
             String s2 = EnumChatFormatting.RED + "" + score1.getScorePoints();
             int k = j1 - j * this.getFontRenderer().FONT_HEIGHT;
-            int l = scaledRes.getScaledWidth() - k1 + 2;
+            int l = scaledRes.getScaledWidth() / 11 - k1 + 2;
             drawRect(l1 - 2, k, l, k + this.getFontRenderer().FONT_HEIGHT, 1342177280);
             this.getFontRenderer().drawString(s1, l1, k, 553648127);
             this.getFontRenderer().drawString(s2, l - this.getFontRenderer().getStringWidth(s2), k, 553648127);
