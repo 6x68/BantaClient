@@ -26,24 +26,8 @@ public class ModuleStorage extends Storage<Module> {
     public List<String> changelog = new ArrayList<>();
 
     public ModuleStorage() {
-        changelog.add("[+] Added 'Smooth swing' & 'Swing speed' to Animations");
-        changelog.add("[+] Added 'Spoof' item switch mode to Scaffold");
-        changelog.add("[+] Added 'Color mode' option to Arraylist");
-        changelog.add("[+] Added 'Font' option to Arraylist");
-        changelog.add("[+] Added TargetHUD animations");
-        changelog.add("[+] Added 'Teleport' mode to Fly");
-        changelog.add("[+] Added ClickGui animations");
-        changelog.add("[+] Added more watermarks");
-        changelog.add("[+] Added Crosshair module");
-        changelog.add("[+] Added more themes");
-        changelog.add("[+] Added AutoDisable");
-        changelog.add("[+] Added Nametags");
-        changelog.add("[+] Added Timer");
-        changelog.add("[#] Rewrote MovementFix & rotations");
-        changelog.add("[#] Fixed Arraylist height offsets");
-        changelog.add("[#] Fixed speed working in water");
-        changelog.add("[#] Finished ImGui ClickGui");
-        changelog.add("[#] Fixed auto-block");
+        changelog.add("[+] Added 'Custom' speed mode");
+        changelog.add("[+] Added Jesus");
     }
 
     @Override
