@@ -199,7 +199,7 @@ public class ClickGUIScreen extends GuiScreen {
                                     .create(bX - sett.getStringWidth(module.displayName) - 2, y + 2.5, sett.getStringWidth(module.displayName) + 4, 9)
                                     .color(new Color(45, 45, 45))
                                     .draw();
-                            sett.drawString(module.displayName, bX - sett.getStringWidth(module.displayName) - 0.5f, y + 1.5f, -1);
+                            sett.drawString(module.displayName, bX - sett.getStringWidth(module.displayName) - 1, y + 2, -1);
                         }
 
                         y += 14 * moduleAnim;
@@ -422,9 +422,9 @@ public class ClickGUIScreen extends GuiScreen {
                                             .create(bX - animatedWidth - 2, y + 1.5f, animatedWidth + 4, 9 + (selector.allValues.length * 9 * settingAnim))
                                             .color(new Color(45, 45, 45))
                                             .draw();
-                                    sett.drawString(selector.getValue(), bX - sett.getStringWidth(selector.getValue()) - 0.5f, y + 1, -1);
 
-                                    sett.drawString(selector.expanded ? "-" : "+", bX + 3.5f, y + 1, -1);
+                                    sett.drawString(selector.getValue(), bX - sett.getStringWidth(selector.getValue()) - 1, y + 1, -1);
+                                    sett.drawString(selector.expanded ? "-" : "+", bX + 3.5f, y + 0.7f, -1);
 
                                     if (settingAnim > 0.1f) {
                                         float yOffset = y + 8;
@@ -465,9 +465,9 @@ public class ClickGUIScreen extends GuiScreen {
                                             .create(bX - animatedWidth - 2, y + 1.5f, animatedWidth + 4, 9 + (selector.allValues.length * 9 * settingAnim))
                                             .color(new Color(45, 45, 45))
                                             .draw();
-                                    sett.drawString(enabled, bX - sett.getStringWidth(enabled) - 0.5f, y + 1, -1);
 
-                                    sett.drawString(selector.expanded ? "-" : "+", bX + 4, y + 1, -1);
+                                    sett.drawString(enabled, bX - sett.getStringWidth(enabled) - 1, y + 1, -1);
+                                    sett.drawString(selector.expanded ? "-" : "+", bX + 3.5f, y + 0.7f, -1);
 
                                     if (settingAnim > 0.1f) {
                                         float yOffset = y + 8;
