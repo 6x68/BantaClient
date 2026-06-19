@@ -22,17 +22,16 @@ public class Speed extends Module {
             mode = Setting.of("Mode", "NCP", "OldNCP", "Mospixel-Basic", "Mospixel", "NCP", "Miniblox-Ground", "Custom"),
             oncpmode = Setting.of("OldNCP Mode", "Y-Port", "Y-Port", "Strafe").hide(() -> !mode.getValue().equals("OldNCP"));
     private final BooleanSetting shouldjump = Setting.of("Should Jump",true).hide(() -> !mode.getValue().equals("Custom"));
-    private final NumberSetting jumpamount = Setting.of("Jump Motion",0.42f,0.01,2,2).hide(() -> !shouldjump.getValue() || !mode.getValue().equals("Custom"));
+    private final NumberSetting jumpamount = Setting.of("Jump Motion",0.42f,0.01,2,3).hide(() -> !shouldjump.getValue() || !mode.getValue().equals("Custom"));
     private final BooleanSetting strafe = Setting.of("Should Strafe", true).hide(() -> !mode.getValue().equals("Custom"));
-    private final NumberSetting strafeamount = Setting.of("Strafe Amount", 0.2, 0.01, 2,2).hide(() -> !strafe.getValue() || !mode.getValue().equals("Custom"));
+    private final NumberSetting strafeamount = Setting.of("Strafe Amount", 0, 0, 2,2).hide(() -> !strafe.getValue() || !mode.getValue().equals("Custom"));
     private final BooleanSetting groundstrafe = Setting.of("Should Ground Strafe", true).hide(() -> !mode.getValue().equals("Custom"));
     private final NumberSetting groundstrafeamount = Setting.of("Ground Strafe Amount", 0.2, 0.01, 2,2).hide(() -> !groundstrafe.getValue() || !mode.getValue().equals("Custom"));
     private final BooleanSetting shouldtickstrafe = Setting.of("Should Tick Strafe", false).hide(() -> !mode.getValue().equals("Custom"));
     private final NumberSetting tickstrafeamount = Setting.of("Tick Strafe Amount", 0.2,0.01,2,2).hide(() -> !shouldtickstrafe.getValue() || !mode.getValue().equals("Custom"));
     private final BooleanSetting shouldlowhop = Setting.of("Should Lowhop", false).hide(() -> !mode.getValue().equals("Custom"));
-    private final NumberSetting
-            lowhopstrength = Setting.of("Lowhop Strength", 0.2,0.01,2,2).hide(() -> !shouldtickstrafe.getValue() || !mode.getValue().equals("Custom")),
-            lowhoptick = Setting.of("Lowhop Off Ground Tick", 0.2,0.01,2,2).hide(() -> !shouldtickstrafe.getValue() || !mode.getValue().equals("Custom"));
+    private final NumberSetting lowhopstrength = Setting.of("Lowhop Strength", 0.2,0.01,10,2).hide(() -> !shouldlowhop.getValue() || !mode.getValue().equals("Custom")),
+            lowhoptick = Setting.of("Lowhop Tick", 2,1,50,0).hide(() -> !shouldlowhop.getValue() || !mode.getValue().equals("Custom"));
 
 
     public Speed() {
@@ -185,7 +184,11 @@ public class Speed extends Module {
                         }
                     }
                     if (strafe.getValue()) {
-                        MovementUtil.strafe(strafeamount.getValue().floatValue());
+                        if (strafeamount.getValue().floatValue() == 0) {
+                            MovementUtil.strafe();
+                        } else {
+                            MovementUtil.strafe(strafeamount.getValue().floatValue());
+                        }
                     }
 
                     if (groundstrafe.getValue() && mc.thePlayer.onGround) {
@@ -193,8 +196,14 @@ public class Speed extends Module {
                     }
 
                     if (shouldtickstrafe.getValue()) {
-                        if (offGroundTicks == 1) {
+                        if (offGroundTicks == 2) {
                             MovementUtil.strafe(tickstrafeamount.getValue().floatValue());
+                        }
+                    }
+
+                    if (shouldlowhop.getValue()) {
+                        if (offGroundTicks == lowhoptick.getValue().intValue()) {
+                            mc.thePlayer.motionY -= lowhopstrength.getValue().floatValue();
                         }
                     }
                     break;

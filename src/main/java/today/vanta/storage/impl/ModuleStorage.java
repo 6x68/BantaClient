@@ -56,6 +56,7 @@ public class ModuleStorage extends Storage<Module> {
         list.add(new FastSneak());
         list.add(new Fly());
         list.add(new Jesus());
+        list.add(new NoJumpDelay());
 
         // Player
         list.add(new Scaffold());
