@@ -1687,9 +1687,11 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
         this.systemTime = getSystemTime();
 
         if (ViaLoadingBase.getInstance().getTargetVersion().newerThanOrEqualTo(ProtocolVersion.v1_21_2)) {
-            UserConnection connection = Via.getManager().getConnectionManager().getConnections().iterator().next();
-            PacketWrapper packet = PacketWrapper.create(ServerboundPackets1_21_2.CLIENT_TICK_END, null, connection);
-            packet.sendToServer(Protocol1_21_2To1_21.class);
+            if (Via.getManager() != null && Via.getManager().getConnectionManager() != null && !Via.getManager().getConnectionManager().getConnections().isEmpty()) {
+                UserConnection connection = Via.getManager().getConnectionManager().getConnections().iterator().next();
+                PacketWrapper packet = PacketWrapper.create(ServerboundPackets1_21_2.CLIENT_TICK_END, null, connection);
+                packet.sendToServer(Protocol1_21_2To1_21.class);
+            }
         }
 
         runTickEvent.state = EventState.POST;
