@@ -88,13 +88,13 @@ public class Nametags extends Module {
 
             Color distanceColor;
             if (distance <= 10) {
-                distanceColor = Color.RED;
-            } else if (distance <= 30) {
-                distanceColor = Color.ORANGE;
-            } else if (distance <= 60) {
-                distanceColor = Color.YELLOW;
-            } else {
                 distanceColor = Color.GREEN;
+            } else if (distance <= 30) {
+                distanceColor = Color.YELLOW;
+            } else if (distance <= 60) {
+                distanceColor = Color.ORANGE;
+            } else {
+                distanceColor = Color.RED;
             }
 
             float maxHealth = living.getMaxHealth();
