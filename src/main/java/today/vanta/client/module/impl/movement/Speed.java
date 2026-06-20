@@ -3,6 +3,7 @@ package today.vanta.client.module.impl.movement;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
+import net.minecraft.potion.Potion;
 import today.vanta.client.event.impl.game.network.ReceivePacketEvent;
 import today.vanta.client.event.impl.game.player.MotionEvent;
 import today.vanta.client.event.impl.game.render.Render2DEvent;
@@ -149,7 +150,12 @@ public class Speed extends Module {
                     if (mc.thePlayer.onGround && !mc.gameSettings.keyBindJump.isKeyDown()) {
                         mc.thePlayer.jump();
                     }
-                    if (offGroundTicks == 2) {
+
+                    if (offGroundTicks == 2 && mc.thePlayer.isPotionActive(Potion.moveSpeed)) {
+                        MovementUtil.strafe(0.55f);
+                        ChatUtil.send(ChatUtil.Prefix.INFO, "yes" + Math.random());
+                    }
+                    if (offGroundTicks == 2 && !mc.thePlayer.isPotionActive(Potion.moveSpeed)) {
                         MovementUtil.strafe(0.33f);
 //                        ChatUtil.send(ChatUtil.Prefix.INFO, String.valueOf(MovementUtil.getBPS()));
                     } else {

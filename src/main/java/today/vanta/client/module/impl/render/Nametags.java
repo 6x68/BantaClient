@@ -21,6 +21,7 @@ import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.BooleanSetting;
 import today.vanta.client.setting.impl.MultiStringSetting;
 import today.vanta.util.game.events.EventListen;
+import today.vanta.util.game.player.ChatUtil;
 import today.vanta.util.game.render.ProjectionUtil;
 import today.vanta.util.game.render.RenderUtil;
 import today.vanta.util.game.render.font.CFonts;
@@ -33,11 +34,16 @@ import java.util.List;
 
 public class Nametags extends Module {
     private final MultiStringSetting entities = Setting.of("Entities", new String[]{"Players"}, new String[]{"Players", "Monsters", "Animals", "Local", "Invisibles"});
-    private final BooleanSetting belowPlayer = Setting.of("Below player", false);
-    private final BooleanSetting distance = Setting.of("Distance", true);
-    private final BooleanSetting health = Setting.of("Health", true);
-    private final BooleanSetting equipment = Setting.of("Equipment", false);
+    private final BooleanSetting
+            belowPlayer = Setting.of("Below player", false),
+            distance = Setting.of("Distance", true),
+            health = Setting.of("Health", true),
+            equipment = Setting.of("Equipment", false),
+            background = Setting.of("Draw Background", true),
+            healthbar = Setting.of("Draw Healthbar", true);
 
+    private static final Color BACKGROUND = new Color(20, 20, 20, 200);
+    private static final Color DARKER_BACKGROUND = new Color(20, 20, 20, 255);
     public Nametags() {
         super("Nametags", "Renders better styled nametags than vanilla above entities.", Category.RENDER);
     }
@@ -120,8 +126,32 @@ public class Nametags extends Module {
             float startX = x + width / 2f - totalWidth / 2f;
             float textY = y - font.getFontHeight() - 5;
 
+            float idk = totalWidth + 2;
+            float idkbar1 = (idk / 2) * (((EntityLivingBase) entity).getHealth() / ((EntityLivingBase) entity).getMaxHealth());
+            float idkbar2 = (idk / 2) * (((EntityLivingBase) entity).getHealth() / ((EntityLivingBase) entity).getMaxHealth()) * -1;
+
+
+
+
             if (belowPlayer.getValue()) {
                 textY = y + height;
+            }
+            if (background.getValue()) {
+                Rectangle
+                        .create(startX,textY - 1,totalWidth + 2,14)
+                        .color(BACKGROUND)
+                        .draw();
+            }
+
+            if (healthbar.getValue()) {
+                Rectangle
+                        .create(startX + (idk / 2),textY + 12,idkbar1,1)
+                        .color(Color.GREEN)
+                        .draw();
+                Rectangle
+                        .create(startX + (idk / 2),textY + 12,idkbar2,1)
+                        .color(Color.GREEN)
+                        .draw();
             }
 
             if (!distanceText.isEmpty()) {
