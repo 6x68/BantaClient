@@ -46,6 +46,7 @@ public class ModuleStorage extends Storage<Module> {
         list.add(new Velocity());
         list.add(new BlockHit());
         list.add(new KeepSprint());
+        list.add(new TriggerBot());
 
         // Movement
         list.add(new Sprint());

@@ -28,6 +28,7 @@ public class Speed extends Module {
     private final NumberSetting strafeamount = Setting.of("Strafe Amount", 0, 0, 2,2).hide(() -> !strafe.getValue() || !mode.getValue().equals("Custom"));
     private final BooleanSetting groundstrafe = Setting.of("Should Ground Strafe", true).hide(() -> !mode.getValue().equals("Custom"));
     private final NumberSetting groundstrafeamount = Setting.of("Ground Strafe Amount", 0.2, 0.01, 2,2).hide(() -> !groundstrafe.getValue() || !mode.getValue().equals("Custom"));
+    private final BooleanSetting groundonstrafe = Setting.of("Ground Strafe Only on Strafe", true).hide(() -> !mode.getValue().equals("Custom") && !groundstrafe.getValue());
     private final BooleanSetting shouldtickstrafe = Setting.of("Should Tick Strafe", false).hide(() -> !mode.getValue().equals("Custom"));
     private final NumberSetting tickstrafeamount = Setting.of("Tick Strafe Amount", 0.2,0.01,2,2).hide(() -> !shouldtickstrafe.getValue() || !mode.getValue().equals("Custom"));
     private final BooleanSetting shouldlowhop = Setting.of("Should Lowhop", false).hide(() -> !mode.getValue().equals("Custom"));
@@ -198,7 +199,13 @@ public class Speed extends Module {
                     }
 
                     if (groundstrafe.getValue() && mc.thePlayer.onGround) {
-                        MovementUtil.strafe(groundstrafeamount.getValue().floatValue());
+                        if (groundonstrafe.getValue()) {
+                            if (mc.gameSettings.keyBindLeft.isKeyDown() || mc.gameSettings.keyBindRight.isKeyDown()) {
+                                MovementUtil.strafe(groundstrafeamount.getValue().floatValue());
+                            }
+                        } else {
+                            MovementUtil.strafe(groundstrafeamount.getValue().floatValue());
+                        }
                     }
 
                     if (shouldtickstrafe.getValue()) {
