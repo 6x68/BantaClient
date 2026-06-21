@@ -1,6 +1,8 @@
 package today.vanta.util.game.player;
 
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.network.NetworkPlayerInfo;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.optifine.BlockPosM;
@@ -16,5 +18,21 @@ public class PlayerUtil implements IMinecraft {
                 return false;
         }
         return true;
+    }
+
+    // from Seline :sob:
+    public static boolean checkIllegal(EntityLivingBase entity) {
+        float length = entity.getName().length();
+        if (length >= 17) {
+            return true;
+        }
+
+        NetworkPlayerInfo info = mc.getNetHandler()
+                .getPlayerInfo(entity.getUniqueID());
+        if (info == null) return true;
+        if (info.getResponseTime() == 0) return true;
+        if (entity.getName().startsWith("§")) return true;
+
+        return false;
     }
 }

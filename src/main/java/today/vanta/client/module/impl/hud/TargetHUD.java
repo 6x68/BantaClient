@@ -14,7 +14,9 @@ import today.vanta.client.processor.impl.TargetProcessor;
 import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.NumberSetting;
 import today.vanta.client.setting.impl.StringSetting;
+import today.vanta.util.client.IClient;
 import today.vanta.util.game.events.EventListen;
+import today.vanta.util.game.player.PlayerUtil;
 import today.vanta.util.game.render.RenderUtil;
 import today.vanta.util.game.render.font.CFonts;
 import today.vanta.util.game.render.shape.impl.GradientRectangle;
@@ -27,6 +29,7 @@ import java.awt.*;
 public class TargetHUD extends Module {
     private static final Color BACKGROUND = new Color(20, 20, 20, 200);
     private static final Color DARKER_BACKGROUND = new Color(20, 20, 20, 255);
+    private static final Color PASSBACKGROUND = new Color(182, 215, 223);
 
     private EntityLivingBase localTarget;
     private String oldTarget;
@@ -38,7 +41,7 @@ public class TargetHUD extends Module {
     private boolean dragging;
     private float dragX, dragY;
 
-    private final StringSetting mode = Setting.of("Mode", "Vanta", "Classic", "Vanta", "Adjust");
+    private final StringSetting mode = Setting.of("Mode", "Vanta", "Classic", "Vanta", "Adjust", "ID-Card");
     private final NumberSetting
             x = Setting.of("X position", 20, 0, 2000),
             y = Setting.of("Y position", 20, 0, 2000);
@@ -331,6 +334,35 @@ public class TargetHUD extends Module {
                 }
 
                 CFonts.getFont("T-Regular", 14).drawStringWithShadow(String.format("%.1f", mc.thePlayer.getHealth() - localTarget.getHealth()), x + width - (length) - 4, y + 15, Color.WHITE);
+                break;
+
+            case "ID-Card":
+                width = 211;
+                height = 100;
+                String entitytype;
+                if (PlayerUtil.checkIllegal(localTarget)) {
+                    entitytype = "Bot";
+                } else {
+                    entitytype = "Player";
+                }
+                String firstChar = String.valueOf(localTarget.getName().charAt(0)).toUpperCase();
+                Rectangle
+                        .create(x,y,width,height)
+                        .color(PASSBACKGROUND)
+                        .draw();
+
+                CFonts.OCRB_10.drawString("NORGE NOREG NORGA", x + 2, y + 2, Color.RED,false);
+                CFonts.OCRB_10.drawString("NORWAY", x + 2, y + 9, Color.RED, false);
+                CFonts.OCRB_10.drawString("ID-KORT ID-DUODASTUS", x + 118, y + 2, Color.RED, false);
+                CFonts.OCRB_10.drawString("IDENTITY CARD", x + 150, y + 9, Color.RED, false);
+                CFonts.OCRB_8.drawString("Etternavn/Etternamn/Sohkanamma/Surname", x + 71, y + 20, Color.RED, false);
+                CFonts.OCRB_18.drawString(entitytype.toUpperCase(), x + 71, y + 25, Color.BLACK, false);
+                CFonts.OCRB_8.drawString("Fornavn/Førenamn/Ovdanamma/Given Name", x + 71, y + 41, Color.RED, false);
+                CFonts.OCRB_18.drawString(localTarget.getName().toUpperCase(), x + 71, y + 47, Color.BLACK, false);
+                CFonts.OCRB_8.drawString("Kjønn/Sokhabeali/Sex", x + 71, y + 63, Color.RED, false);
+                CFonts.OCRB_18.drawString("MINECRAFT", x + 71, y + 69, Color.BLACK, false);
+                CFonts.RUSTICROADWAY_22.drawString(firstChar + ". " + entitytype, x + 71, y + 83, Color.BLACK, false);
+                RenderUtil.renderHead((EntityPlayer) localTarget, x + 3, y + 22, 64);
                 break;
         }
 

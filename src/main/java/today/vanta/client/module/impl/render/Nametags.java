@@ -146,11 +146,11 @@ public class Nametags extends Module {
             if (healthbar.getValue()) {
                 Rectangle
                         .create(startX + (idk / 2),textY + 12,idkbar1,1)
-                        .color(Color.GREEN)
+                        .color(healthColor)
                         .draw();
                 Rectangle
                         .create(startX + (idk / 2),textY + 12,idkbar2,1)
-                        .color(Color.GREEN)
+                        .color(healthColor)
                         .draw();
             }
 

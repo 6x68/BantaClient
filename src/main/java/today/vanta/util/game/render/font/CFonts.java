@@ -27,6 +27,18 @@ public class CFonts {
     public static GlyphFontRenderer SFPT_REGULAR_16 = getFont("SFPT-Regular", 16);
     public static GlyphFontRenderer SFPT_REGULAR_14 = getFont("SFPT-Regular", 14);
 
+    // OCR-B
+    public static GlyphFontRenderer OCRB_18 = getFont("OCR-B", 18);
+    public static GlyphFontRenderer OCRB_16 = getFont("OCR-B", 16);
+    public static GlyphFontRenderer OCRB_14 = getFont("OCR-B", 14);
+    public static GlyphFontRenderer OCRB_12 = getFont("OCR-B", 12);
+    public static GlyphFontRenderer OCRB_10 = getFont("OCR-B", 10);
+    public static GlyphFontRenderer OCRB_8 = getFont("OCR-B", 8);
+    public static GlyphFontRenderer OCRB_6 = getFont("OCR-B", 6);
+
+    // RusticRoadway
+    public static GlyphFontRenderer RUSTICROADWAY_22 = getFont("RusticRoadway", 22);
+
     public static GlyphFontRenderer getFont(String fontName, float size) {
         String key = fontName + ":" + size;
 
