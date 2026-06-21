@@ -17,7 +17,7 @@ public class TriggerBot extends Module {
     }
 
     private long calculateAttackDelay() {
-        long cps = (mincps + mincps) / 2;
+        long cps = (mincps + maxcps) / 2;
         return 1000 / cps;
     }
 
