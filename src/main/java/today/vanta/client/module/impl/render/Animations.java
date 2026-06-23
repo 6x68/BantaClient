@@ -6,10 +6,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.util.MathHelper;
 import org.lwjgl.opengl.GL11;
 import today.vanta.client.event.impl.game.player.MotionEvent;
-import today.vanta.client.event.impl.game.render.BobArmEvent;
-import today.vanta.client.event.impl.game.render.PerformBlockEvent;
-import today.vanta.client.event.impl.game.render.RenderItemSwingEvent;
-import today.vanta.client.event.impl.game.render.SwingAnimationEvent;
+import today.vanta.client.event.impl.game.render.*;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.setting.Setting;
@@ -26,7 +23,8 @@ public class Animations extends Module {
     private final BooleanSetting
             noBob = Setting.of("German No-bob", false),
             noSway = Setting.of("No hand sway", false),
-            smoothSwing = Setting.of("Smooth swing", false);
+            smoothSwing = Setting.of("Smooth swing", false),
+            noresetanim = Setting.of("No Swing Reset", false);
 
     public Animations() {
         super("Animations", "Modifies Minecraft block animations.", Category.RENDER);
@@ -54,6 +52,11 @@ public class Animations extends Module {
                 : (int) ((mc.thePlayer.isPotionActive(Potion.digSlowdown)
                           ? 6 + (1 + mc.thePlayer.getActivePotionEffect(Potion.digSlowdown).getAmplifier()) * 2
                           : 6) * (1.0 / swingSpeed.getValue().doubleValue()));
+    }
+
+    @EventListen
+    private void onSwingAnimReset(SwingAnimResetEvent event) {
+        event.cancelled = noresetanim.getValue();
     }
 
     @EventListen

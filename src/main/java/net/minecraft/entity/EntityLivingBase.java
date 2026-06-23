@@ -32,6 +32,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import today.vanta.client.event.impl.game.player.EntityMotionEvent;
 import today.vanta.client.event.impl.game.player.JumpDelayEvent;
+import today.vanta.client.event.impl.game.render.SwingAnimResetEvent;
 import today.vanta.client.processor.impl.RotationProcessor;
 import today.vanta.util.game.player.ChatUtil;
 
@@ -912,7 +913,15 @@ public abstract class EntityLivingBase extends Entity {
     }
 
     public void swingItem() {
-        if (!this.isSwingInProgress || this.swingProgressInt >= this.getArmSwingAnimationEnd() / 2 || this.swingProgressInt < 0) {
+        int division = 2;
+        SwingAnimResetEvent event = new SwingAnimResetEvent();
+        event.call();
+        if (event.cancelled) {
+            division = 1;
+        } else {
+            division = 2;
+        }
+        if (!this.isSwingInProgress || this.swingProgressInt >= this.getArmSwingAnimationEnd() / division || this.swingProgressInt < 0) {
             this.swingProgressInt = -1;
             this.isSwingInProgress = true;
 
