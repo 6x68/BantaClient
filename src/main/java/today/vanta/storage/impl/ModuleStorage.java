@@ -68,6 +68,7 @@ public class ModuleStorage extends Storage<Module> {
         list.add(new Ambience());
         list.add(new Animations());
         list.add(new Nametags());
+        list.add(new Scoreboard());
 
         // Misc
         list.add(new Disabler());

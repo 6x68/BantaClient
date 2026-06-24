@@ -2,6 +2,7 @@ package today.vanta.client.module.impl.movement;
 
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.item.ItemEnderPearl;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 import net.minecraft.potion.Potion;
 import today.vanta.client.event.impl.game.network.ReceivePacketEvent;
@@ -42,7 +43,6 @@ public class Speed extends Module {
     }
 
     private int offGroundTicks;
-    ScaledResolution sr = new ScaledResolution(mc);
     private int tick;
     private boolean flag;
 
@@ -58,13 +58,13 @@ public class Speed extends Module {
     @EventListen
     private void onRender2D(Render2DEvent event) {
         if (flag) {
-            mc.fontRendererObj.drawString("Detected flag! Ticks left: " + (60 - tick), 565, 400, 0xFFFFFF, true);
+            mc.fontRendererObj.drawString("Detected flag! Ticks left: " + (60 - tick), event.scaledResolution.getScaledWidth() / 2 - (mc.fontRendererObj.getStringWidth("Detected flag! Ticks left: " + (60 - tick)) / 2), 400, 0xFFFFFF, true);
         }
     }
 
     @EventListen
     private void onPacket(ReceivePacketEvent event) {
-        if (event.packet instanceof S08PacketPlayerPosLook) {
+        if (event.packet instanceof S08PacketPlayerPosLook && mc.thePlayer != null && mc.theWorld != null && !(mc.thePlayer.getHeldItem().getItem() instanceof ItemEnderPearl)) {
             flag = true;
         }
     }
@@ -153,7 +153,7 @@ public class Speed extends Module {
                     }
 
                     if (offGroundTicks == 2 && mc.thePlayer.isPotionActive(Potion.moveSpeed)) {
-                        MovementUtil.strafe(0.55f);
+                        MovementUtil.strafe(0.48f);
                         ChatUtil.send(ChatUtil.Prefix.INFO, "yes" + Math.random());
                     }
                     if (offGroundTicks == 2 && !mc.thePlayer.isPotionActive(Potion.moveSpeed)) {
