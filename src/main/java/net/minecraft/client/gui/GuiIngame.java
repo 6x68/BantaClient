@@ -34,10 +34,7 @@ import net.minecraft.util.*;
 import net.minecraft.world.border.WorldBorder;
 import net.optifine.CustomColors;
 import today.vanta.Vanta;
-import today.vanta.client.event.impl.game.render.BobArmEvent;
-import today.vanta.client.event.impl.game.render.Render2DEvent;
-import today.vanta.client.event.impl.game.render.RenderCrosshairEvent;
-import today.vanta.client.event.impl.game.render.ScoreboardRenderEvent;
+import today.vanta.client.event.impl.game.render.*;
 import today.vanta.client.module.impl.render.Animations;
 import today.vanta.util.game.render.font.impl.BitMapFontRenderer;
 
@@ -435,6 +432,8 @@ public class GuiIngame extends Gui {
         }
     }
     private void renderleftScoreboard(ScoreObjective objective, ScaledResolution scaledRes) {
+        ScoreboardScoreEvent event = new ScoreboardScoreEvent();
+        event.call();
         Scoreboard scoreboard = objective.getScoreboard();
         Collection<Score> collection = scoreboard.getSortedScores(objective);
         List<Score> list = Lists.newArrayList(Iterables.filter(collection, new Predicate<Score>() {
@@ -472,7 +471,9 @@ public class GuiIngame extends Gui {
             int l = i + 3;
             drawRect(l1 - 2, k, l, k + this.getFontRenderer().FONT_HEIGHT, 1342177280);
             this.getFontRenderer().drawString(s1, l1, k, 553648127);
-            this.getFontRenderer().drawString(s2, l - this.getFontRenderer().getStringWidth(s2), k, 553648127);
+            if (!(event.cancelled)) {
+                this.getFontRenderer().drawString(s2, l - this.getFontRenderer().getStringWidth(s2), k, 553648127);
+            }
 
             if (j == collection.size()) {
                 String s3 = objective.getDisplayName();
@@ -490,6 +491,8 @@ public class GuiIngame extends Gui {
             renderleftScoreboard(objective, scaledRes);
             return;
         }
+        ScoreboardScoreEvent scoreEvent = new ScoreboardScoreEvent();
+        scoreEvent.call();
         Scoreboard scoreboard = objective.getScoreboard();
         Collection<Score> collection = scoreboard.getSortedScores(objective);
         List<Score> list = Lists.newArrayList(Iterables.filter(collection, new Predicate<Score>() {
@@ -527,8 +530,9 @@ public class GuiIngame extends Gui {
             int l = scaledRes.getScaledWidth() - k1 + 2;
             drawRect(l1 - 2, k, l, k + this.getFontRenderer().FONT_HEIGHT, 1342177280);
             this.getFontRenderer().drawString(s1, l1, k, 553648127);
-            this.getFontRenderer().drawString(s2, l - this.getFontRenderer().getStringWidth(s2), k, 553648127);
-
+            if (!(scoreEvent.cancelled)) {
+                this.getFontRenderer().drawString(s2, l - this.getFontRenderer().getStringWidth(s2), k, 553648127);
+            }
             if (j == collection.size()) {
                 String s3 = objective.getDisplayName();
                 drawRect(l1 - 2, k - this.getFontRenderer().FONT_HEIGHT - 1, l, k - 1, 1610612736);

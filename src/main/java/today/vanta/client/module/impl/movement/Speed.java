@@ -40,6 +40,7 @@ public class Speed extends Module {
     public Speed() {
         super("Speed", "Makes you go faster.", Category.MOVEMENT);
         displayNames = new String[]{"Speed", "FastMove", "Zoot", "SpeedyGonzales"};
+        super.setEnabled(false);
     }
 
     private int offGroundTicks;
@@ -64,7 +65,7 @@ public class Speed extends Module {
 
     @EventListen
     private void onPacket(ReceivePacketEvent event) {
-        if (event.packet instanceof S08PacketPlayerPosLook && mc.thePlayer != null && mc.theWorld != null && !(mc.thePlayer.getHeldItem().getItem() instanceof ItemEnderPearl)) {
+        if (event.packet instanceof S08PacketPlayerPosLook) {
             flag = true;
         }
     }
