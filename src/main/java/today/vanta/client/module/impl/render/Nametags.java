@@ -20,12 +20,15 @@ import today.vanta.client.module.impl.client.Theme;
 import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.BooleanSetting;
 import today.vanta.client.setting.impl.MultiStringSetting;
+import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.player.ChatUtil;
 import today.vanta.util.game.render.ProjectionUtil;
 import today.vanta.util.game.render.RenderUtil;
 import today.vanta.util.game.render.font.CFonts;
+import today.vanta.util.game.render.font.impl.BitMapFontRenderer;
 import today.vanta.util.game.render.font.impl.GlyphFontRenderer;
+import today.vanta.util.game.render.shape.impl.GradientRectangle;
 import today.vanta.util.game.render.shape.impl.Rectangle;
 
 import java.awt.*;
@@ -41,6 +44,7 @@ public class Nametags extends Module {
             equipment = Setting.of("Equipment", false),
             background = Setting.of("Draw Background", true),
             healthbar = Setting.of("Draw Healthbar", true);
+    private final StringSetting colMode = Setting.of("Health Color Mode", "Gradient", "Health", "Gradient");
 
     private static final Color BACKGROUND = new Color(20, 20, 20, 200);
     private static final Color DARKER_BACKGROUND = new Color(20, 20, 20, 255);
@@ -117,6 +121,9 @@ public class Nametags extends Module {
                 healthColor = Color.GREEN;
             }
 
+            Color gradcolor = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
+            Color gradcolor2 = Vanta.instance.moduleStorage.getT(Theme.class).colors[1];
+
             float distanceWidth = font.getStringWidth(distanceText);
             float nameWidth = font.getStringWidth(nameText);
             float healthWidth = font.getStringWidth(healthText);
@@ -144,14 +151,27 @@ public class Nametags extends Module {
             }
 
             if (healthbar.getValue()) {
-                Rectangle
-                        .create(startX + (idk / 2),textY + 12,idkbar1,1)
-                        .color(healthColor)
-                        .draw();
-                Rectangle
-                        .create(startX + (idk / 2),textY + 12,idkbar2,1)
-                        .color(healthColor)
-                        .draw();
+                if (colMode.getValue().equals("Gradient")) {
+                    GradientRectangle
+                            .create(startX + (idk / 2),textY + 12,idkbar1,1)
+                            .firstColor(gradcolor2)
+                            .secondColor(gradcolor)
+                            .draw();
+                    GradientRectangle
+                            .create(startX + (idk / 2),textY + 12,idkbar2,1)
+                            .firstColor(gradcolor2)
+                            .secondColor(gradcolor)
+                            .draw();
+                } else {
+                    Rectangle
+                            .create(startX + (idk / 2),textY + 12,idkbar1,1)
+                            .color(healthColor)
+                            .draw();
+                    Rectangle
+                            .create(startX + (idk / 2),textY + 12,idkbar2,1)
+                            .color(healthColor)
+                            .draw();
+                }
             }
 
             if (!distanceText.isEmpty()) {

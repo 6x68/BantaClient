@@ -7,6 +7,7 @@ import today.vanta.Vanta;
 import today.vanta.client.event.impl.game.network.ReceivePacketEvent;
 import today.vanta.client.event.impl.game.network.SendPacketEvent;
 import today.vanta.client.event.impl.game.player.MotionEvent;
+import today.vanta.client.event.impl.game.world.UpdateEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.module.impl.movement.Speed;
@@ -16,6 +17,7 @@ import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.events.EventState;
+import today.vanta.util.game.player.ChatUtil;
 import today.vanta.util.game.player.MovementUtil;
 
 import java.util.concurrent.ThreadLocalRandom;
@@ -27,8 +29,9 @@ public class Criticals extends Module {
     private static final double PACKET_CRIT_OFFSET = 0.01125D;
     private static final double RANDOM_OFFSET_MIN = 0.001D;
     private static final double RANDOM_OFFSET_MAX = 0.0011D;
+    int tick;
 
-    private final StringSetting mode = Setting.of("Mode", "Edit", "Edit", "Packet", "Old Watchdog");
+    private final StringSetting mode = Setting.of("Mode", "Edit", "Edit", "Packet", "Old Watchdog", "Mospixel");
 
     public Criticals() {
         super("Criticals", "Tries to make all landed hits critical.", Category.COMBAT);
@@ -39,7 +42,7 @@ public class Criticals extends Module {
         if (event.state != EventState.PRE) return;
         if (mode.getValue().equals("Packet")) return;
 
-        if (!shouldCrit()) return;
+//        if (!shouldCrit() && !mode.getValue().equals("Mospixel Post")) return;
 
         Entity target = getTarget();
         if (target == null) return;
@@ -49,8 +52,15 @@ public class Criticals extends Module {
         if (mode.getValue().equals("Old Watchdog")) {
             applyHypixelCrit(event, hurtResistantTime);
         }
+        if (mode.getValue().equals("Mospixel")) {
+            applyMospixelCrit(event,hurtResistantTime);
+        }
+//            applyStandardCrit(event, hurtResistantTime);
+    }
 
-        applyStandardCrit(event, hurtResistantTime);
+    @EventListen
+    public void onTick(UpdateEvent event) {
+        tick++;
     }
 
     @EventListen
@@ -80,6 +90,29 @@ public class Criticals extends Module {
             case 17:
                 applyRandomCrit(event);
                 break;
+        }
+    }
+
+    private void applyMospixelCrit(MotionEvent event, int hurtResistantTime) {
+        if (hurtResistantTime == 19 && tick > 10 && mc.thePlayer.onGround && !Vanta.instance.moduleStorage.getT(Speed.class).isEnabled()) {
+            mc.getNetHandler().addToSendQueue(
+                    new C03PacketPlayer.C04PacketPlayerPosition(
+                            mc.thePlayer.posX,
+                            mc.thePlayer.posY + 0.0630,
+                            mc.thePlayer.posZ,
+                            false
+                    )
+            );
+            mc.getNetHandler().addToSendQueue(
+                    new C03PacketPlayer.C04PacketPlayerPosition(
+                            mc.thePlayer.posX,
+                            mc.thePlayer.posY,
+                            mc.thePlayer.posZ,
+                            false
+                    )
+            );
+            ChatUtil.send(ChatUtil.Prefix.INFO, String.valueOf(tick));
+            tick = 0;
         }
     }
 
@@ -143,7 +176,7 @@ public class Criticals extends Module {
             return TargetProcessor.getInstance().target;
         }
 
-        if (mc.objectMouseOver != null && mc.objectMouseOver.entityHit != null) {
+        if (mc.objectMouseOver != null && mc.objectMouseOver.entityHit != null && !TargetProcessor.getInstance().killaura.isEnabled()) {
             return mc.objectMouseOver.entityHit;
         }
 

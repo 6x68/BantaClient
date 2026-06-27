@@ -5,6 +5,7 @@ import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.module.impl.client.*;
 import today.vanta.client.module.impl.hud.*;
+import today.vanta.client.module.impl.misc.BasicAnticheat;
 import today.vanta.client.module.impl.misc.ClientBrand;
 import today.vanta.client.module.impl.misc.Disabler;
 import today.vanta.client.module.impl.misc.Timer;
@@ -62,6 +63,7 @@ public class ModuleStorage extends Storage<Module> {
         // Player
         list.add(new Scaffold());
         list.add(new FastUse());
+        list.add(new NoClickDelay());
 
         // Render
         list.add(new ESP());
@@ -74,6 +76,7 @@ public class ModuleStorage extends Storage<Module> {
         list.add(new Disabler());
         list.add(new ClientBrand());
         list.add(new Timer());
+        list.add(new BasicAnticheat());
 
         //Hud
         list.add(new Arraylist());

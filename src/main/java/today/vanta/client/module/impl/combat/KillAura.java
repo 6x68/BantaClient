@@ -1,6 +1,9 @@
 package today.vanta.client.module.impl.combat;
 
+import net.minecraft.block.Block;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
+import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C07PacketPlayerDigging;
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 import net.minecraft.network.play.client.C0APacketAnimation;
@@ -30,7 +33,7 @@ public class KillAura extends Module {
     public final StringSetting
             attackMode = Setting.of("Attack mode", "Single", "Single"),
             sortMode = Setting.of("Sort mode", "Range", "Range", "Health", "Armor", "Hurt-time", "Ticks", "Skin color"),
-            autoBlockMode = Setting.of("Auto-block mode", "None", "None", "Vanilla", "Packet", "Hold"),
+            autoBlockMode = Setting.of("Auto-block mode", "None", "None", "Vanilla", "Packet", "Hold", "Mospixel Post"),
             swingMode = Setting.of("Swing mode", "Legit", "Legit", "Blatant");
 
     public final NumberSetting
@@ -165,6 +168,22 @@ public class KillAura extends Module {
             handleAttack();
         } else if (event.state == EventState.POST) {
             if (TargetProcessor.getInstance().target != null && mc.thePlayer.getHeldItem() != null && mc.thePlayer.getHeldItem().getItem() instanceof ItemSword) {
+                if (autoBlockMode.getValue().equals("Mospixel Post")) {
+                    mc.thePlayer.setItemInUse(mc.thePlayer.getHeldItem(), 1);
+                    mc.getNetHandler().addToSendQueue(
+                            new C07PacketPlayerDigging(
+                                    C07PacketPlayerDigging.Action.RELEASE_USE_ITEM,
+                                    BlockPos.ORIGIN,
+                                    EnumFacing.DOWN
+                            )
+                    );
+
+                    mc.getNetHandler().addToSendQueue(
+                            new C08PacketPlayerBlockPlacement(
+                                    mc.thePlayer.getHeldItem()
+                            )
+                    );
+                }
                 if (autoBlockMode.getValue().equals("Packet") || autoBlockMode.getValue().equals("Hold")) {
                     startPacketBlock();
                 }

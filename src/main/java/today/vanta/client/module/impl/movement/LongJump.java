@@ -9,6 +9,7 @@ import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.events.EventState;
 import today.vanta.util.game.player.MovementUtil;
+import today.vanta.util.game.render.NotificationUtil;
 
 public class LongJump extends Module {
     private final StringSetting mode = Setting.of("Mode", "NCP", "NCP", "Mospixel-Jump");
@@ -59,7 +60,7 @@ public class LongJump extends Module {
                 case "Mospixel-Jump":
                     if (offGroundTicks > 21) {
 //            MovementUtil.strafe(MovementUtil.getMovementSpeed() + 0.5f);
-                        mc.thePlayer.motionY = -0.20f;
+                        mc.thePlayer.motionY = -0.34f;
                         //if (mc.thePlayer.onGround) {
                         //   System.out.println("what");
                         //}
