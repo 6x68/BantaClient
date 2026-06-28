@@ -12,6 +12,8 @@ import today.vanta.client.module.impl.misc.Timer;
 import today.vanta.client.module.impl.movement.*;
 import today.vanta.client.module.impl.combat.*;
 import today.vanta.client.module.impl.player.*;
+import today.vanta.client.module.impl.player.temporary.oldContainerStealer;
+import today.vanta.client.module.impl.player.temporary.oldInventoryManager;
 import today.vanta.client.module.impl.render.*;
 import today.vanta.storage.Storage;
 import today.vanta.util.game.events.EventListen;
@@ -64,6 +66,9 @@ public class ModuleStorage extends Storage<Module> {
         list.add(new Scaffold());
         list.add(new FastUse());
         list.add(new NoClickDelay());
+        list.add(new oldInventoryManager());
+        list.add(new oldContainerStealer());
+        list.add(new AntiVoid());
 
         // Render
         list.add(new ESP());

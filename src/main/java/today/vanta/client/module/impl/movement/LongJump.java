@@ -58,9 +58,9 @@ public class LongJump extends Module {
                     MovementUtil.strafe();
                     break;
                 case "Mospixel-Jump":
-                    if (offGroundTicks > 21) {
+                    if (offGroundTicks > 21 && offGroundTicks < 59) {
 //            MovementUtil.strafe(MovementUtil.getMovementSpeed() + 0.5f);
-                        mc.thePlayer.motionY = -0.34f;
+                        mc.thePlayer.motionY = -0.2f;
                         //if (mc.thePlayer.onGround) {
                         //   System.out.println("what");
                         //}

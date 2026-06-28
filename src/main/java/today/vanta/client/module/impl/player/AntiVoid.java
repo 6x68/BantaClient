@@ -14,8 +14,11 @@ public class AntiVoid extends Module {
 
     @EventListen
     public void onUpdate(UpdateEvent event) {
-        if (PlayerUtil.isOverVoid()) {
+        if (PlayerUtil.isOverVoid() && !mc.thePlayer.onGround) {
             tick++;
+            if (tick > 50) {
+                mc.thePlayer.motionY -= 0.4f;
+            }
         } else {
             tick = 0;
         }
