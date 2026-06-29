@@ -1,6 +1,5 @@
 package today.vanta.client.module.impl.hud;
 
-import net.minecraft.client.gui.ScaledResolution;
 import today.vanta.client.event.impl.game.render.Render2DEvent;
 import today.vanta.client.event.impl.game.render.RenderCrosshairEvent;
 import today.vanta.client.module.Category;
@@ -18,7 +17,6 @@ public class Crosshair extends Module {
     private final NumberSetting width = Setting.of("Width", 0.5f, 0.5f, 2, 1);
     private final NumberSetting space = Setting.of("Static space", 5, 0, 15);
     private final NumberSetting spaceMove = Setting.of("Moving space", 7, 1, 16);
-    ScaledResolution sr = new ScaledResolution(mc);
 
     public Crosshair() {
         super("Crosshair", "Looks like CSGO.", Category.HUD);

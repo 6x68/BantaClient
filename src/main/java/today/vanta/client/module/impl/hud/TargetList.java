@@ -1,15 +1,11 @@
 package today.vanta.client.module.impl.hud;
 
-import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.player.EntityPlayer;
 import today.vanta.client.event.impl.game.render.Render2DEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
-import today.vanta.client.module.impl.hud.arraylist.BitMapRenderer;
 import today.vanta.client.processor.impl.TargetProcessor;
 import today.vanta.util.game.events.EventListen;
-import today.vanta.util.game.player.ChatUtil;
-import today.vanta.util.game.render.RenderUtil;
 import today.vanta.util.game.render.shape.impl.Rectangle;
 
 import java.awt.*;

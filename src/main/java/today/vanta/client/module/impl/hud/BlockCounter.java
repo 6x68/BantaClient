@@ -1,11 +1,7 @@
 package today.vanta.client.module.impl.hud;
 
 import net.minecraft.client.gui.GuiChat;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
-import org.w3c.dom.css.Rect;
 import today.vanta.Vanta;
 import today.vanta.client.event.impl.game.render.DrawScreenEvent;
 import today.vanta.client.module.Category;
