@@ -1,7 +1,11 @@
 package today.vanta.util.game.player;
 
 import net.minecraft.potion.Potion;
+import today.vanta.Vanta;
 import today.vanta.client.event.impl.game.player.MoveInputEvent;
+import today.vanta.client.module.impl.movement.Fly;
+import today.vanta.client.module.impl.movement.LongJump;
+import today.vanta.storage.impl.ModuleStorage;
 import today.vanta.util.game.IMinecraft;
 
 public class MovementUtil implements IMinecraft {
@@ -139,5 +143,13 @@ public class MovementUtil implements IMinecraft {
         }
 
         return baseSpeed;
+    }
+
+    public static boolean movementModuleEnabled() {
+        ModuleStorage moduleStorage = Vanta.instance.moduleStorage;
+        if (moduleStorage.getT(LongJump.class).isEnabled() || moduleStorage.getT(Fly.class).isEnabled()) {
+            return true;
+        }
+        return false;
     }
 }

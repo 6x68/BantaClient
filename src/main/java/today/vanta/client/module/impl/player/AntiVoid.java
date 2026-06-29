@@ -4,6 +4,7 @@ import today.vanta.client.event.impl.game.world.UpdateEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.util.game.events.EventListen;
+import today.vanta.util.game.player.MovementUtil;
 import today.vanta.util.game.player.PlayerUtil;
 
 public class AntiVoid extends Module {
@@ -14,6 +15,7 @@ public class AntiVoid extends Module {
 
     @EventListen
     public void onUpdate(UpdateEvent event) {
+        if (MovementUtil.movementModuleEnabled()) {return;}
         if (PlayerUtil.isOverVoid() && !mc.thePlayer.onGround) {
             tick++;
             if (tick > 12) {
