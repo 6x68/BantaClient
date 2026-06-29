@@ -12,7 +12,7 @@ public class PlayerUtil implements IMinecraft {
 
     public static boolean isOverVoid() {
         BlockPosM position = new BlockPosM(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
-        for (int i = 0; i < position.getX(); i++) {
+        for (int i = 0; i < 256; i++) {
             IBlockState state = mc.theWorld.getBlockState(new BlockPos(position.getX(), i, position.getZ()));
             if (state.getBlock() != Blocks.air)
                 return false;
