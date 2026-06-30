@@ -397,6 +397,7 @@ public class TargetHUD extends Module {
                 color2 = Vanta.instance.moduleStorage.getT(Theme.class).colors[0].darker();
 
                 health_str = String.format("%.1f", localTarget.getHealth());
+                String distance_str = String.format("%.1f", mc.thePlayer.getDistanceToEntity(localTarget));
 
                 Rectangle
                         .create(x, y, width, height)
@@ -417,8 +418,9 @@ public class TargetHUD extends Module {
                         .gradientMode(GradientMode.VERTICAL)
                         .draw();
 
-                mc.exhiFontRendererObj.drawStringWithShadow(health_str + " ❤", x + 35, y + 12, Color.WHITE);
-                mc.exhiFontRendererObj.drawStringWithShadow(localTarget.getName(), x + 35, y + 2, Color.WHITE);
+                mc.exhiFontRendererObj.drawString(health_str, x + 35, y + 12, Color.WHITE);
+                mc.exhiFontRendererObj.drawString(localTarget.getName(), x + 35, y + 2, Color.WHITE);
+                mc.exhiFontRendererObj.drawString(distance_str,x+width - mc.exhiFontRendererObj.getStringWidth(distance_str) - 2,y + 2,Color.WHITE);
                 break;
         }
 

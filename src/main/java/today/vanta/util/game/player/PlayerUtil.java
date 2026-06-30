@@ -20,6 +20,16 @@ public class PlayerUtil implements IMinecraft {
         return true;
     }
 
+    public static boolean isSlabUnderneath() {
+        BlockPosM position = new BlockPosM(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
+        for (int i = 0; i < 2; i++) {
+            IBlockState state = mc.theWorld.getBlockState(new BlockPos(position.getX(), position.getY() + i, position.getZ()));
+            if (state.getBlock() != Blocks.wooden_slab || state.getBlock() != Blocks.stone_slab || state.getBlock() != Blocks.stone_slab)
+                return false;
+        }
+        return true;
+    }
+
     // from Seline :sob:
     public static boolean checkIllegal(EntityLivingBase entity) {
         float length = entity.getName().length();

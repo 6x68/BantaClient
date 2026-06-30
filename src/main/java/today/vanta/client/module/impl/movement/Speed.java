@@ -1,8 +1,5 @@
 package today.vanta.client.module.impl.movement;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.item.ItemEnderPearl;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 import net.minecraft.potion.Potion;
 import today.vanta.client.event.impl.game.network.ReceivePacketEvent;
@@ -178,8 +175,6 @@ public class Speed extends Module {
                     mc.thePlayer.setSprinting(false);
 
                     break;
-
-
 
                 case "Custom":
                     if (shouldjump.getValue()) {

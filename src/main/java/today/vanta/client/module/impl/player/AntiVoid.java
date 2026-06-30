@@ -7,6 +7,7 @@ import today.vanta.client.event.impl.game.world.UpdateEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.setting.Setting;
+import today.vanta.client.setting.impl.NumberSetting;
 import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.player.ChatUtil;
@@ -16,6 +17,7 @@ import today.vanta.util.game.player.PlayerUtil;
 public class AntiVoid extends Module {
     private StringSetting mode = Setting.of("Mode", "Flag", "Blink", "Flag", "Setback");
     private StringSetting setbackmode = Setting.of("Position Set Mode", "Ground", "Previous", "Ground");
+    private NumberSetting waitTime = Setting.of("Ticks until activation", 5,0,40,0);
     int tick;
     double prevPosZ,prevPosX,prevPosY;
     boolean wasonground;
@@ -47,7 +49,7 @@ public class AntiVoid extends Module {
             case "Flag":
                 if (PlayerUtil.isOverVoid() && !mc.thePlayer.onGround) {
                     tick++;
-                    if (tick > 11) {
+                    if (tick > waitTime.getValue().intValue()) {
                         mc.thePlayer.motionY -= 0.4f;
                     }
                 } else {
@@ -55,20 +57,23 @@ public class AntiVoid extends Module {
                 }
                 break;
             case "Blink":
-//                if (PlayerUtil.isOverVoid() && !mc.thePlayer.onGround) {
-//                    tick++;
-//                    if (tick > 11) {
-//                        mc.thePlayer.setPosition(prevPosX,prevPosY,prevPosZ);
-//                        ChatUtil.send(ChatUtil.Prefix.INFO, "set");
-//                        tick = 0;
-//                    }
-//                } else {
-//                    tick = 0;
-//                }
+                if (PlayerUtil.isOverVoid() && !mc.thePlayer.onGround) {
+                    tick++;
+                    if (tick > waitTime.getValue().intValue()) {
+                        mc.thePlayer.setPosition(prevPosX,prevPosY,prevPosZ);
+                    }
+                } else {
+                    tick = 0;
+                }
                 break;
             case "Setback":
-                if (PlayerUtil.isOverVoid()) {
-                    mc.thePlayer.setPosition(prevPosX,prevPosY,prevPosZ);
+                if (PlayerUtil.isOverVoid()&& !mc.thePlayer.onGround) {
+                    tick++;
+                    if (tick > waitTime.getValue().intValue()) {
+                        mc.thePlayer.setPosition(prevPosX,prevPosY,prevPosZ);
+                    }
+                } else {
+                    tick = 0;
                 }
                 break;
         }
@@ -76,10 +81,8 @@ public class AntiVoid extends Module {
 
     @EventListen
     public void onPacket(SendPacketEvent event) {
-        if (mode.getValue().equals("Blink") && PlayerUtil.isOverVoid()) {
+        if (mode.getValue().equals("Blink") && PlayerUtil.isOverVoid() && !mc.thePlayer.onGround) {
             event.cancelled = true;
-            mc.thePlayer.setPosition(prevPosX,prevPosY,prevPosZ);
-            ChatUtil.send(ChatUtil.Prefix.INFO, "Cancel");
         }
     }
 }
