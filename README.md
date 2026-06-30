@@ -14,6 +14,12 @@
 - Main menu ![](https://i.imgur.com/aFR2CaO.png)
 - Alt manager ![](https://i.imgur.com/rlWefBb.png)
 
+## How to Start (Intellij IDEA)
+-> Use JDK8
+- After the project has imported fully, use the maven button on the right side and go to lifecycle and double click compile (you can also run clean first to be sure everything is going to work). 
+- After it has finished, go back to the maven menu and now double click install. 
+- When that has finished run the Start class located at "src/test/java/Start.java"
+
 ## Contacts
 - Discord @ https://discord.wonderland.ac/
 
