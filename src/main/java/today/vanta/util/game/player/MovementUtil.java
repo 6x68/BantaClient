@@ -14,6 +14,7 @@ public class MovementUtil implements IMinecraft {
     }
 
     public static void stop() {
+        if (mc.thePlayer == null) {return;}
         mc.thePlayer.motionX = 0;
         mc.thePlayer.motionZ = 0;
     }
@@ -151,5 +152,12 @@ public class MovementUtil implements IMinecraft {
             return true;
         }
         return false;
+    }
+    public static void blockMovement() {
+        mc.gameSettings.keyBindRight.pressed = false;
+        mc.gameSettings.keyBindLeft.pressed = false;
+        mc.gameSettings.keyBindForward.pressed = false;
+        mc.gameSettings.keyBindBack.pressed = false;
+        mc.gameSettings.keyBindJump.pressed = false;
     }
 }

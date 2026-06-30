@@ -19,6 +19,7 @@ import today.vanta.storage.Storage;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.events.EventPriority;
 
+import java.rmi.server.RemoteServer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -61,6 +62,7 @@ public class ModuleStorage extends Storage<Module> {
         list.add(new Fly());
         list.add(new Jesus());
         list.add(new NoJumpDelay());
+        list.add(new ForceMovementKeys());
 
         // Player
         list.add(new Scaffold());
@@ -69,6 +71,7 @@ public class ModuleStorage extends Storage<Module> {
         list.add(new oldInventoryManager());
         list.add(new oldContainerStealer());
         list.add(new AntiVoid());
+        list.add(new ResetVL());
 
         // Render
         list.add(new ESP());

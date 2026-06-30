@@ -19,6 +19,7 @@ import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.player.PlayerUtil;
 import today.vanta.util.game.render.RenderUtil;
 import today.vanta.util.game.render.font.CFonts;
+import today.vanta.util.game.render.shape.GradientMode;
 import today.vanta.util.game.render.shape.impl.GradientRectangle;
 import today.vanta.util.game.render.shape.impl.Rectangle;
 import today.vanta.util.system.math.animation.Animation;
@@ -41,7 +42,7 @@ public class TargetHUD extends Module {
     private boolean dragging;
     private float dragX, dragY;
 
-    private final StringSetting mode = Setting.of("Mode", "Vanta", "Classic", "Vanta", "Adjust", "ID-Card");
+    private final StringSetting mode = Setting.of("Mode", "Vanta", "Classic", "Vanta", "Adjust", "ID-Card", "aged");
     private final NumberSetting
             x = Setting.of("X position", 20, 0, 2000),
             y = Setting.of("Y position", 20, 0, 2000);
@@ -102,6 +103,8 @@ public class TargetHUD extends Module {
     private float adtargetWidth2 = width - 4f;
     private float adghostBarWidth = width - 4f;
     private float adbarWidth = width - 4f;
+    private float abarwidth = width - 37;
+    private float atargetwidth = width - 37;
 
     private Animation animation;
     private Animation ghostAnimation;
@@ -120,7 +123,7 @@ public class TargetHUD extends Module {
 
                 Rectangle
                         .create(x, y, width, height)
-                        .color(BACKGROUND)
+                        .color(new Color(28, 29, 33))
                         .draw();
 
                 RenderUtil.renderHead((EntityPlayer) localTarget, x, y, 36f);
@@ -364,14 +367,81 @@ public class TargetHUD extends Module {
                 CFonts.RUSTICROADWAY_22.drawString(firstChar + ". " + entitytype, x + 71, y + 83, Color.BLACK, false);
                 RenderUtil.renderHead((EntityPlayer) localTarget, x + 3, y + 22, 64);
                 break;
+            case "aged":
+                width = 150f;
+                height = 35f;
+
+                whatever = (localTarget.getHealth() / localTarget.getMaxHealth());
+                healthbar = (width - 37) * whatever;
+
+                if (healthbar != atargetwidth) {
+                    atargetwidth = healthbar;
+                    if (oldTarget != localTarget.getName()) {
+                        abarwidth = healthbar;
+                        oldTarget = localTarget.getName();
+                        return;
+                    }
+
+                    animation = Animation.create(
+                            abarwidth,
+                            atargetwidth,
+                            100,
+                            Easing.LINEAR,
+                            val -> abarwidth = val
+                    );
+
+                    animation.start();
+                }
+
+                color = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
+                color2 = Vanta.instance.moduleStorage.getT(Theme.class).colors[0].darker();
+
+                health_str = String.format("%.1f", localTarget.getHealth());
+
+                Rectangle
+                        .create(x, y, width, height)
+                        .color(BACKGROUND)
+                        .draw();
+
+                RenderUtil.renderHead((EntityPlayer) localTarget,x + 2,y + 2,31);
+
+                Rectangle
+                        .create(x + 35, y - (10f / 2) + (height / 2) + 10, width - 37, 10f)
+                        .color(DARKER_BACKGROUND)
+                        .draw();
+
+                GradientRectangle
+                        .create(x + 35, y - (10f / 2) + (height / 2) + 10, abarwidth, 10f)
+                        .firstColor(color)
+                        .secondColor(color2)
+                        .gradientMode(GradientMode.VERTICAL)
+                        .draw();
+
+                mc.exhiFontRendererObj.drawStringWithShadow(health_str + " ❤", x + 35, y + 12, Color.WHITE);
+                mc.exhiFontRendererObj.drawStringWithShadow(localTarget.getName(), x + 35, y + 2, Color.WHITE);
+                break;
         }
 
         if (dragging && mc.currentScreen instanceof GuiChat) {
-            Rectangle
-                    .create(x - 0.5, y - 0.5, width + 1, height + 1)
-                    .color(color)
-                    .outline(true)
-                    .draw();
+            if (mode.getValue().equals("aged")) {
+                GradientRectangle
+                        .create(x - 0.5, y - 0.5, width + 1, height + 1)
+                        .firstColor(color)
+                        .secondColor(color2)
+                        .outline(true)
+                        .draw();
+            } else {
+                Rectangle
+                        .create(x - 0.5, y - 0.5, width + 1, height + 1)
+                        .color(color)
+                        .outline(true)
+                        .draw();
+            }
         }
+    }
+
+    @Override
+    public String getSuffix() {
+        return mode.getValue();
     }
 }

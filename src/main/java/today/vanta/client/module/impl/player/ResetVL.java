@@ -1,0 +1,38 @@
+package today.vanta.client.module.impl.player;
+
+import today.vanta.client.event.impl.game.world.UpdateEvent;
+import today.vanta.client.module.Category;
+import today.vanta.client.module.Module;
+import today.vanta.util.game.events.EventListen;
+import today.vanta.util.game.player.ChatUtil;
+import today.vanta.util.game.player.MovementUtil;
+import today.vanta.util.system.math.Counter;
+
+public class ResetVL extends Module {
+    Counter counter = new Counter();
+    public ResetVL() {
+        super("ResetVL", "Resets NCP Violations.", Category.PLAYER);
+    }
+    @EventListen
+    public void onUpdate(UpdateEvent event) {
+        MovementUtil.blockMovement();
+        if (mc.thePlayer.onGround) {
+            mc.thePlayer.motionY = 0.2f;
+        }
+        if (counter.hasElapsed(9000)) {
+            setEnabled(false);
+        }
+        ChatUtil.send(ChatUtil.Prefix.INFO, String.valueOf(counter.getElapsedTime()));
+    }
+
+    @Override
+    public void onEnable() {
+        counter.reset();
+        MovementUtil.stop();
+    }
+
+    @Override
+    public void onDisable() {
+        MovementUtil.stop();
+    }
+}
