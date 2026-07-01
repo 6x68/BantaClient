@@ -16,6 +16,7 @@ import today.vanta.storage.Storage;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.events.EventPriority;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -100,6 +101,13 @@ public class ModuleStorage extends Storage<Module> {
     }
 
     public Module getModule(String input) {
-        return this.list.stream().filter(m -> m.name.equalsIgnoreCase(input)).findFirst().orElse(null);
+        return this.list.stream()
+                .filter(mod ->
+                        mod.name.equalsIgnoreCase(input) ||
+                                (mod.displayNames != null && Arrays.stream(mod.displayNames)
+                                        .anyMatch(a -> a.equalsIgnoreCase(input)))
+                )
+                .findFirst()
+                .orElse(null);
     }
 }
