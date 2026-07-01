@@ -3,6 +3,7 @@ package today.vanta.client.module.impl.hud;
 import today.vanta.Vanta;
 import today.vanta.client.event.impl.client.ModuleDisableEvent;
 import today.vanta.client.event.impl.client.ModuleEnableEvent;
+import today.vanta.client.event.impl.client.ModuleRenamedEvent;
 import today.vanta.client.event.impl.game.render.Render2DEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
@@ -100,6 +101,11 @@ public class Arraylist extends Module {
         if (!enabledModules.contains(event.module)) {
             enabledModules.add(event.module);
         }
+        resortModules();
+    }
+
+    @EventListen
+    private void onRename(ModuleRenamedEvent e) {
         resortModules();
     }
 

@@ -3,6 +3,7 @@ package today.vanta.client.module;
 import today.vanta.Vanta;
 import today.vanta.client.event.impl.client.ModuleDisableEvent;
 import today.vanta.client.event.impl.client.ModuleEnableEvent;
+import today.vanta.client.event.impl.client.ModuleRenamedEvent;
 import today.vanta.client.setting.Setting;
 import today.vanta.util.game.IMinecraft;
 import today.vanta.util.system.math.ColorUtil;
@@ -94,12 +95,14 @@ public abstract class Module implements IMinecraft {
         int currentIndex = index();
         int nextIndex = (currentIndex + 1) % displayNames.length;
         displayName = displayNames[nextIndex];
+        new ModuleRenamedEvent(this).call();
     }
 
     public void previous() {
         int currentIndex = index();
         int previousIndex = (currentIndex - 1 + displayNames.length) % displayNames.length;
         displayName = displayNames[previousIndex];
+        new ModuleRenamedEvent(this).call();
     }
 
     private int index() {
