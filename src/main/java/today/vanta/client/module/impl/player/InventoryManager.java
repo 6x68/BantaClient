@@ -3,6 +3,7 @@ package today.vanta.client.module.impl.player;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.item.*;
+import today.vanta.client.event.impl.game.render.DisplayGuiScreenEvent;
 import today.vanta.client.event.impl.game.world.UpdateEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
@@ -19,56 +20,78 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
 
 public class InventoryManager extends Module {
-    private final NumberSetting
-            minDelay = Setting.of("Min Delay", 300, 10, 1000),
-            maxDelay = Setting.of("Max Delay", 300, 10, 1000);
-    private final NumberSetting startDelay = Setting.of("Start Delay", 100, 10, 1000);
-    private final BooleanSetting
-            inventoryOnly = Setting.of("Inventory Only", true),
-            exitOnEnemy = Setting.of("Exit on enemy", true);
-    private final BooleanSetting
-            keepSword = Setting.of("Keep Swords", true),
-            keepPickaxe = Setting.of("Keep Pickaxes", true),
-            keepAxe = Setting.of("Keep axes", true),
-            keepShovel = Setting.of("Keep shovels", true),
-            keepBow = Setting.of("Keep bows", true),
-            keepFood = Setting.of("Keep food", true);
-    private final NumberSetting
-            swordSlot = Setting.of("Sword Slot", 1, 1, 9),
-            bowSlot = Setting.of("Bow Slot", 2, 1, 9),
-            axeSlot = Setting.of("Axe Slot", 3, 1, 9),
-            pickaxeSlot = Setting.of("Pickaxe Slot", 4, 1, 9),
-            shovelSlot = Setting.of("Shovel Slot", 5, 1, 9),
-            foodSlot = Setting.of("Food Slot", 6, 1, 9),
-            blockSlot = Setting.of("Block Slot", 7, 1, 9),
-            keepBlocks = Setting.of("Max Stacks of Blocks", 3, 1, 9),
-            keepThrowables = Setting.of("Max Stacks of Throwables", 3, 1, 9);
+    private final NumberSetting minDelay = Setting.of("Min Delay", 300, 10, 1000, "ms");
+    private final NumberSetting maxDelay = Setting.of("Max Delay", 300, 10, 1000, "ms");
+    private final BooleanSetting inventoryOnly = Setting.of("Inventory only", true);
+    private final BooleanSetting exitOnEnemy = Setting.of("Exit on enemy", true);
+
+    private final NumberSetting startDelay = Setting.of("Start Delay", 100, 10, 1000, "ms")
+            .hide(() -> !inventoryOnly.getValue());
+
+    private final BooleanSetting keepSword = Setting.of("Keep swords", true);
+    private final BooleanSetting keepPickaxe = Setting.of("Keep pickaxes", true);
+    private final BooleanSetting keepAxe = Setting.of("Keep axes", true);
+    private final BooleanSetting keepShovel = Setting.of("Keep shovels", true);
+    private final BooleanSetting keepBow = Setting.of("Keep bows", true);
+    private final BooleanSetting keepFood = Setting.of("Keep food", true);
+
+    private final NumberSetting swordSlot = Setting.of("Sword slot", 1, 1, 9)
+            .hide(() -> !keepSword.getValue());
+    private final NumberSetting pickaxeSlot = Setting.of("Pickaxe slot", 1, 1, 9)
+            .hide(() -> !keepPickaxe.getValue());
+    private final NumberSetting axeSlot = Setting.of("Axe slot", 1, 1, 9)
+            .hide(() -> !keepAxe.getValue());
+    private final NumberSetting blockSlot = Setting.of("Block slot", 5, 1, 9);
+    private final NumberSetting shovelSlot = Setting.of("Shovel slot", 4, 1, 9)
+            .hide(() -> !keepShovel.getValue());
+    private final NumberSetting foodSlot = Setting.of("Food slot", 6, 1, 9)
+            .hide(() -> !keepFood.getValue());
+    private final NumberSetting bowSlot = Setting.of("Bow slot", 9, 1, 9)
+            .hide(() -> !keepBow.getValue());
+
+    private final NumberSetting keepBlocks = Setting.of("Keep X stack of blocks", 3, 1, 9)
+            .hide(() -> !keepBow.getValue());
+    private final NumberSetting keepThrowables = Setting.of("Keep throwables", 3, 1, 9)
+            .hide(() -> !keepBow.getValue());
+
+    private final BooleanSetting humanized = Setting.of("Humanized", true);
+    private final NumberSetting fittsWeight = Setting.of("Fitts weight", 15, 0, 100, "%").hide(() -> !humanized.getValue());
+    private final NumberSetting hickWeight = Setting.of("Hick weight", 10, 0, 100, "%").hide(() -> !humanized.getValue());
 
     private final Counter actionTimer = new Counter();
     private final Counter startTimer = new Counter();
 
+    private int lastActionSlot = -1;
+
     public InventoryManager() {
-        super("InventoryManager", "Manages and cleans your inventory.", Category.PLAYER);
+        super("InventoryManager", "Automatically manages inventory.", Category.PLAYER);
     }
 
     @Override
     public void onEnable() {
         actionTimer.reset();
+        lastActionSlot = -1;
     }
 
     @Override
     public void onDisable() {
         actionTimer.reset();
+        lastActionSlot = -1;
+    }
+
+    @EventListen
+    private void onInitGui(DisplayGuiScreenEvent event) {
+        if (inventoryOnly.getValue()) {
+            resetTimers();
+        }
     }
 
     @EventListen
     private void onUpdate(UpdateEvent event) {
-        if (inventoryOnly.getValue() && mc.currentScreen instanceof GuiInventory) {
-            resetTimers();
-        }
         if (TargetProcessor.getInstance().target != null && exitOnEnemy.getValue() && mc.currentScreen instanceof GuiInventory) {
             mc.thePlayer.closeScreen();
         }
@@ -226,27 +249,68 @@ public class InventoryManager extends Module {
     }
 
     private void dropItem(int slot) {
-        if (!actionTimer.hasElapsed((long) MathUtil.range(minDelay.getValue().intValue(), maxDelay.getValue().intValue())) || !startTimer.hasElapsed(startDelay.getValue().longValue())) {
-            return;
-        }
+        if (!canAct(slot)) return;
         mc.playerController.windowClick(mc.thePlayer.inventoryContainer.windowId, correctSlot(slot), 1, 4, mc.thePlayer);
-        actionTimer.reset();
     }
 
     private void swapItem(int slot, int targetSlot) {
-        if (!actionTimer.hasElapsed((long) MathUtil.range(minDelay.getValue().intValue(), maxDelay.getValue().intValue())) || !startTimer.hasElapsed(startDelay.getValue().longValue())) {
-            return;
-        }
+        if (!canAct(slot)) return;
         mc.playerController.windowClick(0, correctSlot(slot), targetSlot, 2, mc.thePlayer);
-        actionTimer.reset();
     }
 
     private void shiftClickItem(int item) {
-        if (!actionTimer.hasElapsed((long) MathUtil.range(minDelay.getValue().intValue(), maxDelay.getValue().intValue())) || !startTimer.hasElapsed(startDelay.getValue().longValue())) {
-            return;
-        }
+        if (!canAct(item)) return;
         mc.playerController.windowClick(mc.thePlayer.inventoryContainer.windowId, correctSlot(item), 0, 1, mc.thePlayer);
+    }
+
+    private boolean canAct(int targetSlot) {
+        if (!startTimer.hasElapsed(startDelay.getValue().longValue())) return false;
+
+        long requiredDelay = calculateHumanizedDelay(distance(lastActionSlot, targetSlot), countNonEmptySlots());
+
+        if (!actionTimer.hasElapsed(requiredDelay)) return false;
+
         actionTimer.reset();
+        lastActionSlot = targetSlot;
+        return true;
+    }
+
+    private int countNonEmptySlots() {
+        int count = 0;
+        for (int i = 0; i < 40; i++) {
+            if (mc.thePlayer.inventory.getStackInSlot(i) != null) count++;
+        }
+        return count;
+    }
+
+    private long calculateHumanizedDelay(int distance, int choices) {
+        double min = minDelay.getValue().doubleValue();
+        double max = maxDelay.getValue().doubleValue();
+
+        if (!humanized.getValue()) {
+            return (long) MathUtil.range(min, max);
+        }
+
+        double base = (min + max) / 2.0;
+
+        double fittsComponent = Math.min(Math.log(distance + 1) / Math.log(2), 4.0);
+        double hickComponent = Math.log(choices + 1) / Math.log(2);
+
+        double fittsInfluence = fittsWeight.getValue().doubleValue() / 100.0;
+        double hickInfluence = hickWeight.getValue().doubleValue() / 100.0;
+
+        double calculatedDelay = base * (1.0 + fittsInfluence * fittsComponent + hickInfluence * hickComponent);
+
+        double randomFactor = ThreadLocalRandom.current().nextDouble(0.9, 1.1);
+
+        return (long) Math.max(min, Math.min(max, calculatedDelay * randomFactor));
+    }
+
+    private int distance(int slot1, int slot2) {
+        if (slot2 == -1) return Integer.MAX_VALUE;
+        int row1 = slot1 / 9, col1 = slot1 % 9;
+        int row2 = slot2 / 9, col2 = slot2 % 9;
+        return Math.abs(row1 - row2) + Math.abs(col1 - col2);
     }
 
     private int correctSlot(int slot) {
@@ -262,5 +326,6 @@ public class InventoryManager extends Module {
     private void resetTimers() {
         actionTimer.reset();
         startTimer.reset();
+        lastActionSlot = -1;
     }
 }

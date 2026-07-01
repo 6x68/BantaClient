@@ -59,6 +59,7 @@ public class ModuleStorage extends Storage<Module> {
         list.add(new AntiVoid());
         list.add(new ResetVL());
         list.add(new ChestStealer());
+        list.add(new InventoryManager());
 
         // Render
         list.add(new ESP());
