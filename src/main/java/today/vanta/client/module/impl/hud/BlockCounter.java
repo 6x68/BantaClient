@@ -1,31 +1,45 @@
 package today.vanta.client.module.impl.hud;
 
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiChat;
 import org.lwjgl.input.Mouse;
 import today.vanta.Vanta;
 import today.vanta.client.event.impl.game.render.DrawScreenEvent;
+import today.vanta.client.event.impl.game.render.Render2DEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.module.impl.client.Theme;
 import today.vanta.client.processor.impl.TargetProcessor;
 import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.NumberSetting;
+import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.events.EventListen;
+import today.vanta.util.game.player.ChatUtil;
 import today.vanta.util.game.player.InventoryUtil;
 import today.vanta.util.game.render.RenderUtil;
 import today.vanta.util.game.render.font.CFonts;
 import today.vanta.util.game.render.shape.impl.Rectangle;
+import today.vanta.util.system.math.animation.Animation;
+import today.vanta.util.system.math.animation.Easing;
 
 import java.awt.*;
 
 public class BlockCounter extends Module {
-    private static final Color BACKGROUND = new Color(20, 20, 20, 200);
+    private StringSetting mode = Setting.of("Mode", "Vanta", "Vanta", "Box", "Adjust");
+    private Color BACKGROUND = new Color(20, 20, 20, 200);
+    private Color colorrr = new Color(1f, 1f, 1f, 1f);
 
-    private static final float WIDTH = 90;
-    private static final float HEIHT = 40;
+    private static float WIDTH = 90;
+    private static float HEIGHT = 40;
+
+    private float centerValueX;
 
     private boolean dragging;
     private float dragX, dragY;
+    private boolean isAnimating = false;
+    private int maxBlocks = 0;
+    Color color = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
+    int blocks;
 
     private final NumberSetting
             x = Setting.of("X position", 20, 0, 2000),
@@ -35,32 +49,48 @@ public class BlockCounter extends Module {
         super("BlockCounter", "Block information.", Category.HUD);
     }
 
+    private boolean canBeDrawn() {
+        if ((mc.currentScreen instanceof GuiChat) || TargetProcessor.getInstance().scaffold.isEnabled()) {
+            return true;
+        }
+        return false;
+    }
+
+    @EventListen
+    public void onRender2D(Render2DEvent event) {
+        centerValueX = ((float) event.scaledResolution.getScaledWidth() / 2) - (WIDTH / 2);
+        if (x.getValue() == null) {return;}
+        if (x.getValue().floatValue() == centerValueX && dragging) {
+            Rectangle
+                    .create((float) event.scaledResolution.getScaledWidth() / 2 - 1, 0,2,event.scaledResolution.getScaledHeight())
+                    .color(new Color(200,200,200,180))
+                    .draw();
+        }
+    }
+
+
     @EventListen
     private void onDrawScreen(DrawScreenEvent event) {
         if (mc.thePlayer == null) return;
+        blocks = InventoryUtil.getHotbarBlockCount();
 
-        if (!(mc.currentScreen instanceof GuiChat) && !TargetProcessor.getInstance().scaffold.isEnabled()) {
-            return;
+
+        if (maxBlocks < blocks) {
+            maxBlocks = blocks;
         }
 
-        if (InventoryUtil.getHotbarBlockCount() == 0) {
-            return;
+        if (canBeDrawn()) {
+            draw();
+            if (mc.currentScreen instanceof GuiChat) {
+                handleDragging(event.mouseX, event.mouseY);
+            }
         }
-
-        if (mc.currentScreen instanceof GuiChat) {
-            handleDragging(event.mouseX, event.mouseY);
-        } else if (mc.currentScreen != null) {
-            return;
-        } else if (!TargetProcessor.getInstance().scaffold.isEnabled()) {
-            return;
-        }
-
-        draw();
     }
+
 
     private void handleDragging(float mouseX, float mouseY) {
         if (Mouse.isButtonDown(0)) {
-            if (!dragging && RenderUtil.hovered(mouseX, mouseY, x.getValue().floatValue(), y.getValue().floatValue(), WIDTH, HEIHT)) {
+            if (!dragging && RenderUtil.hovered(mouseX, mouseY, x.getValue().floatValue(), y.getValue().floatValue(), WIDTH, HEIGHT)) {
                 dragging = true;
                 dragX = mouseX - x.getValue().floatValue();
                 dragY = mouseY - y.getValue().floatValue();
@@ -76,28 +106,66 @@ public class BlockCounter extends Module {
     }
 
     private void draw() {
-        Color color = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
-        int blocks = InventoryUtil.getHotbarBlockCount();
-
         float x = this.x.getValue().floatValue();
         float y = this.y.getValue().floatValue();
+        switch(mode.getValue()) {
+            case "Vanta":
+                WIDTH = 90;
+                HEIGHT = 40;
 
-        Rectangle
-                .create(x, y, WIDTH, HEIHT)
-                .color(BACKGROUND)
-                .draw();
+                Rectangle
+                        .create(x, y, WIDTH, HEIGHT)
+                        .color(BACKGROUND)
+                        .draw();
 
-        RenderUtil.renderScaledItem(InventoryUtil.getBestBlockStack(), x, y + 0.5f, 2.4f);
+                RenderUtil.renderScaledItem(InventoryUtil.getBestBlockStack(), x, y + 0.5f, 2.4f);
 
-        CFonts.SFPT_SEMIBOLD_20.drawStringWithShadow("Blocks", x + 38, y + 4, color);
-        CFonts.SFPT_SEMIBOLD_20.drawStringWithShadow(String.valueOf(blocks), x + 38, y + 15, Color.WHITE);
+                CFonts.SFPT_SEMIBOLD_20.drawStringWithShadow("Blocks", x + 38, y + 4, color);
+                CFonts.SFPT_SEMIBOLD_20.drawStringWithShadow(String.valueOf(blocks), x + 38, y + 15, Color.WHITE);
+                break;
+            case "Adjust":
+
+                break;
+            case "Box":
+                WIDTH = 90;
+                HEIGHT = 20;
+
+                color = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
+                blocks = InventoryUtil.getHotbarBlockCount();
+                float barWidth = WIDTH - 4;
+                float bar = barWidth * ((float) blocks / maxBlocks);
+
+                Rectangle
+                        .create(x, y, WIDTH, HEIGHT)
+                        .color(BACKGROUND)
+                        .draw();
+
+                Rectangle
+                        .create(x + 2, y + 14, barWidth, 3)
+                        .color(BACKGROUND.darker())
+                        .draw();
+
+                Rectangle
+                        .create(x + 2, y + 14, bar, 3)
+                        .color(color)
+                        .draw();
+
+                String block_str = String.valueOf(blocks);
+                float length = CFonts.SFPT_SEMIBOLD_20.getStringWidth(block_str);
+
+                CFonts.SFPT_SEMIBOLD_20.drawStringWithShadow("Blocks", x, y + 1, colorrr);
+                CFonts.SFPT_SEMIBOLD_20.drawStringWithShadow(block_str, x + WIDTH - length - 2, y + 1, colorrr);
+                break;
+        }
 
         if (dragging && mc.currentScreen instanceof GuiChat) {
             Rectangle
-                    .create(x - 0.5, y - 0.5, WIDTH + 1, HEIHT + 1)
+                    .create(x - 0.5, y - 0.5, WIDTH + 1, HEIGHT + 1)
                     .outline(true)
                     .color(color)
                     .draw();
         }
     }
+
+
 }
