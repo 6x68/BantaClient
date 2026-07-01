@@ -69,6 +69,7 @@ public class ModuleStorage extends Storage<Module> {
         list.add(new ClientBrand());
         list.add(new Timer());
         list.add(new AntiExploit());
+        list.add(new AntiCheat());
 
         //Hud
         list.add(new Arraylist());
