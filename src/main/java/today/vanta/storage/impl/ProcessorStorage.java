@@ -9,6 +9,7 @@ public class ProcessorStorage extends Storage<Processor> {
     public void subscribe() {
         super.subscribe();
 
+        list.add(new KeyProcessor());
         list.add(new AnimationProcessor());
         list.add(new VersionProcessor());
         list.add(new RotationProcessor());

@@ -1,21 +1,15 @@
 package today.vanta.storage.impl;
 
-import today.vanta.client.event.impl.system.KeyboardEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.module.impl.client.*;
 import today.vanta.client.module.impl.hud.*;
-import today.vanta.client.module.impl.misc.AntiExploit;
-import today.vanta.client.module.impl.misc.ClientBrand;
-import today.vanta.client.module.impl.misc.Disabler;
-import today.vanta.client.module.impl.misc.Timer;
+import today.vanta.client.module.impl.misc.*;
 import today.vanta.client.module.impl.movement.*;
 import today.vanta.client.module.impl.combat.*;
 import today.vanta.client.module.impl.player.*;
 import today.vanta.client.module.impl.render.*;
 import today.vanta.storage.Storage;
-import today.vanta.util.game.events.EventListen;
-import today.vanta.util.game.events.EventPriority;
 
 import java.util.Arrays;
 import java.util.List;
@@ -85,15 +79,6 @@ public class ModuleStorage extends Storage<Module> {
         list.add(new TargetList());
 
         this.context = null;
-    }
-
-    @EventListen(priority = EventPriority.HIGHEST)
-    private void onKey(KeyboardEvent event) {
-        list.forEach(mod -> {
-            if (event.key == mod.key) {
-                mod.setEnabled(!mod.isEnabled());
-            }
-        });
     }
 
     public List<Module> getModulesByCategory(Category input) {
