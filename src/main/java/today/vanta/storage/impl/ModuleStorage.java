@@ -58,6 +58,7 @@ public class ModuleStorage extends Storage<Module> {
         list.add(new NoClickDelay());
         list.add(new AntiVoid());
         list.add(new ResetVL());
+        list.add(new ChestStealer());
 
         // Render
         list.add(new ESP());
