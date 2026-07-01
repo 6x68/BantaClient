@@ -25,8 +25,8 @@ public class ChestStealer extends Module {
     private final BooleanSetting closeAfterStealing = Setting.of("Auto close", true);
     private final BooleanSetting titleCheck = Setting.of("Title check", true);
     private final BooleanSetting humanized = Setting.of("Humanized", true);
-    private final NumberSetting fittsWeight = Setting.of("Fitts weight", 15, 0, 100, "%");
-    private final NumberSetting hickWeight = Setting.of("Hick weight", 10, 0, 100, "%");
+    private final NumberSetting fittsWeight = Setting.of("Fitts weight", 15, 0, 100, "%").hide(() -> !humanized.getValue());
+    private final NumberSetting hickWeight = Setting.of("Hick weight", 10, 0, 100, "%").hide(() -> !humanized.getValue());
 
     private final Counter actionTimer = new Counter();
     private final Counter startTimer = new Counter();

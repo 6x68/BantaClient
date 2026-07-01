@@ -10,6 +10,7 @@ public interface IClient {
     String CLIENT_FULL_TITLE = CLIENT_NAME + " - " + CLIENT_VERSION + " - " + DEVELOPERS;
 
     List<String> CHANGELOG = Arrays.asList(
-
+            "[#] Reworked InventoryManager",
+            "[#] Reworked ChestStealer"
     );
 }
