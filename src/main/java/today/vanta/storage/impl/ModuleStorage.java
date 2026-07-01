@@ -47,6 +47,7 @@ public class ModuleStorage extends Storage<Module> {
         list.add(new Jesus());
         list.add(new NoJumpDelay());
         list.add(new SaveMoveKeys());
+        list.add(new ClickTeleport());
 
         // Player
         list.add(new Scaffold());

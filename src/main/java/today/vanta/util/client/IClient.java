@@ -16,6 +16,7 @@ public interface IClient {
     List<String> CHANGELOG = Arrays.asList(
             "[+] Added Commands - help, bind, toggle, clear, teleport",
             "[+] Added command suggestions",
+            "[+] Added ClickTeleport",
             "[+] Added AntiExploit",
             "[+] Added AntiCheat",
             "[#] Reworked InventoryManager",
