@@ -60,7 +60,7 @@ public class AntiCheat extends Module {
     private int cleanupTicks = 0;
 
     public AntiCheat() {
-        super("AntiCheat", "Client side anticheat - NCP", Category.MISC);
+        super("AntiCheat", "Client side anticheat - NCP.", Category.MISC);
     }
 
     @Override
