@@ -7,36 +7,34 @@ import today.vanta.util.game.render.shape.Shape;
 import javax.annotation.Nonnull;
 import java.awt.*;
 
-import static org.lwjgl.opengl.GL11.*;
-
-public class Rectangle extends Shape<Rectangle> {
+public class Triangle extends Shape<Triangle> {
     private Color color = Color.WHITE;
 
     private boolean outline = false;
     private float outlineWidth = 2.0f;
 
-    private Rectangle(double x, double y, double width, double height) {
+    private Triangle(double x, double y, double width, double height) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
     }
 
-    public static Rectangle create(double x, double y, double width, double height) {
-        return new Rectangle(x, y, width, height);
+    public static Triangle create(double x, double y, double width, double height) {
+        return new Triangle(x, y, width, height);
     }
 
-    public Rectangle color(@Nonnull Color color) {
+    public Triangle color(@Nonnull Color color) {
         this.color = color;
         return this;
     }
 
-    public Rectangle outline(boolean outline) {
+    public Triangle outline(boolean outline) {
         this.outline = outline;
         return this;
     }
 
-    public Rectangle outlineWidth(float outlineWidth) {
+    public Triangle outlineWidth(float outlineWidth) {
         this.outlineWidth = outlineWidth;
         return this;
     }
@@ -53,11 +51,10 @@ public class Rectangle extends Shape<Rectangle> {
         GL11.glLineWidth(outlineWidth);
 
         RenderUtil.color(color);
-        GL11.glBegin(outline ? GL_LINE_LOOP : GL_QUADS);
-        GL11.glVertex2d(x, y);
-        GL11.glVertex2d(x + width, y);
-        GL11.glVertex2d(x + width, y + height);
+        GL11.glBegin(outline ? GL11.GL_LINE_LOOP : GL11.GL_TRIANGLES);
+        GL11.glVertex2d(x + width / 2.0, y);
         GL11.glVertex2d(x, y + height);
+        GL11.glVertex2d(x + width, y + height);
         GL11.glEnd();
 
         GL11.glPopMatrix();

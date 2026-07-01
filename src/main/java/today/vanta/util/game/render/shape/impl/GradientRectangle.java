@@ -10,7 +10,7 @@ import java.awt.*;
 
 import static org.lwjgl.opengl.GL11.GL_LINE_LOOP;
 
-public class GradientRectangle extends Shape {
+public class GradientRectangle extends Shape<GradientRectangle> {
     private Color firstColor = Color.WHITE;
     private Color secondColor = Color.BLACK;
 
@@ -59,11 +59,15 @@ public class GradientRectangle extends Shape {
     public void draw() {
         RenderUtil.start();
 
+        GL11.glPushMatrix();
+        GL11.glTranslated(x + width / 2.0, y + height / 2.0, 0);
+        GL11.glRotatef(rotation, 0, 0, 1);
+        GL11.glTranslated(-(x + width / 2.0), -(y + height / 2.0), 0);
+
         GL11.glLineWidth(outlineWidth);
 
         GL11.glShadeModel(GL11.GL_SMOOTH);
         GL11.glBegin(outline ? GL_LINE_LOOP : GL11.GL_QUADS);
-
         switch (gradientMode) {
             case VERTICAL:
                 // Top left
@@ -101,9 +105,10 @@ public class GradientRectangle extends Shape {
 
                 break;
         }
-
         GL11.glEnd();
         GL11.glShadeModel(GL11.GL_FLAT);
+
+        GL11.glPopMatrix();
 
         RenderUtil.stop();
     }

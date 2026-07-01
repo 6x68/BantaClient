@@ -11,7 +11,7 @@ import today.vanta.util.game.render.shape.Shape;
 import javax.annotation.Nonnull;
 import java.awt.*;
 
-public class ImageRectangle extends Shape {
+public class ImageRectangle extends Shape<ImageRectangle> {
     private int textureId = -1;
     private Color color = Color.WHITE;
 
@@ -72,6 +72,11 @@ public class ImageRectangle extends Shape {
 
         RenderUtil.start();
 
+        GL11.glPushMatrix();
+        GL11.glTranslated(x + width / 2.0, y + height / 2.0, 0);
+        GL11.glRotatef(rotation, 0, 0, 1);
+        GL11.glTranslated(-(x + width / 2.0), -(y + height / 2.0), 0);
+
         double minU = u / tileWidth;
         double minV = v / tileHeight;
 
@@ -92,6 +97,8 @@ public class ImageRectangle extends Shape {
         GL11.glTexCoord2d(minU, maxV);
         GL11.glVertex2d(x, y + height);
         GL11.glEnd();
+
+        GL11.glPopMatrix();
 
         RenderUtil.stop();
     }
