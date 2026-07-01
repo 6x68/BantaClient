@@ -4,16 +4,14 @@ import com.google.common.collect.Lists;
 import net.minecraft.network.play.client.C14PacketTabComplete;
 import net.minecraft.util.*;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import today.vanta.client.event.impl.game.render.ChatDrawScreenEvent;
 
 import java.io.IOException;
 import java.util.List;
 
 public class GuiChat extends GuiScreen {
-    private static final Logger logger = LogManager.getLogger();
     private String historyBuffer = "";
     private int sentHistoryCursor = -1;
     private boolean playerNamesFound;
@@ -76,7 +74,7 @@ public class GuiChat extends GuiScreen {
         } else {
             String s = this.inputField.getText().trim();
 
-            if (s.length() > 0) {
+            if (!s.isEmpty()) {
                 this.sendChatMessage(s);
             }
 
@@ -137,9 +135,8 @@ public class GuiChat extends GuiScreen {
             int i = this.inputField.func_146197_a(-1, this.inputField.getCursorPosition(), false);
             this.foundPlayerNames.clear();
             this.autocompleteIndex = 0;
-            String s = this.inputField.getText().substring(i).toLowerCase();
             String s1 = this.inputField.getText().substring(0, this.inputField.getCursorPosition());
-            this.sendAutocompleteRequest(s1, s);
+            this.sendAutocompleteRequest(s1);
 
             if (this.foundPlayerNames.isEmpty()) {
                 return;
@@ -166,15 +163,15 @@ public class GuiChat extends GuiScreen {
         this.inputField.writeText(this.foundPlayerNames.get(this.autocompleteIndex++));
     }
 
-    private void sendAutocompleteRequest(String p_146405_1_, String p_146405_2_) {
-        if (p_146405_1_.length() >= 1) {
+    private void sendAutocompleteRequest(String msg) {
+        if (!msg.isEmpty()) {
             BlockPos blockpos = null;
 
             if (this.mc.objectMouseOver != null && this.mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
                 blockpos = this.mc.objectMouseOver.getBlockPos();
             }
 
-            this.mc.thePlayer.sendQueue.addToSendQueue(new C14PacketTabComplete(p_146405_1_, blockpos));
+            this.mc.thePlayer.sendQueue.addToSendQueue(new C14PacketTabComplete(msg, blockpos));
             this.waitingOnAutocomplete = true;
         }
     }
@@ -202,6 +199,22 @@ public class GuiChat extends GuiScreen {
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         drawRect(2, this.height - 14, this.width - 2, this.height - 2, Integer.MIN_VALUE);
         this.inputField.drawTextBox();
+
+        ChatDrawScreenEvent chatDrawScreenEvent = new ChatDrawScreenEvent(this.inputField.getText());
+        chatDrawScreenEvent.call();
+
+        if (chatDrawScreenEvent.inlineSuggestion != null) {
+            int textWidth = this.fontRendererObj.getStringWidth(this.inputField.getText());
+            this.fontRendererObj.drawStringWithShadow(EnumChatFormatting.GRAY + chatDrawScreenEvent.inlineSuggestion, 4 + textWidth, this.height - 12, -1);
+        }
+
+        if (chatDrawScreenEvent.suggestions.size() > 1) {
+            for (int i = 0; i < chatDrawScreenEvent.suggestions.size(); i++) {
+                String suggestion = chatDrawScreenEvent.suggestions.get(i);
+                this.fontRendererObj.drawStringWithShadow(EnumChatFormatting.GRAY + suggestion, 4, this.height - 25 - (i * this.fontRendererObj.FONT_HEIGHT), -1);
+            }
+        }
+
         IChatComponent ichatcomponent = this.mc.ingameGUI.getChatGUI().getChatComponent(Mouse.getX(), Mouse.getY());
 
         if (ichatcomponent != null && ichatcomponent.getChatStyle().getChatHoverEvent() != null) {
@@ -211,24 +224,24 @@ public class GuiChat extends GuiScreen {
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 
-    public void onAutocompleteResponse(String[] p_146406_1_) {
+    public void onAutocompleteResponse(String[] matches) {
         if (this.waitingOnAutocomplete) {
             this.playerNamesFound = false;
             this.foundPlayerNames.clear();
 
-            for (String s : p_146406_1_) {
-                if (s.length() > 0) {
+            for (String s : matches) {
+                if (!s.isEmpty()) {
                     this.foundPlayerNames.add(s);
                 }
             }
 
             String s1 = this.inputField.getText().substring(this.inputField.func_146197_a(-1, this.inputField.getCursorPosition(), false));
-            String s2 = StringUtils.getCommonPrefix(p_146406_1_);
+            String s2 = StringUtils.getCommonPrefix(matches);
 
-            if (s2.length() > 0 && !s1.equalsIgnoreCase(s2)) {
+            if (!s2.isEmpty() && !s1.equalsIgnoreCase(s2)) {
                 this.inputField.deleteFromCursor(this.inputField.func_146197_a(-1, this.inputField.getCursorPosition(), false) - this.inputField.getCursorPosition());
                 this.inputField.writeText(s2);
-            } else if (this.foundPlayerNames.size() > 0) {
+            } else if (!this.foundPlayerNames.isEmpty()) {
                 this.playerNamesFound = true;
                 this.autocompletePlayerNames();
             }

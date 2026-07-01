@@ -4,6 +4,7 @@ import today.vanta.Vanta;
 import today.vanta.client.command.Command;
 import today.vanta.client.event.impl.game.network.PrintChatMessage;
 import today.vanta.client.event.impl.game.player.SendChatMessageEvent;
+import today.vanta.client.event.impl.game.render.ChatDrawScreenEvent;
 import today.vanta.client.processor.Processor;
 import today.vanta.util.client.IClient;
 import today.vanta.util.game.events.EventListen;
@@ -56,6 +57,12 @@ public class ChatProcessor extends Processor {
         if (event.message.contains("nigger")) {
             Sounds.NIGGER.play();
         }
+    }
+
+    @EventListen
+    private void onChatDrawScreen(ChatDrawScreenEvent event) {
+        event.inlineSuggestion = Vanta.instance.commandStorage.getInlineSuggestion(event.text);
+        event.suggestions.addAll(Vanta.instance.commandStorage.getMatchingCommands(event.text));
     }
 
     public static ChatProcessor getInstance() {

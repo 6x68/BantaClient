@@ -1073,11 +1073,11 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
 
     public void handleTabComplete(S3APacketTabComplete packetIn) {
         PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.gameController);
-        String[] astring = packetIn.func_149630_c();
+        String[] matches = packetIn.func_149630_c();
 
         if (this.gameController.currentScreen instanceof GuiChat) {
             GuiChat guichat = (GuiChat) this.gameController.currentScreen;
-            guichat.onAutocompleteResponse(astring);
+            guichat.onAutocompleteResponse(matches);
         }
     }
 
