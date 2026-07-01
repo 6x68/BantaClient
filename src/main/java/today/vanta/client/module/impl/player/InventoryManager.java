@@ -3,6 +3,8 @@ package today.vanta.client.module.impl.player;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.item.*;
+import net.minecraft.network.play.client.C0DPacketCloseWindow;
+import net.minecraft.network.play.client.C16PacketClientStatus;
 import today.vanta.client.event.impl.game.render.DisplayGuiScreenEvent;
 import today.vanta.client.event.impl.game.world.UpdateEvent;
 import today.vanta.client.module.Category;
@@ -21,16 +23,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.function.Consumer;
 
 public class InventoryManager extends Module {
+    private static final long CLOSE_DELAY = 50L;
+
     private final NumberSetting minDelay = Setting.of("Min delay", 300, 10, 1000, "ms");
     private final NumberSetting maxDelay = Setting.of("Max delay", 300, 10, 1000, "ms");
     private final BooleanSetting inventoryOnly = Setting.of("Inventory only", true);
     private final BooleanSetting exitOnEnemy = Setting.of("Exit on enemy", true);
 
-    private final NumberSetting startDelay = Setting.of("Initial delay", 100, 10, 1000, "ms")
-            .hide(() -> !inventoryOnly.getValue());
+    private final NumberSetting startDelay = Setting.of("Initial delay", 100, 10, 1000, "ms");
 
     private final BooleanSetting keepSword = Setting.of("Keep swords", true);
     private final BooleanSetting keepPickaxe = Setting.of("Keep pickaxes", true);
@@ -53,19 +55,26 @@ public class InventoryManager extends Module {
     private final NumberSetting bowSlot = Setting.of("Bow slot", 9, 1, 9)
             .hide(() -> !keepBow.getValue());
 
-    private final NumberSetting keepBlocks = Setting.of("Keep X stack of blocks", 3, 1, 9)
-            .hide(() -> !keepBow.getValue());
-    private final NumberSetting keepThrowables = Setting.of("Keep throwables", 3, 1, 9)
-            .hide(() -> !keepBow.getValue());
+    private final NumberSetting keepBlocks = Setting.of("Keep X stack of blocks", 3, 1, 9);
+    private final NumberSetting keepThrowables = Setting.of("Keep throwables", 3, 1, 9);
 
     private final BooleanSetting humanized = Setting.of("Humanized", true);
     private final NumberSetting fittsWeight = Setting.of("Fitts weight", 15, 0, 100, "%").hide(() -> !humanized.getValue());
     private final NumberSetting hickWeight = Setting.of("Hick weight", 10, 0, 100, "%").hide(() -> !humanized.getValue());
 
+    private final BooleanSetting whileMoving = Setting.of("While moving", false)
+            .hide(() -> inventoryOnly.getValue());
+
     private final Counter actionTimer = new Counter();
     private final Counter startTimer = new Counter();
+    private final Counter stateTimer = new Counter();
 
     private int lastActionSlot = -1;
+    private boolean actionPerformed;
+    private int actionsSinceOpen;
+
+    private enum SilentState { CLOSED, OPENING, OPEN, CLOSING }
+    private SilentState silentState = SilentState.CLOSED;
 
     public InventoryManager() {
         super("InventoryManager", "Automatically manages inventory.", Category.PLAYER);
@@ -76,50 +85,185 @@ public class InventoryManager extends Module {
     public void onEnable() {
         actionTimer.reset();
         lastActionSlot = -1;
+        silentState = SilentState.CLOSED;
+        actionsSinceOpen = 0;
     }
 
     @Override
     public void onDisable() {
         actionTimer.reset();
         lastActionSlot = -1;
+        closeSilentInventory();
     }
 
     @EventListen
     private void onInitGui(DisplayGuiScreenEvent event) {
-        if (inventoryOnly.getValue()) {
+        if (event.screen instanceof GuiInventory) {
             resetTimers();
         }
     }
 
     @EventListen
     private void onUpdate(UpdateEvent event) {
-        if (TargetProcessor.getInstance().target != null && exitOnEnemy.getValue() && mc.currentScreen instanceof GuiInventory) {
-            mc.thePlayer.closeScreen();
+        if (TargetProcessor.getInstance().target != null && exitOnEnemy.getValue()) {
+            if (mc.currentScreen instanceof GuiInventory) {
+                mc.thePlayer.closeScreen();
+            }
+            closeSilentInventory();
+        } else if (mc.currentScreen instanceof GuiInventory) {
+            manageInventory();
+            resetSilentState();
+            return;
+        } else if (inventoryOnly.getValue()) {
+            closeSilentInventory();
+        } else if (!whileMoving.getValue() && isMoving()) {
+            closeSilentInventory();
+        } else if (isBusy()) {
+            closeSilentInventory();
         }
 
-        if (mc.currentScreen instanceof GuiInventory && inventoryOnly.getValue()) {
-            manageInventory();
+        processSilentState();
+    }
+
+    private void processSilentState() {
+        switch (silentState) {
+            case CLOSED:
+                if (mc.currentScreen != null) return;
+                if (inventoryOnly.getValue()) return;
+                if (!whileMoving.getValue() && isMoving()) return;
+                if (isBusy()) return;
+                if (!hasWork()) return;
+
+                openSilentInventory();
+                silentState = SilentState.OPENING;
+                stateTimer.reset();
+                actionsSinceOpen = 0;
+                break;
+
+            case OPENING:
+                if (stateTimer.hasElapsed(startDelay.getValue().longValue())) {
+                    silentState = SilentState.OPEN;
+                }
+                break;
+
+            case OPEN:
+                actionPerformed = false;
+                manageInventory();
+
+                if (actionPerformed) {
+                    actionsSinceOpen++;
+                } else if (!hasWork()) {
+                    closeSilentInventory();
+                    silentState = SilentState.CLOSING;
+                    stateTimer.reset();
+                }
+                break;
+
+            case CLOSING:
+                if (stateTimer.hasElapsed(CLOSE_DELAY)) {
+                    silentState = SilentState.CLOSED;
+                }
+                break;
         }
     }
 
     private void manageInventory() {
+        actionPerformed = false;
+
         List<Integer> throwableItems = new ArrayList<>();
         List<Integer> blockItems = new ArrayList<>();
         int[] bestItems = getBestItems();
-
-        Map<Class<? extends Item>, Consumer<Integer>> itemHandlers = createItemHandlers(throwableItems, blockItems, bestItems);
 
         for (int i = 0; i < 40; i++) {
             ItemStack stack = mc.thePlayer.inventory.getStackInSlot(i);
             if (stack == null) continue;
 
-            itemHandlers.getOrDefault(stack.getItem().getClass(), this::handleTrash).accept(i);
+            Item item = stack.getItem();
+            if (item instanceof ItemBlock) {
+                handleBlockItem(i, blockItems);
+            } else if (item instanceof ItemSnowball || item instanceof ItemEgg) {
+                handleThrowableItem(i, throwableItems);
+            } else if (item instanceof ItemSword) {
+                handleBestItem(i, bestItems[4], keepSword);
+            } else if (item instanceof ItemFood) {
+                handleBestItem(i, bestItems[9], keepFood);
+            } else if (item instanceof ItemPickaxe) {
+                handleBestItem(i, bestItems[5], keepPickaxe);
+            } else if (item instanceof ItemAxe) {
+                handleBestItem(i, bestItems[6], keepAxe);
+            } else if (item instanceof ItemSpade) {
+                handleBestItem(i, bestItems[7], keepShovel);
+            } else if (item instanceof ItemBow) {
+                handleBestItem(i, bestItems[10], keepBow);
+            } else {
+                handleTrash(i);
+            }
         }
 
         dropExtraStacks(blockItems, keepBlocks.getValue().intValue());
         dropExtraStacks(throwableItems, keepThrowables.getValue().intValue());
         handleArmor(bestItems);
         handleHotbarItems(bestItems);
+    }
+
+    private boolean hasWork() {
+        List<Integer> throwableItems = new ArrayList<>();
+        List<Integer> blockItems = new ArrayList<>();
+        int[] bestItems = getBestItems();
+
+        for (int i = 0; i < 40; i++) {
+            ItemStack stack = mc.thePlayer.inventory.getStackInSlot(i);
+            if (stack == null) continue;
+
+            Item item = stack.getItem();
+            if (item instanceof ItemBlock) {
+                Block block = ((ItemBlock) item).getBlock();
+                if (!InventoryUtil.canPlaceOnBlock(block)) {
+                    return true;
+                }
+                blockItems.add(i);
+            } else if (item instanceof ItemSnowball || item instanceof ItemEgg) {
+                throwableItems.add(i);
+            } else if (item instanceof ItemSword) {
+                if (!keepSword.getValue() || (bestItems[4] != -1 && bestItems[4] != i)) return true;
+            } else if (item instanceof ItemFood) {
+                if (!keepFood.getValue() || (bestItems[9] != -1 && bestItems[9] != i)) return true;
+            } else if (item instanceof ItemPickaxe) {
+                if (!keepPickaxe.getValue() || (bestItems[5] != -1 && bestItems[5] != i)) return true;
+            } else if (item instanceof ItemAxe) {
+                if (!keepAxe.getValue() || (bestItems[6] != -1 && bestItems[6] != i)) return true;
+            } else if (item instanceof ItemSpade) {
+                if (!keepShovel.getValue() || (bestItems[7] != -1 && bestItems[7] != i)) return true;
+            } else if (item instanceof ItemBow) {
+                if (!keepBow.getValue() || (bestItems[10] != -1 && bestItems[10] != i)) return true;
+            } else if (InventoryUtil.isTrash(item)) {
+                return true;
+            }
+        }
+
+        if (blockItems.size() > keepBlocks.getValue().intValue()) return true;
+        if (throwableItems.size() > keepThrowables.getValue().intValue()) return true;
+
+        for (int i = 0; i < 40; i++) {
+            ItemStack stack = mc.thePlayer.inventory.getStackInSlot(i);
+            if (stack != null && stack.getItem() instanceof ItemArmor) {
+                ItemArmor armor = (ItemArmor) stack.getItem();
+                if (i != bestItems[armor.armorType]) return true;
+            }
+        }
+
+        for (int i = 0; i < 4; i++) {
+            if (bestItems[i] != -1 && bestItems[i] != 39 - i) return true;
+        }
+
+        if (keepSword.getValue() && bestItems[4] != -1 && bestItems[4] != swordSlot.getValue().intValue() - 1) return true;
+        if (keepPickaxe.getValue() && bestItems[5] != -1 && bestItems[5] != pickaxeSlot.getValue().intValue() - 1) return true;
+        if (keepAxe.getValue() && bestItems[6] != -1 && bestItems[6] != axeSlot.getValue().intValue() - 1) return true;
+        if (keepShovel.getValue() && bestItems[7] != -1 && bestItems[7] != shovelSlot.getValue().intValue() - 1) return true;
+        if (keepFood.getValue() && bestItems[9] != -1 && bestItems[9] != foodSlot.getValue().intValue() - 1) return true;
+        if (keepBow.getValue() && bestItems[10] != -1 && bestItems[10] != bowSlot.getValue().intValue() - 1) return true;
+
+        return bestItems[8] != -1 && bestItems[8] != blockSlot.getValue().intValue() - 1;
     }
 
     private int[] getBestItems() {
@@ -136,20 +280,6 @@ public class InventoryManager extends Module {
                 InventoryUtil.getBestFood(),
                 InventoryUtil.getBestBow()
         };
-    }
-
-    private Map<Class<? extends Item>, Consumer<Integer>> createItemHandlers(List<Integer> throwableItems, List<Integer> blockItems, int[] bestItems) {
-        Map<Class<? extends Item>, Consumer<Integer>> itemHandlers = new HashMap<>();
-        itemHandlers.put(ItemBlock.class, i -> handleBlockItem(i, blockItems));
-        itemHandlers.put(ItemSnowball.class, i -> handleThrowableItem(i, throwableItems));
-        itemHandlers.put(ItemEgg.class, i -> handleThrowableItem(i, throwableItems));
-        itemHandlers.put(ItemSword.class, i -> handleBestItem(i, bestItems[4]));
-        itemHandlers.put(ItemFood.class, i -> handleBestItem(i, bestItems[9]));
-        itemHandlers.put(ItemPickaxe.class, i -> handleBestItem(i, bestItems[5]));
-        itemHandlers.put(ItemAxe.class, i -> handleBestItem(i, bestItems[6]));
-        itemHandlers.put(ItemSpade.class, i -> handleBestItem(i, bestItems[7]));
-        itemHandlers.put(ItemBow.class, i -> handleBestItem(i, bestItems[10]));
-        return itemHandlers;
     }
 
     private void handleBlockItem(int i, List<Integer> blockItems) {
@@ -176,7 +306,11 @@ public class InventoryManager extends Module {
         }
     }
 
-    private void handleBestItem(int i, int bestItem) {
+    private void handleBestItem(int i, int bestItem, BooleanSetting keepSetting) {
+        if (!keepSetting.getValue()) {
+            dropItem(i);
+            return;
+        }
         if (bestItem != -1 && bestItem != i) {
             dropItem(i);
         }
@@ -273,6 +407,7 @@ public class InventoryManager extends Module {
 
         actionTimer.reset();
         lastActionSlot = targetSlot;
+        actionPerformed = true;
         return true;
     }
 
@@ -322,6 +457,34 @@ public class InventoryManager extends Module {
             return slot + 36;
         }
         return slot;
+    }
+
+    private boolean isMoving() {
+        return mc.thePlayer.movementInput.moveForward != 0 || mc.thePlayer.movementInput.moveStrafe != 0;
+    }
+
+    private boolean isBusy() {
+        return mc.playerController.getIsHittingBlock()
+                || mc.thePlayer.isUsingItem()
+                || mc.thePlayer.isSwingInProgress;
+    }
+
+    private void openSilentInventory() {
+        mc.thePlayer.sendQueue.addToSendQueue(new C16PacketClientStatus(C16PacketClientStatus.EnumState.OPEN_INVENTORY_ACHIEVEMENT));
+        resetTimers();
+    }
+
+    private void closeSilentInventory() {
+        if (silentState == SilentState.CLOSED || silentState == SilentState.CLOSING) return;
+        mc.thePlayer.sendQueue.addToSendQueue(new C0DPacketCloseWindow(mc.thePlayer.openContainer.windowId));
+        silentState = SilentState.CLOSING;
+        stateTimer.reset();
+        lastActionSlot = -1;
+    }
+
+    private void resetSilentState() {
+        silentState = SilentState.CLOSED;
+        lastActionSlot = -1;
     }
 
     private void resetTimers() {
