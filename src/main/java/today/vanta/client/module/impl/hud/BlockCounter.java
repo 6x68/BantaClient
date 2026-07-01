@@ -1,6 +1,5 @@
 package today.vanta.client.module.impl.hud;
 
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiChat;
 import org.lwjgl.input.Mouse;
 import today.vanta.Vanta;
@@ -14,51 +13,43 @@ import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.NumberSetting;
 import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.events.EventListen;
-import today.vanta.util.game.player.ChatUtil;
 import today.vanta.util.game.player.InventoryUtil;
 import today.vanta.util.game.render.RenderUtil;
 import today.vanta.util.game.render.font.CFonts;
 import today.vanta.util.game.render.shape.impl.Rectangle;
-import today.vanta.util.system.math.animation.Animation;
-import today.vanta.util.system.math.animation.Easing;
 
 import java.awt.*;
 
 public class BlockCounter extends Module {
-    private StringSetting mode = Setting.of("Mode", "Vanta", "Vanta", "Box", "Adjust");
-    private Color BACKGROUND = new Color(20, 20, 20, 200);
-    private Color colorrr = new Color(1f, 1f, 1f, 1f);
+    private static final Color BACKGROUND = new Color(20, 20, 20, 200);
 
-    private static float WIDTH = 90;
-    private static float HEIGHT = 40;
-
-    private float centerValueX;
-
-    private boolean dragging;
-    private float dragX, dragY;
-    private boolean isAnimating = false;
-    private int maxBlocks = 0;
-    Color color = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
-    int blocks;
+    private final StringSetting mode = Setting.of("Mode", "Vanta", "Vanta", "Box");
 
     private final NumberSetting
             x = Setting.of("X position", 20, 0, 2000),
             y = Setting.of("Y position", 70, 0, 2000);
+
+    private static float WIDTH = 90;
+    private static float HEIGHT = 40;
+
+    private boolean dragging;
+    private float dragX, dragY;
+    private int maxBlocks = 0;
+
+    private Color color = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
+    private int blocks;
 
     public BlockCounter() {
         super("BlockCounter", "Block information.", Category.HUD);
     }
 
     private boolean canBeDrawn() {
-        if ((mc.currentScreen instanceof GuiChat) || TargetProcessor.getInstance().scaffold.isEnabled()) {
-            return true;
-        }
-        return false;
+        return (mc.currentScreen instanceof GuiChat) || TargetProcessor.getInstance().scaffold.isEnabled();
     }
 
     @EventListen
     public void onRender2D(Render2DEvent event) {
-        centerValueX = ((float) event.scaledResolution.getScaledWidth() / 2) - (WIDTH / 2);
+        float centerValueX = ((float) event.scaledResolution.getScaledWidth() / 2) - (WIDTH / 2);
         if (x.getValue() == null) {return;}
         if (x.getValue().floatValue() == centerValueX && dragging) {
             Rectangle
@@ -67,7 +58,6 @@ public class BlockCounter extends Module {
                     .draw();
         }
     }
-
 
     @EventListen
     private void onDrawScreen(DrawScreenEvent event) {
@@ -123,9 +113,7 @@ public class BlockCounter extends Module {
                 CFonts.SFPT_SEMIBOLD_20.drawStringWithShadow("Blocks", x + 38, y + 4, color);
                 CFonts.SFPT_SEMIBOLD_20.drawStringWithShadow(String.valueOf(blocks), x + 38, y + 15, Color.WHITE);
                 break;
-            case "Adjust":
 
-                break;
             case "Box":
                 WIDTH = 90;
                 HEIGHT = 20;
@@ -153,8 +141,8 @@ public class BlockCounter extends Module {
                 String block_str = String.valueOf(blocks);
                 float length = CFonts.SFPT_SEMIBOLD_20.getStringWidth(block_str);
 
-                CFonts.SFPT_SEMIBOLD_20.drawStringWithShadow("Blocks", x, y + 1, colorrr);
-                CFonts.SFPT_SEMIBOLD_20.drawStringWithShadow(block_str, x + WIDTH - length - 2, y + 1, colorrr);
+                CFonts.SFPT_SEMIBOLD_20.drawStringWithShadow("Blocks", x, y + 1, -1);
+                CFonts.SFPT_SEMIBOLD_20.drawStringWithShadow(block_str, x + WIDTH - length - 2, y + 1, -1);
                 break;
         }
 
@@ -166,6 +154,4 @@ public class BlockCounter extends Module {
                     .draw();
         }
     }
-
-
 }
