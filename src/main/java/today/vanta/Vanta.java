@@ -17,6 +17,7 @@ public enum Vanta {
     public final EventBus eventBus = new EventBus();
 
     public ModuleStorage moduleStorage;
+    public CommandStorage commandStorage;
     public ConfigStorage configStorage;
     public ProcessorStorage processorStorage;
 
@@ -37,11 +38,13 @@ public enum Vanta {
         }
 
         moduleStorage = new ModuleStorage();
+        commandStorage = new CommandStorage();
         processorStorage = new ProcessorStorage();
         screenStorage = new ScreenStorage();
         configStorage = new ConfigStorage();
 
         moduleStorage.subscribe();
+        commandStorage.subscribe();
         screenStorage.subscribe();
         processorStorage.subscribe();
         configStorage.subscribe();
