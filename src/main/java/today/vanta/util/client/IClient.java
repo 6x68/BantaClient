@@ -11,6 +11,7 @@ public interface IClient {
     String COMMAND_PREFIX = ".";
 
     List<String> CHANGELOG = Arrays.asList(
+            "[+] Added Commands - help, bind, toggle, clear",
             "[#] Reworked InventoryManager",
             "[#] Reworked ChestStealer"
     );
