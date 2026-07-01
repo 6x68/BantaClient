@@ -7,6 +7,7 @@ import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.module.impl.client.Theme;
 import today.vanta.client.setting.Setting;
+import today.vanta.client.setting.impl.BooleanSetting;
 import today.vanta.client.setting.impl.NumberSetting;
 import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.events.EventListen;
@@ -23,6 +24,7 @@ public class Crosshair extends Module {
     private final NumberSetting space = Setting.of("Static space", 5, 0, 15);
     private final NumberSetting spaceMove = Setting.of("Moving space", 7, 1, 16);
     private final StringSetting colorMode = Setting.of("Main Crosshair Color", "White", "Theme", "White");
+    private final BooleanSetting outline = Setting.of("Outline", true);
 
     Animation animation;
 
@@ -78,26 +80,27 @@ public class Crosshair extends Module {
 
 // Outline
 
-        Rectangle
-                .create(x + actualspacing - 1, y - (w / 2) - 1, len + 2, w + 2)
-                .color(black)
-                .draw();
+        if (outline.getValue()) {
+            Rectangle
+                    .create(x + actualspacing - 1, y - (w / 2) - 1, len + 2, w + 2)
+                    .color(black)
+                    .draw();
 
-        Rectangle
-                .create(x - actualspacing - len - 1, y - (w / 2) - 1, len + 2, w + 2)
-                .color(black)
-                .draw();
+            Rectangle
+                    .create(x - actualspacing - len - 1, y - (w / 2) - 1, len + 2, w + 2)
+                    .color(black)
+                    .draw();
 
-        Rectangle
-                .create(x - (w / 2) - 1, y + actualspacing - 1, w + 2, len + 2)
-                .color(black)
-                .draw();
+            Rectangle
+                    .create(x - (w / 2) - 1, y + actualspacing - 1, w + 2, len + 2)
+                    .color(black)
+                    .draw();
 
-        Rectangle
-                .create(x - (w / 2) - 1, y - actualspacing - len - 1, w + 2, len + 2)
-                .color(black)
-                .draw();
-
+            Rectangle
+                    .create(x - (w / 2) - 1, y - actualspacing - len - 1, w + 2, len + 2)
+                    .color(black)
+                    .draw();
+        }
         // Main part
 
         Rectangle

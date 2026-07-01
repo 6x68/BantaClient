@@ -7,6 +7,7 @@ import net.minecraft.client.gui.GuiSelectWorld;
 import today.vanta.Vanta;
 import today.vanta.client.screen.component.Component;
 import today.vanta.client.screen.component.impl.ButtonComponent;
+import today.vanta.storage.impl.ModuleStorage;
 import today.vanta.util.client.IClient;
 import today.vanta.util.game.render.font.impl.GlyphFontRenderer;
 import today.vanta.util.game.render.font.CFonts;
@@ -56,11 +57,11 @@ public class MainMenuScreen extends GuiScreen {
                 .draw();
 
         float panelWidth = 0;
-        for (String change : IClient.CHANGELOG) {
+        for (String change : Vanta.instance.moduleStorage.changelog) {
             panelWidth = Math.max(panelWidth, changesFont.getStringWidth(change) + 10);
         }
 
-        float boxHeight = 14 * IClient.CHANGELOG.size() + 18;
+        float boxHeight = 14 * Vanta.instance.moduleStorage.changelog.size() + 18;
         float middleY = 5;
 
         Rectangle
@@ -69,8 +70,8 @@ public class MainMenuScreen extends GuiScreen {
                 .draw();
         smallTitle.drawString("Changelog", 5 + 3.5f, middleY + 4.5f - 1, -1);
 
-        for (int i = 0; i < IClient.CHANGELOG.size(); i++) {
-            String change = IClient.CHANGELOG.get(i);
+        for (int i = 0; i < Vanta.instance.moduleStorage.changelog.size(); i++) {
+            String change = Vanta.instance.moduleStorage.changelog.get(i);
             float y = middleY + 18 + i * 14 - 1.5f;
 
             Rectangle

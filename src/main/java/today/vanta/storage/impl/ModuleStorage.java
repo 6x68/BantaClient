@@ -32,6 +32,21 @@ public class ModuleStorage extends Storage<Module> {
     public ModuleStorage() {
         changelog.add("[+] Added 'Custom' speed mode");
         changelog.add("[+] Added Jesus");
+        changelog.add("[+] Added 'Mospixel' Criticals mode");
+        changelog.add("[+] Added ResetVL for NCP");
+        changelog.add("[+] Added Scoreboard Customisation");
+        changelog.add("[+] Added InventoryManager");
+        changelog.add("[+] Added ContainerStealer");
+        changelog.add("[+] Added No Swing Reset to Animations");
+        changelog.add("[+] Added Crosshair Outline and Animation");
+        changelog.add("[+] Added Anticheat");
+        changelog.add("[+] Added Triggerbot");
+        changelog.add("[+] Added NoJumpDelay");
+        changelog.add("[+] Added ForceMovementKeys");
+        changelog.add("[+] Added AntiVoid");
+        changelog.add("[+] Added NoClickDelay");
+        changelog.add("[+] Added 'ID-Card' and 'aged' TargetHUD modes");
+        changelog.add("[+] Added Healthbar to Nametags");
     }
 
     @Override

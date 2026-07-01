@@ -8,6 +8,4 @@ public interface IClient {
     String CLIENT_VERSION = "1.3";
     String DEVELOPERS = "made by mark & luna";
     String CLIENT_FULL_TITLE = CLIENT_NAME + " - " + CLIENT_VERSION + " - " + DEVELOPERS;
-
-    List<String> CHANGELOG = Arrays.asList("[+] Added 'Custom' speed mode", "[+] Added Jesus");
 }
