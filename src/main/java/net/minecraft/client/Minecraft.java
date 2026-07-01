@@ -104,6 +104,7 @@ import org.lwjgl.util.glu.GLU;
 import today.vanta.Vanta;
 import today.vanta.client.event.impl.game.ClickEvent;
 import today.vanta.client.event.impl.game.GameLoopEvent;
+import today.vanta.client.event.impl.game.MiddleClickEvent;
 import today.vanta.client.event.impl.game.RunTickEvent;
 import today.vanta.client.event.impl.game.player.AllowAttackWhileBlockingEvent;
 import today.vanta.client.event.impl.game.player.ChangeWorldEvent;
@@ -1885,6 +1886,13 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
     }
 
     private void middleClickMouse() {
+        MiddleClickEvent middleClickEvent = new MiddleClickEvent();
+        middleClickEvent.call();
+
+        if (middleClickEvent.cancelled) {
+            return;
+        }
+
         if (this.objectMouseOver != null) {
             boolean flag = this.thePlayer.capabilities.isCreativeMode;
             int i = 0;
