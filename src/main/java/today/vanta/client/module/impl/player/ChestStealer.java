@@ -39,6 +39,7 @@ public class ChestStealer extends Module {
 
     public ChestStealer() {
         super("ChestStealer", "Steals items from chests intelligently and efficiently.", Category.PLAYER);
+        displayNames = new String[] {"ChestStealer", "ChestSteal", "Stealer", "AutoSteal", "ContainerStealer", "ContainerSteal"};
     }
 
     @EventListen

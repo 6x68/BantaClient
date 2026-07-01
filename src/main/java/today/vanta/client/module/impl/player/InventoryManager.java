@@ -24,12 +24,12 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
 
 public class InventoryManager extends Module {
-    private final NumberSetting minDelay = Setting.of("Min Delay", 300, 10, 1000, "ms");
-    private final NumberSetting maxDelay = Setting.of("Max Delay", 300, 10, 1000, "ms");
+    private final NumberSetting minDelay = Setting.of("Min delay", 300, 10, 1000, "ms");
+    private final NumberSetting maxDelay = Setting.of("Max delay", 300, 10, 1000, "ms");
     private final BooleanSetting inventoryOnly = Setting.of("Inventory only", true);
     private final BooleanSetting exitOnEnemy = Setting.of("Exit on enemy", true);
 
-    private final NumberSetting startDelay = Setting.of("Start Delay", 100, 10, 1000, "ms")
+    private final NumberSetting startDelay = Setting.of("Initial delay", 100, 10, 1000, "ms")
             .hide(() -> !inventoryOnly.getValue());
 
     private final BooleanSetting keepSword = Setting.of("Keep swords", true);
@@ -69,6 +69,7 @@ public class InventoryManager extends Module {
 
     public InventoryManager() {
         super("InventoryManager", "Automatically manages inventory.", Category.PLAYER);
+        displayNames = new String[] {"InventoryManager", "InvManager", "Manager", "InventorySorter", "InvSorter", "Sorter", "Cleaner", "InvCleaner", "InventoryCleaner"};
     }
 
     @Override
