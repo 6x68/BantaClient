@@ -9,7 +9,7 @@ import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MathHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import today.vanta.client.event.impl.game.network.ChatMessageEvent;
+import today.vanta.client.event.impl.game.network.PrintChatMessage;
 
 import java.util.Iterator;
 import java.util.List;
@@ -115,7 +115,7 @@ public class GuiNewChat extends Gui {
     public void printChatMessageWithOptionalDeletion(IChatComponent chatComponent, int chatLineId) {
         this.setChatLine(chatComponent, chatLineId, this.mc.ingameGUI.getUpdateCounter(), false);
         logger.info("[CHAT] {}", chatComponent.getUnformattedText());
-        new ChatMessageEvent(chatComponent.getUnformattedText()).call();
+        new PrintChatMessage(chatComponent.getUnformattedText()).call();
     }
 
     private void setChatLine(IChatComponent chatComponent, int chatLineId, int updateCounter, boolean displayOnly) {
