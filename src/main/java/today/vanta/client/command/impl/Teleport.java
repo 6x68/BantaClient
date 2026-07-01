@@ -3,17 +3,13 @@ package today.vanta.client.command.impl;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.pathfinding.PathEntity;
-import net.minecraft.pathfinding.PathFinder;
-import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
-import net.minecraft.world.ChunkCache;
-import net.minecraft.world.pathfinder.WalkNodeProcessor;
 import today.vanta.client.command.Command;
 import today.vanta.util.game.player.ChatUtil;
+import today.vanta.util.game.world.PathfindingUtil;
 
 public class Teleport extends Command {
-    private static final float PATH_SEARCH_RANGE = 128.0F;
 
     public Teleport() {
         super("Teleport", "Teleports to a player or coordinates using pathfinding.");
@@ -69,62 +65,27 @@ public class Teleport extends Command {
                 MathHelper.floor_double(targetZ)
         );
 
-        PathEntity path = calculatePath(targetBlockPos);
+        PathEntity path = PathfindingUtil.calculatePath(mc.thePlayer, targetBlockPos, PathfindingUtil.DEFAULT_PATH_RANGE);
 
         if (path == null || path.getCurrentPathLength() == 0) {
             ChatUtil.error("Could not find a valid path to the target!");
             return;
         }
 
-        PathPoint finalPoint = path.getFinalPathPoint();
-        boolean reachedTarget = finalPoint != null
-                && finalPoint.xCoord == targetBlockPos.getX()
-                && finalPoint.yCoord == targetBlockPos.getY()
-                && finalPoint.zCoord == targetBlockPos.getZ();
+        PathfindingUtil.teleportAlongPath(path);
 
-        teleportAlongPath(path);
-
-        if (reachedTarget) {
+        if (PathfindingUtil.pathReachesTarget(path, targetBlockPos)) {
             mc.thePlayer.setPosition(targetX, targetY, targetZ);
+            mc.thePlayer.motionX = 0.0D;
+            mc.thePlayer.motionY = 0.0D;
+            mc.thePlayer.motionZ = 0.0D;
+            mc.thePlayer.fallDistance = 0.0F;
             sendPacket(new C03PacketPlayer.C04PacketPlayerPosition(targetX, targetY, targetZ, true));
         } else {
             ChatUtil.warn("Path could not reach the exact target, stopped at the closest reachable point.");
         }
 
         send("Teleported to &e{}&f, &e{}&f, &e{}&f!", targetX, targetY, targetZ);
-    }
-
-    private PathEntity calculatePath(BlockPos targetPos) {
-        WalkNodeProcessor nodeProcessor = new WalkNodeProcessor();
-        nodeProcessor.setEnterDoors(true);
-        nodeProcessor.setCanSwim(true);
-
-        PathFinder pathFinder = new PathFinder(nodeProcessor);
-
-        BlockPos entityPos = new BlockPos(mc.thePlayer);
-        int searchOffset = (int) (PATH_SEARCH_RANGE + 8.0F);
-
-        ChunkCache chunkCache = new ChunkCache(
-                mc.theWorld,
-                entityPos.add(-searchOffset, -searchOffset, -searchOffset),
-                entityPos.add(searchOffset, searchOffset, searchOffset),
-                0
-        );
-
-        return pathFinder.createEntityPathTo(chunkCache, mc.thePlayer, targetPos, PATH_SEARCH_RANGE);
-    }
-
-    private void teleportAlongPath(PathEntity path) {
-        for (int i = 0; i < path.getCurrentPathLength(); i++) {
-            PathPoint point = path.getPathPointFromIndex(i);
-
-            double x = point.xCoord + 0.5D;
-            double y = point.yCoord;
-            double z = point.zCoord + 0.5D;
-
-            mc.thePlayer.setPosition(x, y, z);
-            sendPacket(new C03PacketPlayer.C04PacketPlayerPosition(x, y, z, true));
-        }
     }
 
     @Override
