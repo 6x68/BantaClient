@@ -12,15 +12,19 @@ public class ChatUtil implements IMinecraft {
     }
 
     public static void send(Prefix prefix, String message, Object... args) {
-        for (Object arg : args) {
-            message = message.replaceFirst("\\{}",
-                    Matcher.quoteReplacement(String.valueOf(arg)));
-        }
+        sendInternal(prefix, message, 1, args);
+    }
 
-        message = prefix.prefix + message;
-        message = message.replace('&', '§');
+    public static void sendNoLine(Prefix prefix, String message, Object... args) {
+        sendInternal(prefix, message, 0, args);
+    }
 
-        addChatMessage(new ChatComponentText(message), 1);
+    public static void sendNoLineNoPrefix(String message, Object... args) {
+        sendInternal(null, message, 0, args);
+    }
+
+    public static void sendNoPrefix(String message, Object... args) {
+        sendInternal(null, message, 1, args);
     }
 
     public static void info(String message, Object... args) {
@@ -33,6 +37,23 @@ public class ChatUtil implements IMinecraft {
 
     public static void warn(String message, Object... args) {
         send(Prefix.WARNING, message, args);
+    }
+
+    private static void sendInternal(Prefix prefix, String message, int line, Object... args) {
+        if (message == null) return;
+
+        for (Object arg : args) {
+            message = message.replaceFirst("\\{}",
+                    Matcher.quoteReplacement(String.valueOf(arg)));
+        }
+
+        if (prefix != null) {
+            message = prefix.prefix + message;
+        }
+
+        message = message.replace('&', '§');
+
+        addChatMessage(new ChatComponentText(message), line);
     }
 
     public enum Prefix {
