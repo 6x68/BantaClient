@@ -42,6 +42,7 @@ public class Nametags extends Module {
 
     private static final Color BACKGROUND = new Color(20, 20, 20, 200);
     private static final Color DARKER_BACKGROUND = new Color(20, 20, 20, 255);
+
     public Nametags() {
         super("Nametags", "Renders better styled nametags than vanilla above entities.", Category.RENDER);
     }
@@ -132,14 +133,12 @@ public class Nametags extends Module {
             float idkbar2 = (idk / 2) * (((EntityLivingBase) entity).getHealth() / ((EntityLivingBase) entity).getMaxHealth()) * -1;
 
 
-
-
             if (belowPlayer.getValue()) {
                 textY = y + height;
             }
             if (background.getValue()) {
                 Rectangle
-                        .create(startX,textY - 1,totalWidth + 2,14)
+                        .create(startX, textY - 1, totalWidth + 2, 14)
                         .color(BACKGROUND)
                         .draw();
             }
@@ -147,22 +146,22 @@ public class Nametags extends Module {
             if (healthbar.getValue()) {
                 if (colMode.getValue().equals("Gradient")) {
                     GradientRectangle
-                            .create(startX + (idk / 2),textY + 12,idkbar1,1)
+                            .create(startX + (idk / 2), textY + 12, idkbar1, 1)
                             .firstColor(gradcolor2)
                             .secondColor(gradcolor)
                             .draw();
                     GradientRectangle
-                            .create(startX + (idk / 2),textY + 12,idkbar2,1)
+                            .create(startX + (idk / 2), textY + 12, idkbar2, 1)
                             .firstColor(gradcolor2)
                             .secondColor(gradcolor)
                             .draw();
                 } else {
                     Rectangle
-                            .create(startX + (idk / 2),textY + 12,idkbar1,1)
+                            .create(startX + (idk / 2), textY + 12, idkbar1, 1)
                             .color(healthColor)
                             .draw();
                     Rectangle
-                            .create(startX + (idk / 2),textY + 12,idkbar2,1)
+                            .create(startX + (idk / 2), textY + 12, idkbar2, 1)
                             .color(healthColor)
                             .draw();
                 }

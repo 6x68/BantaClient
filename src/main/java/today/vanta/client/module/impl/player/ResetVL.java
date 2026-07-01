@@ -9,19 +9,23 @@ import today.vanta.util.game.player.MovementUtil;
 import today.vanta.util.system.math.Counter;
 
 public class ResetVL extends Module {
-    Counter counter = new Counter();
+    private final Counter counter = new Counter();
+
     public ResetVL() {
-        super("ResetVL", "Resets NCP Violations.", Category.PLAYER);
+        super("ResetVL", "Resets some anticheat violations level.", Category.PLAYER);
     }
+
     @EventListen
     public void onUpdate(UpdateEvent event) {
         MovementUtil.blockMovement();
         if (mc.thePlayer.onGround) {
             mc.thePlayer.motionY = 0.2f;
         }
+
         if (counter.hasElapsed(9000)) {
             setEnabled(false);
         }
+
         ChatUtil.send(ChatUtil.Prefix.INFO, String.valueOf(counter.getElapsedTime()));
     }
 

@@ -1,7 +1,5 @@
 package today.vanta.client.module.impl.player;
 
-import net.minecraft.network.play.client.C03PacketPlayer;
-import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 import today.vanta.client.event.impl.game.network.SendPacketEvent;
 import today.vanta.client.event.impl.game.world.UpdateEvent;
 import today.vanta.client.module.Category;
@@ -10,17 +8,17 @@ import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.NumberSetting;
 import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.events.EventListen;
-import today.vanta.util.game.player.ChatUtil;
 import today.vanta.util.game.player.MovementUtil;
 import today.vanta.util.game.player.PlayerUtil;
 
 public class AntiVoid extends Module {
-    private StringSetting mode = Setting.of("Mode", "Flag", "Blink", "Flag", "Setback");
-    private StringSetting setbackmode = Setting.of("Position Set Mode", "Ground", "Previous", "Ground");
-    private NumberSetting waitTime = Setting.of("Ticks until activation", 5,0,40,0);
-    int tick;
-    double prevPosZ,prevPosX,prevPosY;
-    boolean wasonground;
+    private final StringSetting mode = Setting.of("Mode", "Flag", "Blink", "Flag", "Setback");
+    private final StringSetting setbackmode = Setting.of("Position Set Mode", "Ground", "Previous", "Ground");
+    private final NumberSetting waitTime = Setting.of("Ticks until activation", 5, 0, 40, 0);
+
+    private double prevPosZ, prevPosX, prevPosY;
+    private int tick;
+
     public AntiVoid() {
         super("AntiVoid", "teleport yes.", Category.PLAYER);
     }
@@ -44,7 +42,10 @@ public class AntiVoid extends Module {
                 break;
         }
 
-        if (MovementUtil.movementModuleEnabled()) {return;}
+        if (MovementUtil.movementModuleEnabled()) {
+            return;
+        }
+
         switch (mode.getValue()) {
             case "Flag":
                 if (PlayerUtil.isOverVoid() && !mc.thePlayer.onGround) {
@@ -56,21 +57,23 @@ public class AntiVoid extends Module {
                     tick = 0;
                 }
                 break;
+
             case "Blink":
                 if (PlayerUtil.isOverVoid() && !mc.thePlayer.onGround) {
                     tick++;
                     if (tick > waitTime.getValue().intValue()) {
-                        mc.thePlayer.setPosition(prevPosX,prevPosY,prevPosZ);
+                        mc.thePlayer.setPosition(prevPosX, prevPosY, prevPosZ);
                     }
                 } else {
                     tick = 0;
                 }
                 break;
+
             case "Setback":
-                if (PlayerUtil.isOverVoid()&& !mc.thePlayer.onGround) {
+                if (PlayerUtil.isOverVoid() && !mc.thePlayer.onGround) {
                     tick++;
                     if (tick > waitTime.getValue().intValue()) {
-                        mc.thePlayer.setPosition(prevPosX,prevPosY,prevPosZ);
+                        mc.thePlayer.setPosition(prevPosX, prevPosY, prevPosZ);
                     }
                 } else {
                     tick = 0;

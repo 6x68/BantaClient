@@ -23,9 +23,9 @@ import java.util.function.Consumer;
 
 public class InventoryManager extends Module {
     private final NumberSetting
-            minDelay = Setting.of("Min Delay", 300, 10,1000),
+            minDelay = Setting.of("Min Delay", 300, 10, 1000),
             maxDelay = Setting.of("Max Delay", 300, 10, 1000);
-    private final NumberSetting startDelay = Setting.of("Start Delay", 100,10,1000);
+    private final NumberSetting startDelay = Setting.of("Start Delay", 100, 10, 1000);
     private final BooleanSetting
             inventoryOnly = Setting.of("Inventory Only", true),
             exitOnEnemy = Setting.of("Exit on enemy", true);
@@ -37,21 +37,23 @@ public class InventoryManager extends Module {
             keepBow = Setting.of("Keep bows", true),
             keepFood = Setting.of("Keep food", true);
     private final NumberSetting
-            swordSlot = Setting.of("Sword Slot" , 1, 1, 9),
-            bowSlot = Setting.of("Bow Slot", 2,1,9),
-            axeSlot = Setting.of("Axe Slot", 3,1,9),
+            swordSlot = Setting.of("Sword Slot", 1, 1, 9),
+            bowSlot = Setting.of("Bow Slot", 2, 1, 9),
+            axeSlot = Setting.of("Axe Slot", 3, 1, 9),
             pickaxeSlot = Setting.of("Pickaxe Slot", 4, 1, 9),
-            shovelSlot = Setting.of("Shovel Slot", 5,1,9),
-            foodSlot = Setting.of("Food Slot", 6, 1,9),
+            shovelSlot = Setting.of("Shovel Slot", 5, 1, 9),
+            foodSlot = Setting.of("Food Slot", 6, 1, 9),
             blockSlot = Setting.of("Block Slot", 7, 1, 9),
-            keepBlocks = Setting.of("Max Stacks of Blocks", 3,1,9),
+            keepBlocks = Setting.of("Max Stacks of Blocks", 3, 1, 9),
             keepThrowables = Setting.of("Max Stacks of Throwables", 3, 1, 9);
 
     private final Counter actionTimer = new Counter();
     private final Counter startTimer = new Counter();
+
     public InventoryManager() {
         super("InventoryManager", "Manages and cleans your inventory.", Category.PLAYER);
     }
+
     @Override
     public void onEnable() {
         actionTimer.reset();
@@ -61,7 +63,6 @@ public class InventoryManager extends Module {
     public void onDisable() {
         actionTimer.reset();
     }
-
 
     @EventListen
     private void onUpdate(UpdateEvent event) {
@@ -170,10 +171,18 @@ public class InventoryManager extends Module {
             if (stack.getItem() instanceof ItemArmor) {
                 ItemArmor armor = (ItemArmor) stack.getItem();
                 switch (armor.armorType) {
-                    case 0: if (i != bestItems[0]) dropItem(i); break;
-                    case 1: if (i != bestItems[1]) dropItem(i); break;
-                    case 2: if (i != bestItems[2]) dropItem(i); break;
-                    case 3: if (i != bestItems[3]) dropItem(i); break;
+                    case 0:
+                        if (i != bestItems[0]) dropItem(i);
+                        break;
+                    case 1:
+                        if (i != bestItems[1]) dropItem(i);
+                        break;
+                    case 2:
+                        if (i != bestItems[2]) dropItem(i);
+                        break;
+                    case 3:
+                        if (i != bestItems[3]) dropItem(i);
+                        break;
                 }
             }
         }

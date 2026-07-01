@@ -350,11 +350,11 @@ public class TargetHUD extends Module {
                 }
                 String firstChar = String.valueOf(localTarget.getName().charAt(0)).toUpperCase();
                 Rectangle
-                        .create(x,y,width,height)
+                        .create(x, y, width, height)
                         .color(PASSBACKGROUND)
                         .draw();
 
-                CFonts.OCRB_10.drawString("NORGE NOREG NORGA", x + 2, y + 2, Color.RED,false);
+                CFonts.OCRB_10.drawString("NORGE NOREG NORGA", x + 2, y + 2, Color.RED, false);
                 CFonts.OCRB_10.drawString("NORWAY", x + 2, y + 9, Color.RED, false);
                 CFonts.OCRB_10.drawString("ID-KORT ID-DUODASTUS", x + 118, y + 2, Color.RED, false);
                 CFonts.OCRB_10.drawString("IDENTITY CARD", x + 150, y + 9, Color.RED, false);
@@ -404,7 +404,7 @@ public class TargetHUD extends Module {
                         .color(BACKGROUND)
                         .draw();
 
-                RenderUtil.renderHead((EntityPlayer) localTarget,x + 2,y + 2,31);
+                RenderUtil.renderHead((EntityPlayer) localTarget, x + 2, y + 2, 31);
 
                 Rectangle
                         .create(x + 35, y - (10f / 2) + (height / 2) + 10, width - 37, 10f)
@@ -420,7 +420,7 @@ public class TargetHUD extends Module {
 
                 mc.exhiFontRendererObj.drawString(health_str, x + 35, y + 12, Color.WHITE);
                 mc.exhiFontRendererObj.drawString(localTarget.getName(), x + 35, y + 2, Color.WHITE);
-                mc.exhiFontRendererObj.drawString(distance_str,x+width - mc.exhiFontRendererObj.getStringWidth(distance_str) - 2,y + 2,Color.WHITE);
+                mc.exhiFontRendererObj.drawString(distance_str, x + width - mc.exhiFontRendererObj.getStringWidth(distance_str) - 2, y + 2, Color.WHITE);
                 break;
         }
 

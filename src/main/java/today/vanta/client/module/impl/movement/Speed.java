@@ -20,19 +20,18 @@ public class Speed extends Module {
     private final StringSetting
             mode = Setting.of("Mode", "NCP", "OldNCP", "Mospixel-Basic", "Mospixel", "NCP", "Miniblox-Ground", "Custom"),
             oncpmode = Setting.of("OldNCP Mode", "Y-Port", "Y-Port", "Strafe").hide(() -> !mode.getValue().equals("OldNCP"));
-    private final BooleanSetting shouldjump = Setting.of("Should Jump",true).hide(() -> !mode.getValue().equals("Custom"));
-    private final NumberSetting jumpamount = Setting.of("Jump Motion",0.42f,0.01,2,3).hide(() -> !shouldjump.getValue() || !mode.getValue().equals("Custom"));
+    private final BooleanSetting shouldjump = Setting.of("Should Jump", true).hide(() -> !mode.getValue().equals("Custom"));
+    private final NumberSetting jumpamount = Setting.of("Jump Motion", 0.42f, 0.01, 2, 3).hide(() -> !shouldjump.getValue() || !mode.getValue().equals("Custom"));
     private final BooleanSetting strafe = Setting.of("Should Strafe", true).hide(() -> !mode.getValue().equals("Custom"));
-    private final NumberSetting strafeamount = Setting.of("Strafe Amount", 0, 0, 2,2).hide(() -> !strafe.getValue() || !mode.getValue().equals("Custom"));
+    private final NumberSetting strafeamount = Setting.of("Strafe Amount", 0, 0, 2, 2).hide(() -> !strafe.getValue() || !mode.getValue().equals("Custom"));
     private final BooleanSetting groundstrafe = Setting.of("Should Ground Strafe", true).hide(() -> !mode.getValue().equals("Custom"));
-    private final NumberSetting groundstrafeamount = Setting.of("Ground Strafe Amount", 0.2, 0.01, 2,2).hide(() -> !groundstrafe.getValue() || !mode.getValue().equals("Custom"));
+    private final NumberSetting groundstrafeamount = Setting.of("Ground Strafe Amount", 0.2, 0.01, 2, 2).hide(() -> !groundstrafe.getValue() || !mode.getValue().equals("Custom"));
     private final BooleanSetting groundonstrafe = Setting.of("Ground Strafe Only on Strafe", true).hide(() -> !mode.getValue().equals("Custom") && !groundstrafe.getValue());
     private final BooleanSetting shouldtickstrafe = Setting.of("Should Tick Strafe", false).hide(() -> !mode.getValue().equals("Custom"));
-    private final NumberSetting tickstrafeamount = Setting.of("Tick Strafe Amount", 0.2,0.01,2,2).hide(() -> !shouldtickstrafe.getValue() || !mode.getValue().equals("Custom"));
+    private final NumberSetting tickstrafeamount = Setting.of("Tick Strafe Amount", 0.2, 0.01, 2, 2).hide(() -> !shouldtickstrafe.getValue() || !mode.getValue().equals("Custom"));
     private final BooleanSetting shouldlowhop = Setting.of("Should Lowhop", false).hide(() -> !mode.getValue().equals("Custom"));
-    private final NumberSetting lowhopstrength = Setting.of("Lowhop Strength", 0.2,0.01,10,2).hide(() -> !shouldlowhop.getValue() || !mode.getValue().equals("Custom")),
-            lowhoptick = Setting.of("Lowhop Tick", 2,1,50,0).hide(() -> !shouldlowhop.getValue() || !mode.getValue().equals("Custom"));
-
+    private final NumberSetting lowhopstrength = Setting.of("Lowhop Strength", 0.2, 0.01, 10, 2).hide(() -> !shouldlowhop.getValue() || !mode.getValue().equals("Custom")),
+            lowhoptick = Setting.of("Lowhop Tick", 2, 1, 50, 0).hide(() -> !shouldlowhop.getValue() || !mode.getValue().equals("Custom"));
 
     public Speed() {
         super("Speed", "Makes you go faster.", Category.MOVEMENT);
@@ -56,7 +55,7 @@ public class Speed extends Module {
     @EventListen
     private void onRender2D(Render2DEvent event) {
         if (flag) {
-            mc.fontRendererObj.drawString("Detected flag! Ticks left: " + (60 - tick), event.scaledResolution.getScaledWidth() / 2 - (mc.fontRendererObj.getStringWidth("Detected flag! Ticks left: " + (60 - tick)) / 2), 400, 0xFFFFFF, true);
+            mc.fontRendererObj.drawString("Detected flag! Ticks left: " + (60 - tick), (float) event.scaledResolution.getScaledWidth() / 2 - ((float) mc.fontRendererObj.getStringWidth("Detected flag! Ticks left: " + (60 - tick)) / 2), 400, 0xFFFFFF, true);
         }
     }
 

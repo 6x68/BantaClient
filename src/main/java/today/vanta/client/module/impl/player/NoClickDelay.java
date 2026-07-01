@@ -9,6 +9,7 @@ public class NoClickDelay extends Module {
     public NoClickDelay() {
         super("NoClickDelay", "Removes Minecraft Click Delay.", Category.PLAYER);
     }
+
     @EventListen
     public void onSwingDelay(SwingDelayEvent event) {
         event.cancelled = true;

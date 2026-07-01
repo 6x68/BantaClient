@@ -17,6 +17,7 @@ import today.vanta.util.system.math.animation.Animation;
 import today.vanta.util.system.math.animation.Easing;
 
 import java.awt.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Crosshair extends Module {
     private final NumberSetting length = Setting.of("Length", 7, 4, 10, 0);
@@ -25,8 +26,6 @@ public class Crosshair extends Module {
     private final NumberSetting spaceMove = Setting.of("Moving space", 7, 1, 16);
     private final StringSetting colorMode = Setting.of("Main Crosshair Color", "White", "Theme", "White");
     private final BooleanSetting outline = Setting.of("Outline", true);
-
-    Animation animation;
 
     public Crosshair() {
         super("Crosshair", "Looks like CSGO.", Category.HUD);
@@ -37,89 +36,87 @@ public class Crosshair extends Module {
         event.cancelled = true;
     }
 
-    float actualspacing = spaceMove.getValue().floatValue();
-    float targetspacing = spaceMove.getValue().floatValue();
     @EventListen
     private void onRender2D(Render2DEvent event) {
         if (mc.gameSettings.thirdPersonView != 0) {
             return;
         }
 
+        AtomicReference<Float> actualspacing = new AtomicReference<>(spaceMove.getValue().floatValue());
+        float targetspacing = spaceMove.getValue().floatValue();
+
         float spacing = space.getValue().floatValue();
         Color color = Color.WHITE;
+
         if (colorMode.getValue().equals("Theme")) {
             color = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
-        } else {
-            color = Color.WHITE;
         }
+
         Color black = Color.BLACK;
         float y = (float) event.scaledResolution.getScaledHeight() / 2;
         float x = (float) event.scaledResolution.getScaledWidth() / 2;
         float w = width.getValue().floatValue();
-        float wout = w + 1;
+
         if (MovementUtil.isMoving()) {
             spacing = spaceMove.getValue().intValue();
         }
+
         if (spacing != targetspacing) {
             targetspacing = spacing;
 
-            animation = Animation.create(
-                    actualspacing,
+            Animation animation = Animation.create(
+                    actualspacing.get(),
                     targetspacing,
                     125,
                     Easing.EASE_IN_OUT_QUAD,
-                    val -> actualspacing = val
+                    actualspacing::set
             );
 
             animation.start();
         }
 
-
-
         double len = length.getValue().doubleValue();
-
-// Outline
 
         if (outline.getValue()) {
             Rectangle
-                    .create(x + actualspacing - 1, y - (w / 2) - 1, len + 2, w + 2)
+                    .create(x + actualspacing.get() - 1, y - (w / 2) - 1, len + 2, w + 2)
                     .color(black)
                     .draw();
 
             Rectangle
-                    .create(x - actualspacing - len - 1, y - (w / 2) - 1, len + 2, w + 2)
+                    .create(x - actualspacing.get() - len - 1, y - (w / 2) - 1, len + 2, w + 2)
                     .color(black)
                     .draw();
 
             Rectangle
-                    .create(x - (w / 2) - 1, y + actualspacing - 1, w + 2, len + 2)
+                    .create(x - (w / 2) - 1, y + actualspacing.get() - 1, w + 2, len + 2)
                     .color(black)
                     .draw();
 
             Rectangle
-                    .create(x - (w / 2) - 1, y - actualspacing - len - 1, w + 2, len + 2)
+                    .create(x - (w / 2) - 1, y - actualspacing.get() - len - 1, w + 2, len + 2)
                     .color(black)
                     .draw();
         }
+
         // Main part
-
         Rectangle
-                .create(x + actualspacing, y - (w / 2), len, w)
+                .create(x + actualspacing.get(), y - (w / 2), len, w)
                 .color(color)
                 .draw();
 
         Rectangle
-                .create(x - actualspacing - len, y - (w / 2), len, w)
+                .create(x - actualspacing.get() - len, y - (w / 2), len, w)
                 .color(color)
                 .draw();
 
         Rectangle
-                .create(x - (w / 2), y + actualspacing, w, len)
+                .create(x - (w / 2), y + actualspacing.get(), w, len)
                 .color(color)
                 .draw();
 
         Rectangle
-                .create(x - (w / 2), y - actualspacing - len, w, len)
+                .create(x - (w / 2), y - actualspacing.get() - len, w, len)
                 .color(color)
                 .draw();
     }

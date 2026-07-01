@@ -5,15 +5,12 @@ import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.module.impl.client.*;
 import today.vanta.client.module.impl.hud.*;
-import today.vanta.client.module.impl.misc.BasicAnticheat;
 import today.vanta.client.module.impl.misc.ClientBrand;
 import today.vanta.client.module.impl.misc.Disabler;
 import today.vanta.client.module.impl.misc.Timer;
 import today.vanta.client.module.impl.movement.*;
 import today.vanta.client.module.impl.combat.*;
 import today.vanta.client.module.impl.player.*;
-import today.vanta.client.module.impl.player.temporary.oldContainerStealer;
-import today.vanta.client.module.impl.player.temporary.oldInventoryManager;
 import today.vanta.client.module.impl.render.*;
 import today.vanta.storage.Storage;
 import today.vanta.util.game.events.EventListen;
@@ -53,14 +50,12 @@ public class ModuleStorage extends Storage<Module> {
         list.add(new Fly());
         list.add(new Jesus());
         list.add(new NoJumpDelay());
-        list.add(new ForceMovementKeys());
+        list.add(new SaveMoveKeys());
 
         // Player
         list.add(new Scaffold());
         list.add(new FastUse());
         list.add(new NoClickDelay());
-        list.add(new oldInventoryManager());
-        list.add(new oldContainerStealer());
         list.add(new AntiVoid());
         list.add(new ResetVL());
 
@@ -75,7 +70,6 @@ public class ModuleStorage extends Storage<Module> {
         list.add(new Disabler());
         list.add(new ClientBrand());
         list.add(new Timer());
-        list.add(new BasicAnticheat());
 
         //Hud
         list.add(new Arraylist());

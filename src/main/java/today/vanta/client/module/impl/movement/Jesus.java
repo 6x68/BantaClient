@@ -1,8 +1,6 @@
 package today.vanta.client.module.impl.movement;
 
-import today.vanta.client.event.impl.game.player.MotionEvent;
 import today.vanta.client.event.impl.game.player.MoveEvent;
-import today.vanta.client.event.impl.game.world.UpdateEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.setting.Setting;
@@ -13,7 +11,8 @@ import today.vanta.util.game.player.MovementUtil;
 public class Jesus extends Module {
     private final StringSetting mode = Setting.of("Mode", "Basic", "Vulcan", "Basic");
 
-    boolean canslow;
+    private boolean canslow;
+
     public Jesus() {
         super("Jesus", "Lets you walk on water like jesus supposedly did.", Category.MOVEMENT);
         displayNames = new String[]{"Jesus", "LiquidWalk", "WaterWalk", "WaterHack"};
