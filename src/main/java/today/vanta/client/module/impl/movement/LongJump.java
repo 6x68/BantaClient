@@ -9,7 +9,6 @@ import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.events.EventState;
 import today.vanta.util.game.player.MovementUtil;
-import today.vanta.util.game.render.NotificationUtil;
 
 public class LongJump extends Module {
     private final StringSetting mode = Setting.of("Mode", "NCP", "NCP", "Mospixel-Jump");

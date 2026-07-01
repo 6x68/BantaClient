@@ -19,35 +19,11 @@ import today.vanta.storage.Storage;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.events.EventPriority;
 
-import java.rmi.server.RemoteServer;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class ModuleStorage extends Storage<Module> {
     public Module context;
-
-    public List<String> changelog = new ArrayList<>();
-
-    public ModuleStorage() {
-        changelog.add("[+] Added 'Custom' speed mode");
-        changelog.add("[+] Added Jesus");
-        changelog.add("[+] Added 'Mospixel' Criticals mode");
-        changelog.add("[+] Added ResetVL for NCP");
-        changelog.add("[+] Added Scoreboard Customisation");
-        changelog.add("[+] Added InventoryManager");
-        changelog.add("[+] Added ContainerStealer");
-        changelog.add("[+] Added No Swing Reset to Animations");
-        changelog.add("[+] Added Crosshair Outline and Animation");
-        changelog.add("[+] Added Anticheat");
-        changelog.add("[+] Added Triggerbot");
-        changelog.add("[+] Added NoJumpDelay");
-        changelog.add("[+] Added ForceMovementKeys");
-        changelog.add("[+] Added AntiVoid");
-        changelog.add("[+] Added NoClickDelay");
-        changelog.add("[+] Added 'ID-Card' and 'aged' TargetHUD modes");
-        changelog.add("[+] Added Healthbar to Nametags");
-    }
 
     @Override
     public void subscribe() {
