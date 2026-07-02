@@ -10,7 +10,6 @@ import today.vanta.client.event.impl.game.world.UpdateEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.module.impl.movement.Fly;
-import today.vanta.client.module.impl.movement.Speed;
 import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.MultiStringSetting;
 import today.vanta.client.setting.impl.NumberSetting;
@@ -20,7 +19,7 @@ import java.util.*;
 
 public class Disabler extends Module {
     private final MultiStringSetting disable = Setting.of("Disable", new String[]{"Miniblox"}, new String[]{"Miniblox", "Grim"});
-    private final NumberSetting holdLength = Setting.of("Hold length", 50, 0, 1000, "ms");
+    private final NumberSetting holdLength = Setting.of("Hold length", 50, 0, 1000, "ms").hide(() -> !disable.isEnabled("Grim"));
 
     public Disabler() {
         super("Disabler", "Disable anticheats, or at least parts of them.", Category.MISC);
@@ -32,9 +31,6 @@ public class Disabler extends Module {
 
     @EventListen
     private void onUpdate(UpdateEvent event) {
-        if (disable.isEnabled("Miniblox")) {
-        }
-
         if (disable.isEnabled("Grim")) {
             //needs some kind of interact packet to work properly
             //sendPacket(...)
@@ -56,7 +52,10 @@ public class Disabler extends Module {
         if (isProcessing || mc.thePlayer == null) return;
 
         if (disable.isEnabled("Miniblox")) {
-            if (Vanta.instance.moduleStorage.getT(Fly.class).isEnabled()){ return;}
+            if (Vanta.instance.moduleStorage.getT(Fly.class).isEnabled()) {
+                return;
+            }
+
             if (event.packet instanceof C03PacketPlayer) {
                 PacketBuffer packetbuffer = new PacketBuffer(Unpooled.buffer());
                 packetbuffer.writeDouble(mc.thePlayer.lastTickPosX);
