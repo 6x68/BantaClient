@@ -179,7 +179,7 @@ public class GuiIngame extends Gui {
             this.overlayDebug.renderDebugInfo(scaledresolution);
         }
 
-        new RenderEvent(partialTicks, scaledresolution).call();
+        new RenderEvent(partialTicks, scaledresolution, false).call();
 
         if (this.recordPlayingUpFor > 0) {
             this.mc.mcProfiler.startSection("overlayMessage");
