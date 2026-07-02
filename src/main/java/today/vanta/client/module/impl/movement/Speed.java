@@ -171,7 +171,6 @@ public class Speed extends Module {
                     if (mc.thePlayer.onGround) {
                         MovementUtil.strafe(0.16f);
                     }
-                    mc.thePlayer.setSprinting(false);
 
                     break;
 

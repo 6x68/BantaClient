@@ -61,7 +61,7 @@ public class TargetList extends Module {
 
         for (EntityPlayer entityPlayer : list) {
             String name = entityPlayer.getName();
-            mc.fontRendererObj.drawString(name, 82, y, Color.WHITE);
+            mc.exhiFontRendererObj.drawString(name, 82, y, Color.WHITE);
             y += 10f;
         }
     }
