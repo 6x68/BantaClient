@@ -16,10 +16,14 @@ public interface IClient {
     List<String> CHANGELOG = Arrays.asList(
             "[+] Added Commands - help, bind, toggle, clear, teleport",
             "[+] Added command suggestions",
+            "[+] Added Miniblox disabler",
             "[+] Added ClickTeleport",
+            "[+] Added more themes",
             "[+] Added AntiExploit",
             "[+] Added AntiCheat",
             "[#] Reworked InventoryManager",
-            "[#] Reworked ChestStealer"
+            "[#] Reworked ChestStealer",
+            "[#] Reworked Scoreboard",
+            "[#] Fixed rendering bugs"
     );
 }
