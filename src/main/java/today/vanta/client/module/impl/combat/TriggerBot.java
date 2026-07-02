@@ -25,7 +25,7 @@ public class TriggerBot extends Module {
     public void onUpdate(UpdateEvent event) {
         if (mc.objectMouseOver.entityHit instanceof EntityLivingBase) {
             target = (EntityLivingBase) mc.objectMouseOver.entityHit;
-            if (attackCounter.hasElapsed(calculateAttackDelay(), true) && target.hurtTime < 1) {
+            if (attackCounter.hasElapsed(calculateAttackDelay(), true)) {
                 mc.clickMouse();
             }
         }

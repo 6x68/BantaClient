@@ -40,9 +40,18 @@ public class PlayerUtil implements IMinecraft {
         NetworkPlayerInfo info = mc.getNetHandler()
                 .getPlayerInfo(entity.getUniqueID());
         if (info == null) return true;
-        if (info.getResponseTime() == 0) return true;
+        if (info.getResponseTime() == 0 && entity.getAge() == 600) return true;
         if (entity.getName().startsWith("§")) return true;
 
         return false;
+    }
+
+    public static int getPing(EntityLivingBase entity) {
+        if (mc.thePlayer == null || mc.getNetHandler() == null) return 0;
+
+        NetworkPlayerInfo info = mc.getNetHandler().getPlayerInfo(entity.getUniqueID());
+        if (info == null) return 0;
+
+        return info.getResponseTime();
     }
 }
