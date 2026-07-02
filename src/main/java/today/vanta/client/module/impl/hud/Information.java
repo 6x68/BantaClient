@@ -1,7 +1,7 @@
 package today.vanta.client.module.impl.hud;
 
 import net.minecraft.client.gui.GuiChat;
-import today.vanta.client.event.impl.game.render.Render2DEvent;
+import today.vanta.client.event.impl.client.RenderOverlayEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.util.game.events.EventListen;
@@ -16,7 +16,7 @@ public class Information extends Module {
     }
 
     @EventListen
-    public void onRender2D(Render2DEvent event) {
+    public void onRender2D(RenderOverlayEvent event) {
         float y = event.scaledResolution.getScaledHeight() - 19;
         if (mc.currentScreen instanceof GuiChat) {
             y = event.scaledResolution.getScaledHeight() - 230;

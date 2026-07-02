@@ -4,7 +4,7 @@ import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 import net.minecraft.potion.Potion;
 import today.vanta.client.event.impl.game.network.ReceivePacketEvent;
 import today.vanta.client.event.impl.game.player.MotionEvent;
-import today.vanta.client.event.impl.game.render.Render2DEvent;
+import today.vanta.client.event.impl.client.RenderOverlayEvent;
 import today.vanta.client.event.impl.game.world.UpdateEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
@@ -53,7 +53,7 @@ public class Speed extends Module {
     }
 
     @EventListen
-    private void onRender2D(Render2DEvent event) {
+    private void onRender2D(RenderOverlayEvent event) {
         if (flag) {
             mc.fontRendererObj.drawString("Detected flag! Ticks left: " + (60 - tick), (float) event.scaledResolution.getScaledWidth() / 2 - ((float) mc.fontRendererObj.getStringWidth("Detected flag! Ticks left: " + (60 - tick)) / 2), 400, 0xFFFFFF, true);
         }

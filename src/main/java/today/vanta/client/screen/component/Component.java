@@ -1,5 +1,6 @@
 package today.vanta.client.screen.component;
 
+import today.vanta.client.event.impl.client.RenderScreenEvent;
 import today.vanta.util.game.render.font.impl.GlyphFontRenderer;
 
 public abstract class Component {
@@ -16,7 +17,7 @@ public abstract class Component {
         this.font = font;
     }
 
-    public abstract void draw(float mouseX, float mouseY);
+    public abstract void draw(RenderScreenEvent event);
 
     public abstract boolean click(float mouseX, float mouseY, int mouseButton);
 }

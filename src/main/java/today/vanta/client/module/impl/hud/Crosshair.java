@@ -1,7 +1,7 @@
 package today.vanta.client.module.impl.hud;
 
 import today.vanta.Vanta;
-import today.vanta.client.event.impl.game.render.Render2DEvent;
+import today.vanta.client.event.impl.client.RenderOverlayEvent;
 import today.vanta.client.event.impl.game.render.RenderCrosshairEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
@@ -36,7 +36,7 @@ public class Crosshair extends Module {
     }
 
     @EventListen
-    private void onRender2D(Render2DEvent event) {
+    private void onRender2D(RenderOverlayEvent event) {
         if (mc.gameSettings.thirdPersonView != 0) {
             return;
         }
@@ -62,43 +62,43 @@ public class Crosshair extends Module {
             Rectangle
                     .create(x + animatedSpacing - 1, y - (w / 2) - 1, len + 2, w + 2)
                     .color(Color.BLACK)
-                    .draw();
+                    .draw(event);
 
             Rectangle
                     .create(x - animatedSpacing - len - 1, y - (w / 2) - 1, len + 2, w + 2)
                     .color(Color.BLACK)
-                    .draw();
+                    .draw(event);
 
             Rectangle
                     .create(x - (w / 2) - 1, y + animatedSpacing - 1, w + 2, len + 2)
                     .color(Color.BLACK)
-                    .draw();
+                    .draw(event);
 
             Rectangle
                     .create(x - (w / 2) - 1, y - animatedSpacing - len - 1, w + 2, len + 2)
                     .color(Color.BLACK)
-                    .draw();
+                    .draw(event);
         }
 
         // Main part
         Rectangle
                 .create(x + animatedSpacing, y - (w / 2), len, w)
                 .color(color)
-                .draw();
+                .draw(event);
 
         Rectangle
                 .create(x - animatedSpacing - len, y - (w / 2), len, w)
                 .color(color)
-                .draw();
+                .draw(event);
 
         Rectangle
                 .create(x - (w / 2), y + animatedSpacing, w, len)
                 .color(color)
-                .draw();
+                .draw(event);
 
         Rectangle
                 .create(x - (w / 2), y - animatedSpacing - len, w, len)
                 .color(color)
-                .draw();
+                .draw(event);
     }
 }

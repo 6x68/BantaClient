@@ -1,6 +1,6 @@
 package today.vanta.client.module.impl.client;
 
-import today.vanta.client.event.impl.game.render.Render2DEvent;
+import today.vanta.client.event.impl.client.RenderOverlayEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.util.game.events.EventListen;
@@ -14,11 +14,11 @@ public class Test extends Module {
     }
 
     @EventListen
-    private void onRender(Render2DEvent event) {
+    private void onRender(RenderOverlayEvent event) {
         Triangle
                 .create(15, 15 + 150, 150, 149)
                 .rotate(90)
                 .color(Color.RED)
-                .draw();
+                .draw(event);
     }
 }

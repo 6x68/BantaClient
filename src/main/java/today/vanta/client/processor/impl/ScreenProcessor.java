@@ -2,7 +2,9 @@ package today.vanta.client.processor.impl;
 
 import net.minecraft.client.gui.GuiMainMenu;
 import today.vanta.Vanta;
+import today.vanta.client.event.impl.client.RenderOverlayEvent;
 import today.vanta.client.event.impl.game.render.DisplayGuiScreenEvent;
+import today.vanta.client.event.impl.game.render.RenderEvent;
 import today.vanta.client.processor.Processor;
 import today.vanta.client.screen.MainMenuScreen;
 import today.vanta.storage.impl.ScreenStorage;
@@ -16,6 +18,12 @@ public class ScreenProcessor extends Processor {
         super.onInitialize();
 
         screenStorage = Vanta.instance.screenStorage;
+    }
+
+    @EventListen
+    private void onRender(RenderEvent event) {
+        RenderOverlayEvent overlayEvent = new RenderOverlayEvent(event.partialTicks, event.scaledResolution);
+        overlayEvent.call();
     }
 
     @EventListen

@@ -2,7 +2,7 @@ package today.vanta.client.module.impl.hud;
 
 import net.minecraft.entity.player.EntityPlayer;
 import today.vanta.Vanta;
-import today.vanta.client.event.impl.game.render.Render2DEvent;
+import today.vanta.client.event.impl.client.RenderOverlayEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.module.impl.combat.KillAura;
@@ -24,7 +24,7 @@ public class TargetList extends Module {
     }
 
     @EventListen
-    private void onRender2D(Render2DEvent event) {
+    private void onRender2D(RenderOverlayEvent event) {
         if (mc.thePlayer == null) {
             return;
         }
@@ -46,7 +46,7 @@ public class TargetList extends Module {
         Rectangle
                 .create(80, 20, 100, 10)
                 .color(DARKER_BACKGROUND)
-                .draw();
+                .draw(event);
 
         mc.exhiFontRendererObj.drawString("Targets:", 82, 21, Color.WHITE);
 
@@ -56,7 +56,7 @@ public class TargetList extends Module {
         Rectangle
                 .create(80, 30, width, height)
                 .color(BACKGROUND)
-                .draw();
+                .draw(event);
         float y = 32;
 
         for (EntityPlayer entityPlayer : list) {

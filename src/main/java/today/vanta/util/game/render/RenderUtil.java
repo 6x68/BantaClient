@@ -98,14 +98,14 @@ public class RenderUtil {
         GuiInventory.drawEntityOnScreen(posX, posY, scale, mouseX, mouseY, entity);
     }
 
-    public static void renderHead(EntityPlayer target, float x, float y, float headSize) throws NullPointerException {
+    public static void renderHead(Renderable renderable, EntityPlayer target, float x, float y, float headSize) throws NullPointerException {
             ImageRectangle
                     .create(x, y, headSize, headSize, -1)
                     .uv(8, 8)
                     .uvSize(8, 8)
                     .tileSize(64, 64)
                     .textureId(((AbstractClientPlayer) target).getLocationSkin())
-                    .draw();
+                    .draw(renderable);
 
             ImageRectangle
                     .create(x, y, headSize, headSize, -1)
@@ -113,7 +113,7 @@ public class RenderUtil {
                     .uvSize(8, 8)
                     .tileSize(64, 64)
                     .textureId(((AbstractClientPlayer) target).getLocationSkin())
-                    .draw();
+                    .draw(renderable);
     }
 
     public static BufferedImage base64ToBufferedImage(String base64Image) {

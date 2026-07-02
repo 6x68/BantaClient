@@ -1,6 +1,7 @@
 package today.vanta.client.screen.component.impl;
 
 import today.vanta.Vanta;
+import today.vanta.client.event.impl.client.RenderScreenEvent;
 import today.vanta.client.module.impl.client.Theme;
 import today.vanta.client.screen.component.Component;
 import today.vanta.util.client.cache.TextureCache;
@@ -29,16 +30,18 @@ public class AccountComponent extends Component {
     }
 
     @Override
-    public void draw(float mouseX, float mouseY) {
-        boolean hover = RenderUtil.hovered(mouseX, mouseY, x, y, width, height);
+    public void draw(RenderScreenEvent event) {
+        boolean hover = RenderUtil.hovered(event.mouseX, event.mouseY, x, y, width, height);
         boolean currentAccount = account.equals(AccountSavingUtil.CURRENT_ACCOUNT);
         Color color1 = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
         Rectangle
                 .create(x, y, width, height)
                 .color(hover ? new Color(40, 40, 40) : new Color(35, 35, 35))
-                .draw();
+                .draw(event);
         font.drawYCenteredString(text, x + height - 4 + 6, y + height / 2 - 2, currentAccount ? color1 : Color.WHITE, false);
-        ImageRectangle.create(x + 4, y + 2, height - 4, height - 4, skinTextureId).draw();
+        ImageRectangle
+                .create(x + 4, y + 2, height - 4, height - 4, skinTextureId)
+                .draw(event);
     }
 
     @Override

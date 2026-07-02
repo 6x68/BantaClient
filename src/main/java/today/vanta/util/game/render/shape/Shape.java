@@ -1,5 +1,7 @@
 package today.vanta.util.game.render.shape;
 
+import today.vanta.util.game.render.Renderable;
+
 public abstract class Shape<T extends Shape<T>> {
     protected double x, y, width, height;
     protected float rotation;
@@ -10,5 +12,5 @@ public abstract class Shape<T extends Shape<T>> {
         return (T) this;
     }
 
-    public abstract void draw();
+    public abstract void draw(Renderable renderable);
 }

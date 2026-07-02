@@ -4,12 +4,14 @@ import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.Session;
 import today.vanta.Vanta;
+import today.vanta.client.event.impl.client.RenderScreenEvent;
 import today.vanta.client.screen.component.Component;
 import today.vanta.client.screen.component.impl.AccountComponent;
 import today.vanta.client.screen.component.impl.ButtonComponent;
 import today.vanta.util.client.network.MicrosoftUtil;
 import today.vanta.util.client.network.account.Account;
 import today.vanta.util.client.network.account.AccountSavingUtil;
+import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.render.font.impl.GlyphFontRenderer;
 import today.vanta.util.game.render.font.CFonts;
 import today.vanta.util.game.render.shape.impl.Rectangle;
@@ -34,8 +36,6 @@ public class AltLoginScreen extends GuiScreen {
 
     @Override
     public void initGui() {
-        super.initGui();
-
         float middleX = width / 2f;
         float middleY = height / 2f;
 
@@ -52,16 +52,21 @@ public class AltLoginScreen extends GuiScreen {
         }
 
         components.add(new ButtonComponent("Back", middleX - buttonWidth / 2f, middleY, buttonWidth, 14, buttonText));
+
+        Vanta.instance.eventBus.register(this);
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        super.drawScreen(mouseX, mouseY, partialTicks);
+    public void onGuiClosed() {
+        Vanta.instance.eventBus.unregister(this);
+    }
 
+    @EventListen
+    private void onRender(RenderScreenEvent event) {
         Rectangle
                 .create(0, 0, width, height)
                 .color(new Color(20, 20, 20))
-                .draw();
+                .draw(event);
 
         buttonText.drawString("(Alt accounts) Left click to login, right click to delete.", 5, 5, new Color(125, 125, 125).getRGB());
 
@@ -71,10 +76,10 @@ public class AltLoginScreen extends GuiScreen {
         Rectangle
                 .create(middleX - 143 / 2f, middleY - 16, 143, 14 * components.size() + 18)
                 .color(new Color(30, 30, 30))
-                .draw();
+                .draw(event);
         smallTitle.drawString(mc.session.getUsername(), middleX - 143 / 2f + 3, middleY - 18 + 4.5f, -1);
 
-        components.forEach(c -> c.draw(mouseX, mouseY));
+        components.forEach(c -> c.draw(event));
     }
 
     @Override

@@ -7,7 +7,7 @@ import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import today.vanta.Vanta;
-import today.vanta.client.event.impl.game.render.Render2DEvent;
+import today.vanta.client.event.impl.client.RenderOverlayEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.module.impl.client.Theme;
@@ -27,7 +27,7 @@ public class ESP extends Module {
     }
 
     @EventListen
-    private void onRender(Render2DEvent event) {
+    private void onRender(RenderOverlayEvent event) {
         float ticks = event.partialTicks;
         ScaledResolution sr = event.scaledResolution;
         Color color = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
@@ -51,21 +51,21 @@ public class ESP extends Module {
                     .outline(true)
                     .color(Color.BLACK)
                     .outlineWidth(1.0f)
-                    .draw();
+                    .draw(event);
 
             Rectangle
                     .create(x, y, width, height)
                     .outline(true)
                     .color(color)
                     .outlineWidth(1.0f)
-                    .draw();
+                    .draw(event);
 
             Rectangle
                     .create(x + 0.5f, y + 0.5f, width - 1, height - 1)
                     .outline(true)
                     .color(Color.BLACK)
                     .outlineWidth(1.0f)
-                    .draw();
+                    .draw(event);
         }
     }
 

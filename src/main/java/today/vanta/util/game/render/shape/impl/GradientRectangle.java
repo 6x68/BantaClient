@@ -2,6 +2,7 @@ package today.vanta.util.game.render.shape.impl;
 
 import org.lwjgl.opengl.GL11;
 import today.vanta.util.game.render.RenderUtil;
+import today.vanta.util.game.render.Renderable;
 import today.vanta.util.game.render.shape.GradientMode;
 import today.vanta.util.game.render.shape.Shape;
 
@@ -54,7 +55,7 @@ public class GradientRectangle extends Shape<GradientRectangle> {
     }
 
     @Override
-    public void draw() {
+    public void draw(Renderable renderable) {
         RenderUtil.start();
 
         GL11.glPushMatrix();

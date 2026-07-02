@@ -6,7 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.input.Mouse;
 import today.vanta.Vanta;
-import today.vanta.client.event.impl.game.render.DrawScreenEvent;
+import today.vanta.client.event.impl.client.RenderScreenEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.module.impl.client.Theme;
@@ -17,6 +17,7 @@ import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.player.PlayerUtil;
 import today.vanta.util.game.render.RenderUtil;
+import today.vanta.util.game.render.Renderable;
 import today.vanta.util.game.render.font.CFonts;
 import today.vanta.util.game.render.shape.GradientMode;
 import today.vanta.util.game.render.shape.impl.GradientRectangle;
@@ -51,7 +52,7 @@ public class TargetHUD extends Module {
     }
 
     @EventListen
-    private void onDrawScreen(DrawScreenEvent event) {
+    private void onDrawScreen(RenderScreenEvent event) {
         if (mc.thePlayer == null) return;
 
         if (!(mc.currentScreen instanceof GuiChat) && TargetProcessor.getInstance().target == null) {
@@ -74,7 +75,7 @@ public class TargetHUD extends Module {
             return;
         }
 
-        draw();
+        draw(event);
     }
 
     private void handleDragging(float mouseX, float mouseY) {
@@ -108,7 +109,7 @@ public class TargetHUD extends Module {
     private Animation animation;
     private Animation ghostAnimation;
 
-    private void draw() {
+    private void draw(Renderable renderable) {
         float x = this.x.getValue().floatValue();
         float y = this.y.getValue().floatValue();
 
@@ -123,9 +124,9 @@ public class TargetHUD extends Module {
                 Rectangle
                         .create(x, y, width, height)
                         .color(new Color(28, 29, 33))
-                        .draw();
+                        .draw(renderable);
 
-                RenderUtil.renderHead((EntityPlayer) localTarget, x, y, 36f);
+                RenderUtil.renderHead(renderable, (EntityPlayer) localTarget, x, y, 36f);
                 CFonts.SFPT_MEDIUM_20.drawStringWithShadow(localTarget.getName(), x + 38, y + 4, Color.WHITE);
                 CFonts.SFPT_REGULAR_18.drawStringWithShadow(String.format("%.1f", localTarget.getHealth()), x + 38, y + 15, Color.WHITE);
 
@@ -175,18 +176,18 @@ public class TargetHUD extends Module {
                 Rectangle
                         .create(x, y + 36, width - 2.5f, 4f)
                         .color(DARKER_BACKGROUND)
-                        .draw();
+                        .draw(renderable);
 
                 Rectangle
                         .create(x, y + 36, ghostBarWidth, 4f)
                         .color(color.darker())
-                        .draw();
+                        .draw(renderable);
 
                 GradientRectangle
                         .create(x, y + 36, barWidth, 4f)
                         .firstColor(color2)
                         .secondColor(color)
-                        .draw();
+                        .draw(renderable);
                 break;
 
             case "Classic":
@@ -211,19 +212,19 @@ public class TargetHUD extends Module {
                 Rectangle
                         .create(x, y, width, height)
                         .color(BACKGROUND)
-                        .draw();
+                        .draw(renderable);
 
                 RenderUtil.renderEntity((int) x + 15, (int) y + 52, 25, -30, 0, localTarget);
 
                 Rectangle
                         .create(x + 37, y - (10f / 2) + (height / 2) + 10, healthbarwidth, 10f)
                         .color(DARKER_BACKGROUND)
-                        .draw();
+                        .draw(renderable);
 
                 Rectangle
                         .create(x + 37, y - (10f / 2) + (height / 2) + 10, healthbar, 10f)
                         .color(healthbarcol)
-                        .draw();
+                        .draw(renderable);
 
                 mc.fontRendererObj.drawStringWithShadow(health_str + " ❤", x + 37, y + 16, Color.WHITE);
                 mc.fontRendererObj.drawStringWithShadow(localTarget.getName(), x + 37, y + 2, Color.WHITE);
@@ -282,25 +283,25 @@ public class TargetHUD extends Module {
                 Rectangle
                         .create(x, y, width, height)
                         .color(BACKGROUND)
-                        .draw();
+                        .draw(renderable);
 
-                RenderUtil.renderHead((EntityPlayer) localTarget, x + 2, y + 2, 20f);
+                RenderUtil.renderHead(renderable, (EntityPlayer) localTarget, x + 2, y + 2, 20f);
                 CFonts.getFont("T-Regular", 16).drawStringWithShadow(localTarget.getName(), x + 24, y + 1, Color.WHITE);
 
                 Rectangle
                         .create(x + 2, y + space, width - 4, 3f)
                         .color(DARKER_BACKGROUND)
-                        .draw();
+                        .draw(renderable);
 
                 Rectangle
                         .create(x + 2, y + space, adghostBarWidth, 3f)
                         .color(color.darker())
-                        .draw();
+                        .draw(renderable);
 
                 Rectangle
                         .create(x + 2, y + space, adbarWidth, 3f)
                         .color(color)
-                        .draw();
+                        .draw(renderable);
 
                 float itemX = x + 10 + 2;
                 float itemY = y + 10;
@@ -351,7 +352,7 @@ public class TargetHUD extends Module {
                 Rectangle
                         .create(x, y, width, height)
                         .color(PASSBACKGROUND)
-                        .draw();
+                        .draw(renderable);
 
                 CFonts.OCRB_10.drawString("NORGE NOREG NORGA", x + 2, y + 2, Color.RED, false);
                 CFonts.OCRB_10.drawString("NORWAY", x + 2, y + 9, Color.RED, false);
@@ -364,7 +365,7 @@ public class TargetHUD extends Module {
                 CFonts.OCRB_8.drawString("Kjønn/Sokhabeali/Sex", x + 71, y + 63, Color.RED, false);
                 CFonts.OCRB_18.drawString("MINECRAFT", x + 71, y + 69, Color.BLACK, false);
                 CFonts.RUSTICROADWAY_22.drawString(firstChar + ". " + entitytype, x + 71, y + 83, Color.BLACK, false);
-                RenderUtil.renderHead((EntityPlayer) localTarget, x + 3, y + 22, 64);
+                RenderUtil.renderHead(renderable, (EntityPlayer) localTarget, x + 3, y + 22, 64);
                 break;
             case "aged":
                 width = 150f;
@@ -401,21 +402,21 @@ public class TargetHUD extends Module {
                 Rectangle
                         .create(x, y, width, height)
                         .color(BACKGROUND)
-                        .draw();
+                        .draw(renderable);
 
-                RenderUtil.renderHead((EntityPlayer) localTarget, x + 2, y + 2, 31);
+                RenderUtil.renderHead(renderable, (EntityPlayer) localTarget, x + 2, y + 2, 31);
 
                 Rectangle
                         .create(x + 35, y - (10f / 2) + (height / 2) + 10, width - 37, 10f)
                         .color(DARKER_BACKGROUND)
-                        .draw();
+                        .draw(renderable);
 
                 GradientRectangle
                         .create(x + 35, y - (10f / 2) + (height / 2) + 10, abarwidth, 10f)
                         .firstColor(color)
                         .secondColor(color2)
                         .gradientMode(GradientMode.VERTICAL)
-                        .draw();
+                        .draw(renderable);
 
                 mc.exhiFontRendererObj.drawString(health_str, x + 35, y + 12, Color.WHITE);
                 mc.exhiFontRendererObj.drawString(localTarget.getName(), x + 35, y + 2, Color.WHITE);
@@ -430,13 +431,13 @@ public class TargetHUD extends Module {
                         .firstColor(color)
                         .secondColor(color2)
                         .outline(true)
-                        .draw();
+                        .draw(renderable);
             } else {
                 Rectangle
                         .create(x - 0.5, y - 0.5, width + 1, height + 1)
                         .color(color)
                         .outline(true)
-                        .draw();
+                        .draw(renderable);
             }
         }
     }

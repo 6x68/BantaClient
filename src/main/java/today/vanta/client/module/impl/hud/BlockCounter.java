@@ -3,8 +3,8 @@ package today.vanta.client.module.impl.hud;
 import net.minecraft.client.gui.GuiChat;
 import org.lwjgl.input.Mouse;
 import today.vanta.Vanta;
-import today.vanta.client.event.impl.game.render.DrawScreenEvent;
-import today.vanta.client.event.impl.game.render.Render2DEvent;
+import today.vanta.client.event.impl.client.RenderScreenEvent;
+import today.vanta.client.event.impl.client.RenderOverlayEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.module.impl.client.Theme;
@@ -15,6 +15,7 @@ import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.player.InventoryUtil;
 import today.vanta.util.game.render.RenderUtil;
+import today.vanta.util.game.render.Renderable;
 import today.vanta.util.game.render.font.CFonts;
 import today.vanta.util.game.render.shape.impl.Rectangle;
 
@@ -48,19 +49,19 @@ public class BlockCounter extends Module {
     }
 
     @EventListen
-    public void onRender2D(Render2DEvent event) {
+    public void onRender2D(RenderOverlayEvent event) {
         float centerValueX = ((float) event.scaledResolution.getScaledWidth() / 2) - (WIDTH / 2);
         if (x.getValue() == null) {return;}
         if (x.getValue().floatValue() == centerValueX && dragging) {
             Rectangle
                     .create((float) event.scaledResolution.getScaledWidth() / 2 - 1, 0,2,event.scaledResolution.getScaledHeight())
                     .color(new Color(200,200,200,180))
-                    .draw();
+                    .draw(event);
         }
     }
 
     @EventListen
-    private void onDrawScreen(DrawScreenEvent event) {
+    private void onDrawScreen(RenderScreenEvent event) {
         if (mc.thePlayer == null) return;
         blocks = InventoryUtil.getHotbarBlockCount();
 
@@ -70,7 +71,7 @@ public class BlockCounter extends Module {
         }
 
         if (canBeDrawn()) {
-            draw();
+            draw(event);
             if (mc.currentScreen instanceof GuiChat) {
                 handleDragging(event.mouseX, event.mouseY);
             }
@@ -95,7 +96,7 @@ public class BlockCounter extends Module {
         }
     }
 
-    private void draw() {
+    private void draw(Renderable renderable) {
         float x = this.x.getValue().floatValue();
         float y = this.y.getValue().floatValue();
         switch(mode.getValue()) {
@@ -106,7 +107,7 @@ public class BlockCounter extends Module {
                 Rectangle
                         .create(x, y, WIDTH, HEIGHT)
                         .color(BACKGROUND)
-                        .draw();
+                        .draw(renderable);
 
                 RenderUtil.renderScaledItem(InventoryUtil.getBestBlockStack(), x, y + 0.5f, 2.4f);
 
@@ -126,17 +127,17 @@ public class BlockCounter extends Module {
                 Rectangle
                         .create(x, y, WIDTH, HEIGHT)
                         .color(BACKGROUND)
-                        .draw();
+                        .draw(renderable);
 
                 Rectangle
                         .create(x + 2, y + 14, barWidth, 3)
                         .color(BACKGROUND.darker())
-                        .draw();
+                        .draw(renderable);
 
                 Rectangle
                         .create(x + 2, y + 14, bar, 3)
                         .color(color)
-                        .draw();
+                        .draw(renderable);
 
                 String block_str = String.valueOf(blocks);
                 float length = CFonts.SFPT_SEMIBOLD_20.getStringWidth(block_str);
@@ -151,7 +152,7 @@ public class BlockCounter extends Module {
                     .create(x - 0.5, y - 0.5, WIDTH + 1, HEIGHT + 1)
                     .outline(true)
                     .color(color)
-                    .draw();
+                    .draw(renderable);
         }
     }
 }

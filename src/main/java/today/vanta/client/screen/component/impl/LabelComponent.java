@@ -1,5 +1,6 @@
 package today.vanta.client.screen.component.impl;
 
+import today.vanta.client.event.impl.client.RenderScreenEvent;
 import today.vanta.client.screen.component.Component;
 import today.vanta.util.game.render.RenderUtil;
 import today.vanta.util.game.render.font.impl.GlyphFontRenderer;
@@ -21,13 +22,13 @@ public class LabelComponent extends Component {
     }
 
     @Override
-    public void draw(float mouseX, float mouseY) {
-        boolean hover = RenderUtil.hovered(mouseX, mouseY, x, y, width, height);
+    public void draw(RenderScreenEvent event) {
+        boolean hover = RenderUtil.hovered(event.mouseX, event.mouseY, x, y, width, height);
         if (!onlyText) {
             Rectangle
                     .create(x, y, width, height)
                     .color(hover ? new Color(40, 40, 40) : new Color(35, 35, 35))
-                    .draw();
+                    .draw(event);
             font.drawYCenteredString(text, x + 3.5f, y + height / 2 - 2, Color.WHITE, false);
         } else {
             font.drawString(text, x, y - 2, hover ? Color.LIGHT_GRAY : Color.WHITE);

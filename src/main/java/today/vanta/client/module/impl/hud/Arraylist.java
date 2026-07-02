@@ -4,7 +4,7 @@ import today.vanta.Vanta;
 import today.vanta.client.event.impl.client.ModuleDisableEvent;
 import today.vanta.client.event.impl.client.ModuleEnableEvent;
 import today.vanta.client.event.impl.client.ModuleRenamedEvent;
-import today.vanta.client.event.impl.game.render.Render2DEvent;
+import today.vanta.client.event.impl.client.RenderOverlayEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.module.impl.client.Theme;
@@ -117,7 +117,7 @@ public class Arraylist extends Module {
     }
 
     @EventListen
-    private void onRender(Render2DEvent event) {
+    private void onRender(RenderOverlayEvent event) {
         if (enabledModules.isEmpty()) return;
 
         List<Module> visibleModules = new ArrayList<>();
@@ -170,7 +170,7 @@ public class Arraylist extends Module {
                 Rectangle
                         .create(rectX, rectY, rectWidth, rectHeight)
                         .color(backgroundColor)
-                        .draw();
+                        .draw(event);
             }
 
             boolean first = counter == 0;
@@ -184,7 +184,7 @@ public class Arraylist extends Module {
                         Rectangle
                                 .create(rectX, rectY - 1, rectWidth, 1)
                                 .color(color)
-                                .draw();
+                                .draw(event);
                     }
 
                     if (line.getValue().equals("Top+right")) {
@@ -192,7 +192,7 @@ public class Arraylist extends Module {
                         Rectangle
                                 .create(rectX + rectWidth, rectY - 1, 1, rectHeight + 1)
                                 .color(color)
-                                .draw();
+                                .draw(event);
                     }
                     break;
                 case "Full":
@@ -201,12 +201,12 @@ public class Arraylist extends Module {
                         Rectangle
                                 .create(rectX, rectY - 1, rectWidth, 1)
                                 .color(color)
-                                .draw();
+                                .draw(event);
                         // top left corner
                         Rectangle
                                 .create(rectX - 1, rectY - 1, 1, 1)
                                 .color(color)
-                                .draw();
+                                .draw(event);
                     }
 
                     if (last) {
@@ -214,7 +214,7 @@ public class Arraylist extends Module {
                         Rectangle
                                 .create(rectX, rectY + rectHeight, rectWidth, 1)
                                 .color(color)
-                                .draw();
+                                .draw(event);
                     } else {
                         // bottom for each middle module
                         Module nextModule = last
@@ -231,24 +231,24 @@ public class Arraylist extends Module {
                         Rectangle
                                 .create(rectX, rectY + rectHeight, widthToNext, 1)
                                 .color(color)
-                                .draw();
+                                .draw(event);
                     }
 
                     // left side
                     Rectangle
                             .create(rectX - 1, rectY, 1, rectHeight)
                             .color(color)
-                            .draw();
+                            .draw(event);
                     // bottom left corner
                     Rectangle
                             .create(rectX - 1, rectY + rectHeight, 1, 1)
                             .color(color)
-                            .draw();
+                            .draw(event);
                     // right side
                     Rectangle
                             .create(rectX + rectWidth, rectY - 1, 1, rectHeight + 2)
                             .color(color)
-                            .draw();
+                            .draw(event);
                     break;
 
                 case "Left":
@@ -256,7 +256,7 @@ public class Arraylist extends Module {
                     Rectangle
                             .create(rectX - 1, rectY, 1, rectHeight)
                             .color(color)
-                            .draw();
+                            .draw(event);
                     break;
 
                 case "Right":
@@ -264,7 +264,7 @@ public class Arraylist extends Module {
                     Rectangle
                             .create(rectX + rectWidth, rectY, 1, rectHeight)
                             .color(color)
-                            .draw();
+                            .draw(event);
                     break;
             }
 

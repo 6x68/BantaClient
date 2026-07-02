@@ -5,10 +5,11 @@ import net.minecraft.client.gui.GuiOptions;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiSelectWorld;
 import today.vanta.Vanta;
+import today.vanta.client.event.impl.client.RenderScreenEvent;
 import today.vanta.client.screen.component.Component;
 import today.vanta.client.screen.component.impl.ButtonComponent;
-import today.vanta.storage.impl.ModuleStorage;
 import today.vanta.util.client.IClient;
+import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.render.font.impl.GlyphFontRenderer;
 import today.vanta.util.game.render.font.CFonts;
 import today.vanta.util.game.render.shape.impl.Rectangle;
@@ -28,8 +29,6 @@ public class MainMenuScreen extends GuiScreen {
 
     @Override
     public void initGui() {
-        super.initGui();
-
         float middleX = width / 2f;
         float middleY = height / 2f;
 
@@ -45,16 +44,21 @@ public class MainMenuScreen extends GuiScreen {
         buttons.add(new ButtonComponent("Alts", middleX - buttonWidth / 2f, middleY, buttonWidth, 14, roundedMedium9));
         middleY += 14;
         buttons.add(new ButtonComponent("Exit", middleX - buttonWidth / 2f, middleY, buttonWidth, 14, roundedMedium9));
+
+        Vanta.instance.eventBus.register(this);
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        super.drawScreen(mouseX, mouseY, partialTicks);
+    public void onGuiClosed() {
+        Vanta.instance.eventBus.unregister(this);
+    }
 
+    @EventListen
+    private void onRender(RenderScreenEvent event) {
         Rectangle
                 .create(0, 0, width, height)
                 .color(new Color(20, 20, 20))
-                .draw();
+                .draw(event);
 
         float panelWidth = 0;
         for (String change : IClient.CHANGELOG) {
@@ -67,7 +71,7 @@ public class MainMenuScreen extends GuiScreen {
         Rectangle
                 .create(5, middleY, panelWidth, boxHeight)
                 .color(new Color(30, 30, 30))
-                .draw();
+                .draw(event);
         smallTitle.drawString("Changelog", 5 + 3.5f, middleY + 4.5f - 1, -1);
 
         for (int i = 0; i < IClient.CHANGELOG.size(); i++) {
@@ -77,7 +81,7 @@ public class MainMenuScreen extends GuiScreen {
             Rectangle
                     .create(5 + 1.5f, y, (panelWidth - 3), 14)
                     .color(new Color(35, 35, 35))
-                    .draw();
+                    .draw(event);
 
             String formattedChange = formatChange(change);
 
@@ -90,11 +94,11 @@ public class MainMenuScreen extends GuiScreen {
         Rectangle
                 .create(middleX - 143 / 2f, middleY - 16, 143, 14 * (buttons.size()) + 18)
                 .color(new Color(30, 30, 30))
-                .draw();
+                .draw(event);
         roundedSemibold10.drawString(IClient.CLIENT_NAME, middleX - 143 / 2f + 3, middleY - 18 + 4.5f, -1);
         roundedMedium9.drawString(IClient.CLIENT_VERSION + " | " + IClient.DEVELOPERS, middleX * 2 - roundedMedium9.getStringWidth(IClient.CLIENT_VERSION + " | " + IClient.DEVELOPERS) - 3, middleY * 2 - roundedMedium9.getFontHeight() - 5.5f, new Color(200, 200, 200));
 
-        buttons.forEach(but -> but.draw(mouseX, mouseY));
+        buttons.forEach(but -> but.draw(event));
     }
 
     private static String formatChange(String change) {

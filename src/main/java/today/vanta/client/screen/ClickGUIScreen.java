@@ -6,6 +6,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector2f;
 import today.vanta.Vanta;
+import today.vanta.client.event.impl.client.RenderScreenEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.module.impl.client.ClickGUI;
@@ -16,6 +17,7 @@ import today.vanta.client.setting.impl.MultiStringSetting;
 import today.vanta.client.setting.impl.NumberSetting;
 import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.client.screen.ScreenSavingUtil;
+import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.render.RenderUtil;
 import today.vanta.util.game.render.font.impl.GlyphFontRenderer;
 import today.vanta.util.game.render.font.CFonts;
@@ -66,11 +68,14 @@ public class ClickGUIScreen extends GuiScreen {
         this.animationMap.put("global_open", 0f);
         this.activeAnimations.values().forEach(Animation::stop);
         this.activeAnimations.clear();
-        super.initGui();
+
+        Vanta.instance.eventBus.register(this);
     }
 
-    @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+    @EventListen
+    private void onRender(RenderScreenEvent event) {
+        float mouseX = event.mouseX;
+        float mouseY = event.mouseY;
         float globalAnim = getAnimationValue("global_open", closing ? 0f : 1f, 300, Easing.EASE_OUT_EXPO);
 
         if (closing && globalAnim <= 0.01f) {
@@ -81,7 +86,7 @@ public class ClickGUIScreen extends GuiScreen {
         if (Vanta.instance.moduleStorage.getT(ClickGUI.class).darkenBackground.getValue()) {
             Rectangle.create(0, 0, width, height)
                     .color(new Color(0, 0, 0, (int) (150 * globalAnim)))
-                    .draw();
+                    .draw(event);
         }
 
         Color color1 = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
@@ -91,7 +96,7 @@ public class ClickGUIScreen extends GuiScreen {
                     .firstColor(new Color(0, 0, 0, (int) (150 * globalAnim)))
                     .secondColor(new Color(color1.getRed(), color1.getGreen(), color1.getBlue(), (int) (150 * globalAnim)))
                     .gradientMode(GradientMode.VERTICAL)
-                    .draw();
+                    .draw(event);
         }
 
         GlStateManager.pushMatrix();
@@ -104,12 +109,12 @@ public class ClickGUIScreen extends GuiScreen {
             Vector2f position = category.position;
             boolean hoverCat = RenderUtil.hovered(mouseX, mouseY, position.x, position.y, panelWidth, panelHeight);
 
-            position = drag(position, mouseX, mouseY, category, hoverCat);
+            position = drag(position, (int) mouseX, (int) mouseY, category, hoverCat);
 
             Rectangle
                     .create(position.x, position.y, panelWidth, panelHeight)
                     .color(new Color(30, 30, 30))
-                    .draw();
+                    .draw(event);
 
             medium.drawString(category.name, position.x + 3, position.y + 1, Color.WHITE);
 
@@ -160,7 +165,7 @@ public class ClickGUIScreen extends GuiScreen {
             Rectangle
                     .create(position.x, position.y + 14, panelWidth, ignoreThis + 2)
                     .color(new Color(30, 30, 30))
-                    .draw();
+                    .draw(event);
 
             float y = position.y + 14;
             float x = position.x;
@@ -175,7 +180,7 @@ public class ClickGUIScreen extends GuiScreen {
                 Rectangle
                         .create(x + 1.5f, y, panelWidth - 3, 14)
                         .color(hoverMod ? new Color(50, 50, 50) : new Color(40, 40, 40))
-                        .draw();
+                        .draw(event);
 
                 regular.drawString(module.name, x + 3, y + 1, ColorUtil.interpolateColor(Color.WHITE, color1, getAnimationValue(module.name + "_enabled", module.isEnabled() ? 1f : 0f, 200, Easing.EASE_OUT_QUAD)));
                 regular.drawString(module.isExpanded() ? "-" : "+", x + panelWidth - regular.getStringWidth(module.isExpanded() ? "-" : "+") - 7, y + 1, hoverMod ? Color.LIGHT_GRAY : Color.WHITE);
@@ -190,7 +195,7 @@ public class ClickGUIScreen extends GuiScreen {
                         Rectangle
                                 .create(x + 1.5f, y, panelWidth - 3, 14 * moduleAnim)
                                 .color(hoverDisplayName ? new Color(42, 42, 42) : new Color(38, 38, 38))
-                                .draw();
+                                .draw(event);
                         if (moduleAnim > 0.5f) {
                             sett.drawString("Display name", x + 3, y + 2, -1);
 
@@ -198,7 +203,7 @@ public class ClickGUIScreen extends GuiScreen {
                             Rectangle
                                     .create(bX - sett.getStringWidth(module.displayName) - 2, y + 2.5, sett.getStringWidth(module.displayName) + 4, 9)
                                     .color(new Color(45, 45, 45))
-                                    .draw();
+                                    .draw(event);
                             sett.drawString(module.displayName, bX - sett.getStringWidth(module.displayName) - 1, y + 2, -1);
                         }
 
@@ -210,7 +215,7 @@ public class ClickGUIScreen extends GuiScreen {
                         Rectangle
                                 .create(x + 1.5f, y, panelWidth - 3, 14 * moduleAnim)
                                 .color(hoverKeybind ? new Color(42, 42, 42) : new Color(38, 38, 38))
-                                .draw();
+                                .draw(event);
 
                         if (moduleAnim > 0.5f) {
                             sett.drawString("Keybind", x + 3, y + 2, -1);
@@ -228,7 +233,7 @@ public class ClickGUIScreen extends GuiScreen {
                             Rectangle
                                     .create(bXKey - animatedKBWidth - 2, y + 2.5, animatedKBWidth + 4, 9)
                                     .color(new Color(45, 45, 45))
-                                    .draw();
+                                    .draw(event);
                             sett.drawString(keyName, bXKey - animatedKBWidth - 1, y + 2, ColorUtil.interpolateColor(Color.WHITE, Color.GRAY, kbFade));
                         }
 
@@ -240,7 +245,7 @@ public class ClickGUIScreen extends GuiScreen {
                         Rectangle
                                 .create(x + 1.5f, y, panelWidth - 3, 14 * moduleAnim)
                                 .color(hoverHide ? new Color(42, 42, 42) : new Color(38, 38, 38))
-                                .draw();
+                                .draw(event);
                         if (moduleAnim > 0.5f) {
                             sett.drawString("Hide on arraylist", x + 3, y + 2, -1);
 
@@ -250,12 +255,12 @@ public class ClickGUIScreen extends GuiScreen {
                             Rectangle
                                     .create(bXHidden - 17, y + 3.5f, 17, 7)
                                     .color(ColorUtil.interpolateColor(new Color(0xA3A3A3), color1.brighter(), hiddenAnim))
-                                    .draw();
+                                    .draw(event);
 
                             Rectangle
                                     .create(bXHidden - 17 - 1 + (9 * hiddenAnim), y + 2.5f, 9, 9)
                                     .color(ColorUtil.interpolateColor(Color.WHITE, color1, hiddenAnim))
-                                    .draw();
+                                    .draw(event);
                         }
 
                         y += 14 * moduleAnim;
@@ -265,7 +270,7 @@ public class ClickGUIScreen extends GuiScreen {
                     Rectangle
                             .create(x + 1.5f, y, panelWidth - 3, 14 * moduleAnim)
                             .color(hoverSave ? new Color(42, 42, 42) : new Color(38, 38, 38))
-                            .draw();
+                            .draw(event);
                     if (moduleAnim > 0.5f) {
                         sett.drawString("Save in config", x + 3, y + 2, -1);
 
@@ -276,12 +281,12 @@ public class ClickGUIScreen extends GuiScreen {
                         Rectangle
                                 .create(bXSave - 17, y + 3.5f, 17, 7)
                                 .color(ColorUtil.interpolateColor(new Color(0xA3A3A3), color1.brighter(), saveAnim))
-                                .draw();
+                                .draw(event);
 
                         Rectangle
                                 .create(bXSave - 17 - 1 + (9 * saveAnim), y + 2.5f, 9, 9)
                                 .color(ColorUtil.interpolateColor(Color.WHITE, color1, saveAnim))
-                                .draw();
+                                .draw(event);
                     }
 
                     y += 14 * moduleAnim;
@@ -291,7 +296,7 @@ public class ClickGUIScreen extends GuiScreen {
                         Rectangle
                                 .create(x + 1.5f, y, panelWidth - 3, 14 * moduleAnim)
                                 .color(hoverSuffix ? new Color(42, 42, 42) : new Color(38, 38, 38))
-                                .draw();
+                                .draw(event);
                         if (moduleAnim > 0.5f) {
                             sett.drawString("Show suffix", x + 3, y + 2, -1);
 
@@ -301,12 +306,12 @@ public class ClickGUIScreen extends GuiScreen {
                             Rectangle
                                     .create(bXSuffix - 17, y + 3.5f, 17, 7)
                                     .color(ColorUtil.interpolateColor(new Color(0xA3A3A3), color1.brighter(), suffixAnim))
-                                    .draw();
+                                    .draw(event);
 
                             Rectangle
                                     .create(bXSuffix - 17 - 1 + (9 * suffixAnim), y + 2.5f, 9, 9)
                                     .color(ColorUtil.interpolateColor(Color.WHITE, color1, suffixAnim))
-                                    .draw();
+                                    .draw(event);
                         }
 
                         y += 14 * moduleAnim;
@@ -325,7 +330,7 @@ public class ClickGUIScreen extends GuiScreen {
                                 Rectangle
                                         .create(x + 1.5f, y, panelWidth - 3, 14 * moduleAnim)
                                         .color(hover ? new Color(40, 40, 40) : new Color(35, 35, 35))
-                                        .draw();
+                                        .draw(event);
 
                                 if (moduleAnim > 0.5f) {
                                     float toggleAnim = getAnimationValue(toggle, toggle.getValue() ? 1f : 0f, 200, Easing.EASE_OUT_QUAD);
@@ -333,12 +338,12 @@ public class ClickGUIScreen extends GuiScreen {
                                     Rectangle
                                             .create(bX - 17, y + 3.5, 17, 7)
                                             .color(ColorUtil.interpolateColor(new Color(0xA3A3A3), color1.brighter(), toggleAnim))
-                                            .draw();
+                                            .draw(event);
 
                                     Rectangle
                                             .create(bX - 17 - 1 + (9 * toggleAnim), y + 2.5, 9, 9)
                                             .color(ColorUtil.interpolateColor(Color.WHITE, color1, toggleAnim))
-                                            .draw();
+                                            .draw(event);
 
                                     sett.drawString(setting.name, x + 3, y + 2, -1);
                                 }
@@ -355,17 +360,17 @@ public class ClickGUIScreen extends GuiScreen {
                                 Rectangle
                                         .create(x + 1.5f, y, panelWidth - 3, 20 * moduleAnim)
                                         .color(hover ? new Color(40, 40, 40) : new Color(35, 35, 35))
-                                        .draw();
+                                        .draw(event);
 
                                 if (moduleAnim > 0.5f) {
                                     Rectangle
                                             .create(x + 5, y + 14, 111, 3)
                                             .color(color1.darker())
-                                            .draw();
+                                            .draw(event);
                                     Rectangle
                                             .create(x + 5, y + 14, width, 3)
                                             .color(color1)
-                                            .draw();
+                                            .draw(event);
 
                                     float handleX = x + 5 + width - 2;
                                     if (width >= 111) {
@@ -376,7 +381,7 @@ public class ClickGUIScreen extends GuiScreen {
                                     Rectangle
                                             .create(handleX, y + 14 - 1, 5, 5)
                                             .color(Color.WHITE)
-                                            .draw();
+                                            .draw(event);
 
                                     sett.drawString(setting.name, x + 3, y + 2, -1);
 
@@ -404,7 +409,7 @@ public class ClickGUIScreen extends GuiScreen {
                                 Rectangle
                                         .create(x + 1.5f, y, panelWidth - 3, settingHeight * moduleAnim)
                                         .color(hover2 ? new Color(40, 40, 40) : new Color(35, 35, 35))
-                                        .draw();
+                                        .draw(event);
 
                                 if (moduleAnim > 0.5f) {
                                     sett.drawString(setting.name, x + 3, y + 1, -1);
@@ -421,7 +426,7 @@ public class ClickGUIScreen extends GuiScreen {
                                     Rectangle
                                             .create(bX - animatedWidth - 2, y + 1.5f, animatedWidth + 4, 9 + (selector.allValues.length * 9 * settingAnim))
                                             .color(new Color(45, 45, 45))
-                                            .draw();
+                                            .draw(event);
 
                                     sett.drawString(selector.getValue(), bX - sett.getStringWidth(selector.getValue()) - 1, y + 1, -1);
                                     sett.drawString(selector.expanded ? "-" : "+", bX + 3.5f, y + 0.7f, -1);
@@ -447,7 +452,7 @@ public class ClickGUIScreen extends GuiScreen {
                                 Rectangle
                                         .create(x + 1.5f, y, panelWidth - 3, settingHeight * moduleAnim)
                                         .color(hover2 ? new Color(40, 40, 40) : new Color(35, 35, 35))
-                                        .draw();
+                                        .draw(event);
 
                                 if (moduleAnim > 0.5f) {
                                     sett.drawString(setting.name, x + 3, y + 1, -1);
@@ -464,7 +469,7 @@ public class ClickGUIScreen extends GuiScreen {
                                     Rectangle
                                             .create(bX - animatedWidth - 2, y + 1.5f, animatedWidth + 4, 9 + (selector.allValues.length * 9 * settingAnim))
                                             .color(new Color(45, 45, 45))
-                                            .draw();
+                                            .draw(event);
 
                                     sett.drawString(enabled, bX - sett.getStringWidth(enabled) - 1, y + 1, -1);
                                     sett.drawString(selector.expanded ? "-" : "+", bX + 3.5f, y + 0.7f, -1);
@@ -717,8 +722,7 @@ public class ClickGUIScreen extends GuiScreen {
     public void onGuiClosed() {
         ScreenSavingUtil.saveConfig(VantaFile.getFile("clickgui.json"));
         Vanta.instance.configStorage.saveConfig(VantaFile.getFile("configs/default.json"));
-
-        super.onGuiClosed();
+        Vanta.instance.eventBus.unregister(this);
     }
 
     @Override

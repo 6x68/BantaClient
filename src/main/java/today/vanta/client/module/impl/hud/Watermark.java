@@ -2,7 +2,7 @@ package today.vanta.client.module.impl.hud;
 
 import net.minecraft.util.EnumChatFormatting;
 import today.vanta.Vanta;
-import today.vanta.client.event.impl.game.render.Render2DEvent;
+import today.vanta.client.event.impl.client.RenderOverlayEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.module.impl.client.Theme;
@@ -29,7 +29,7 @@ public class Watermark extends Module {
     }
 
     @EventListen(priority = EventPriority.LOWEST)
-    private void onRender(Render2DEvent event) {
+    private void onRender(RenderOverlayEvent event) {
         String firstChar = String.valueOf(IClient.CLIENT_NAME.charAt(0));
         float firstCharWidth = CFonts.SFPT_SEMIBOLD_42.getStringWidth(firstChar) - 1;
         String watermarkText = IClient.CLIENT_NAME.substring(1);

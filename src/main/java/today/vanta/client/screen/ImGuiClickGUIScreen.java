@@ -5,6 +5,7 @@ import imgui.flag.ImGuiCond;
 import net.minecraft.client.gui.GuiScreen;
 import org.lwjgl.input.Keyboard;
 import today.vanta.Vanta;
+import today.vanta.client.event.impl.client.RenderScreenEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.module.impl.client.ClickGUI;
@@ -15,7 +16,7 @@ import today.vanta.client.setting.impl.MultiStringSetting;
 import today.vanta.client.setting.impl.NumberSetting;
 import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.client.IClient;
-import today.vanta.util.game.render.RenderUtil;
+import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.render.shape.GradientMode;
 import today.vanta.util.game.render.shape.impl.GradientRectangle;
 import today.vanta.util.game.render.shape.impl.Rectangle;
@@ -33,11 +34,21 @@ public class ImGuiClickGUIScreen extends GuiScreen implements IClient {
     private Module listeningModule = null;
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+    public void initGui() {
+        Vanta.instance.eventBus.register(this);
+    }
+
+    @Override
+    public void onGuiClosed() {
+        Vanta.instance.eventBus.unregister(this);
+    }
+
+    @EventListen
+    private void onRender(RenderScreenEvent event) {
         if (Vanta.instance.moduleStorage.getT(ClickGUI.class).darkenBackground.getValue()) {
             Rectangle.create(0, 0, width, height)
                     .color(new Color(0, 0, 0, 150))
-                    .draw();
+                    .draw(event);
         }
 
         Color color1 = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
@@ -47,7 +58,7 @@ public class ImGuiClickGUIScreen extends GuiScreen implements IClient {
                     .firstColor(new Color(0, 0, 0, 150))
                     .secondColor(new Color(color1.getRed(), color1.getGreen(), color1.getBlue(), 150))
                     .gradientMode(GradientMode.VERTICAL)
-                    .draw();
+                    .draw(event);
         }
 
         ImGuiImpl.draw(() -> {

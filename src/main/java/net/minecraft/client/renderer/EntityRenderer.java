@@ -73,7 +73,7 @@ import org.lwjgl.opengl.GL12;
 import org.lwjgl.opengl.GLContext;
 import org.lwjgl.util.glu.Project;
 import today.vanta.client.event.impl.game.FrameEvent;
-import today.vanta.client.event.impl.game.render.DrawScreenEvent;
+import today.vanta.client.event.impl.client.RenderScreenEvent;
 import today.vanta.util.system.lwjgl.imgui.ImGuiImpl;
 
 import java.io.IOException;
@@ -1127,7 +1127,7 @@ public class EntityRenderer implements IResourceManagerReloadListener {
                 }
             }
 
-            new DrawScreenEvent(mouseX, mouseY, partialTicks).call();
+            new RenderScreenEvent(mouseX, mouseY, partialTicks).call();
 
             ImGuiImpl.scroll();
             ImGuiImpl.render(mc.getFramebuffer(), partialTicks);
