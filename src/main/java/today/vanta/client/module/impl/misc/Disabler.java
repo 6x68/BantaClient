@@ -1,11 +1,16 @@
 package today.vanta.client.module.impl.misc;
 
+import io.netty.buffer.Unpooled;
 import net.minecraft.network.Packet;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.client.*;
+import today.vanta.Vanta;
 import today.vanta.client.event.impl.game.network.SendPacketEvent;
 import today.vanta.client.event.impl.game.world.UpdateEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
+import today.vanta.client.module.impl.movement.Fly;
+import today.vanta.client.module.impl.movement.Speed;
 import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.MultiStringSetting;
 import today.vanta.client.setting.impl.NumberSetting;
@@ -28,12 +33,6 @@ public class Disabler extends Module {
     @EventListen
     private void onUpdate(UpdateEvent event) {
         if (disable.isEnabled("Miniblox")) {
-            sendPacket(new C0CPacketInput(
-                    mc.thePlayer.moveStrafing,
-                    mc.thePlayer.moveForward,
-                    mc.thePlayer.movementInput.jump,
-                    mc.thePlayer.movementInput.sneak
-            ));
         }
 
         if (disable.isEnabled("Grim")) {
@@ -55,6 +54,24 @@ public class Disabler extends Module {
     @EventListen
     private void onPacket(SendPacketEvent event) {
         if (isProcessing || mc.thePlayer == null) return;
+
+        if (disable.isEnabled("Miniblox")) {
+            if (Vanta.instance.moduleStorage.getT(Fly.class).isEnabled()){ return;}
+            if (event.packet instanceof C03PacketPlayer) {
+                PacketBuffer packetbuffer = new PacketBuffer(Unpooled.buffer());
+                packetbuffer.writeDouble(mc.thePlayer.lastTickPosX);
+                packetbuffer.writeDouble(mc.thePlayer.lastTickPosY);
+                packetbuffer.writeDouble(mc.thePlayer.lastTickPosZ);
+                packetbuffer.writeFloat(mc.thePlayer.rotationYaw);
+                packetbuffer.writeFloat(mc.thePlayer.rotationPitch);
+                packetbuffer.writeFloat(mc.thePlayer.movementInput.moveForward);
+                packetbuffer.writeFloat(mc.thePlayer.movementInput.moveStrafe);
+                packetbuffer.writeBoolean(mc.thePlayer.movementInput.jump);
+                packetbuffer.writeBoolean(mc.thePlayer.movementInput.sneak);
+                packetbuffer.writeBoolean(mc.thePlayer.onGround);
+                mc.getNetHandler().addToSendQueue(new C17PacketCustomPayload("miniblox:movepacket", packetbuffer));
+            }
+        }
 
         if (disable.isEnabled("Grim")) {
             if (event.packet instanceof C03PacketPlayer) {
