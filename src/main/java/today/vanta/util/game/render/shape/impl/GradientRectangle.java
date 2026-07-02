@@ -8,8 +8,6 @@ import today.vanta.util.game.render.shape.Shape;
 import javax.annotation.Nonnull;
 import java.awt.*;
 
-import static org.lwjgl.opengl.GL11.GL_LINE_LOOP;
-
 public class GradientRectangle extends Shape<GradientRectangle> {
     private Color firstColor = Color.WHITE;
     private Color secondColor = Color.BLACK;
@@ -67,7 +65,7 @@ public class GradientRectangle extends Shape<GradientRectangle> {
         GL11.glLineWidth(outlineWidth);
 
         GL11.glShadeModel(GL11.GL_SMOOTH);
-        GL11.glBegin(outline ? GL_LINE_LOOP : GL11.GL_QUADS);
+        GL11.glBegin(outline ? GL11.GL_LINE_LOOP : GL11.GL_QUADS);
         switch (gradientMode) {
             case VERTICAL:
                 // Top left
