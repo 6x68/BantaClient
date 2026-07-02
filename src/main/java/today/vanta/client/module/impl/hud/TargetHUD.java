@@ -42,7 +42,7 @@ public class TargetHUD extends Module {
     private boolean dragging;
     private float dragX, dragY;
 
-    private final StringSetting mode = Setting.of("Mode", "Vanta", "Classic", "Vanta", "Adjust", "ID-Card", "aged");
+    private final StringSetting mode = Setting.of("Mode", "Vanta", "Classic", "Vanta", "Adjust", "ID-Card", "Aged");
     private final NumberSetting
             x = Setting.of("X position", 20, 0, 2000),
             y = Setting.of("Y position", 20, 0, 2000);
@@ -367,7 +367,7 @@ public class TargetHUD extends Module {
                 CFonts.RUSTICROADWAY_22.drawString(firstChar + ". " + entitytype, x + 71, y + 83, Color.BLACK, false);
                 RenderUtil.renderHead(renderable, (EntityPlayer) localTarget, x + 3, y + 22, 64);
                 break;
-            case "aged":
+            case "Aged":
                 width = 150f;
                 height = 35f;
 
@@ -425,7 +425,7 @@ public class TargetHUD extends Module {
         }
 
         if (dragging && mc.currentScreen instanceof GuiChat) {
-            if (mode.getValue().equals("aged")) {
+            if (mode.getValue().equals("Aged")) {
                 GradientRectangle
                         .create(x - 0.5, y - 0.5, width + 1, height + 1)
                         .firstColor(color)
