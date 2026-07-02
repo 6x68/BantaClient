@@ -41,7 +41,7 @@ public class Triangle extends Shape<Triangle> {
     }
 
     @Override
-    public void draw(Renderable renderable) {
+    public void push(Renderable renderable) {
         RenderUtil.start();
 
         GL11.glPushMatrix();

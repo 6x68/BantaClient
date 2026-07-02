@@ -19,6 +19,6 @@ public class Test extends Module {
                 .create(15, 15 + 150, 150, 149)
                 .rotate(90)
                 .color(Color.RED)
-                .draw(event);
+                .push(event);
     }
 }

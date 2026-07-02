@@ -58,7 +58,7 @@ public class MainMenuScreen extends GuiScreen {
         Rectangle
                 .create(0, 0, width, height)
                 .color(new Color(20, 20, 20))
-                .draw(event);
+                .push(event);
 
         float panelWidth = 0;
         for (String change : IClient.CHANGELOG) {
@@ -71,7 +71,7 @@ public class MainMenuScreen extends GuiScreen {
         Rectangle
                 .create(5, middleY, panelWidth, boxHeight)
                 .color(new Color(30, 30, 30))
-                .draw(event);
+                .push(event);
         smallTitle.drawString("Changelog", 5 + 3.5f, middleY + 4.5f - 1, -1);
 
         for (int i = 0; i < IClient.CHANGELOG.size(); i++) {
@@ -81,7 +81,7 @@ public class MainMenuScreen extends GuiScreen {
             Rectangle
                     .create(5 + 1.5f, y, (panelWidth - 3), 14)
                     .color(new Color(35, 35, 35))
-                    .draw(event);
+                    .push(event);
 
             String formattedChange = formatChange(change);
 
@@ -94,7 +94,7 @@ public class MainMenuScreen extends GuiScreen {
         Rectangle
                 .create(middleX - 143 / 2f, middleY - 16, 143, 14 * (buttons.size()) + 18)
                 .color(new Color(30, 30, 30))
-                .draw(event);
+                .push(event);
         roundedSemibold10.drawString(IClient.CLIENT_NAME, middleX - 143 / 2f + 3, middleY - 18 + 4.5f, -1);
         roundedMedium9.drawString(IClient.CLIENT_VERSION + " | " + IClient.DEVELOPERS, middleX * 2 - roundedMedium9.getStringWidth(IClient.CLIENT_VERSION + " | " + IClient.DEVELOPERS) - 3, middleY * 2 - roundedMedium9.getFontHeight() - 5.5f, new Color(200, 200, 200));
 

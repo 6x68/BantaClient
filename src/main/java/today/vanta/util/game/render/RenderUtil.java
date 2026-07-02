@@ -14,7 +14,6 @@ import net.minecraft.item.ItemStack;
 import net.optifine.reflect.Reflector;
 import org.lwjgl.opengl.GL11;
 import today.vanta.Vanta;
-import today.vanta.util.game.IMinecraft;
 import today.vanta.util.game.render.shape.impl.ImageRectangle;
 
 import javax.imageio.ImageIO;
@@ -105,7 +104,7 @@ public class RenderUtil {
                     .uvSize(8, 8)
                     .tileSize(64, 64)
                     .textureId(((AbstractClientPlayer) target).getLocationSkin())
-                    .draw(renderable);
+                    .push(renderable);
 
             ImageRectangle
                     .create(x, y, headSize, headSize, -1)
@@ -113,7 +112,7 @@ public class RenderUtil {
                     .uvSize(8, 8)
                     .tileSize(64, 64)
                     .textureId(((AbstractClientPlayer) target).getLocationSkin())
-                    .draw(renderable);
+                    .push(renderable);
     }
 
     public static BufferedImage base64ToBufferedImage(String base64Image) {

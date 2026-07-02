@@ -29,7 +29,7 @@ public class ButtonComponent extends Component {
             Rectangle
                     .create(x, y, width, height)
                     .color(hover ? new Color(40, 40, 40) : new Color(35, 35, 35))
-                    .draw(event);
+                    .push(event);
             font.drawYCenteredString(text, x + 3.5f, y + height / 2 - 2, Color.WHITE, false);
         } else {
             font.drawString(text, x, y - 2, hover ? Color.LIGHT_GRAY : Color.WHITE);

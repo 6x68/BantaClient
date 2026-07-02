@@ -56,7 +56,7 @@ public class BlockCounter extends Module {
             Rectangle
                     .create((float) event.scaledResolution.getScaledWidth() / 2 - 1, 0,2,event.scaledResolution.getScaledHeight())
                     .color(new Color(200,200,200,180))
-                    .draw(event);
+                    .push(event);
         }
     }
 
@@ -107,7 +107,7 @@ public class BlockCounter extends Module {
                 Rectangle
                         .create(x, y, WIDTH, HEIGHT)
                         .color(BACKGROUND)
-                        .draw(renderable);
+                        .push(renderable);
 
                 RenderUtil.renderScaledItem(InventoryUtil.getBestBlockStack(), x, y + 0.5f, 2.4f);
 
@@ -127,17 +127,17 @@ public class BlockCounter extends Module {
                 Rectangle
                         .create(x, y, WIDTH, HEIGHT)
                         .color(BACKGROUND)
-                        .draw(renderable);
+                        .push(renderable);
 
                 Rectangle
                         .create(x + 2, y + 14, barWidth, 3)
                         .color(BACKGROUND.darker())
-                        .draw(renderable);
+                        .push(renderable);
 
                 Rectangle
                         .create(x + 2, y + 14, bar, 3)
                         .color(color)
-                        .draw(renderable);
+                        .push(renderable);
 
                 String block_str = String.valueOf(blocks);
                 float length = CFonts.SFPT_SEMIBOLD_20.getStringWidth(block_str);
@@ -152,7 +152,7 @@ public class BlockCounter extends Module {
                     .create(x - 0.5, y - 0.5, WIDTH + 1, HEIGHT + 1)
                     .outline(true)
                     .color(color)
-                    .draw(renderable);
+                    .push(renderable);
         }
     }
 }

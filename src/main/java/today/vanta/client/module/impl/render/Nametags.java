@@ -140,7 +140,7 @@ public class Nametags extends Module {
                 Rectangle
                         .create(startX, textY - 1, totalWidth + 2, 14)
                         .color(BACKGROUND)
-                        .draw(event);
+                        .push(event);
             }
 
             if (healthbar.getValue()) {
@@ -149,21 +149,21 @@ public class Nametags extends Module {
                             .create(startX + (idk / 2), textY + 12, idkbar1, 1)
                             .firstColor(gradcolor2)
                             .secondColor(gradcolor)
-                            .draw(event);
+                            .push(event);
                     GradientRectangle
                             .create(startX + (idk / 2), textY + 12, idkbar2, 1)
                             .firstColor(gradcolor2)
                             .secondColor(gradcolor)
-                            .draw(event);
+                            .push(event);
                 } else {
                     Rectangle
                             .create(startX + (idk / 2), textY + 12, idkbar1, 1)
                             .color(healthColor)
-                            .draw(event);
+                            .push(event);
                     Rectangle
                             .create(startX + (idk / 2), textY + 12, idkbar2, 1)
                             .color(healthColor)
-                            .draw(event);
+                            .push(event);
                 }
             }
 

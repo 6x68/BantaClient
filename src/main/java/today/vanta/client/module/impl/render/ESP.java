@@ -51,21 +51,21 @@ public class ESP extends Module {
                     .outline(true)
                     .color(Color.BLACK)
                     .outlineWidth(1.0f)
-                    .draw(event);
+                    .push(event);
 
             Rectangle
                     .create(x, y, width, height)
                     .outline(true)
                     .color(color)
                     .outlineWidth(1.0f)
-                    .draw(event);
+                    .push(event);
 
             Rectangle
                     .create(x + 0.5f, y + 0.5f, width - 1, height - 1)
                     .outline(true)
                     .color(Color.BLACK)
                     .outlineWidth(1.0f)
-                    .draw(event);
+                    .push(event);
         }
     }
 

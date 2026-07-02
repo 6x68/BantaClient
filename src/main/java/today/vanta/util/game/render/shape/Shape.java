@@ -12,5 +12,5 @@ public abstract class Shape<T extends Shape<T>> {
         return (T) this;
     }
 
-    public abstract void draw(Renderable renderable);
+    public abstract void push(Renderable renderable);
 }

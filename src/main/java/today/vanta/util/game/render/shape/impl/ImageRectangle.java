@@ -66,7 +66,7 @@ public class ImageRectangle extends Shape<ImageRectangle> {
     }
 
     @Override
-    public void draw(Renderable renderable) {
+    public void push(Renderable renderable) {
         if (textureId == -1) {
             return;
         }

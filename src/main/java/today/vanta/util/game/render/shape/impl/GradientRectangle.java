@@ -55,7 +55,7 @@ public class GradientRectangle extends Shape<GradientRectangle> {
     }
 
     @Override
-    public void draw(Renderable renderable) {
+    public void push(Renderable renderable) {
         RenderUtil.start();
 
         GL11.glPushMatrix();

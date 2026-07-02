@@ -46,7 +46,7 @@ public class TargetList extends Module {
         Rectangle
                 .create(80, 20, 100, 10)
                 .color(DARKER_BACKGROUND)
-                .draw(event);
+                .push(event);
 
         mc.exhiFontRendererObj.drawString("Targets:", 82, 21, Color.WHITE);
 
@@ -56,7 +56,7 @@ public class TargetList extends Module {
         Rectangle
                 .create(80, 30, width, height)
                 .color(BACKGROUND)
-                .draw(event);
+                .push(event);
         float y = 32;
 
         for (EntityPlayer entityPlayer : list) {

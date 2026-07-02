@@ -124,7 +124,7 @@ public class TargetHUD extends Module {
                 Rectangle
                         .create(x, y, width, height)
                         .color(new Color(28, 29, 33))
-                        .draw(renderable);
+                        .push(renderable);
 
                 RenderUtil.renderHead(renderable, (EntityPlayer) localTarget, x, y, 36f);
                 CFonts.SFPT_MEDIUM_20.drawStringWithShadow(localTarget.getName(), x + 38, y + 4, Color.WHITE);
@@ -176,18 +176,18 @@ public class TargetHUD extends Module {
                 Rectangle
                         .create(x, y + 36, width - 2.5f, 4f)
                         .color(DARKER_BACKGROUND)
-                        .draw(renderable);
+                        .push(renderable);
 
                 Rectangle
                         .create(x, y + 36, ghostBarWidth, 4f)
                         .color(color.darker())
-                        .draw(renderable);
+                        .push(renderable);
 
                 GradientRectangle
                         .create(x, y + 36, barWidth, 4f)
                         .firstColor(color2)
                         .secondColor(color)
-                        .draw(renderable);
+                        .push(renderable);
                 break;
 
             case "Classic":
@@ -212,19 +212,19 @@ public class TargetHUD extends Module {
                 Rectangle
                         .create(x, y, width, height)
                         .color(BACKGROUND)
-                        .draw(renderable);
+                        .push(renderable);
 
                 RenderUtil.renderEntity((int) x + 15, (int) y + 52, 25, -30, 0, localTarget);
 
                 Rectangle
                         .create(x + 37, y - (10f / 2) + (height / 2) + 10, healthbarwidth, 10f)
                         .color(DARKER_BACKGROUND)
-                        .draw(renderable);
+                        .push(renderable);
 
                 Rectangle
                         .create(x + 37, y - (10f / 2) + (height / 2) + 10, healthbar, 10f)
                         .color(healthbarcol)
-                        .draw(renderable);
+                        .push(renderable);
 
                 mc.fontRendererObj.drawStringWithShadow(health_str + " ❤", x + 37, y + 16, Color.WHITE);
                 mc.fontRendererObj.drawStringWithShadow(localTarget.getName(), x + 37, y + 2, Color.WHITE);
@@ -283,7 +283,7 @@ public class TargetHUD extends Module {
                 Rectangle
                         .create(x, y, width, height)
                         .color(BACKGROUND)
-                        .draw(renderable);
+                        .push(renderable);
 
                 RenderUtil.renderHead(renderable, (EntityPlayer) localTarget, x + 2, y + 2, 20f);
                 CFonts.getFont("T-Regular", 16).drawStringWithShadow(localTarget.getName(), x + 24, y + 1, Color.WHITE);
@@ -291,17 +291,17 @@ public class TargetHUD extends Module {
                 Rectangle
                         .create(x + 2, y + space, width - 4, 3f)
                         .color(DARKER_BACKGROUND)
-                        .draw(renderable);
+                        .push(renderable);
 
                 Rectangle
                         .create(x + 2, y + space, adghostBarWidth, 3f)
                         .color(color.darker())
-                        .draw(renderable);
+                        .push(renderable);
 
                 Rectangle
                         .create(x + 2, y + space, adbarWidth, 3f)
                         .color(color)
-                        .draw(renderable);
+                        .push(renderable);
 
                 float itemX = x + 10 + 2;
                 float itemY = y + 10;
@@ -352,7 +352,7 @@ public class TargetHUD extends Module {
                 Rectangle
                         .create(x, y, width, height)
                         .color(PASSBACKGROUND)
-                        .draw(renderable);
+                        .push(renderable);
 
                 CFonts.OCRB_10.drawString("NORGE NOREG NORGA", x + 2, y + 2, Color.RED, false);
                 CFonts.OCRB_10.drawString("NORWAY", x + 2, y + 9, Color.RED, false);
@@ -402,21 +402,21 @@ public class TargetHUD extends Module {
                 Rectangle
                         .create(x, y, width, height)
                         .color(BACKGROUND)
-                        .draw(renderable);
+                        .push(renderable);
 
                 RenderUtil.renderHead(renderable, (EntityPlayer) localTarget, x + 2, y + 2, 31);
 
                 Rectangle
                         .create(x + 35, y - (10f / 2) + (height / 2) + 10, width - 37, 10f)
                         .color(DARKER_BACKGROUND)
-                        .draw(renderable);
+                        .push(renderable);
 
                 GradientRectangle
                         .create(x + 35, y - (10f / 2) + (height / 2) + 10, abarwidth, 10f)
                         .firstColor(color)
                         .secondColor(color2)
                         .gradientMode(GradientMode.VERTICAL)
-                        .draw(renderable);
+                        .push(renderable);
 
                 mc.exhiFontRendererObj.drawString(health_str, x + 35, y + 12, Color.WHITE);
                 mc.exhiFontRendererObj.drawString(localTarget.getName(), x + 35, y + 2, Color.WHITE);
@@ -431,13 +431,13 @@ public class TargetHUD extends Module {
                         .firstColor(color)
                         .secondColor(color2)
                         .outline(true)
-                        .draw(renderable);
+                        .push(renderable);
             } else {
                 Rectangle
                         .create(x - 0.5, y - 0.5, width + 1, height + 1)
                         .color(color)
                         .outline(true)
-                        .draw(renderable);
+                        .push(renderable);
             }
         }
     }

@@ -66,7 +66,7 @@ public class AltLoginScreen extends GuiScreen {
         Rectangle
                 .create(0, 0, width, height)
                 .color(new Color(20, 20, 20))
-                .draw(event);
+                .push(event);
 
         buttonText.drawString("(Alt accounts) Left click to login, right click to delete.", 5, 5, new Color(125, 125, 125).getRGB());
 
@@ -76,7 +76,7 @@ public class AltLoginScreen extends GuiScreen {
         Rectangle
                 .create(middleX - 143 / 2f, middleY - 16, 143, 14 * components.size() + 18)
                 .color(new Color(30, 30, 30))
-                .draw(event);
+                .push(event);
         smallTitle.drawString(mc.session.getUsername(), middleX - 143 / 2f + 3, middleY - 18 + 4.5f, -1);
 
         components.forEach(c -> c.draw(event));

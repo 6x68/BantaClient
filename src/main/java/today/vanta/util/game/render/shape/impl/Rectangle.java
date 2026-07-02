@@ -41,7 +41,7 @@ public class Rectangle extends Shape<Rectangle> {
     }
 
     @Override
-    public void draw(Renderable renderable) {
+    public void push(Renderable renderable) {
         RenderUtil.start();
 
         GL11.glPushMatrix();

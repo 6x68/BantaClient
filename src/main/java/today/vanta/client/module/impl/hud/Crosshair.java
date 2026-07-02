@@ -62,43 +62,43 @@ public class Crosshair extends Module {
             Rectangle
                     .create(x + animatedSpacing - 1, y - (w / 2) - 1, len + 2, w + 2)
                     .color(Color.BLACK)
-                    .draw(event);
+                    .push(event);
 
             Rectangle
                     .create(x - animatedSpacing - len - 1, y - (w / 2) - 1, len + 2, w + 2)
                     .color(Color.BLACK)
-                    .draw(event);
+                    .push(event);
 
             Rectangle
                     .create(x - (w / 2) - 1, y + animatedSpacing - 1, w + 2, len + 2)
                     .color(Color.BLACK)
-                    .draw(event);
+                    .push(event);
 
             Rectangle
                     .create(x - (w / 2) - 1, y - animatedSpacing - len - 1, w + 2, len + 2)
                     .color(Color.BLACK)
-                    .draw(event);
+                    .push(event);
         }
 
         // Main part
         Rectangle
                 .create(x + animatedSpacing, y - (w / 2), len, w)
                 .color(color)
-                .draw(event);
+                .push(event);
 
         Rectangle
                 .create(x - animatedSpacing - len, y - (w / 2), len, w)
                 .color(color)
-                .draw(event);
+                .push(event);
 
         Rectangle
                 .create(x - (w / 2), y + animatedSpacing, w, len)
                 .color(color)
-                .draw(event);
+                .push(event);
 
         Rectangle
                 .create(x - (w / 2), y - animatedSpacing - len, w, len)
                 .color(color)
-                .draw(event);
+                .push(event);
     }
 }
