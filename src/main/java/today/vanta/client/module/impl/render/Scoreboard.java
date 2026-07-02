@@ -36,16 +36,35 @@ public class Scoreboard extends Module {
 
     public Scoreboard() {
         super("Scoreboard", "Modifies Minecraft Scoreboard.", Category.RENDER);
+
+        x.addListener((setting, oldValue, newValue) -> resetToDefaults());
+        y.addListener((setting, oldValue, newValue) -> resetToDefaults());
     }
 
     @Override
     public void onEnable() {
-        if (x.getValue().floatValue() < 0 || y.getValue().floatValue() < 0) {
-            float[] defaultPos = calculateDefaultPosition();
-            if (defaultPos != null) {
-                x.setValue(defaultPos[0]);
-                y.setValue(defaultPos[1]);
-            }
+        resetToDefaults();
+    }
+
+    private boolean resetting;
+
+    private void resetToDefaults() {
+        if (resetting) return;
+
+        float xValue = x.getValue().floatValue();
+        float yValue = y.getValue().floatValue();
+
+        if (xValue >= 0 && yValue >= 0) return;
+
+        ScoreboardLayout layout = resolveLayout();
+        if (layout == null) return;
+
+        resetting = true;
+        try {
+            if (xValue < 0) x.setValue(layout.defaultX);
+            if (yValue < 0) y.setValue(layout.defaultY);
+        } finally {
+            resetting = false;
         }
     }
 
@@ -58,114 +77,65 @@ public class Scoreboard extends Module {
     private void onDrawScreen(RenderScreenEvent event) {
         if (mc.thePlayer == null || mc.theWorld == null) return;
 
-        ScaledResolution scaledRes = new ScaledResolution(mc);
+        ScoreboardLayout layout = resolveLayout();
+        if (layout == null) return;
 
-        net.minecraft.scoreboard.Scoreboard worldScoreboard = mc.theWorld.getScoreboard();
-        ScoreObjective sidebarObjective = null;
-        ScorePlayerTeam playerTeam = worldScoreboard.getPlayersTeam(mc.thePlayer.getName());
+        float boundsX = x.getValue().floatValue();
+        float boundsY = y.getValue().floatValue();
 
-        if (playerTeam != null) {
-            int teamColor = playerTeam.getChatFormat().getColorIndex();
+        float renderX = boundsX + 2;
+        float renderY = boundsY + layout.totalHeight;
 
-            if (teamColor >= 0) {
-                sidebarObjective = worldScoreboard.getObjectiveInDisplaySlot(3 + teamColor);
-            }
+        if (mc.currentScreen instanceof GuiChat) {
+            handleDragging(event.mouseX, event.mouseY, boundsX, boundsY, layout.totalWidth, layout.totalHeight);
+        } else if (mc.currentScreen != null) {
+            return;
         }
 
-        ScoreObjective objective = sidebarObjective != null ? sidebarObjective : worldScoreboard.getObjectiveInDisplaySlot(1);
+        int lineIndex = 0;
+        for (Score score : layout.scores) {
+            lineIndex++;
 
-        if (objective != null) {
-            net.minecraft.scoreboard.Scoreboard scoreboard = objective.getScoreboard();
-            Collection<Score> scoreCollection = scoreboard.getSortedScores(objective);
+            ScorePlayerTeam team = layout.scoreboard.getPlayersTeam(score.getPlayerName());
+            String playerName = ScorePlayerTeam.formatPlayerName(team, score.getPlayerName());
 
-            List<Score> visibleScores = Lists.newArrayList(Iterables.filter(scoreCollection, score -> score.getPlayerName() != null && !score.getPlayerName().startsWith("#")));
+            float rectY = renderY - lineIndex * mc.fontRendererObj.FONT_HEIGHT;
+            float rightX = renderX + layout.width + 2;
 
-            if (visibleScores.size() > 15) {
-                scoreCollection = Lists.newArrayList(Iterables.skip(visibleScores, visibleScores.size() - 15));
-            } else {
-                scoreCollection = visibleScores;
+            Rectangle
+                    .create(boundsX, rectY, layout.totalWidth, mc.fontRendererObj.FONT_HEIGHT)
+                    .color(new Color(0, 0, 0, 80))
+                    .push(event);
+
+            mc.fontRendererObj.drawString(playerName, (int) renderX, (int) rectY, 553648127);
+
+            if (!removeScore.getValue()) {
+                String points = EnumChatFormatting.RED + "" + score.getScorePoints();
+                mc.fontRendererObj.drawString(points, (int) (rightX - mc.fontRendererObj.getStringWidth(points)), (int) rectY, 553648127);
             }
 
-            int width = mc.fontRendererObj.getStringWidth(objective.getDisplayName());
-
-            for (Score score : scoreCollection) {
-                ScorePlayerTeam team = scoreboard.getPlayersTeam(score.getPlayerName());
-
-                String scoreLine = ScorePlayerTeam.formatPlayerName(team, score.getPlayerName()) + ": " + EnumChatFormatting.RED + score.getScorePoints();
-                width = Math.max(width, mc.fontRendererObj.getStringWidth(scoreLine));
-            }
-
-            int height = scoreCollection.size() * mc.fontRendererObj.FONT_HEIGHT;
-            int padding = 3;
-
-            float totalWidth = width + 4;
-            float totalHeight = (scoreCollection.size() + 1) * mc.fontRendererObj.FONT_HEIGHT + 1;
-
-            if (x.getValue().floatValue() < 0 || y.getValue().floatValue() < 0) {
-                float defaultX = scaledRes.getScaledWidth() - width - padding - 2;
-                float defaultY = scaledRes.getScaledHeight() / 2 + height / 3 - totalHeight;
-                x.setValue(defaultX);
-                y.setValue(defaultY);
-            }
-
-            float boundsX = x.getValue().floatValue();
-            float boundsY = y.getValue().floatValue();
-
-            float renderX = boundsX + 2;
-            float renderY = boundsY + totalHeight;
-
-            if (mc.currentScreen instanceof GuiChat) {
-                handleDragging(event.mouseX, event.mouseY, boundsX, boundsY, totalWidth, totalHeight);
-            } else if (mc.currentScreen != null) {
-                return;
-            }
-
-            int lineIndex = 0;
-
-            for (Score score : scoreCollection) {
-                lineIndex++;
-
-                ScorePlayerTeam team = scoreboard.getPlayersTeam(score.getPlayerName());
-                String playerName = ScorePlayerTeam.formatPlayerName(team, score.getPlayerName());
-
-                float rectY = renderY - lineIndex * mc.fontRendererObj.FONT_HEIGHT;
-                float rightX = renderX + width + 2;
+            if (lineIndex == layout.scores.size()) {
+                String objectiveName = layout.objective.getDisplayName();
 
                 Rectangle
-                        .create(boundsX, rectY, totalWidth, mc.fontRendererObj.FONT_HEIGHT)
+                        .create(boundsX, rectY - mc.fontRendererObj.FONT_HEIGHT - 1, layout.totalWidth, mc.fontRendererObj.FONT_HEIGHT)
+                        .color(new Color(0, 0, 0, 96))
+                        .push(event);
+                Rectangle
+                        .create(boundsX, rectY - 1, layout.totalWidth, 1)
                         .color(new Color(0, 0, 0, 80))
                         .push(event);
 
-                mc.fontRendererObj.drawString(playerName, (int) renderX, (int) rectY, 553648127);
-
-                if (!removeScore.getValue()) {
-                    String points = EnumChatFormatting.RED + "" + score.getScorePoints();
-                    mc.fontRendererObj.drawString(points, (int) (rightX - mc.fontRendererObj.getStringWidth(points)), (int) rectY, 553648127);
-                }
-
-                if (lineIndex == scoreCollection.size()) {
-                    String objectiveName = objective.getDisplayName();
-
-                    Rectangle
-                            .create(boundsX, rectY - mc.fontRendererObj.FONT_HEIGHT - 1, totalWidth, mc.fontRendererObj.FONT_HEIGHT)
-                            .color(new Color(0, 0, 0, 96))
-                            .push(event);
-                    Rectangle
-                            .create(boundsX, rectY - 1, totalWidth, 1)
-                            .color(new Color(0, 0, 0, 80))
-                            .push(event);
-
-                    mc.fontRendererObj.drawString(objectiveName, (int) (renderX + width / 2 - mc.fontRendererObj.getStringWidth(objectiveName) / 2), (int) (rectY - mc.fontRendererObj.FONT_HEIGHT), 553648127);
-                }
+                mc.fontRendererObj.drawString(objectiveName, (int) (renderX + layout.width / 2f - mc.fontRendererObj.getStringWidth(objectiveName) / 2f), (int) (rectY - mc.fontRendererObj.FONT_HEIGHT), 553648127);
             }
+        }
 
-            if (dragging && mc.currentScreen instanceof GuiChat) {
-                Rectangle
-                        .create(boundsX - 0.5, boundsY - 0.5, totalWidth + 1, totalHeight + 1)
-                        .color(new Color(255, 255, 255, 150))
-                        .outline(true)
-                        .push(event);
-            }
+        if (dragging && mc.currentScreen instanceof GuiChat) {
+            Rectangle
+                    .create(boundsX - 0.5, boundsY - 0.5, layout.totalWidth + 1, layout.totalHeight + 1)
+                    .color(new Color(255, 255, 255, 150))
+                    .outline(true)
+                    .push(event);
         }
     }
 
@@ -186,25 +156,23 @@ public class Scoreboard extends Module {
         }
     }
 
-    private float[] calculateDefaultPosition() {
+    private ScoreboardLayout resolveLayout() {
         if (mc.thePlayer == null || mc.theWorld == null) return null;
 
         ScaledResolution scaledRes = new ScaledResolution(mc);
-
         net.minecraft.scoreboard.Scoreboard worldScoreboard = mc.theWorld.getScoreboard();
+
         ScoreObjective sidebarObjective = null;
         ScorePlayerTeam playerTeam = worldScoreboard.getPlayersTeam(mc.thePlayer.getName());
 
         if (playerTeam != null) {
             int teamColor = playerTeam.getChatFormat().getColorIndex();
-
             if (teamColor >= 0) {
                 sidebarObjective = worldScoreboard.getObjectiveInDisplaySlot(3 + teamColor);
             }
         }
 
         ScoreObjective objective = sidebarObjective != null ? sidebarObjective : worldScoreboard.getObjectiveInDisplaySlot(1);
-
         if (objective == null) return null;
 
         net.minecraft.scoreboard.Scoreboard scoreboard = objective.getScoreboard();
@@ -222,7 +190,6 @@ public class Scoreboard extends Module {
 
         for (Score score : scoreCollection) {
             ScorePlayerTeam team = scoreboard.getPlayersTeam(score.getPlayerName());
-
             String scoreLine = ScorePlayerTeam.formatPlayerName(team, score.getPlayerName()) + ": " + EnumChatFormatting.RED + score.getScorePoints();
             width = Math.max(width, mc.fontRendererObj.getStringWidth(scoreLine));
         }
@@ -230,11 +197,33 @@ public class Scoreboard extends Module {
         int height = scoreCollection.size() * mc.fontRendererObj.FONT_HEIGHT;
         int padding = 3;
 
+        float totalWidth = width + 4;
         float totalHeight = (scoreCollection.size() + 1) * mc.fontRendererObj.FONT_HEIGHT + 1;
-
         float defaultX = scaledRes.getScaledWidth() - width - padding - 2;
-        float defaultY = scaledRes.getScaledHeight() / 2 + height / 3 - totalHeight;
+        float defaultY = scaledRes.getScaledHeight() / 2f + height / 3f - totalHeight;
 
-        return new float[]{defaultX, defaultY};
+        return new ScoreboardLayout(scoreboard, objective, Lists.newArrayList(scoreCollection), width, totalWidth, totalHeight, defaultX, defaultY);
+    }
+
+    private static class ScoreboardLayout {
+        final net.minecraft.scoreboard.Scoreboard scoreboard;
+        final ScoreObjective objective;
+        final List<Score> scores;
+        final int width;
+        final float totalWidth;
+        final float totalHeight;
+        final float defaultX;
+        final float defaultY;
+
+        ScoreboardLayout(net.minecraft.scoreboard.Scoreboard scoreboard, ScoreObjective objective, List<Score> scores, int width, float totalWidth, float totalHeight, float defaultX, float defaultY) {
+            this.scoreboard = scoreboard;
+            this.objective = objective;
+            this.scores = scores;
+            this.width = width;
+            this.totalWidth = totalWidth;
+            this.totalHeight = totalHeight;
+            this.defaultX = defaultX;
+            this.defaultY = defaultY;
+        }
     }
 }
