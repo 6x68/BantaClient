@@ -14,9 +14,10 @@ public interface IClient {
     String COMMAND_PREFIX = ".";
 
     List<String> CHANGELOG = Arrays.asList(
-            "[+] Added Commands - help, bind, toggle, clear, teleport",
+            "[+] Added Commands - help, bind, toggle, clear, teleport, config",
             "[+] Added command suggestions",
             "[+] Added Miniblox disabler",
+            "[+] Added more targethuds",
             "[+] Added refresh tokens",
             "[+] Added ClickTeleport",
             "[+] Added more themes",
@@ -25,6 +26,7 @@ public interface IClient {
             "[#] Reworked InventoryManager",
             "[#] Reworked ChestStealer",
             "[#] Reworked Scoreboard",
+            "[#] Reworked configs",
             "[#] Fixed rendering bugs"
     );
 }
