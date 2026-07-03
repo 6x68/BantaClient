@@ -16,6 +16,7 @@ import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.player.PlayerUtil;
 import today.vanta.util.game.render.RenderUtil;
+import today.vanta.util.game.render.font.CFonts;
 import today.vanta.util.game.render.shape.impl.Rectangle;
 
 import java.awt.*;
@@ -107,7 +108,15 @@ public class TargetList extends Module {
                 }
                 break;
             case "Window":
+                WIDTH = 100f;
+                HEIGHT = 10f * list.size();
                 RenderUtil.drawWindowRectangle(event,"TargetList",x.getValue().floatValue(),y.getValue().floatValue(),WIDTH,HEIGHT);
+                ydraw = y.getValue().floatValue() + 11f;
+                for(EntityPlayer entityPlayer : list) {
+                    String name = entityPlayer.getName();
+                    CFonts.SFPT_REGULAR_18.drawStringWithShadow(name,x.getValue().floatValue(),ydraw,Color.WHITE);
+                    ydraw += 10f;
+                }
                 break;
         }
 
