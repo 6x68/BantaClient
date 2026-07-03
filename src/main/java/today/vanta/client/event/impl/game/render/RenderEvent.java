@@ -5,8 +5,8 @@ import today.vanta.client.event.Event;
 
 public class RenderEvent extends Event {
     public float partialTicks;
-    public ScaledResolution scaledResolution;
-    public boolean screen;
+    public final ScaledResolution scaledResolution;
+    public final boolean screen;
 
     public RenderEvent(float partialTicks, ScaledResolution scaledResolution, boolean screen) {
         this.partialTicks = partialTicks;

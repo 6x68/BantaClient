@@ -1,16 +1,25 @@
 package today.vanta.client.module.impl.movement;
 
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.pathfinding.PathPoint;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
+import org.lwjgl.opengl.GL11;
+import today.vanta.Vanta;
 import today.vanta.client.event.impl.game.MiddleClickEvent;
+import today.vanta.client.event.impl.game.render.Render3DEvent;
 import today.vanta.client.event.impl.game.world.UpdateEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
+import today.vanta.client.module.impl.client.Theme;
 import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.NumberSetting;
 import today.vanta.client.setting.impl.StringSetting;
@@ -19,6 +28,7 @@ import today.vanta.util.game.player.ChatUtil;
 import today.vanta.util.game.world.PathfindingUtil;
 import today.vanta.util.system.math.Counter;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,6 +56,9 @@ public class ClickTeleport extends Module {
     private double straightTargetZ;
 
     private final Counter delayCounter = new Counter();
+
+    private BlockPos previewBlockPos;
+    private Vec3 previewTarget;
 
     public ClickTeleport() {
         super("ClickTeleport", "Teleports to where you are looking on middle click.", Category.MOVEMENT);
@@ -214,8 +227,31 @@ public class ClickTeleport extends Module {
         return chunks;
     }
 
+    private void updatePreview() {
+        MovingObjectPosition result = mc.thePlayer.rayTrace(reach.getValue().doubleValue(), 1.0F);
+
+        if (result == null || result.typeOfHit != MovingObjectPosition.MovingObjectType.BLOCK) {
+            previewBlockPos = null;
+            previewTarget = null;
+            return;
+        }
+
+        BlockPos blockPos = result.getBlockPos();
+
+        if (previewBlockPos != null && previewBlockPos.equals(blockPos) && previewTarget != null) {
+            return;
+        }
+
+        previewBlockPos = blockPos;
+        previewTarget = new Vec3(blockPos.getX() + 0.5D, blockPos.getY() + 1.0D, blockPos.getZ() + 0.5D);
+    }
+
     @EventListen
     private void onUpdate(UpdateEvent event) {
+        if (mc.thePlayer != null && mc.theWorld != null && !isChunkedTeleportActive()) {
+            updatePreview();
+        }
+
         if (!isChunkedTeleportActive()) {
             return;
         }
@@ -336,10 +372,97 @@ public class ClickTeleport extends Module {
         return chunkedPath != null || straightChunks != null;
     }
 
+    @EventListen
+    private void onRenderWorldLast(Render3DEvent event) {
+        if (mc.thePlayer == null || mc.theWorld == null || previewTarget == null) {
+            return;
+        }
+
+        Color color = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
+
+        double x = previewTarget.xCoord - mc.getRenderManager().viewerPosX;
+        double y = previewTarget.yCoord - mc.getRenderManager().viewerPosY;
+        double z = previewTarget.zCoord - mc.getRenderManager().viewerPosZ;
+
+        double sizeXZ = 0.5D;
+        double sizeY = 0.1D;
+
+        AxisAlignedBB box = new AxisAlignedBB(
+                x - sizeXZ, y, z - sizeXZ,
+                x + sizeXZ, y + sizeY * 2, z + sizeXZ
+        );
+
+        GlStateManager.pushMatrix();
+        GlStateManager.disableTexture2D();
+        GlStateManager.enableBlend();
+        GlStateManager.disableDepth();
+        GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
+        GlStateManager.disableLighting();
+        GlStateManager.color(color.getRed() / 255.0F, color.getGreen() / 255.0F, color.getBlue() / 255.0F, 0.8f);
+        GL11.glLineWidth(2.0F);
+
+        drawBoundingBox(box);
+
+        GlStateManager.enableLighting();
+        GlStateManager.enableDepth();
+        GlStateManager.enableTexture2D();
+        GlStateManager.popMatrix();
+    }
+
+    private void drawBoundingBox(AxisAlignedBB box) {
+        Tessellator tessellator = Tessellator.getInstance();
+        WorldRenderer renderer = tessellator.getWorldRenderer();
+        renderer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
+
+        // Bottom face
+        renderer.pos(box.minX, box.minY, box.minZ).endVertex();
+        renderer.pos(box.maxX, box.minY, box.minZ).endVertex();
+
+        renderer.pos(box.maxX, box.minY, box.minZ).endVertex();
+        renderer.pos(box.maxX, box.minY, box.maxZ).endVertex();
+
+        renderer.pos(box.maxX, box.minY, box.maxZ).endVertex();
+        renderer.pos(box.minX, box.minY, box.maxZ).endVertex();
+
+        renderer.pos(box.minX, box.minY, box.maxZ).endVertex();
+        renderer.pos(box.minX, box.minY, box.minZ).endVertex();
+
+        // Top face
+        renderer.pos(box.minX, box.maxY, box.minZ).endVertex();
+        renderer.pos(box.maxX, box.maxY, box.minZ).endVertex();
+
+        renderer.pos(box.maxX, box.maxY, box.minZ).endVertex();
+        renderer.pos(box.maxX, box.maxY, box.maxZ).endVertex();
+
+        renderer.pos(box.maxX, box.maxY, box.maxZ).endVertex();
+        renderer.pos(box.minX, box.maxY, box.maxZ).endVertex();
+
+        renderer.pos(box.minX, box.maxY, box.maxZ).endVertex();
+        renderer.pos(box.minX, box.maxY, box.minZ).endVertex();
+
+        // Vertical lines
+        renderer.pos(box.minX, box.minY, box.minZ).endVertex();
+        renderer.pos(box.minX, box.maxY, box.minZ).endVertex();
+
+        renderer.pos(box.maxX, box.minY, box.minZ).endVertex();
+        renderer.pos(box.maxX, box.maxY, box.minZ).endVertex();
+
+        renderer.pos(box.maxX, box.minY, box.maxZ).endVertex();
+        renderer.pos(box.maxX, box.maxY, box.maxZ).endVertex();
+
+        renderer.pos(box.minX, box.minY, box.maxZ).endVertex();
+        renderer.pos(box.minX, box.maxY, box.maxZ).endVertex();
+
+        tessellator.draw();
+    }
+
     @Override
     public void onDisable() {
         chunkedPath = null;
         straightChunks = null;
+
+        previewBlockPos = null;
+        previewTarget = null;
     }
 
     @Override

@@ -1,0 +1,11 @@
+package today.vanta.client.event.impl.game.render;
+
+import today.vanta.client.event.Event;
+
+public class Render3DEvent extends Event {
+    public final float partialTicks;
+
+    public Render3DEvent(float partialTicks) {
+        this.partialTicks = partialTicks;
+    }
+}

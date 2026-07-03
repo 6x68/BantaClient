@@ -73,8 +73,8 @@ import org.lwjgl.opengl.GL12;
 import org.lwjgl.opengl.GLContext;
 import org.lwjgl.util.glu.Project;
 import today.vanta.client.event.impl.game.FrameEvent;
-import today.vanta.client.event.impl.client.RenderScreenEvent;
 import today.vanta.client.event.impl.game.render.RenderEvent;
+import today.vanta.client.event.impl.game.render.Render3DEvent;
 import today.vanta.util.system.lwjgl.imgui.ImGuiImpl;
 
 import java.io.IOException;
@@ -1532,6 +1532,8 @@ public class EntityRenderer implements IResourceManagerReloadListener {
             this.mc.mcProfiler.endStartSection("forge_render_last");
             Reflector.callVoid(Reflector.ForgeHooksClient_dispatchRenderLast, renderglobal, Float.valueOf(partialTicks));
         }
+
+        new Render3DEvent(partialTicks).call();
 
         this.mc.mcProfiler.endStartSection("hand");
 
