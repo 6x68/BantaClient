@@ -18,6 +18,8 @@ import today.vanta.util.game.render.RenderUtil;
 import today.vanta.util.game.render.Renderable;
 import today.vanta.util.game.render.font.CFonts;
 import today.vanta.util.game.render.shape.impl.Rectangle;
+import today.vanta.util.system.math.animation.Animation;
+import today.vanta.util.system.math.animation.Easing;
 
 import java.awt.*;
 
@@ -39,6 +41,9 @@ public class BlockCounter extends Module {
 
     private Color color = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
     private int blocks;
+    private Animation animation;
+    private float targetwidth = WIDTH - 4;;
+    private float animBarWidth = WIDTH - 4;;
 
     public BlockCounter() {
         super("BlockCounter", "Block information.", Category.HUD);
@@ -123,6 +128,21 @@ public class BlockCounter extends Module {
                 float barWidth = WIDTH - 4;
                 float bar = barWidth * ((float) blocks / maxBlocks);
 
+                if (bar != targetwidth) {
+                    targetwidth = bar;
+
+                    animation = Animation.create(
+                            animBarWidth,
+                            targetwidth,
+                            100,
+                            Easing.LINEAR,
+                            val -> animBarWidth = val
+                    );
+
+                    animation.start();
+                }
+
+
                 Rectangle
                         .create(x, y, WIDTH, HEIGHT)
                         .color(BACKGROUND)
@@ -134,7 +154,7 @@ public class BlockCounter extends Module {
                         .push(renderable);
 
                 Rectangle
-                        .create(x + 2, y + 14, bar, 3)
+                        .create(x + 2, y + 14, animBarWidth, 3)
                         .color(color)
                         .push(renderable);
 
