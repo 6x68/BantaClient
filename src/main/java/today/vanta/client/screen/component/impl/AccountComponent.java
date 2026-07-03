@@ -7,7 +7,6 @@ import today.vanta.client.screen.component.Component;
 import today.vanta.util.client.cache.TextureCache;
 import today.vanta.util.client.network.NetworkUtil;
 import today.vanta.util.client.network.account.Account;
-import today.vanta.util.client.network.account.AccountSavingUtil;
 import today.vanta.util.game.render.RenderUtil;
 import today.vanta.util.game.render.font.impl.GlyphFontRenderer;
 import today.vanta.util.game.render.shape.impl.ImageRectangle;
@@ -32,7 +31,7 @@ public class AccountComponent extends Component {
     @Override
     public void draw(RenderScreenEvent event) {
         boolean hover = RenderUtil.hovered(event.mouseX, event.mouseY, x, y, width, height);
-        boolean currentAccount = account.equals(AccountSavingUtil.CURRENT_ACCOUNT);
+        boolean currentAccount = account.equals(Vanta.instance.accountStorage.currentAccount);
         Color color1 = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
         Rectangle
                 .create(x, y, width, height)
@@ -56,7 +55,7 @@ public class AccountComponent extends Component {
     }
 
     public void refresh() {
-        if (account.isEmail()) {
+        if (!account.isCracked()) {
             try {
                 account.skin = NetworkUtil.getBase64EncodedImage(NetworkUtil.getHead(account.uuid, 512));
             } catch (IOException ignored) {

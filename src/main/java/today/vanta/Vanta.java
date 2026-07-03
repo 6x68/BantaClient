@@ -6,9 +6,7 @@ import org.apache.logging.log4j.Logger;
 import today.vanta.storage.impl.*;
 import today.vanta.util.client.IClient;
 import today.vanta.util.game.events.bus.EventBus;
-import today.vanta.util.game.render.ImageUtil;
 import today.vanta.util.system.FileUtil;
-import today.vanta.util.system.VantaFile;
 import today.vanta.util.system.lwjgl.imgui.ImGuiImpl;
 
 public enum Vanta {
@@ -19,10 +17,10 @@ public enum Vanta {
 
     public ModuleStorage moduleStorage;
     public CommandStorage commandStorage;
-    public ConfigStorage configStorage;
     public ProcessorStorage processorStorage;
-
     public ScreenStorage screenStorage;
+    public FileStorage fileStorage;
+    public AccountStorage accountStorage;
 
     static {
         FileUtil.createFolder(IClient.CLIENT_NAME);
@@ -42,17 +40,19 @@ public enum Vanta {
         commandStorage = new CommandStorage();
         processorStorage = new ProcessorStorage();
         screenStorage = new ScreenStorage();
-        configStorage = new ConfigStorage();
+        fileStorage = new FileStorage();
+        accountStorage = new AccountStorage();
 
         moduleStorage.subscribe();
         commandStorage.subscribe();
         screenStorage.subscribe();
         processorStorage.subscribe();
-        configStorage.subscribe();
+        fileStorage.subscribe();
+        accountStorage.subscribe();
     }
 
     public void stop() {
-        configStorage.saveConfig(VantaFile.getFile("configs/default.json"));
-        ImageUtil.clearCache();
+        fileStorage.stop();
+        screenStorage.stop();
     }
 }

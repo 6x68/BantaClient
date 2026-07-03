@@ -9,7 +9,6 @@ import today.vanta.client.screen.component.impl.AccountComponent;
 import today.vanta.client.screen.component.impl.ButtonComponent;
 import today.vanta.util.client.network.MicrosoftUtil;
 import today.vanta.util.client.network.account.Account;
-import today.vanta.util.client.network.account.AccountSavingUtil;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.render.font.impl.GlyphFontRenderer;
 import today.vanta.util.game.render.font.CFonts;
@@ -30,10 +29,6 @@ public class AltLoginScreen extends VantaScreen {
 
     private final List<Component> components = new ArrayList<>();
 
-    public AltLoginScreen() {
-        AccountSavingUtil.loadConfig();
-    }
-
     @Override
     protected void initScreen() {
         float middleX = width / 2f;
@@ -44,14 +39,32 @@ public class AltLoginScreen extends VantaScreen {
         components.clear();
         components.add(new ButtonComponent("Login with browser", middleX - buttonWidth / 2f, middleY, buttonWidth, 14, buttonText));
         middleY += 14;
-        if (!AccountSavingUtil.ACCOUNTS.isEmpty()) {
-            for (Account account : AccountSavingUtil.ACCOUNTS) {
-                components.add(new AccountComponent(account, middleX - buttonWidth / 2f, middleY, buttonWidth, 14, buttonText));
-                middleY += 14;
-            }
+
+        for (Account account : Vanta.instance.accountStorage.list) {
+            components.add(new AccountComponent(account, middleX - buttonWidth / 2f, middleY, buttonWidth, 14, buttonText));
+            middleY += 14;
         }
 
         components.add(new ButtonComponent("Back", middleX - buttonWidth / 2f, middleY, buttonWidth, 14, buttonText));
+    }
+
+    private void addOrUpdateAccount(Account account) {
+        for (Account existing : Vanta.instance.accountStorage.list) {
+            if (existing.username.equalsIgnoreCase(account.username)) {
+                existing.uuid = account.uuid;
+                existing.token = account.token;
+                existing.refreshToken = account.refreshToken;
+                saveAccounts();
+                return;
+            }
+        }
+
+        Vanta.instance.accountStorage.list.add(account);
+        saveAccounts();
+    }
+
+    private void saveAccounts() {
+        Vanta.instance.fileStorage.accountsFile.save();
     }
 
     private CompletableFuture<MicrosoftUtil.LoginResult> loginWithAccount(Account account, ExecutorService executor) {
@@ -112,14 +125,10 @@ public class AltLoginScreen extends VantaScreen {
                                         .thenComposeAsync(mc -> MicrosoftUtil.login(mc, ms.refreshToken, authExecutor), authExecutor), authExecutor)
                                 .thenAccept(result -> {
                                     Account account = new Account(result.session.getUsername(), result.session.getPlayerID(), result.session.getToken(), result.refreshToken);
-                                    if (!AccountSavingUtil.ACCOUNTS.contains(account)) {
-                                        AccountSavingUtil.ACCOUNTS.add(account);
-                                    }
-
+                                    addOrUpdateAccount(account);
+                                    Vanta.instance.accountStorage.currentAccount = account;
                                     mc.session = result.session;
                                     Vanta.instance.logger.info("Logged into {}! (microsoft)", result.session.getUsername());
-                                    AccountSavingUtil.saveConfig();
-
                                     scheduleInitGui();
                                 })
                                 .exceptionally(error -> {
@@ -134,14 +143,14 @@ public class AltLoginScreen extends VantaScreen {
                     default:
                         if (c instanceof AccountComponent) {
                             AccountComponent aC = (AccountComponent) c;
-                            Iterator<Account> iterator = AccountSavingUtil.ACCOUNTS.iterator();
+                            Iterator<Account> iterator = Vanta.instance.accountStorage.list.iterator();
                             while (iterator.hasNext()) {
                                 Account account = iterator.next();
-                                if (aC.account.equals(account)) {
+                                if (aC.account == account) {
                                     if (mouseButton == 0) {
-                                        AccountSavingUtil.CURRENT_ACCOUNT = account;
                                         if (account.isCracked()) {
                                             Vanta.instance.logger.info("Logged into {}! (cracked)", account.username);
+                                            Vanta.instance.accountStorage.currentAccount = account;
                                             mc.session = new Session(account.username, "", "", "legacy");
                                         } else {
                                             ExecutorService refreshExecutor = Executors.newSingleThreadExecutor();
@@ -152,9 +161,10 @@ public class AltLoginScreen extends VantaScreen {
                                                             account.refreshToken = result.refreshToken;
                                                         }
 
+                                                        Vanta.instance.accountStorage.currentAccount = account;
                                                         mc.session = result.session;
                                                         Vanta.instance.logger.info("Logged into {}! (microsoft)", account.username);
-                                                        AccountSavingUtil.saveConfig();
+                                                        saveAccounts();
 
                                                         scheduleInitGui();
                                                     })
@@ -164,12 +174,12 @@ public class AltLoginScreen extends VantaScreen {
                                                     })
                                                     .whenComplete((result, error) -> refreshExecutor.shutdown());
                                         }
-                                    } else {
+                                    } else if (mouseButton == 1) {
                                         Vanta.instance.logger.info("Removed {}!", account.username);
                                         iterator.remove();
-                                        initGui();
+                                        saveAccounts();
+                                        scheduleInitGui();
                                     }
-                                    AccountSavingUtil.saveConfig();
                                 }
                             }
                         }
