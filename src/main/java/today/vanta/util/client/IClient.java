@@ -17,6 +17,7 @@ public interface IClient {
             "[+] Added Commands - help, bind, toggle, clear, teleport",
             "[+] Added command suggestions",
             "[+] Added Miniblox disabler",
+            "[+] Added refresh tokens",
             "[+] Added ClickTeleport",
             "[+] Added more themes",
             "[+] Added AntiExploit",
