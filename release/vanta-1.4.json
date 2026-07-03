@@ -60,17 +60,6 @@
     {
       "downloads": {
         "artifact": {
-          "path": "com/mojang/netty/1.8.8/netty-1.8.8.jar",
-          "sha1": "0a796914d1c8a55b4da9f4a8856dd9623375d8bb",
-          "size": 15966,
-          "url": "https://libraries.minecraft.net/com/mojang/netty/1.8.8/netty-1.8.8.jar"
-        }
-      },
-      "name": "com.mojang:netty:1.8.8"
-    },
-    {
-      "downloads": {
-        "artifact": {
           "path": "oshi-project/oshi-core/1.1/oshi-core-1.1.jar",
           "sha1": "9ddf7b048a8d701be231c0f4f95fd986198fd2d8",
           "size": 30973,
@@ -276,17 +265,6 @@
         }
       },
       "name": "com.mojang:authlib:1.5.21"
-    },
-    {
-      "downloads": {
-        "artifact": {
-          "path": "com/mojang/realms/1.7.59/realms-1.7.59.jar",
-          "sha1": "9c6c59b742d8e038a15f64c1aa273a893a658424",
-          "size": 1198123,
-          "url": "https://libraries.minecraft.net/com/mojang/realms/1.7.59/realms-1.7.59.jar"
-        }
-      },
-      "name": "com.mojang:realms:1.7.59"
     },
     {
       "downloads": {
