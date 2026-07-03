@@ -61,8 +61,15 @@ public class RotationProcessor extends Processor {
         float yawDelta  = (float) ((double) currentRotation.yaw - lastSentRotation.yaw);
         float pitchDelta = (float) ((double) currentRotation.pitch - lastSentRotation.pitch);
 
-        event.yaw = lastSentRotation.yaw + yawDelta;
-        event.pitch = lastSentRotation.pitch + pitchDelta;
+        Rotation raw = new Rotation(
+                lastSentRotation.yaw + yawDelta,
+                lastSentRotation.pitch + pitchDelta
+        );
+
+        Rotation gcdRot = RotationUtil.gcd(raw, lastSentRotation);
+
+        event.yaw = gcdRot.yaw;
+        event.pitch = gcdRot.pitch;
 
         mc.thePlayer.renderPitchHead = currentRotation.pitch;
         mc.thePlayer.rotationYawHead = currentRotation.yaw;
