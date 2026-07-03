@@ -102,13 +102,9 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.*;
 import org.lwjgl.util.glu.GLU;
 import today.vanta.Vanta;
-import today.vanta.client.event.impl.game.ClickEvent;
-import today.vanta.client.event.impl.game.GameLoopEvent;
-import today.vanta.client.event.impl.game.MiddleClickEvent;
-import today.vanta.client.event.impl.game.RunTickEvent;
+import today.vanta.client.event.impl.game.*;
 import today.vanta.client.event.impl.game.player.AllowAttackWhileBlockingEvent;
 import today.vanta.client.event.impl.game.player.ChangeWorldEvent;
-import today.vanta.client.event.impl.game.player.SwingDelayEvent;
 import today.vanta.client.event.impl.game.render.DisplayGuiScreenEvent;
 import today.vanta.client.event.impl.game.world.LoadWorldEvent;
 import today.vanta.client.event.impl.system.KeyboardEvent;
@@ -1076,6 +1072,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 
     public void displayInGameMenu() {
         if (this.currentScreen == null) {
+            new PauseGameEvent().call();
             this.displayGuiScreen(new GuiIngameMenu());
 
             if (this.isSingleplayer() && !this.theIntegratedServer.getPublic()) {
@@ -1104,18 +1101,14 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
     }
 
     public void clickMouse() {
-        SwingDelayEvent swingDelayEvent = new SwingDelayEvent();
-        swingDelayEvent.call();
-        if (swingDelayEvent.cancelled) {
-            leftClickCounter = 0;
-        }
         if (this.leftClickCounter <= 0) {
             //VIA VERSION
             AttackOrder.sendConditionalSwing(this.objectMouseOver);
 
             if (this.objectMouseOver == null) {
                 logger.error("Null returned as 'hitResult', this shouldn't happen!");
-                if (this.playerController.isNotCreative() && !swingDelayEvent.cancelled) {
+
+                if (this.playerController.isNotCreative()) {
                     this.leftClickCounter = 10;
                 }
             } else {
@@ -1135,14 +1128,11 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 
                     case MISS:
                     default:
-                        if (this.playerController.isNotCreative() && !swingDelayEvent.cancelled) {
+                        if (this.playerController.isNotCreative()) {
                             this.leftClickCounter = 10;
                         }
                 }
             }
-        }
-        if (swingDelayEvent.cancelled) {
-            leftClickCounter = 0;
         }
     }
 

@@ -26,7 +26,7 @@ public abstract class Module implements IMinecraft {
 
     public final Color color = new Color(ColorUtil.randomColor());
 
-    public boolean frozen; //When true, module is not toggleable.
+    public boolean frozen; // When true, module is not toggleable.
 
     public Module(String name, String description, Category category, int key) {
         this.name = name;
@@ -41,7 +41,6 @@ public abstract class Module implements IMinecraft {
     }
 
     public boolean addSuffix = true;
-    public boolean hideFromClickGui;
     public boolean hideFromArraylist;
     public boolean addToConfig = true;
 
