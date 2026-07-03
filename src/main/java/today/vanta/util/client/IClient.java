@@ -24,6 +24,7 @@ public interface IClient {
             "[+] Added more themes",
             "[+] Added AntiExploit",
             "[+] Added AntiCheat",
+            "[+] Added Jump Fly",
             "[#] Reworked InventoryManager",
             "[#] Reworked ChestStealer",
             "[#] Reworked Scoreboard",
