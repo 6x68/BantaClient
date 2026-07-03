@@ -44,6 +44,7 @@ public class Information extends Module {
     }
 
     private void handleDragging(float mouseX, float mouseY) {
+        if (mode.getValue() != "Window") return;
         if (Mouse.isButtonDown(0)) {
             if (!dragging && RenderUtil.hovered(mouseX, mouseY, x.getValue().floatValue(), y.getValue().floatValue(), WIDTH, HEIGHT)) {
                 dragging = true;
