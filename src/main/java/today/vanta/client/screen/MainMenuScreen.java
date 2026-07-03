@@ -10,8 +10,10 @@ import today.vanta.client.screen.component.Component;
 import today.vanta.client.screen.component.impl.ButtonComponent;
 import today.vanta.util.client.IClient;
 import today.vanta.util.game.events.EventListen;
+import today.vanta.util.game.render.ImageUtil;
 import today.vanta.util.game.render.font.impl.GlyphFontRenderer;
 import today.vanta.util.game.render.font.CFonts;
+import today.vanta.util.game.render.shape.impl.ImageRectangle;
 import today.vanta.util.game.render.shape.impl.Rectangle;
 
 import java.awt.*;
@@ -26,6 +28,8 @@ public class MainMenuScreen extends GuiScreen {
     private final GlyphFontRenderer changesFont = CFonts.SFPT_MEDIUM_18;
 
     private final List<Component> buttons = new ArrayList<>();
+
+    private int rotation = 0;
 
     @Override
     public void initGui() {
@@ -98,7 +102,19 @@ public class MainMenuScreen extends GuiScreen {
         roundedSemibold10.drawString(IClient.CLIENT_NAME, middleX - 143 / 2f + 3, middleY - 18 + 4.5f, -1);
         roundedMedium9.drawString(IClient.CLIENT_VERSION + " | " + IClient.DEVELOPERS, middleX * 2 - roundedMedium9.getStringWidth(IClient.CLIENT_VERSION + " | " + IClient.DEVELOPERS) - 3, middleY * 2 - roundedMedium9.getFontHeight() - 5.5f, new Color(200, 200, 200));
 
+        if (rotation > 360) {
+            rotation = 0;
+        }
+
+        ImageRectangle
+                .create(width - 100 - 20, 20, 100, 100, -1)
+                .resource(ImageUtil.getTexture("cousin.gif"))
+                .rotate(rotation)
+                .push(event);
+
         buttons.forEach(but -> but.draw(event));
+
+        rotation++;
     }
 
     private static String formatChange(String change) {

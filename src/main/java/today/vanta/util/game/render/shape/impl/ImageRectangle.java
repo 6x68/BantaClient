@@ -1,10 +1,9 @@
 package today.vanta.util.game.render.shape.impl;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
+import today.vanta.util.game.render.ImageUtil;
 import today.vanta.util.game.render.RenderUtil;
 import today.vanta.util.game.render.Renderable;
 import today.vanta.util.game.render.shape.Shape;
@@ -59,9 +58,8 @@ public class ImageRectangle extends Shape<ImageRectangle> {
         return this;
     }
 
-    public ImageRectangle textureId(ResourceLocation location) {
-        ITextureObject itextureobject = Minecraft.getMinecraft().getTextureManager().mapTextureObjects.get(location);
-        this.textureId = itextureobject.getGlTextureId();
+    public ImageRectangle resource(ResourceLocation location) {
+        this.textureId = ImageUtil.bindAndGetId(location);
         return this;
     }
 

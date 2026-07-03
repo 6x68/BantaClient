@@ -103,7 +103,7 @@ public class RenderUtil {
                     .uv(8, 8)
                     .uvSize(8, 8)
                     .tileSize(64, 64)
-                    .textureId(((AbstractClientPlayer) target).getLocationSkin())
+                    .resource(((AbstractClientPlayer) target).getLocationSkin())
                     .push(renderable);
 
             ImageRectangle
@@ -111,7 +111,7 @@ public class RenderUtil {
                     .uv(40, 8)
                     .uvSize(8, 8)
                     .tileSize(64, 64)
-                    .textureId(((AbstractClientPlayer) target).getLocationSkin())
+                    .resource(((AbstractClientPlayer) target).getLocationSkin())
                     .push(renderable);
     }
 

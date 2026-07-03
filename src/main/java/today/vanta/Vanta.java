@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import today.vanta.storage.impl.*;
 import today.vanta.util.client.IClient;
 import today.vanta.util.game.events.bus.EventBus;
+import today.vanta.util.game.render.ImageUtil;
 import today.vanta.util.system.FileUtil;
 import today.vanta.util.system.VantaFile;
 import today.vanta.util.system.lwjgl.imgui.ImGuiImpl;
@@ -52,5 +53,6 @@ public enum Vanta {
 
     public void stop() {
         configStorage.saveConfig(VantaFile.getFile("configs/default.json"));
+        ImageUtil.clearCache();
     }
 }
