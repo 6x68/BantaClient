@@ -42,7 +42,7 @@ public class TargetHUD extends Module {
     private boolean dragging;
     private float dragX, dragY;
 
-    private final StringSetting mode = Setting.of("Mode", "Vanta", "Classic", "Vanta", "Adjust", "ID-Card", "Aged");
+    private final StringSetting mode = Setting.of("Mode", "Vanta", "Classic", "Vanta", "Adjust", "ID-Card", "Aged", "Novoline");
     private final NumberSetting
             x = Setting.of("X position", 20, 0, 2000),
             y = Setting.of("Y position", 20, 0, 2000);
@@ -422,6 +422,46 @@ public class TargetHUD extends Module {
                 mc.exhiFontRendererObj.drawString(localTarget.getName(), x + 35, y + 2, Color.WHITE);
                 mc.exhiFontRendererObj.drawString(distance_str, x + width - mc.exhiFontRendererObj.getStringWidth(distance_str) - 2, y + 2, Color.WHITE);
                 break;
+
+            case "Novoline":
+                float targetNameWidth = mc.fontRendererObj.getStringWidth(localTarget.getName());
+                width = Math.max(75, 75 + targetNameWidth);
+                height = 42;
+                float barW = width - 43;
+
+                float healthRatio = (float) Math.max(0.0, Math.min(localTarget.getHealth(), localTarget.getMaxHealth()) / localTarget.getMaxHealth());
+                float calcBarWidth = barW * healthRatio;
+
+                Color backgroundColor1 = new Color(29, 29, 29, 255);
+                Color backgroundColor2 = new Color(40, 40, 40, 255);
+
+                Color healthColor = getHealthColor(healthRatio);
+
+                Rectangle.create(x, y, width, height)
+                        .color(backgroundColor1)
+                        .push(renderable);
+
+                Rectangle.create(x, y, width, height)
+                        .color(backgroundColor2)
+                        .push(renderable);
+
+                mc.fontRendererObj.drawString(localTarget.getName(), x + 41, y + 4, Color.WHITE);
+
+                Rectangle.create(x + 41, y + 15, barW, 9.0)
+                        .color(backgroundColor1)
+                        .push(renderable);
+
+                Rectangle.create(x + 41, y + 15, calcBarWidth, 9.0)
+                        .color(healthColor)
+                        .push(renderable);
+
+                RenderUtil.renderHead(renderable, (EntityPlayer) localTarget, x + 1, y + 1, 37);
+                String healthText = String.format("%.1f", localTarget.getHealth());
+                mc.fontRendererObj.drawString(healthText, x + 41, y + 29, Color.WHITE);
+
+                int stringW = mc.fontRendererObj.getStringWidth(healthText);
+                mc.fontRendererObj.drawString(" ❤", x + 41 + stringW, y + 28, healthColor);
+                break;
         }
 
         if (dragging && mc.currentScreen instanceof GuiChat) {
@@ -445,5 +485,10 @@ public class TargetHUD extends Module {
     @Override
     public String getSuffix() {
         return mode.getValue();
+    }
+
+    private Color getHealthColor(double ratio) {
+        float hue = (float) (ratio * 360.0 / 3.0) / 360.0f;
+        return Color.getHSBColor(hue, 1.0f, 0.5f);
     }
 }
