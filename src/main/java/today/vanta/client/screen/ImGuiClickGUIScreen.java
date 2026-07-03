@@ -2,7 +2,6 @@ package today.vanta.client.screen;
 
 import imgui.ImGui;
 import imgui.flag.ImGuiCond;
-import net.minecraft.client.gui.GuiScreen;
 import org.lwjgl.input.Keyboard;
 import today.vanta.Vanta;
 import today.vanta.client.event.impl.client.RenderScreenEvent;
@@ -27,20 +26,14 @@ import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
-public class ImGuiClickGUIScreen extends GuiScreen implements IClient {
+public class ImGuiClickGUIScreen extends VantaScreen implements IClient {
     private Category currentCategory = Category.COMBAT;
     private final Map<Category, Module> lastModulePerCategory = new EnumMap<>(Category.class);
     private Module currentModule;
     private Module listeningModule = null;
 
     @Override
-    public void initGui() {
-        Vanta.instance.eventBus.register(this);
-    }
-
-    @Override
-    public void onGuiClosed() {
-        Vanta.instance.eventBus.unregister(this);
+    protected void initScreen() {
     }
 
     @EventListen

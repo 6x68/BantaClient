@@ -1,6 +1,5 @@
 package today.vanta.client.screen;
 
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -35,7 +34,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
-public class ClickGUIScreen extends GuiScreen {
+public class ClickGUIScreen extends VantaScreen {
     private final GlyphFontRenderer medium = CFonts.getFont("SFPT-Semibold", 20);
     private final GlyphFontRenderer regular = CFonts.getFont("SFPT-Medium", 18);
     private final GlyphFontRenderer sett = CFonts.getFont("SFPT-Medium", 16);
@@ -63,13 +62,11 @@ public class ClickGUIScreen extends GuiScreen {
     }
 
     @Override
-    public void initGui() {
+    protected void initScreen() {
         this.closing = false;
         this.animationMap.put("global_open", 0f);
         this.activeAnimations.values().forEach(Animation::stop);
         this.activeAnimations.clear();
-
-        Vanta.instance.eventBus.register(this);
     }
 
     @EventListen
@@ -722,7 +719,7 @@ public class ClickGUIScreen extends GuiScreen {
     public void onGuiClosed() {
         ScreenSavingUtil.saveConfig(VantaFile.getFile("clickgui.json"));
         Vanta.instance.configStorage.saveConfig(VantaFile.getFile("configs/default.json"));
-        Vanta.instance.eventBus.unregister(this);
+        super.onGuiClosed();
     }
 
     @Override

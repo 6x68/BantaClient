@@ -1,7 +1,6 @@
 package today.vanta.client.screen;
 
 import net.minecraft.client.gui.GuiMainMenu;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.Session;
 import today.vanta.Vanta;
 import today.vanta.client.event.impl.client.RenderScreenEvent;
@@ -25,7 +24,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class AltLoginScreen extends GuiScreen {
+public class AltLoginScreen extends VantaScreen {
     private final GlyphFontRenderer smallTitle = CFonts.SFPT_SEMIBOLD_20;
     private final GlyphFontRenderer buttonText = CFonts.SFPT_MEDIUM_18;
 
@@ -36,7 +35,7 @@ public class AltLoginScreen extends GuiScreen {
     }
 
     @Override
-    public void initGui() {
+    protected void initScreen() {
         float middleX = width / 2f;
         float middleY = height / 2f;
 
@@ -53,13 +52,6 @@ public class AltLoginScreen extends GuiScreen {
         }
 
         components.add(new ButtonComponent("Back", middleX - buttonWidth / 2f, middleY, buttonWidth, 14, buttonText));
-
-        Vanta.instance.eventBus.register(this);
-    }
-
-    @Override
-    public void onGuiClosed() {
-        Vanta.instance.eventBus.unregister(this);
     }
 
     private CompletableFuture<MicrosoftUtil.LoginResult> loginWithAccount(Account account, ExecutorService executor) {
@@ -128,7 +120,7 @@ public class AltLoginScreen extends GuiScreen {
                                     Vanta.instance.logger.info("Logged into {}! (microsoft)", result.session.getUsername());
                                     AccountSavingUtil.saveConfig();
 
-                                    mc.addScheduledTask(this::initGui);
+                                    scheduleInitGui();
                                 })
                                 .exceptionally(error -> {
                                     Vanta.instance.logger.error("Failed to login due to {}", error.getMessage());
@@ -164,7 +156,7 @@ public class AltLoginScreen extends GuiScreen {
                                                         Vanta.instance.logger.info("Logged into {}! (microsoft)", account.username);
                                                         AccountSavingUtil.saveConfig();
 
-                                                        mc.addScheduledTask(this::initGui);
+                                                        scheduleInitGui();
                                                     })
                                                     .exceptionally(error -> {
                                                         Vanta.instance.logger.error("Failed to login due to {}", error.getMessage());

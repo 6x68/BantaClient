@@ -2,7 +2,6 @@ package today.vanta.client.screen;
 
 import net.minecraft.client.gui.GuiMultiplayer;
 import net.minecraft.client.gui.GuiOptions;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiSelectWorld;
 import today.vanta.Vanta;
 import today.vanta.client.event.impl.client.RenderScreenEvent;
@@ -21,7 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainMenuScreen extends GuiScreen {
+public class MainMenuScreen extends VantaScreen {
     private final GlyphFontRenderer roundedSemibold10 = CFonts.SFPT_SEMIBOLD_20;
     private final GlyphFontRenderer roundedMedium9 = CFonts.SFPT_MEDIUM_18;
     private final GlyphFontRenderer smallTitle = CFonts.SFPT_SEMIBOLD_20;
@@ -32,7 +31,7 @@ public class MainMenuScreen extends GuiScreen {
     private int rotation = 0;
 
     @Override
-    public void initGui() {
+    protected void initScreen() {
         float middleX = width / 2f;
         float middleY = height / 2f;
 
@@ -48,13 +47,6 @@ public class MainMenuScreen extends GuiScreen {
         buttons.add(new ButtonComponent("Alts", middleX - buttonWidth / 2f, middleY, buttonWidth, 14, roundedMedium9));
         middleY += 14;
         buttons.add(new ButtonComponent("Exit", middleX - buttonWidth / 2f, middleY, buttonWidth, 14, roundedMedium9));
-
-        Vanta.instance.eventBus.register(this);
-    }
-
-    @Override
-    public void onGuiClosed() {
-        Vanta.instance.eventBus.unregister(this);
     }
 
     @EventListen
