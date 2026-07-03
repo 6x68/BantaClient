@@ -1,6 +1,7 @@
 package net.minecraft.util;
 
 import net.minecraft.client.settings.GameSettings;
+import today.vanta.client.event.impl.game.player.MoveButtonEvent;
 import today.vanta.client.event.impl.game.player.MoveInputEvent;
 import today.vanta.client.event.impl.game.player.SneakInputEvent;
 
@@ -15,31 +16,40 @@ public class MovementInputFromOptions extends MovementInput {
         this.moveStrafe = 0.0F;
         this.moveForward = 0.0F;
 
-        if (this.gameSettings.keyBindForward.isKeyDown()) {
+        MoveButtonEvent moveButtonEvent = new MoveButtonEvent(
+                this.gameSettings.keyBindForward.isKeyDown(),
+                this.gameSettings.keyBindBack.isKeyDown(),
+                this.gameSettings.keyBindLeft.isKeyDown(),
+                this.gameSettings.keyBindRight.isKeyDown(),
+                this.gameSettings.keyBindJump.isKeyDown(),
+                this.gameSettings.keyBindSneak.isKeyDown()
+        );
+        moveButtonEvent.call();
+
+        if (moveButtonEvent.forward) {
             ++this.moveForward;
         }
 
-        if (this.gameSettings.keyBindBack.isKeyDown()) {
+        if (moveButtonEvent.back) {
             --this.moveForward;
         }
 
-        if (this.gameSettings.keyBindLeft.isKeyDown()) {
+        if (moveButtonEvent.left) {
             ++this.moveStrafe;
         }
 
-        if (this.gameSettings.keyBindRight.isKeyDown()) {
+        if (moveButtonEvent.right) {
             --this.moveStrafe;
         }
 
-        this.jump = this.gameSettings.keyBindJump.isKeyDown();
-        this.sneak = this.gameSettings.keyBindSneak.isKeyDown();
+        this.jump = moveButtonEvent.jump;
+        this.sneak = moveButtonEvent.sneak;
 
         MoveInputEvent moveInputEvent = new MoveInputEvent(this.moveForward, this.moveStrafe, this.jump, this.sneak, 0.3F);
         moveInputEvent.call();
 
         this.moveStrafe = moveInputEvent.strafe;
         this.moveForward = moveInputEvent.forward;
-
         this.jump = moveInputEvent.jumping;
         this.sneak = moveInputEvent.sneaking;
 
