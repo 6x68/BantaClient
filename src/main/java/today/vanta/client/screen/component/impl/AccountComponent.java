@@ -58,11 +58,11 @@ public class AccountComponent extends Component {
     public void refresh() {
         if (account.isEmail()) {
             try {
-                account.skin = NetworkUtil.getBase64EncodedImage(NetworkUtil.getHead(account.password, 512));
+                account.skin = NetworkUtil.getBase64EncodedImage(NetworkUtil.getHead(account.uuid, 512));
             } catch (IOException ignored) {
             }
         }
         this.bufferedImage = RenderUtil.base64ToBufferedImage(account.skin);
-        this.skinTextureId = TextureCache.getTexture(account.password, bufferedImage);
+        this.skinTextureId = TextureCache.getTexture(account.uuid, bufferedImage);
     }
 }

@@ -29,10 +29,16 @@ public class AccountSavingUtil {
             for (Map.Entry<String, JsonObject> entry : accountMap.entrySet()) {
                 String name = entry.getKey();
                 JsonObject jsonObject = entry.getValue();
-                Account account = new Account(name, null);
+                Account account = new Account(name, "");
 
-                account.password = jsonObject.has("UUID") ? jsonObject.get("UUID").getAsString() : jsonObject.has("Token") ? EncryptUtil.decrypt(jsonObject.get("Password").getAsString()) : "";
+                if (jsonObject.has("UUID")) {
+                    account.uuid = jsonObject.get("UUID").getAsString();
+                } else if (jsonObject.has("Password")) {
+                    account.uuid = EncryptUtil.decrypt(jsonObject.get("Password").getAsString());
+                }
+
                 account.token = jsonObject.has("Token") ? EncryptUtil.decrypt(jsonObject.get("Token").getAsString()) : "";
+                account.refreshToken = jsonObject.has("RefreshToken") ? EncryptUtil.decrypt(jsonObject.get("RefreshToken").getAsString()) : "";
                 if (jsonObject.has("Skin"))
                     account.skin = jsonObject.get("Skin").getAsString();
                 ACCOUNTS.add(account);
@@ -49,13 +55,13 @@ public class AccountSavingUtil {
             Map<String, JsonObject> categoryMap = new HashMap<>();
 
             for (Account acc : ACCOUNTS) {
-                boolean pass = acc.isEmail();
                 JsonObject accountObject = new JsonObject();
-                accountObject.addProperty(pass ? "Password" : "UUID", pass ? EncryptUtil.encrypt(acc.password) : acc.password);
+                accountObject.addProperty("UUID", acc.uuid);
                 accountObject.addProperty("Token", EncryptUtil.encrypt(acc.token));
-                if (pass || !acc.token.isEmpty()) {
-                    accountObject.addProperty("Skin", NetworkUtil.getBase64EncodedImage(NetworkUtil.getHead(acc.password, 512)));
-                } else if (acc.isCracked()) {
+                accountObject.addProperty("RefreshToken", EncryptUtil.encrypt(acc.refreshToken));
+                if (!acc.isCracked()) {
+                    accountObject.addProperty("Skin", NetworkUtil.getBase64EncodedImage(NetworkUtil.getHead(acc.uuid, 512)));
+                } else {
                     accountObject.addProperty("Skin", getSteveHead());
                 }
                 categoryMap.put(acc.username, accountObject);

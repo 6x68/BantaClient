@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -61,6 +62,26 @@ public class AltLoginScreen extends GuiScreen {
         Vanta.instance.eventBus.unregister(this);
     }
 
+    private CompletableFuture<MicrosoftUtil.LoginResult> loginWithAccount(Account account, ExecutorService executor) {
+        return MicrosoftUtil.login(account.token, account.refreshToken, executor).handle((result, error) -> {
+            if (error == null) {
+                return CompletableFuture.completedFuture(result);
+            }
+
+            if (!account.refreshToken.isEmpty()) {
+                return MicrosoftUtil.acquireMSTokensFromRefreshToken(account.refreshToken, executor)
+                        .thenComposeAsync(ms -> MicrosoftUtil.acquireXboxAccessToken(ms.accessToken, executor)
+                                .thenComposeAsync(xbox -> MicrosoftUtil.acquireXboxXstsToken(xbox, executor), executor)
+                                .thenComposeAsync(xsts -> MicrosoftUtil.acquireMCAccessToken(xsts.get("Token"), xsts.get("uhs"), executor), executor)
+                                .thenComposeAsync(mc -> MicrosoftUtil.login(mc, ms.refreshToken, executor), executor), executor);
+            }
+
+            CompletableFuture<MicrosoftUtil.LoginResult> failed = new CompletableFuture<>();
+            failed.completeExceptionally(error);
+            return failed;
+        }).thenCompose(future -> future);
+    }
+
     @EventListen
     private void onRender(RenderScreenEvent event) {
         Rectangle
@@ -90,21 +111,21 @@ public class AltLoginScreen extends GuiScreen {
             if (c.click(mouseX, mouseY, mouseButton)) {
                 switch (c.text) {
                     case "Login with browser":
-                        ExecutorService executor = Executors.newSingleThreadExecutor();
-                        MicrosoftUtil.acquireMSAuthCode(executor)
-                                .thenComposeAsync(msAuthCode -> MicrosoftUtil.acquireMSAccessToken(msAuthCode, executor), executor)
-                                .thenComposeAsync(msAccessToken -> MicrosoftUtil.acquireXboxAccessToken(msAccessToken, executor), executor)
-                                .thenComposeAsync(xboxAccessToken -> MicrosoftUtil.acquireXboxXstsToken(xboxAccessToken, executor), executor)
-                                .thenComposeAsync(xboxXstsData -> MicrosoftUtil.acquireMCAccessToken(xboxXstsData.get("Token"), xboxXstsData.get("uhs"), executor), executor)
-                                .thenComposeAsync(mcToken -> MicrosoftUtil.login(mcToken, executor), executor)
-                                .thenAccept(session -> {
-                                    Account account = new Account(session.getUsername(), session.getPlayerID(), session.getToken());
+                        ExecutorService authExecutor = Executors.newSingleThreadExecutor();
+                        MicrosoftUtil.acquireMSAuthCode(authExecutor)
+                                .thenComposeAsync(result -> MicrosoftUtil.acquireMSTokensFromAuthCode(result.code, result.redirectUri, authExecutor), authExecutor)
+                                .thenComposeAsync(ms -> MicrosoftUtil.acquireXboxAccessToken(ms.accessToken, authExecutor)
+                                        .thenComposeAsync(xbox -> MicrosoftUtil.acquireXboxXstsToken(xbox, authExecutor), authExecutor)
+                                        .thenComposeAsync(xsts -> MicrosoftUtil.acquireMCAccessToken(xsts.get("Token"), xsts.get("uhs"), authExecutor), authExecutor)
+                                        .thenComposeAsync(mc -> MicrosoftUtil.login(mc, ms.refreshToken, authExecutor), authExecutor), authExecutor)
+                                .thenAccept(result -> {
+                                    Account account = new Account(result.session.getUsername(), result.session.getPlayerID(), result.session.getToken(), result.refreshToken);
                                     if (!AccountSavingUtil.ACCOUNTS.contains(account)) {
                                         AccountSavingUtil.ACCOUNTS.add(account);
                                     }
 
-                                    mc.session = session;
-                                    Vanta.instance.logger.info("Logged into {}! (microsoft)", session.getUsername());
+                                    mc.session = result.session;
+                                    Vanta.instance.logger.info("Logged into {}! (microsoft)", result.session.getUsername());
                                     AccountSavingUtil.saveConfig();
 
                                     mc.addScheduledTask(this::initGui);
@@ -112,7 +133,8 @@ public class AltLoginScreen extends GuiScreen {
                                 .exceptionally(error -> {
                                     Vanta.instance.logger.error("Failed to login due to {}", error.getMessage());
                                     return null;
-                                });
+                                })
+                                .whenComplete((result, error) -> authExecutor.shutdown());
                         break;
                     case "Back":
                         mc.displayGuiScreen(new GuiMainMenu());
@@ -130,8 +152,25 @@ public class AltLoginScreen extends GuiScreen {
                                             Vanta.instance.logger.info("Logged into {}! (cracked)", account.username);
                                             mc.session = new Session(account.username, "", "", "legacy");
                                         } else {
-                                            Vanta.instance.logger.info("Logged into {}! (microsoft)", account.username);
-                                            mc.session = new Session(account.username, account.password, account.token, "legacy");
+                                            ExecutorService refreshExecutor = Executors.newSingleThreadExecutor();
+                                            loginWithAccount(account, refreshExecutor)
+                                                    .thenAccept(result -> {
+                                                        account.token = result.session.getToken();
+                                                        if (result.refreshToken != null) {
+                                                            account.refreshToken = result.refreshToken;
+                                                        }
+
+                                                        mc.session = result.session;
+                                                        Vanta.instance.logger.info("Logged into {}! (microsoft)", account.username);
+                                                        AccountSavingUtil.saveConfig();
+
+                                                        mc.addScheduledTask(this::initGui);
+                                                    })
+                                                    .exceptionally(error -> {
+                                                        Vanta.instance.logger.error("Failed to login due to {}", error.getMessage());
+                                                        return null;
+                                                    })
+                                                    .whenComplete((result, error) -> refreshExecutor.shutdown());
                                         }
                                     } else {
                                         Vanta.instance.logger.info("Removed {}!", account.username);
