@@ -78,7 +78,6 @@ public class BlockCounter extends Module {
         }
     }
 
-
     private void handleDragging(float mouseX, float mouseY) {
         if (Mouse.isButtonDown(0)) {
             if (!dragging && RenderUtil.hovered(mouseX, mouseY, x.getValue().floatValue(), y.getValue().floatValue(), WIDTH, HEIGHT)) {
@@ -142,8 +141,8 @@ public class BlockCounter extends Module {
                 String block_str = String.valueOf(blocks);
                 float length = CFonts.SFPT_SEMIBOLD_20.getStringWidth(block_str);
 
-                CFonts.SFPT_SEMIBOLD_20.drawStringWithShadow("Blocks", x, y + 1, -1);
-                CFonts.SFPT_SEMIBOLD_20.drawStringWithShadow(block_str, x + WIDTH - length - 2, y + 1, -1);
+                CFonts.SFPT_SEMIBOLD_20.drawStringWithShadow("Blocks", x + 1, y + 1, -1);
+                CFonts.SFPT_SEMIBOLD_20.drawStringWithShadow(block_str, x + WIDTH - length - 2 - 1, y + 1, -1);
                 break;
         }
 
