@@ -14,7 +14,9 @@ import net.minecraft.item.ItemStack;
 import net.optifine.reflect.Reflector;
 import org.lwjgl.opengl.GL11;
 import today.vanta.Vanta;
+import today.vanta.util.game.render.font.CFonts;
 import today.vanta.util.game.render.shape.impl.ImageRectangle;
+import today.vanta.util.game.render.shape.impl.Rectangle;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -95,6 +97,22 @@ public class RenderUtil {
 
     public static void renderEntity(int posX, int posY, int scale, float mouseX, float mouseY, EntityLivingBase entity) {
         GuiInventory.drawEntityOnScreen(posX, posY, scale, mouseX, mouseY, entity);
+    }
+
+    public static void drawWindowRectangle(Renderable renderable,String title,float x,float y,float width, float height) {
+        Color WINDOWBG = new Color(20, 20, 20, 220);
+        Color BACKGROUND = new Color(20, 20, 20, 190);
+
+        Rectangle
+                .create(x,y,width,12)
+                .color(WINDOWBG)
+                .push(renderable);
+        CFonts.SFPT_REGULAR_18.drawStringWithShadow(title, x + 1, y, Color.white);
+        Rectangle
+                .create(x,y + 12,width,height)
+                .color(BACKGROUND)
+                .push(renderable);
+
     }
 
     public static void renderHead(Renderable renderable, EntityPlayer target, float x, float y, float headSize) throws NullPointerException {

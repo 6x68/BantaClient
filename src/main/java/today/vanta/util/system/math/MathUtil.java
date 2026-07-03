@@ -23,6 +23,26 @@ public class MathUtil {
         return previous + partialTicks * delta;
     }
 
+    public static String formatDuration(long millis) {
+        long totalSeconds = millis / 1000;
+        long hours = totalSeconds / 3600;
+        long minutes = (totalSeconds % 3600) / 60;
+        long seconds = totalSeconds % 60;
+
+        StringBuilder sb = new StringBuilder();
+
+        if (hours > 0) {
+            sb.append(hours).append("h ");
+        }
+        if (minutes > 0 || hours > 0) {
+            sb.append(minutes).append("m ");
+        }
+        sb.append(seconds).append("s");
+
+        return sb.toString();
+    }
+
+
     public static int range(int min, int max) {
         return (int) ((Math.random() * (max - min)) + min);
     }
