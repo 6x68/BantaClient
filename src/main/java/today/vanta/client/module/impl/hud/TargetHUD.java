@@ -470,7 +470,7 @@ public class TargetHUD extends Module {
                 mc.fontRendererObj.drawString(" ❤", x + 41 + stringW, y + 28, healthColor);
                 break;
             case "Old Atmosphere":
-                width = 130;
+                width = 140;
                 height = 48;
                 barrrrwidth = width - 36f;
                 float widthoutline = width - 34f;
@@ -545,7 +545,7 @@ public class TargetHUD extends Module {
                         .push(renderable);
 
                 itemX = x + 20 + 2;
-                itemY = y + 11;
+                itemY = y + 12.5f;
 
 
                 slot3 = ((EntityPlayer) localTarget).inventory.armorItemInSlot(3);
@@ -598,8 +598,9 @@ public class TargetHUD extends Module {
                 if (ratio < 0) {
                     winratio = EnumChatFormatting.GRAY+"Losing"+ EnumChatFormatting.DARK_GRAY + " ("+ratio+")";
                 }
-                CFonts.SFPT_REGULAR_16.drawStringWithShadow(winratio, x + 4, y + 35, Color.WHITE);
-                CFonts.SFPT_REGULAR_16.drawStringWithShadow(healthperStr + "%", x + width - lengthh - 4, y + 35, Color.WHITE);
+                float stringheight = CFonts.SFPT_REGULAR_16.getFontHeight();
+                CFonts.SFPT_REGULAR_16.drawString(winratio, x + 3, y + 34 + 6 - stringheight, Color.WHITE);
+                CFonts.SFPT_REGULAR_16.drawString(healthperStr + "%", x + width - lengthh - 4, y + 34 + 6 - stringheight, Color.WHITE);
                 break;
         }
 
