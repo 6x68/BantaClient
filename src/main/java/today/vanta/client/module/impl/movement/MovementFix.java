@@ -45,7 +45,11 @@ public class MovementFix extends Module {
     }
 
     private Rotation getRotations() {
-        return RotationProcessor.getInstance().rotations;
+        RotationProcessor processor = RotationProcessor.getInstance();
+        if (!processor.isActive()) {
+            return null;
+        }
+        return processor.getCurrentRotation();
     }
 
     private boolean isExempted() {
