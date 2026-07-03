@@ -18,6 +18,7 @@ public interface IClient {
             "[+] Added command suggestions",
             "[+] Added Miniblox disabler",
             "[+] Added more targethuds",
+            "[+] Added Collision Jesus",
             "[+] Added refresh tokens",
             "[+] Added ClickTeleport",
             "[+] Added more themes",

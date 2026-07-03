@@ -2,7 +2,6 @@ package net.minecraft.block;
 
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
@@ -21,6 +20,7 @@ import net.minecraft.util.*;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import today.vanta.client.event.impl.game.world.BlockCollisionEvent;
 
 import java.util.List;
 import java.util.Random;
@@ -85,12 +85,12 @@ public class Block {
     protected boolean enableStats;
     protected boolean needsRandomTick;
     protected boolean isBlockContainer;
-    protected double minX;
-    protected double minY;
-    protected double minZ;
-    protected double maxX;
-    protected double maxY;
-    protected double maxZ;
+    public double minX;
+    public double minY;
+    public double minZ;
+    public double maxX;
+    public double maxY;
+    public double maxZ;
     public Block.SoundType stepSound;
     public float blockParticleGravity;
     protected final Material blockMaterial;
@@ -316,6 +316,11 @@ public class Block {
 
     public void addCollisionBoxesToList(World worldIn, BlockPos pos, IBlockState state, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity) {
         AxisAlignedBB axisalignedbb = this.getCollisionBoundingBox(worldIn, pos, state);
+
+        BlockCollisionEvent event = new BlockCollisionEvent(this, pos, collidingEntity, axisalignedbb);
+        event.call();
+
+        axisalignedbb = event.axisalignedbb;
 
         if (axisalignedbb != null && mask.intersectsWith(axisalignedbb)) {
             list.add(axisalignedbb);
