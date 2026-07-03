@@ -4,6 +4,7 @@ import net.minecraft.client.gui.GuiChat;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 import org.lwjgl.input.Mouse;
 import today.vanta.Vanta;
 import today.vanta.client.event.impl.client.RenderScreenEvent;
@@ -29,6 +30,8 @@ import java.awt.*;
 
 public class TargetHUD extends Module {
     private static final Color BACKGROUND = new Color(20, 20, 20, 200);
+    private static final Color ATBACKGROUND = new Color(20, 20, 20, 150);
+    private static final Color ATDARKERBACKGROUND = new Color(20, 20, 20, 200);
     private static final Color DARKER_BACKGROUND = new Color(20, 20, 20, 255);
     private static final Color PASSBACKGROUND = new Color(182, 215, 223);
 
@@ -42,7 +45,7 @@ public class TargetHUD extends Module {
     private boolean dragging;
     private float dragX, dragY;
 
-    private final StringSetting mode = Setting.of("Mode", "Vanta", "Classic", "Vanta", "Adjust", "ID-Card", "Aged", "Novoline");
+    private final StringSetting mode = Setting.of("Mode", "Vanta", "Classic", "Vanta", "Adjust", "ID-Card", "Aged", "Novoline", "Old Atmosphere");
     private final NumberSetting
             x = Setting.of("X position", 20, 0, 2000),
             y = Setting.of("Y position", 20, 0, 2000);
@@ -105,6 +108,10 @@ public class TargetHUD extends Module {
     private float adbarWidth = width - 4f;
     private float abarwidth = width - 37;
     private float atargetwidth = width - 37;
+    private float atTargetWidth = width - 36f;
+    private float atghostBarWidth = width - 36f;
+    private float atTargetWidth2 = width - 36f;
+    private float atbarWidth = width - 36f;
 
     private Animation animation;
     private Animation ghostAnimation;
@@ -119,7 +126,7 @@ public class TargetHUD extends Module {
         switch (mode.getValue()) {
             case "Vanta":
                 width = 130;
-                height = 40;
+                height = 50;
 
                 Rectangle
                         .create(x, y, width, height)
@@ -461,6 +468,138 @@ public class TargetHUD extends Module {
 
                 int stringW = mc.fontRendererObj.getStringWidth(healthText);
                 mc.fontRendererObj.drawString(" ❤", x + 41 + stringW, y + 28, healthColor);
+                break;
+            case "Old Atmosphere":
+                width = 130;
+                height = 48;
+                barrrrwidth = width - 36f;
+                float widthoutline = width - 34f;
+
+                float athealthWidth = barrrrwidth * (localTarget.getHealth() / localTarget.getMaxHealth());
+                float atghostWidth = barrrrwidth * (localTarget.getHealth() / localTarget.getMaxHealth());
+
+                if (athealthWidth != atTargetWidth) {
+                    atTargetWidth = athealthWidth;
+                    if (oldTarget != localTarget.getName()) {
+                        atbarWidth = atTargetWidth;
+                        can = true;
+                        oldTarget = localTarget.getName();
+                        return;
+                    }
+
+                    animation = Animation.create(
+                            atbarWidth,
+                            atTargetWidth,
+                            150,
+                            Easing.LINEAR,
+                            val -> atbarWidth = val
+                    );
+
+                    animation.start();
+                }
+                if (atghostWidth != atTargetWidth2) {
+                    atTargetWidth2 = atghostWidth;
+
+                    if (can) {
+                        atghostBarWidth = atTargetWidth2;
+                        oldTarget = localTarget.getName();
+                        can = false;
+                        return;
+                    }
+
+                    ghostAnimation = Animation.create(
+                            atghostBarWidth,
+                            atTargetWidth2,
+                            450,
+                            Easing.LINEAR,
+                            val -> atghostBarWidth = val
+                    );
+
+                    ghostAnimation.start();
+                }
+
+                space = 28f;
+                length = CFonts.SFPT_REGULAR_16.getStringWidth(String.format("%.1f", mc.thePlayer.getHealth() - localTarget.getHealth()));
+
+                Rectangle
+                        .create(x, y, width, height)
+                        .color(ATBACKGROUND)
+                        .push(renderable);
+
+                RenderUtil.renderHead(renderable, (EntityPlayer) localTarget, x + 2, y + 2, 30f);
+                CFonts.SFPT_REGULAR_18.drawStringWithShadow(localTarget.getName(), x + 33, y + 1, Color.WHITE);
+
+                Rectangle
+                        .create(x + 33, y + space - 1, widthoutline, 5.5f)
+                        .color(DARKER_BACKGROUND)
+                        .push(renderable);
+
+                Rectangle
+                        .create(x + 34, y + space, atghostBarWidth, 3f)
+                        .color(color.darker())
+                        .push(renderable);
+
+                Rectangle
+                        .create(x + 34, y + space, atbarWidth, 3f)
+                        .color(color)
+                        .push(renderable);
+
+                itemX = x + 20 + 2;
+                itemY = y + 11;
+
+
+                slot3 = ((EntityPlayer) localTarget).inventory.armorItemInSlot(3);
+                if (slot3 != null) {
+                    itemX += 10 + 1;
+                    RenderUtil.renderScaledItem(slot3, itemX, itemY, 0.8f);
+                }
+
+                slot2 = ((EntityPlayer) localTarget).inventory.armorItemInSlot(2);
+                if (slot2 != null) {
+                    itemX += 10 + 1;
+                    RenderUtil.renderScaledItem(slot2, itemX, itemY, 0.8f);
+                }
+
+                slot1 = ((EntityPlayer) localTarget).inventory.armorItemInSlot(1);
+                if (slot1 != null) {
+                    itemX += 10 + 1;
+                    RenderUtil.renderScaledItem(slot1, itemX, itemY, 0.8f);
+                }
+
+                slot0 = ((EntityPlayer) localTarget).inventory.armorItemInSlot(0);
+                if (slot0 != null) {
+                    itemX += 10 + 1;
+                    RenderUtil.renderScaledItem(slot0, itemX, itemY, 0.8f);
+                }
+
+                currentItem = ((EntityPlayer) localTarget).inventory.getCurrentItem();
+                if (currentItem != null) {
+                    itemX += 10 + 1;
+                    RenderUtil.renderScaledItem(currentItem, itemX + 1, itemY + 1, 0.8f);
+                }
+
+
+                Rectangle
+                        .create(x + 1,y + 34,width - 2,12)
+                        .color(ATDARKERBACKGROUND)
+                        .push(renderable);
+
+                String winratio = "";
+                float healthper = (localTarget.getHealth() / localTarget.getMaxHealth()) * 100;
+                String healthperStr = String.format("%.1f", healthper);
+                float lengthh = CFonts.SFPT_REGULAR_16.getStringWidth(healthperStr + "%");
+                float ratio = Float.valueOf(String.format("%.1f", mc.thePlayer.getHealth() - localTarget.getHealth()));
+                if (ratio > 0 && ratio != 0) {
+                    winratio = EnumChatFormatting.GRAY+"Winning"+ EnumChatFormatting.DARK_GRAY + " ("+ "+"+ratio+")";
+                }
+                if (ratio == 0) {
+                    winratio = EnumChatFormatting.GRAY+"Tie"+ EnumChatFormatting.DARK_GRAY + " ("+ "+"+ratio+")";
+                }
+                if (ratio < 0) {
+                    winratio = EnumChatFormatting.GRAY+"Losing"+ EnumChatFormatting.DARK_GRAY + " ("+ratio+")";
+                }
+                CFonts.SFPT_REGULAR_16.drawStringWithShadow(winratio, x + 4, y + 35, Color.WHITE);
+                CFonts.SFPT_REGULAR_16.drawStringWithShadow(healthperStr + "%", x + width - lengthh - 4, y + 35, Color.WHITE);
                 break;
         }
 
