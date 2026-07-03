@@ -13,14 +13,17 @@ import today.vanta.util.client.IClient;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.events.EventPriority;
 import today.vanta.util.game.render.font.CFonts;
+import today.vanta.util.game.render.shape.impl.GradientRectangle;
+import today.vanta.util.game.render.shape.impl.Rectangle;
 
 import java.awt.*;
 import java.util.Calendar;
 import java.util.Formatter;
 
 public class Watermark extends Module {
-    private final StringSetting style = Setting.of("Style", "Vanta", "Vanta", "Jello", "Char", "Exhi", "Adjust");
+    private final StringSetting style = Setting.of("Style", "Vanta", "Vanta", "Jello", "Char", "Exhi", "Adjust" , "Vestige");
     private final BooleanSetting mcfont = Setting.of("Vanilla font", true).hide(() -> !style.getValue().equals("Exhi"));
+    private static final Color BACKGROUND = new Color(20, 20, 20, 120);
 
     public Watermark() {
         super("Watermark", "Draws a watermark of the client.", Category.HUD);
@@ -72,6 +75,20 @@ public class Watermark extends Module {
 
             case "Adjust":
                 CFonts.getFont("T-Regular", 20).drawStringWithShadow("§r" + firstChar + "§f" + watermarkText, 2, 2, colors[0]);
+                break;
+            case "Vestige":
+                float length = CFonts.SFPT_MEDIUM_24.getStringWidth(IClient.CLIENT_NAME + " v"+ IClient.CLIENT_VERSION);
+                GradientRectangle
+                        .create(2,2,length + 2,2)
+                        .firstColor(colors[0])
+                        .secondColor(colors[1])
+                        .push(event);
+                Rectangle
+                        .create(2,4,length + 2,14)
+                        .color(BACKGROUND)
+                        .push(event);
+
+                CFonts.SFPT_MEDIUM_24.drawString(IClient.CLIENT_NAME + " v"+ IClient.CLIENT_VERSION, 2,4,Color.WHITE,false);
                 break;
         }
     }
