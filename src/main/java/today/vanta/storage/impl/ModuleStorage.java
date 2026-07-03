@@ -53,7 +53,6 @@ public class ModuleStorage extends Storage<Module> {
         // Player
         list.add(new Scaffold());
         list.add(new FastUse());
-        list.add(new NoClickDelay());
         list.add(new AntiVoid());
         list.add(new ResetVL());
         list.add(new ChestStealer());
