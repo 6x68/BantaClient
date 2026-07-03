@@ -126,7 +126,7 @@ public class Nametags extends Module {
             float totalWidth = distanceWidth + nameWidth + healthWidth;
 
             float startX = x + width / 2f - totalWidth / 2f;
-            float textY = y - font.getFontHeight() - 5;
+            float textY = y - font.getFontHeight() - 10;
 
             float idk = totalWidth + 2;
             float idkbar1 = (idk / 2) * (((EntityLivingBase) entity).getHealth() / ((EntityLivingBase) entity).getMaxHealth());
@@ -134,7 +134,7 @@ public class Nametags extends Module {
 
 
             if (belowPlayer.getValue()) {
-                textY = y + height;
+                textY = y + height + 5;
             }
             if (background.getValue()) {
                 Rectangle
