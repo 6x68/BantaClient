@@ -161,7 +161,7 @@ public class Criticals extends Module {
 
     private boolean shouldCrit() {
         return isEnabled()
-                && RotationProcessor.getInstance().rotations != null
+                && RotationProcessor.getInstance().getCurrentRotation() != null
                 && !mc.thePlayer.isSpectator()
                 && mc.thePlayer.onGround
                 && !mc.thePlayer.isInWater()
