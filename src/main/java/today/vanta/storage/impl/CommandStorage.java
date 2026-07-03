@@ -21,6 +21,7 @@ public class CommandStorage extends Storage<Command> {
         list.add(new Toggle());
         list.add(new Clear());
         list.add(new Bind());
+        list.add(new Config());
         list.add(new Teleport());
 
         this.context = null;

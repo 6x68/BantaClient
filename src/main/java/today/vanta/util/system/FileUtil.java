@@ -10,7 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class FileUtil {
-    public static Path getRunningPath() {
+    public static Path getPath() {
         return Paths.get(Minecraft.getMinecraft().mcDataDir.getPath(), IClient.CLIENT_NAME);
     }
 
