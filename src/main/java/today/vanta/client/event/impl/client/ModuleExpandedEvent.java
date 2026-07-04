@@ -3,15 +3,15 @@ package today.vanta.client.event.impl.client;
 import today.vanta.client.event.Event;
 import today.vanta.client.module.Module;
 
-public class ModuleDisableEvent extends Event {
+public class ModuleExpandedEvent extends Event {
     public Module module;
     public boolean config = false;
 
-    public ModuleDisableEvent(Module module) {
+    public ModuleExpandedEvent(Module module) {
         this.module = module;
     }
 
-    public ModuleDisableEvent(Module module, boolean config) {
+    public ModuleExpandedEvent(Module module, boolean config) {
         this.module = module;
         this.config = config;
     }

@@ -3,6 +3,7 @@ package today.vanta.client.module;
 import today.vanta.Vanta;
 import today.vanta.client.event.impl.client.ModuleDisableEvent;
 import today.vanta.client.event.impl.client.ModuleEnableEvent;
+import today.vanta.client.event.impl.client.ModuleExpandedEvent;
 import today.vanta.client.event.impl.client.ModuleRenamedEvent;
 import today.vanta.client.setting.Setting;
 import today.vanta.util.game.IMinecraft;
@@ -59,6 +60,10 @@ public abstract class Module implements IMinecraft {
     }
 
     public void setEnabled(boolean enabled) {
+        setEnabled(enabled, false);
+    }
+
+    public void setEnabled(boolean enabled, boolean config) {
         if (frozen) {
             return;
         }
@@ -66,18 +71,23 @@ public abstract class Module implements IMinecraft {
         this.enabled = enabled;
 
         if (enabled) {
-            new ModuleEnableEvent(this).call();
+            new ModuleEnableEvent(this, config).call();
             onEnable();
             Vanta.instance.eventBus.register(this);
         } else {
-            new ModuleDisableEvent(this).call();
+            new ModuleDisableEvent(this, config).call();
             Vanta.instance.eventBus.unregister(this);
             onDisable();
         }
     }
 
     public void setExpanded(boolean expanded) {
+        setExpanded(expanded, false);
+    }
+
+    public void setExpanded(boolean expanded, boolean config) {
         this.expanded = expanded;
+        new ModuleExpandedEvent(this, config).call();
     }
 
     public boolean isExpanded() {

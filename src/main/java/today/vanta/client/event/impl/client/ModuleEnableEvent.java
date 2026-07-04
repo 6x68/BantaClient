@@ -5,8 +5,14 @@ import today.vanta.client.module.Module;
 
 public class ModuleEnableEvent extends Event {
     public Module module;
+    public boolean config = false;
 
     public ModuleEnableEvent(Module module) {
         this.module = module;
+    }
+
+    public ModuleEnableEvent(Module module, boolean config) {
+        this.module = module;
+        this.config = config;
     }
 }

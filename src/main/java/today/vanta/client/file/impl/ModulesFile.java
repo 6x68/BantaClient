@@ -58,7 +58,7 @@ public class ModulesFile extends File {
             }
 
             if (modObject.has("Expanded")) {
-                mod.setExpanded(modObject.get("Expanded").getAsBoolean());
+                mod.setExpanded(modObject.get("Expanded").getAsBoolean(), true);
             }
 
             if (modObject.has("Display name")) {

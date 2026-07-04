@@ -63,7 +63,7 @@ public class ConfigFile extends File {
 
             JsonObject modObject = json.getAsJsonObject(mod.name);
 
-            mod.setEnabled(false);
+            mod.setEnabled(false, true);
 
             if (mod.addToConfig) {
                 for (Setting<?> setting : mod.settings) {
@@ -87,7 +87,7 @@ public class ConfigFile extends File {
             }
 
             if (modObject.has("Enabled")) {
-                mod.setEnabled(modObject.get("Enabled").getAsBoolean());
+                mod.setEnabled(modObject.get("Enabled").getAsBoolean(), true);
             }
         }
     }
