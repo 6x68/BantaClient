@@ -49,7 +49,7 @@ public abstract class Module implements IMinecraft {
         this(name, description, category, 0);
 
         if (!description.endsWith(".")) {
-            throw new IllegalArgumentException("No description or description missing period at the end!");
+            throw new IllegalArgumentException("No description or description missing period at the end: " + name);
         }
     }
 
