@@ -99,17 +99,26 @@ public class RenderUtil {
         GuiInventory.drawEntityOnScreen(posX, posY, scale, mouseX, mouseY, entity);
     }
 
+    public static void drawExhiOutlined(String text,float x, float y, Color color) {
+        GlStateManager.pushMatrix();
+        GlStateManager.scale(1.2f,1.2f,1.2f);
+        mc.exhiFontRendererObj.drawString(text,x / 1.2f,y / 1.2f,Color.BLACK,false);
+        GlStateManager.popMatrix();
+        mc.exhiFontRendererObj.drawString(text,x,y,Color.WHITE);
+    }
+
     public static void drawWindowRectangle(Renderable renderable,String title,float x,float y,float width, float height) {
         Color WINDOWBG = new Color(20, 20, 20, 220);
         Color BACKGROUND = new Color(20, 20, 20, 190);
+        float windowHeight = 12;
 
         Rectangle
-                .create(x,y,width,12)
+                .create(x,y,width,windowHeight)
                 .color(WINDOWBG)
                 .push(renderable);
         CFonts.SFPT_REGULAR_18.drawStringWithShadow(title, x + 1, y, Color.white);
         Rectangle
-                .create(x,y + 12,width,height)
+                .create(x,y + windowHeight,width,height)
                 .color(BACKGROUND)
                 .push(renderable);
 

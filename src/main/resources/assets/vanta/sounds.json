@@ -17,5 +17,18 @@
     "sounds": [
       "hover"
     ]
+  },
+  "on": {
+    "category": "master",
+    "sounds": [
+      "on"
+    ]
+  },
+
+  "off": {
+    "category": "master",
+    "sounds": [
+      "off"
+    ]
   }
 }

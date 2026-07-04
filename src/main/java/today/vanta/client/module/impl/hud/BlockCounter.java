@@ -26,7 +26,7 @@ import java.awt.*;
 public class BlockCounter extends Module {
     private static final Color BACKGROUND = new Color(20, 20, 20, 200);
 
-    private final StringSetting mode = Setting.of("Mode", "Vanta", "Vanta", "Box");
+    private final StringSetting mode = Setting.of("Mode", "Vanta", "Vanta", "Box", "Exhi");
 
     private final NumberSetting
             x = Setting.of("X position", 20, 0, 2000),
@@ -163,6 +163,9 @@ public class BlockCounter extends Module {
 
                 CFonts.SFPT_SEMIBOLD_20.drawStringWithShadow("Blocks", x + 1, y + 1, -1);
                 CFonts.SFPT_SEMIBOLD_20.drawStringWithShadow(block_str, x + WIDTH - length - 2 - 1, y + 1, -1);
+                break;
+            case "Exhi":
+
                 break;
         }
 

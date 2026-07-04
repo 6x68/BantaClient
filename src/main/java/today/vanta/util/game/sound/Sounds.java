@@ -7,4 +7,6 @@ public class Sounds implements IMinecraft {
     public static final Sound POP = new Sound(new ResourceLocation("vanta", "pop"));
     public static final Sound NIGGER = new Sound(new ResourceLocation("vanta", "nigger"));
     public static final Sound HOVER = new Sound(new ResourceLocation("vanta", "hover"));
+    public static final Sound ON = new Sound(new ResourceLocation("vanta", "on"));
+    public static final Sound OFF = new Sound(new ResourceLocation("vanta", "off"));
 }

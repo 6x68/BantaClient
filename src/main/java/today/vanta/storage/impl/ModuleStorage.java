@@ -27,6 +27,7 @@ public class ModuleStorage extends Storage<Module> {
         list.add(new Theme());
         list.add(new AutoDisable());
         list.add(new Test());
+        list.add(new ClientSounds());
 
         // Combat
         list.add(new AntiBot());
