@@ -26,9 +26,13 @@ public class GlyphFontRenderer extends CFont implements IRenderer {
     protected DynamicTexture texItalicBold;
 
     public GlyphFontRenderer(Font font) {
-        super(font);
+        this(font, null);
+    }
+
+    public GlyphFontRenderer(Font font, char[] customChars) {
+        super(font, customChars);
         setupMinecraftColorCodes();
-        setupBoldItalicIDs();
+        setupBoldItalicIDs(customChars);
     }
 
     @Override
@@ -344,13 +348,17 @@ public class GlyphFontRenderer extends CFont implements IRenderer {
 
     public void setFont(Font font) {
         super.setFont(font);
-        setupBoldItalicIDs();
+        setupBoldItalicIDs(this.customChars);
     }
 
-    private void setupBoldItalicIDs() {
-        this.texBold = setupTexture(this.font.deriveFont(Font.BOLD), this.boldChars);
-        this.texItalic = setupTexture(this.font.deriveFont(Font.ITALIC), this.italicChars);
-        this.texItalicBold = setupTexture(this.font.deriveFont(Font.BOLD | Font.ITALIC), this.boldItalicChars);
+    private void setupBoldItalicIDs(char[] customChars) {
+        int size = this.charData.length;
+        this.boldChars = new CharData[size];
+        this.italicChars = new CharData[size];
+        this.boldItalicChars = new CharData[size];
+        this.texBold = setupTexture(this.font.deriveFont(Font.BOLD), this.boldChars, customChars);
+        this.texItalic = setupTexture(this.font.deriveFont(Font.ITALIC), this.italicChars, customChars);
+        this.texItalicBold = setupTexture(this.font.deriveFont(Font.BOLD | Font.ITALIC), this.boldItalicChars, customChars);
     }
 
     private void drawLine(double x, double y, double x1, double y1, float width) {

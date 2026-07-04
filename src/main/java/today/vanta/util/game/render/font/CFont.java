@@ -11,20 +11,40 @@ import java.awt.image.BufferedImage;
  * @author <a href="https://github.com/IUDevman/gamesense-client/tree/master">GAMESENSE Client</a>
  */
 public class CFont {
+    private static final int DEFAULT_CHAR_COUNT = 256;
     private final float imgSize = 512;
-    protected CharData[] charData = new CharData[256];
+    protected CharData[] charData = new CharData[DEFAULT_CHAR_COUNT];
     protected Font font;
     protected int fontHeight = -1;
     protected int charOffset = 0;
     protected DynamicTexture tex;
+    protected char[] customChars;
 
     public CFont(Font font) {
+        this(font, null);
+    }
+
+    public CFont(Font font, char[] customChars) {
         this.font = font;
-        tex = setupTexture(font, this.charData);
+        this.customChars = customChars;
+
+        int maxChar = DEFAULT_CHAR_COUNT - 1;
+        if (customChars != null) {
+            for (char c : customChars) {
+                if (c > maxChar) maxChar = c;
+            }
+        }
+
+        this.charData = new CharData[maxChar + 1];
+        tex = setupTexture(font, this.charData, customChars);
     }
 
     protected DynamicTexture setupTexture(Font font, CharData[] chars) {
-        BufferedImage img = generateFontImage(font, chars);
+        return setupTexture(font, chars, null);
+    }
+
+    protected DynamicTexture setupTexture(Font font, CharData[] chars, char[] customChars) {
+        BufferedImage img = generateFontImage(font, chars, customChars);
         try {
             return new DynamicTexture(img);
         } catch (Exception e) {
@@ -34,6 +54,10 @@ public class CFont {
     }
 
     protected BufferedImage generateFontImage(Font font, CharData[] chars) {
+        return generateFontImage(font, chars, null);
+    }
+
+    protected BufferedImage generateFontImage(Font font, CharData[] chars, char[] customChars) {
         int imgSize = (int) this.imgSize;
         BufferedImage bufferedImage = new BufferedImage(imgSize, imgSize, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = (Graphics2D) bufferedImage.getGraphics();
@@ -45,11 +69,31 @@ public class CFont {
         g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         FontMetrics fontMetrics = g.getFontMetrics();
+
+        if (customChars != null && customChars.length > 0) {
+            char[] combined = new char[DEFAULT_CHAR_COUNT + customChars.length];
+            for (int i = 0; i < DEFAULT_CHAR_COUNT; i++) {
+                combined[i] = (char) i;
+            }
+            System.arraycopy(customChars, 0, combined, DEFAULT_CHAR_COUNT, customChars.length);
+            renderChars(fontMetrics, chars, g, combined);
+        } else {
+            char[] defaultChars = new char[chars.length];
+            for (int i = 0; i < defaultChars.length; i++) {
+                defaultChars[i] = (char) i;
+            }
+            renderChars(fontMetrics, chars, g, defaultChars);
+        }
+
+        return bufferedImage;
+    }
+
+    private void renderChars(FontMetrics fontMetrics, CharData[] chars, Graphics2D g, char[] charsToRender) {
         int charHeight = 0;
         int positionX = 0;
         int positionY = 0;
-        for (int i = 0; i < chars.length; i++) {
-            char ch = (char) i;
+
+        for (char ch : charsToRender) {
             CharData charData = new CharData();
             Rectangle2D dimensions = fontMetrics.getStringBounds(String.valueOf(ch), g);
             charData.width = (dimensions.getBounds().width + 8);
@@ -67,11 +111,10 @@ public class CFont {
             if (charData.height > this.fontHeight) {
                 this.fontHeight = charData.height;
             }
-            chars[i] = charData;
+            chars[ch] = charData;
             g.drawString(String.valueOf(ch), positionX + 2, positionY + fontMetrics.getAscent());
             positionX += charData.width;
         }
-        return bufferedImage;
     }
 
     public void drawChar(CharData[] chars, char c, float x, float y) throws ArrayIndexOutOfBoundsException {
@@ -121,7 +164,7 @@ public class CFont {
 
     public void setFont(Font font) {
         this.font = font;
-        tex = setupTexture(font, this.charData);
+        tex = setupTexture(font, this.charData, this.customChars);
     }
 
     public static class CharData {

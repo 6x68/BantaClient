@@ -42,13 +42,34 @@ public class CFonts {
     // RusticRoadway
     public static GlyphFontRenderer RUSTICROADWAY_22 = getFont("RusticRoadway", 22);
 
+    // Phosphor-Icons
+    public static GlyphFontRenderer ICONS_16 = getFont("Icons", 16, Icons.CHARS);
+    public static GlyphFontRenderer ICONS_12 = getFont("Icons", 12, Icons.CHARS);
+
     public static GlyphFontRenderer getFont(String fontName, float size) {
-        String key = fontName + ":" + size;
+        return getFont(fontName, size, (char[]) null);
+    }
+
+    public static GlyphFontRenderer getFont(String fontName, float size, char[] customChars) {
+        String key;
+        if (customChars != null && customChars.length > 0) {
+            key = fontName + ":" + size + ":" + new String(customChars);
+        } else {
+            key = fontName + ":" + size;
+        }
 
         return RENDERER_CACHE.computeIfAbsent(
                 key,
-                k -> new GlyphFontRenderer(getAwtFont(fontName + ".otf", size))
+                k -> new GlyphFontRenderer(getAwtFont(fontName + ".otf", size), customChars)
         );
+    }
+
+    public static char[] parseHexChars(String... hexCodes) {
+        char[] chars = new char[hexCodes.length];
+        for (int i = 0; i < hexCodes.length; i++) {
+            chars[i] = (char) Integer.parseInt(hexCodes[i], 16);
+        }
+        return chars;
     }
 
     private static Font getAwtFont(String fontName, float size) {
