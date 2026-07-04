@@ -1,5 +1,6 @@
 package today.vanta.util.game.render;
 
+import com.sun.org.apache.bcel.internal.generic.NEW;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.ScaledResolution;
@@ -99,13 +100,6 @@ public class RenderUtil {
         GuiInventory.drawEntityOnScreen(posX, posY, scale, mouseX, mouseY, entity);
     }
 
-    public static void drawExhiOutlined(String text,float x, float y, Color color) {
-        GlStateManager.pushMatrix();
-        GlStateManager.scale(1.2f,1.2f,1.2f);
-        mc.exhiFontRendererObj.drawString(text,x / 1.2f,y / 1.2f,Color.BLACK,false);
-        GlStateManager.popMatrix();
-        mc.exhiFontRendererObj.drawString(text,x,y,Color.WHITE);
-    }
 
     public static void drawWindowRectangle(Renderable renderable,String title,float x,float y,float width, float height) {
         Color WINDOWBG = new Color(20, 20, 20, 220);

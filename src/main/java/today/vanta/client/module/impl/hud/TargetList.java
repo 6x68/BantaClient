@@ -77,12 +77,12 @@ public class TargetList extends Module {
                 .map(entity -> (EntityPlayer) entity)
                 .forEachOrdered(list::add);
 
-        for (int i = 0; i < list.size(); i++) {
-            boolean isIllegal = PlayerUtil.checkIllegal(list.get(i));
-            if (isIllegal) {
-                list.remove(i);
-            }
-        }
+//        for (int i = 0; i < list.size(); i++) {
+//            boolean isIllegal = PlayerUtil.checkIllegal(list.get(i));
+//            if (isIllegal) {
+//                list.remove(i);
+//            }
+//        }
         switch(mode.getValue()) {
             case "Novoline":
                 WIDTH = 100f;
@@ -113,7 +113,7 @@ public class TargetList extends Module {
                 RenderUtil.drawWindowRectangle(event,"TargetList",x.getValue().floatValue(),y.getValue().floatValue(),WIDTH,HEIGHT);
                 ydraw = y.getValue().floatValue() + 11f;
                 for(EntityPlayer entityPlayer : list) {
-                    RenderUtil.renderHead(event,entityPlayer,x.getValue().floatValue() + 1,ydraw + 1,8);
+                    RenderUtil.renderHead(event,entityPlayer,x.getValue().floatValue() + 1,ydraw + 2,8);
                     String name = entityPlayer.getName();
                     CFonts.SFPT_REGULAR_18.drawStringWithShadow(name,x.getValue().floatValue() + 9,ydraw,Color.WHITE);
                     ydraw += 10f;

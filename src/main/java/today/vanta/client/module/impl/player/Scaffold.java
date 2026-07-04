@@ -35,7 +35,7 @@ import java.util.Random;
 
 public class Scaffold extends Module {
     private final StringSetting
-            rotationMode = Setting.of("Rotation mode", "Simple", "Simple", "Godbridge", "Static", "Forward"),
+            rotationMode = Setting.of("Rotation mode", "Simple", "Simple", "Godbridge", "Static", "Forward", "Sideways"),
             itemSwitchMode = Setting.of("Item spoof", "Switch", "Switch", "Spoof", "None"),
             towerMode = Setting.of("Tower mode", "Jump", "Jump", "Motion", "Low"),
             sprintMode = Setting.of("Sprint mode", "Manual", "None", "Always");
@@ -204,6 +204,9 @@ public class Scaffold extends Module {
 
                 case "Forward":
                     rots = RotationUtil.getForwardRotations(TargetProcessor.getInstance().cache, lastRots);
+                    break;
+                case "Sideways":
+                    rots = RotationUtil.getSidewaysRotations();
                     break;
             }
 

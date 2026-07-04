@@ -39,6 +39,7 @@ public class RotationUtil implements IMinecraft {
         return new Rotation(MathHelper.wrapAngleTo180_float(yaw), MathHelper.clamp_float(pitch, -90, 90));
     }
 
+
     public static Rotation getSimpleRotations(BlockPos blockPos) {
         double diffX = blockPos.getX() + 0.5 - mc.thePlayer.posX;
         double diffY = blockPos.getY() + 0.5 - (mc.thePlayer.posY + mc.thePlayer.getEyeHeight());
@@ -78,6 +79,14 @@ public class RotationUtil implements IMinecraft {
         }
 
         return new Rotation(MathHelper.wrapAngleTo180_float(yaw), MathHelper.clamp_float(pitch, -90.0f, 90.0f));
+    }
+
+    public static Rotation getSidewaysRotations() {
+        float originYaw = mc.thePlayer.rotationYaw;
+
+        float yaw = mc.thePlayer.rotationYaw + 100;
+
+        return new Rotation(yaw,84);
     }
 
     public static Rotation getGodbridgeRotations(BlockCache blockCache, Rotation lastRotations) {

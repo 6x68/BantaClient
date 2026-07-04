@@ -14,6 +14,7 @@ import today.vanta.client.setting.impl.NumberSetting;
 import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.player.InventoryUtil;
+import today.vanta.util.game.player.PlayerUtil;
 import today.vanta.util.game.render.RenderUtil;
 import today.vanta.util.game.render.Renderable;
 import today.vanta.util.game.render.font.CFonts;
@@ -26,7 +27,7 @@ import java.awt.*;
 public class BlockCounter extends Module {
     private static final Color BACKGROUND = new Color(20, 20, 20, 200);
 
-    private final StringSetting mode = Setting.of("Mode", "Vanta", "Vanta", "Box", "Exhi");
+    private final StringSetting mode = Setting.of("Mode", "Vanta", "Vanta", "Box", "Adjust");
 
     private final NumberSetting
             x = Setting.of("X position", 20, 0, 2000),
@@ -38,6 +39,8 @@ public class BlockCounter extends Module {
     private boolean dragging;
     private float dragX, dragY;
     private int maxBlocks = 0;
+    private float xce;
+    private float yce;
 
     private Color color = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
     private int blocks;
@@ -81,6 +84,12 @@ public class BlockCounter extends Module {
                 handleDragging(event.mouseX, event.mouseY);
             }
         }
+    }
+
+    @EventListen
+    private void onRender(RenderOverlayEvent event) {
+        xce = (float) event.scaledResolution.getScaledWidth() / 2;
+        yce = (float) event.scaledResolution.getScaledHeight() / 2;
     }
 
     private void handleDragging(float mouseX, float mouseY) {
@@ -164,8 +173,18 @@ public class BlockCounter extends Module {
                 CFonts.SFPT_SEMIBOLD_20.drawStringWithShadow("Blocks", x + 1, y + 1, -1);
                 CFonts.SFPT_SEMIBOLD_20.drawStringWithShadow(block_str, x + WIDTH - length - 2 - 1, y + 1, -1);
                 break;
-            case "Exhi":
+            case "Adjust":
+                String numberStr = String.valueOf(blocks);
+                String suffixStr = " blocks";
 
+                float totalLength = CFonts.SFPT_REGULAR_24.getStringWidth(numberStr + suffixStr);
+                float numberLength = CFonts.SFPT_REGULAR_24.getStringWidth(numberStr);
+                float spaceLength = CFonts.SFPT_REGULAR_24.getStringWidth(" ");
+
+                float startX = xce - totalLength / 2f;
+
+                CFonts.SFPT_REGULAR_24.drawStringWithShadow(numberStr, startX, y - 20, color);
+                CFonts.SFPT_REGULAR_24.drawStringWithShadow("blocks", startX + numberLength + spaceLength, y - 20, Color.white);
                 break;
         }
 
