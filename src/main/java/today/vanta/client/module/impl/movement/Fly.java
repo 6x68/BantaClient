@@ -18,7 +18,7 @@ public class Fly extends Module {
 
     private final NumberSetting distance = Setting.of("TP distance", 3, 0, 10, "m").hide(() -> !mode.getValue().equals("Teleport"));
     private final NumberSetting ticks = Setting.of("TP ticks", 10, 1, 20).hide(() -> !mode.getValue().equals("Teleport"));
-    private final NumberSetting viewBobbing = Setting.of("View Bobbing Amount", 60.0f,0.0f,100f);
+    private final NumberSetting viewBobbing = Setting.of("View-bob amount", 60.0f,0.0f,100f);
 
     private final Counter jumpCounter = new Counter();
 

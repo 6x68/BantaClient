@@ -14,7 +14,7 @@ public class Velocity extends Module {
     private final NumberSetting
             horizontal = Setting.of("Horizontal", 0, 0, 100, "%"),
             vertical = Setting.of("Vertical", 0, 0, 100, "%");
-    private final BooleanSetting staffSafe = Setting.of("Anti Staff Check", false);
+    private final BooleanSetting staffSafe = Setting.of("Anti staff check", false);
 
     public Velocity() {
         super("Velocity", "Reduces knockback.", Category.COMBAT);

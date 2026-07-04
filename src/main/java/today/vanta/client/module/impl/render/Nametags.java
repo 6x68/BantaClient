@@ -36,9 +36,10 @@ public class Nametags extends Module {
             distance = Setting.of("Distance", true),
             health = Setting.of("Health", true),
             equipment = Setting.of("Equipment", false),
-            background = Setting.of("Draw Background", true),
-            healthbar = Setting.of("Draw Healthbar", true);
-    private final StringSetting colMode = Setting.of("Health Color Mode", "Gradient", "Health", "Gradient");
+            background = Setting.of("Draw background", true),
+            healthbar = Setting.of("Draw health", true);
+
+    private final StringSetting colMode = Setting.of("Health color", "Gradient", "Health", "Gradient").hide(() -> !healthbar.getValue());
 
     private static final Color BACKGROUND = new Color(20, 20, 20, 200);
     private static final Color DARKER_BACKGROUND = new Color(20, 20, 20, 255);

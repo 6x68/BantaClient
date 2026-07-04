@@ -21,7 +21,7 @@ public class Crosshair extends Module {
     private final NumberSetting width = Setting.of("Width", 0.5f, 0.5f, 2, 1);
     private final NumberSetting space = Setting.of("Static space", 5, 0, 15);
     private final NumberSetting spaceMove = Setting.of("Moving space", 7, 1, 16);
-    private final StringSetting colorMode = Setting.of("Main Crosshair Color", "White", "Theme", "White");
+    private final StringSetting colorMode = Setting.of("Crosshair color", "White", "Theme", "White");
     private final BooleanSetting outline = Setting.of("Outline", true);
 
     private float animatedSpacing;

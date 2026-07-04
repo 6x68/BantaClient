@@ -51,7 +51,7 @@ public class Scaffold extends Module {
 
     private final BooleanSetting
             keepY = Setting.of("Keep Y", false).hide(() -> rotationMode.getValue().equals("Godbridge")),
-            speedKeepY = Setting.of("Keep Y on Speed", false).hide(() -> rotationMode.getValue().equals("Godbridge") || keepY.getValue()),
+            speedKeepY = Setting.of("Keep Y on speed", false).hide(() -> rotationMode.getValue().equals("Godbridge") || keepY.getValue()),
             downwards = Setting.of("Downwards", false).hide(() -> rotationMode.getValue().equals("Godbridge")),
             smoothRotations = Setting.of("Smooth rotations", false).hide(() -> rotationMode.getValue().equals("Godbridge"));
 

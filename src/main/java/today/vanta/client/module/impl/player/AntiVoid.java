@@ -14,7 +14,7 @@ import today.vanta.util.game.player.PlayerUtil;
 
 public class AntiVoid extends Module {
     private final StringSetting mode = Setting.of("Mode", "Flag", "Blink", "Flag", "Setback");
-    private final StringSetting setbackmode = Setting.of("Position Set Mode", "Ground", "Previous", "Ground");
+    private final StringSetting setbackmode = Setting.of("Setback mode", "Ground", "Previous", "Ground");
     private final NumberSetting waitTime = Setting.of("Ticks until activation", 5, 0, 40, 0);
 
     private double prevPosZ, prevPosX, prevPosY;

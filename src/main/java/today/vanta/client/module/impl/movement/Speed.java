@@ -19,7 +19,7 @@ import today.vanta.util.game.player.MovementUtil;
 public class Speed extends Module {
     private final StringSetting
             mode = Setting.of("Mode", "NCP", "OldNCP", "Mospixel-Basic", "Mospixel", "NCP", "Miniblox-Ground", "Custom"),
-            oncpmode = Setting.of("OldNCP Mode", "Y-Port", "Y-Port", "Strafe").hide(() -> !mode.getValue().equals("OldNCP"));
+            oncpmode = Setting.of("OldNCP mode", "Y-Port", "Y-Port", "Strafe").hide(() -> !mode.getValue().equals("OldNCP"));
 
     private final BooleanSetting shouldjump = Setting.of("Should jump", true).hide(() -> !mode.getValue().equals("Custom"));
     private final NumberSetting jumpamount = Setting.of("Jump motion", 0.42f, 0.01, 2, 3).hide(() -> !shouldjump.getValue() || !mode.getValue().equals("Custom"));
