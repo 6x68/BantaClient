@@ -316,8 +316,10 @@ public class SoundManager {
 
     public void resumeAllSounds() {
         for (String s : this.playingSounds.keySet()) {
-            logger.debug(LOG_MARKER, "Resuming channel {}", s);
-            this.sndSystem.play(s);
+            if (this.sndSystem.paused(s)) {
+                logger.debug(LOG_MARKER, "Resuming channel {}", s);
+                this.sndSystem.play(s);
+            }
         }
     }
 
@@ -380,6 +382,17 @@ public class SoundManager {
                 } else {
                     Source source = this.soundLibrary.getSources().get(p_playing_1_);
                     return source != null && (source.playing() || source.paused() || source.preLoad);
+                }
+            }
+        }
+
+        public boolean paused(String p_paused_1_) {
+            synchronized (SoundSystemConfig.THREAD_SYNC) {
+                if (this.soundLibrary == null) {
+                    return false;
+                } else {
+                    Source source = this.soundLibrary.getSources().get(p_paused_1_);
+                    return source != null && source.paused();
                 }
             }
         }
