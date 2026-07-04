@@ -84,7 +84,7 @@ public class RotationUtil implements IMinecraft {
     public static Rotation getSidewaysRotations() {
         float originYaw = mc.thePlayer.rotationYaw;
 
-        float yaw = mc.thePlayer.rotationYaw + 100;
+        float yaw = mc.thePlayer.rotationYaw + 105;
 
         return new Rotation(yaw,84);
     }

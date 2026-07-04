@@ -9,4 +9,6 @@ public class Sounds implements IMinecraft {
     public static final Sound HOVER = new Sound(new ResourceLocation("vanta", "hover"));
     public static final Sound ON = new Sound(new ResourceLocation("vanta", "on"));
     public static final Sound OFF = new Sound(new ResourceLocation("vanta", "off"));
+    public static final Sound TOGGLE = new Sound(new ResourceLocation("vanta", "toggle"));
+    public static final Sound OPEN = new Sound(new ResourceLocation("vanta", "open"));
 }

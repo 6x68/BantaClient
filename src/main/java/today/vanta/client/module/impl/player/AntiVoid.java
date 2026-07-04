@@ -8,6 +8,7 @@ import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.NumberSetting;
 import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.events.EventListen;
+import today.vanta.util.game.player.ChatUtil;
 import today.vanta.util.game.player.MovementUtil;
 import today.vanta.util.game.player.PlayerUtil;
 
@@ -25,6 +26,7 @@ public class AntiVoid extends Module {
 
     @EventListen
     public void onUpdate(UpdateEvent event) {
+        if (mc.thePlayer.capabilities.isFlying || MovementUtil.movementModuleEnabled()) return;
         switch (setbackmode.getValue()) {
             case "Previous":
                 if (!PlayerUtil.isOverVoid()) {

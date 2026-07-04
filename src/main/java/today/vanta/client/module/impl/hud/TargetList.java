@@ -42,7 +42,7 @@ public class TargetList extends Module {
 
     private void handleDragging(float mouseX, float mouseY) {
         if (Mouse.isButtonDown(0)) {
-            if (!dragging && RenderUtil.hovered(mouseX, mouseY, x.getValue().floatValue(), y.getValue().floatValue(), WIDTH, HEIGHT)) {
+            if (!dragging && RenderUtil.hovered(mouseX, mouseY, x.getValue().floatValue(), y.getValue().floatValue(), WIDTH, HEIGHT + 10f)) {
                 dragging = true;
                 dragX = mouseX - x.getValue().floatValue();
                 dragY = mouseY - y.getValue().floatValue();
@@ -123,7 +123,7 @@ public class TargetList extends Module {
 
         if (dragging) {
             Rectangle
-                    .create(x.getValue().floatValue() - 0.5f, y.getValue().floatValue() - 0.5f, WIDTH + 1, HEIGHT + 1)
+                    .create(x.getValue().floatValue() - 0.5f, y.getValue().floatValue() - 0.5f, WIDTH + 1, HEIGHT + 12f)
                     .color(Vanta.instance.moduleStorage.getT(Theme.class).colors[0])
                     .outline(true)
                     .push(event);

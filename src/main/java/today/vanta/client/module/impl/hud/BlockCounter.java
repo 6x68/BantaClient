@@ -58,6 +58,7 @@ public class BlockCounter extends Module {
 
     @EventListen
     public void onRender2D(RenderOverlayEvent event) {
+        color = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
         float centerValueX = ((float) event.scaledResolution.getScaledWidth() / 2) - (WIDTH / 2);
         if (x.getValue() == null) {return;}
         if (x.getValue().floatValue() == centerValueX && dragging) {
@@ -177,14 +178,15 @@ public class BlockCounter extends Module {
                 String numberStr = String.valueOf(blocks);
                 String suffixStr = " blocks";
 
-                float totalLength = CFonts.SFPT_REGULAR_24.getStringWidth(numberStr + suffixStr);
-                float numberLength = CFonts.SFPT_REGULAR_24.getStringWidth(numberStr);
-                float spaceLength = CFonts.SFPT_REGULAR_24.getStringWidth(" ");
+                float suffixLength = CFonts.getFont("SFPT-Regular", 24).getStringWidth(suffixStr);
+                float totalLength = CFonts.getFont("SFPT-Medium", 24).getStringWidth(numberStr) + suffixLength;
+                float numberLength = CFonts.getFont("SFPT-Medium", 24).getStringWidth(numberStr);
+                float spaceLength = CFonts.getFont("SFPT-Regular", 24).getStringWidth(" ");
 
                 float startX = xce - totalLength / 2f;
 
-                CFonts.SFPT_REGULAR_24.drawStringWithShadow(numberStr, startX, y - 20, color);
-                CFonts.SFPT_REGULAR_24.drawStringWithShadow("blocks", startX + numberLength + spaceLength, y - 20, Color.white);
+                CFonts.getFont("SFPT-Medium", 24).drawStringWithShadow(numberStr, startX, y - 70, color);
+                CFonts.getFont("SFPT-Regular", 24).drawStringWithShadow("blocks", startX + numberLength + spaceLength, y - 70, Color.white);
                 break;
         }
 

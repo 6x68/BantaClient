@@ -30,5 +30,19 @@
     "sounds": [
       "off"
     ]
+  },
+
+  "toggle": {
+    "category": "master",
+    "sounds": [
+      "toggle"
+    ]
+  },
+
+  "open": {
+    "category": "master",
+    "sounds": [
+      "open"
+    ]
   }
 }

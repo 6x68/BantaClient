@@ -5,6 +5,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.world.storage.WorldInfo;
 import org.lwjgl.input.Mouse;
 import today.vanta.Vanta;
 import today.vanta.client.event.impl.client.RenderScreenEvent;
@@ -16,6 +17,7 @@ import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.NumberSetting;
 import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.events.EventListen;
+import today.vanta.util.game.player.ChatUtil;
 import today.vanta.util.game.player.PlayerUtil;
 import today.vanta.util.game.render.RenderUtil;
 import today.vanta.util.game.render.Renderable;
@@ -45,7 +47,7 @@ public class TargetHUD extends Module {
     private boolean dragging;
     private float dragX, dragY;
 
-    private final StringSetting mode = Setting.of("Mode", "Vanta", "Classic", "Vanta", "Adjust", "ID-Card", "Aged", "Novoline", "Old Atmosphere");
+    private final StringSetting mode = Setting.of("Mode", "Vanta", "Classic", "Vanta", "Adjust", "ID-Card", "Aged", "Novoline", "Old Atmosphere", "Exhi");
     private final NumberSetting
             x = Setting.of("X position", 20, 0, 2000),
             y = Setting.of("Y position", 20, 0, 2000);
@@ -125,8 +127,9 @@ public class TargetHUD extends Module {
 
         switch (mode.getValue()) {
             case "Vanta":
+
                 width = 130;
-                height = 50;
+                height = 40;
 
                 Rectangle
                         .create(x, y, width, height)
@@ -481,7 +484,10 @@ public class TargetHUD extends Module {
                 if (athealthWidth != atTargetWidth) {
                     atTargetWidth = athealthWidth;
                     if (oldTarget != localTarget.getName()) {
-                        atbarWidth = atTargetWidth;
+                        if (animation != null) {
+                            animation.stop();
+                        }
+                        atbarWidth = athealthWidth;
                         can = true;
                         oldTarget = localTarget.getName();
                         return;
@@ -501,7 +507,10 @@ public class TargetHUD extends Module {
                     atTargetWidth2 = atghostWidth;
 
                     if (can) {
-                        atghostBarWidth = atTargetWidth2;
+                        if (ghostAnimation != null) {
+                            ghostAnimation.stop();
+                        }
+                        atghostBarWidth = atghostWidth;
                         oldTarget = localTarget.getName();
                         can = false;
                         return;
@@ -601,6 +610,11 @@ public class TargetHUD extends Module {
                 float stringheight = CFonts.SFPT_REGULAR_16.getFontHeight();
                 CFonts.SFPT_REGULAR_16.drawString(winratio, x + 3, y + 34 + 6 - stringheight, Color.WHITE);
                 CFonts.SFPT_REGULAR_16.drawString(healthperStr + "%", x + width - lengthh - 4, y + 34 + 6 - stringheight, Color.WHITE);
+                break;
+            case "Exhi":
+                width = 150f;
+                height = 55f;
+                RenderUtil.rectangleBordered(x -2.5,y - 2.5,x + width + 2.5,x + 40 + 2.5,0.5,RenderUtil.getColor(60), RenderUtil.getColor(10));
                 break;
         }
 
