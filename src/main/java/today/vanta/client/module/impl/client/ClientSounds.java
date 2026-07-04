@@ -23,6 +23,7 @@ public class ClientSounds extends Module {
 
     @EventListen
     private void onModuleEnable(ModuleEnableEvent event) {
+        if (mc.thePlayer == null) return;
         if (!toggleSounds.getValue()) return;
         if (event.config || event.module instanceof ClickGUI) return;
 
@@ -31,6 +32,7 @@ public class ClientSounds extends Module {
 
     @EventListen
     private void onModuleDisable(ModuleDisableEvent event) {
+        if (mc.thePlayer == null) return;
         if (!toggleSounds.getValue()) return;
         if (event.config || event.module instanceof ClickGUI) return;
 
@@ -39,6 +41,7 @@ public class ClientSounds extends Module {
 
     @EventListen
     private void onModuleExpand(ModuleExpandedEvent event) {
+        if (mc.thePlayer == null) return;
         if (!expandSounds.getValue()) return;
         if (event.config) return;
         if (!(mc.currentScreen instanceof ClickGUIScreen)) return;
