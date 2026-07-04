@@ -16,14 +16,12 @@ import today.vanta.client.setting.impl.MultiStringSetting;
 import today.vanta.client.setting.impl.NumberSetting;
 import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.events.EventListen;
-import today.vanta.util.game.player.ChatUtil;
 import today.vanta.util.game.render.RenderUtil;
 import today.vanta.util.game.render.font.impl.GlyphFontRenderer;
 import today.vanta.util.game.render.font.CFonts;
 import today.vanta.util.game.render.shape.GradientMode;
 import today.vanta.util.game.render.shape.impl.GradientRectangle;
 import today.vanta.util.game.render.shape.impl.Rectangle;
-import today.vanta.util.game.sound.Sounds;
 import today.vanta.util.system.math.ColorUtil;
 import today.vanta.util.system.math.MathUtil;
 import today.vanta.util.system.math.animation.Animation;
@@ -492,9 +490,6 @@ public class ClickGUIScreen extends VantaScreen {
                     module.setEnabled(!module.isEnabled());
                 } else if (hoverMod && mouseButton == 1) {
                     module.setExpanded(!module.isExpanded());
-                    if (activeAnimations.size() == 1) {
-                        Sounds.OPEN.play();
-                    }
                 }
 
                 y += 14;
