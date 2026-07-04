@@ -72,7 +72,7 @@ public class Information extends Module {
     public void onRender2D(RenderOverlayEvent event) {
         color1 = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
         color2 = Vanta.instance.moduleStorage.getT(Theme.class).colors[1];
-        if (mc.getCurrentServerData().serverIP != null && mc.getCurrentServerData() != null) {
+        if (!mc.isSingleplayer() && mc.getCurrentServerData().serverIP != null) {
             if (oldServer != mc.getCurrentServerData().serverIP) {
                 playTime.reset();
                 oldServer = mc.getCurrentServerData().serverIP;
