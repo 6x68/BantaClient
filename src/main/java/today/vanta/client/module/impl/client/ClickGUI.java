@@ -1,10 +1,12 @@
 package today.vanta.client.module.impl.client;
 
 import org.lwjgl.input.Keyboard;
+import today.vanta.Vanta;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.screen.ClickGUIScreen;
 import today.vanta.client.screen.ImGuiClickGUIScreen;
+import today.vanta.client.screen.VantaScreen;
 import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.BooleanSetting;
 import today.vanta.client.setting.impl.StringSetting;
@@ -22,23 +24,32 @@ public class ClickGUI extends Module {
         hideFromArraylist = true;
     }
 
-    private final ClickGUIScreen clickGUIScreen = new ClickGUIScreen();
-    private final ImGuiClickGUIScreen imGuiClickGuiScreen = new ImGuiClickGUIScreen();
+    private ClickGUIScreen clickGUIScreen;
+    private ImGuiClickGUIScreen imGuiClickGuiScreen;
 
     @Override
     public void onEnable() {
-        switch (design.getValue()) {
-            case "Dropdown": {
-                mc.displayGuiScreen(clickGUIScreen);
-                break;
-            }
-
-            case "ImGui": {
-                mc.displayGuiScreen(imGuiClickGuiScreen);
-                break;
-            }
-        }
+        mc.displayGuiScreen(getClickGui());
 
         setEnabled(false);
+    }
+
+    public VantaScreen getClickGui() {
+        if (clickGUIScreen == null) {
+            clickGUIScreen = Vanta.instance.screenStorage.getT(ClickGUIScreen.class);
+        }
+
+        if (imGuiClickGuiScreen == null) {
+            imGuiClickGuiScreen = Vanta.instance.screenStorage.getT(ImGuiClickGUIScreen.class);
+        }
+
+        switch (design.getValue()) {
+            case "ImGui":
+                return imGuiClickGuiScreen;
+
+            case "Dropdown":
+            default:
+                return clickGUIScreen;
+        }
     }
 }

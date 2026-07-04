@@ -111,7 +111,6 @@ import today.vanta.client.event.impl.system.KeyboardEvent;
 import today.vanta.util.client.IClient;
 import today.vanta.util.game.events.EventState;
 import today.vanta.util.game.render.font.impl.BitMapFontRenderer;
-import today.vanta.util.system.lwjgl.imgui.ImGuiImpl;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -1437,8 +1436,6 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
                 this.dispatchKeypresses();
 
                 if (Keyboard.getEventKeyState()) {
-                    ImGuiImpl.key(k);
-
                     if (k == 62 && this.entityRenderer != null) {
                         this.entityRenderer.switchUseShader();
                     }
@@ -1446,13 +1443,6 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
                     if (this.currentScreen != null) {
                         this.currentScreen.handleKeyboardInput();
                     } else {
-                        final KeyboardEvent keyboardEvent = new KeyboardEvent(k);
-                        keyboardEvent.call();
-
-                        if (keyboardEvent.cancelled) {
-                            return;
-                        }
-
                         if (k == 1) {
                             this.displayInGameMenu();
                         }
@@ -2360,6 +2350,9 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
         if (i != 0 && !Keyboard.isRepeatEvent()) {
             if (!(this.currentScreen instanceof GuiControls) || ((GuiControls) this.currentScreen).time <= getSystemTime() - 20L) {
                 if (Keyboard.getEventKeyState()) {
+                    final KeyboardEvent keyboardEvent = new KeyboardEvent(i);
+                    keyboardEvent.call();
+
                     if (i == this.gameSettings.keyBindFullscreen.getKeyCode()) {
                         this.toggleFullscreen();
                     } else if (i == this.gameSettings.keyBindScreenshot.getKeyCode()) {

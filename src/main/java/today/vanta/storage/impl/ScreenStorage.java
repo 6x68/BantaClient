@@ -13,6 +13,7 @@ public class ScreenStorage extends Storage<GuiScreen> implements IMinecraft {
 
         list.add(new MainMenuScreen());
         list.add(new ClickGUIScreen());
+        list.add(new ImGuiClickGUIScreen());
         list.add(new AltLoginScreen());
     }
 

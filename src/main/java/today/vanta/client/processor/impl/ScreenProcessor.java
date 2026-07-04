@@ -51,4 +51,8 @@ public class ScreenProcessor extends Processor {
             mc.ingameGUI.getChatGUI().clearChatMessages();
         }
     }
+
+    public static ScreenProcessor getInstance() {
+        return Vanta.instance.processorStorage.getT(ScreenProcessor.class);
+    }
 }
