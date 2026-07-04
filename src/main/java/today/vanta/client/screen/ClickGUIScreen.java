@@ -18,7 +18,6 @@ import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.render.ImageUtil;
 import today.vanta.util.game.render.RenderUtil;
-import today.vanta.util.game.render.Renderable;
 import today.vanta.util.game.render.font.impl.GlyphFontRenderer;
 import today.vanta.util.game.render.font.CFonts;
 import today.vanta.util.game.render.shape.GradientMode;
@@ -72,18 +71,18 @@ public class ClickGUIScreen extends VantaScreen {
         }
 
         if (Vanta.instance.moduleStorage.getT(ClickGUI.class).image.getValue()) {
-            float imgwidth = 300 * globalAnim;
-            float heightimg = 300 * globalAnim;
-            String texture = Vanta.instance.moduleStorage.getT(ClickGUI.class).mode.getValue() + ".png";
-            if (Vanta.instance.moduleStorage.getT(ClickGUI.class).mode.getValue().equals("cousin.gif")) {
-                texture = Vanta.instance.moduleStorage.getT(ClickGUI.class).mode.getValue();
+            float imgWidth = 300 * globalAnim;
+            float imgHeight = 300 * globalAnim;
+
+            String texture = Vanta.instance.moduleStorage.getT(ClickGUI.class).mascot.getValue() + ".png";
+            if (texture.startsWith("cousin")) {
+                texture = "cousin.gif";
+            } else if (texture.startsWith("longboy")) {
+                imgHeight = 400 * globalAnim;
             }
 
-            if (texture.contains("longboy")) {
-                heightimg = 400 * globalAnim;
-            }
             ImageRectangle
-                    .create(width - 175 - (imgwidth / 2), height - 210 - (heightimg / 2), imgwidth, heightimg, -1)
+                    .create(width - 175 - (imgWidth / 2), height - 210 - (imgHeight / 2), imgWidth, imgHeight, -1)
                     .resource(ImageUtil.getTexture(texture))
                     .push(event);
         }

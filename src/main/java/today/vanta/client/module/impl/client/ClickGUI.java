@@ -4,6 +4,7 @@ import org.lwjgl.input.Keyboard;
 import today.vanta.Vanta;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
+import today.vanta.client.screen.BoxyClickGUIScreen;
 import today.vanta.client.screen.ClickGUIScreen;
 import today.vanta.client.screen.ImGuiClickGUIScreen;
 import today.vanta.client.screen.VantaScreen;
@@ -17,9 +18,9 @@ public class ClickGUI extends Module {
             darkenBackground = Setting.of("Dark background", true),
             gradientBackground = Setting.of("Gradient background", true),
             image = Setting.of("Image", false);
-    public final StringSetting mode = Setting.of("Mode", "longboy.png", "ermwhat", "silly", "cousin.gif", "longboy").hide(() -> !image.getValue());
 
-    public final StringSetting design = Setting.of("Design", "Dropdown", "Dropdown", "ImGui");
+    private final StringSetting design = Setting.of("Design", "Dropdown", "Dropdown", "ImGui", "Boxy");
+    public final StringSetting mascot = Setting.of("Mascot", "longboy.png", "ermwhat", "silly", "cousin.gif", "longboy").hide(() -> !image.getValue());
 
     public ClickGUI() {
         super("ClickGUI", "Opens up the ClickGUI.", Category.CLIENT, Keyboard.KEY_RSHIFT);
@@ -28,6 +29,7 @@ public class ClickGUI extends Module {
 
     private ClickGUIScreen clickGUIScreen;
     private ImGuiClickGUIScreen imGuiClickGuiScreen;
+    private BoxyClickGUIScreen boxyClickGUIScreen;
 
     @Override
     public void onEnable() {
@@ -45,9 +47,16 @@ public class ClickGUI extends Module {
             imGuiClickGuiScreen = Vanta.instance.screenStorage.getT(ImGuiClickGUIScreen.class);
         }
 
+        if (boxyClickGUIScreen == null) {
+            boxyClickGUIScreen = Vanta.instance.screenStorage.getT(BoxyClickGUIScreen.class);
+        }
+
         switch (design.getValue()) {
             case "ImGui":
                 return imGuiClickGuiScreen;
+
+            case "Boxy":
+                return boxyClickGUIScreen;
 
             case "Dropdown":
             default:

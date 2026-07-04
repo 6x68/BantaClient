@@ -17,7 +17,8 @@ public abstract class VantaScreen extends GuiScreen {
         Vanta.instance.eventBus.register(this);
     }
 
-    protected abstract void initScreen();
+    protected void initScreen() {
+    }
 
     @Override
     public void onGuiClosed() {
