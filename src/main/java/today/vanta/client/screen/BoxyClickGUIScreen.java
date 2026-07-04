@@ -372,7 +372,7 @@ public class BoxyClickGUIScreen extends VantaScreen {
                     .push(event);
         }
 
-        CFonts.getFont("SFPT-Regular", 12).drawString(setting.name.toUpperCase(), controlX + CHECKBOX_SIZE + 5, boxY - 0.5f, TEXT_MUTED);
+        CFonts.getFont("SFPT-Regular", 12).drawString(setting.name.toUpperCase(), controlX + CHECKBOX_SIZE + 5, boxY, TEXT_MUTED);
     }
 
     private void drawNumberSetting(NumberSetting setting, float x, float y, float width, RenderScreenEvent event) {
