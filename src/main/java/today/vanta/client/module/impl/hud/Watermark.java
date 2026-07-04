@@ -12,8 +12,10 @@ import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.client.IClient;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.events.EventPriority;
+import today.vanta.util.game.render.ImageUtil;
 import today.vanta.util.game.render.font.CFonts;
 import today.vanta.util.game.render.shape.impl.GradientRectangle;
+import today.vanta.util.game.render.shape.impl.ImageRectangle;
 import today.vanta.util.game.render.shape.impl.Rectangle;
 
 import java.awt.*;
@@ -21,7 +23,7 @@ import java.util.Calendar;
 import java.util.Formatter;
 
 public class Watermark extends Module {
-    private final StringSetting style = Setting.of("Style", "Vanta", "Vanta", "Jello", "Char", "Exhi", "Adjust" , "Vestige");
+    private final StringSetting style = Setting.of("Style", "Vanta", "Vanta", "Jello", "Char", "Exhi", "Adjust" , "Vestige", "Fanta");
     private final BooleanSetting mcfont = Setting.of("Vanilla font", true).hide(() -> !style.getValue().equals("Exhi"));
     private static final Color BACKGROUND = new Color(20, 20, 20, 190);
 
@@ -89,6 +91,12 @@ public class Watermark extends Module {
                         .push(event);
 
                 CFonts.SFPT_MEDIUM_24.drawString(IClient.CLIENT_NAME + " v"+ IClient.CLIENT_VERSION, 2,4,Color.WHITE,false);
+                break;
+            case "Fanta":
+                ImageRectangle
+                        .create(2, 2 , 100, 100, -1)
+                        .resource(ImageUtil.getTexture("fanta.png"))
+                        .push(event);
                 break;
         }
     }

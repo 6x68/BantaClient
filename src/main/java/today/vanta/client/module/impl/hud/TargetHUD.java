@@ -612,7 +612,7 @@ public class TargetHUD extends Module {
                 CFonts.SFPT_REGULAR_16.drawString(healthperStr + "%", x + width - lengthh - 4, y + 34 + 6 - stringheight, Color.WHITE);
                 break;
             case "Atmosphere":
-                width = 130;
+                width = 125;
                 height = 34;
                 barrrrwidth = width - 36f;
                 widthoutline = width - 34f;

@@ -44,7 +44,7 @@ public class Information extends Module {
     }
 
     private void handleDragging(float mouseX, float mouseY) {
-        if (mode.getValue() != "Window") return;
+        if (mode.getValue().equals("Text")) return;
         if (Mouse.isButtonDown(0)) {
             if (!dragging && RenderUtil.hovered(mouseX, mouseY, x.getValue().floatValue(), y.getValue().floatValue(), WIDTH, HEIGHT)) {
                 dragging = true;
@@ -70,6 +70,8 @@ public class Information extends Module {
 
     @EventListen
     public void onRender2D(RenderOverlayEvent event) {
+        color1 = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
+        color2 = Vanta.instance.moduleStorage.getT(Theme.class).colors[1];
         if (mc.getCurrentServerData().serverIP != null && mc.getCurrentServerData() != null) {
             if (oldServer != mc.getCurrentServerData().serverIP) {
                 playTime.reset();
