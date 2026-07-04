@@ -14,6 +14,8 @@ public interface IClient {
     String COMMAND_PREFIX = ".";
 
     List<String> CHANGELOG = Arrays.asList(
-        "[#] ClickTeleport now draws destination"
+            "[#] Made ClickGui togglable in Main Menu",
+            "[#] ClickTeleport now draws destination",
+            "[#] Fixed ClientSounds"
     );
 }
