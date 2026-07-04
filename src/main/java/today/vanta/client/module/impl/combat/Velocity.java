@@ -4,7 +4,9 @@ import net.minecraft.network.play.server.S12PacketEntityVelocity;
 import today.vanta.client.event.impl.game.network.ReceivePacketEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
+import today.vanta.client.processor.impl.TargetProcessor;
 import today.vanta.client.setting.Setting;
+import today.vanta.client.setting.impl.BooleanSetting;
 import today.vanta.client.setting.impl.NumberSetting;
 import today.vanta.util.game.events.EventListen;
 
@@ -12,6 +14,7 @@ public class Velocity extends Module {
     private final NumberSetting
             horizontal = Setting.of("Horizontal", 0, 0, 100, "%"),
             vertical = Setting.of("Vertical", 0, 0, 100, "%");
+    private final BooleanSetting staffSafe = Setting.of("Anti Staff Check", false);
 
     public Velocity() {
         super("Velocity", "Reduces knockback.", Category.COMBAT);
@@ -21,6 +24,7 @@ public class Velocity extends Module {
     @EventListen
     private void onPacket(ReceivePacketEvent event) {
         if (mc.thePlayer == null) return;
+        if (staffSafe.getValue() && TargetProcessor.getInstance().target == null) return;
         if (event.packet instanceof S12PacketEntityVelocity) {
             S12PacketEntityVelocity veloPacket = (S12PacketEntityVelocity) event.packet;
 

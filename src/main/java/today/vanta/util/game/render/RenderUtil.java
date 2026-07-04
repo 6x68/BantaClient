@@ -12,6 +12,7 @@ import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.MathHelper;
 import net.optifine.reflect.Reflector;
 import org.lwjgl.opengl.GL11;
 import today.vanta.Vanta;
@@ -98,6 +99,78 @@ public class RenderUtil {
 
     public static void renderEntity(int posX, int posY, int scale, float mouseX, float mouseY, EntityLivingBase entity) {
         GuiInventory.drawEntityOnScreen(posX, posY, scale, mouseX, mouseY, entity);
+    }
+    public static void exhirectangle(double left, double top, double right, double bottom, final int color) {
+        if (left < right) {
+            double var5 = left;
+            left = right;
+            right = var5;
+        }
+        if (top < bottom) {
+            double var5 = top;
+            top = bottom;
+            bottom = var5;
+        }
+        float var11 = (color >> 24 & 0xFF) / 255.0F;
+        float var6 = (color >> 16 & 0xFF) / 255.0F;
+        float var7 = (color >> 8 & 0xFF) / 255.0F;
+        float var8 = (color & 0xFF) / 255.0F;
+        GlStateManager.enableBlend();
+        GlStateManager.disableTexture2D();
+        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+        GlStateManager.color(var6, var7, var8, var11);
+        GL11.glBegin(GL_QUADS);
+        GL11.glVertex3d(left, bottom, 0.0D);
+        GL11.glVertex3d(right, bottom, 0.0D);
+        GL11.glVertex3d(right, top, 0.0D);
+        GL11.glVertex3d(left, top, 0.0D);
+        GL11.glEnd();
+        GlStateManager.enableTexture2D();
+        GlStateManager.disableBlend();
+        GlStateManager.color(1, 1, 1, 1);
+    }
+    public static int getColor(Color color) {
+        return getColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+    }
+
+    public static int getColor(Color color, int alpha) {
+        return getColor(color.getRed(), color.getGreen(), color.getBlue(), MathHelper.clamp_int(alpha, 0, 255));
+    }
+
+    public static int getColor(int brightness) {
+        return getColor(brightness, brightness, brightness, 255);
+    }
+
+    public static int getColor(int brightness, int alpha) {
+        return getColor(brightness, brightness, brightness, alpha);
+    }
+
+    public static int getColor(int red, int green, int blue) {
+        return getColor(red, green, blue, 255);
+    }
+
+    public static int getColor(int red, int green, int blue, int alpha) {
+        int color = 0;
+        color |= MathHelper.clamp_int(alpha, 0, 255) << 24;
+        color |= MathHelper.clamp_int(red, 0, 255) << 16;
+        color |= MathHelper.clamp_int(green, 0, 255) << 8;
+        color |= MathHelper.clamp_int(blue, 0, 255);
+        return color;
+    }
+
+    public static int getColorOpacity(int color, int alpha) {
+        int red = (color >> 16 & 0xFF);
+        int green = (color >> 8 & 0xFF);
+        int blue = (color & 0xFF);
+        return getColor(red, green, blue, MathHelper.clamp_int(alpha, 0, 255));
+    }
+
+    public static void rectangleBordered(final double x, final double y, final double x1, final double y1, final double width, final int internalColor, final int borderColor) {
+        exhirectangle(x + width, y + width, x1 - width, y1 - width, internalColor);
+       exhirectangle(x + width, y, x1 - width, y + width, borderColor);
+        exhirectangle(x, y, x + width, y1, borderColor);
+        exhirectangle(x1 - width, y, x1, y1, borderColor);
+        exhirectangle(x + width, y1 - width, x1 - width, y1, borderColor);
     }
 
 
