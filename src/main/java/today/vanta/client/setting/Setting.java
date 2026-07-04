@@ -20,6 +20,10 @@ public class Setting<T> {
         this.name = name;
         this.value = value;
 
+        if (name.matches("^(?!(?:Max|Min)\\b)[A-Z][a-zA-Z]{3,}(?:\\s+[A-Z][a-zA-Z]{3,})+$")) {
+            throw new IllegalArgumentException("Invalid setting name, must only have first word starting with uppercase: " + name);
+        }
+
         Vanta.instance.moduleStorage.context.settings.add(this);
     }
 
