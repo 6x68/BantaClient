@@ -16,11 +16,14 @@ import today.vanta.client.setting.impl.MultiStringSetting;
 import today.vanta.client.setting.impl.NumberSetting;
 import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.events.EventListen;
+import today.vanta.util.game.render.ImageUtil;
 import today.vanta.util.game.render.RenderUtil;
+import today.vanta.util.game.render.Renderable;
 import today.vanta.util.game.render.font.impl.GlyphFontRenderer;
 import today.vanta.util.game.render.font.CFonts;
 import today.vanta.util.game.render.shape.GradientMode;
 import today.vanta.util.game.render.shape.impl.GradientRectangle;
+import today.vanta.util.game.render.shape.impl.ImageRectangle;
 import today.vanta.util.game.render.shape.impl.Rectangle;
 import today.vanta.util.system.math.ColorUtil;
 import today.vanta.util.system.math.MathUtil;
@@ -66,6 +69,23 @@ public class ClickGUIScreen extends VantaScreen {
         if (closing && globalAnim <= 0.01f) {
             this.mc.displayGuiScreen(null);
             return;
+        }
+
+        if (Vanta.instance.moduleStorage.getT(ClickGUI.class).image.getValue()) {
+            float imgwidth = 300 * globalAnim;
+            float heightimg = 300 * globalAnim;
+            String texture = Vanta.instance.moduleStorage.getT(ClickGUI.class).mode.getValue() + ".png";
+            if (Vanta.instance.moduleStorage.getT(ClickGUI.class).mode.getValue().equals("cousin.gif")) {
+                texture = Vanta.instance.moduleStorage.getT(ClickGUI.class).mode.getValue();
+            }
+
+            if (texture.contains("longboy")) {
+                heightimg = 400 * globalAnim;
+            }
+            ImageRectangle
+                    .create(width - 175 - (imgwidth / 2), height - 210 - (heightimg / 2), imgwidth, heightimg, -1)
+                    .resource(ImageUtil.getTexture(texture))
+                    .push(event);
         }
 
         if (Vanta.instance.moduleStorage.getT(ClickGUI.class).darkenBackground.getValue()) {

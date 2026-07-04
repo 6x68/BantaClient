@@ -15,9 +15,11 @@ public class ClickGUI extends Module {
     public final BooleanSetting
             pauseGame = Setting.of("Pause singleplayer", false),
             darkenBackground = Setting.of("Dark background", true),
-            gradientBackground = Setting.of("Gradient background", true);
+            gradientBackground = Setting.of("Gradient background", true),
+            image = Setting.of("Image", false);
+    public final StringSetting mode = Setting.of("Mode", "longboy.png", "ermwhat", "silly", "cousin.gif", "longboy").hide(() -> !image.getValue());
 
-    private final StringSetting design = Setting.of("Design", "Dropdown", "Dropdown", "ImGui");
+    public final StringSetting design = Setting.of("Design", "Dropdown", "Dropdown", "ImGui");
 
     public ClickGUI() {
         super("ClickGUI", "Opens up the ClickGUI.", Category.CLIENT, Keyboard.KEY_RSHIFT);

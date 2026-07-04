@@ -9,6 +9,7 @@ import today.vanta.client.screen.ClickGUIScreen;
 import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.BooleanSetting;
 import today.vanta.util.game.events.EventListen;
+import today.vanta.util.game.player.ChatUtil;
 import today.vanta.util.game.sound.Sounds;
 
 public class ClientSounds extends Module {
@@ -25,7 +26,7 @@ public class ClientSounds extends Module {
     private void onModuleEnable(ModuleEnableEvent event) {
         if (mc.thePlayer == null) return;
         if (!toggleSounds.getValue()) return;
-        if (event.config || event.module instanceof ClickGUI) return;
+        if (event.module instanceof ClickGUI) return;
 
         Sounds.ON.play();
     }
@@ -34,14 +35,14 @@ public class ClientSounds extends Module {
     private void onModuleDisable(ModuleDisableEvent event) {
         if (mc.thePlayer == null) return;
         if (!toggleSounds.getValue()) return;
-        if (event.config || event.module instanceof ClickGUI) return;
+        if (event.module instanceof ClickGUI) return;
 
         Sounds.OFF.play();
+        ChatUtil.send(ChatUtil.Prefix.INFO, "aa");
     }
 
     @EventListen
     private void onModuleExpand(ModuleExpandedEvent event) {
-        if (mc.thePlayer == null) return;
         if (!expandSounds.getValue()) return;
         if (event.config) return;
         if (!(mc.currentScreen instanceof ClickGUIScreen)) return;

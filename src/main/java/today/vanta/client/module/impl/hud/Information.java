@@ -70,7 +70,7 @@ public class Information extends Module {
 
     @EventListen
     public void onRender2D(RenderOverlayEvent event) {
-        if (mc.getCurrentServerData().serverIP != null) {
+        if (mc.getCurrentServerData().serverIP != null && mc.getCurrentServerData() != null) {
             if (oldServer != mc.getCurrentServerData().serverIP) {
                 playTime.reset();
                 oldServer = mc.getCurrentServerData().serverIP;

@@ -47,7 +47,7 @@ public class TargetHUD extends Module {
     private boolean dragging;
     private float dragX, dragY;
 
-    private final StringSetting mode = Setting.of("Mode", "Vanta", "Classic", "Vanta", "Adjust", "ID-Card", "Aged", "Novoline", "Old Atmosphere", "Exhi");
+    private final StringSetting mode = Setting.of("Mode", "Vanta", "Classic", "Vanta", "Adjust", "ID-Card", "Aged", "Novoline", "Old Atmosphere", "Atmosphere");
     private final NumberSetting
             x = Setting.of("X position", 20, 0, 2000),
             y = Setting.of("Y position", 20, 0, 2000);
@@ -539,7 +539,7 @@ public class TargetHUD extends Module {
                 CFonts.SFPT_REGULAR_18.drawStringWithShadow(localTarget.getName(), x + 33, y + 1, Color.WHITE);
 
                 Rectangle
-                        .create(x + 33, y + space - 1, widthoutline, 5.5f)
+                        .create(x + 33, y + space - 1, widthoutline, 5f)
                         .color(DARKER_BACKGROUND)
                         .push(renderable);
 
@@ -611,10 +611,127 @@ public class TargetHUD extends Module {
                 CFonts.SFPT_REGULAR_16.drawString(winratio, x + 3, y + 34 + 6 - stringheight, Color.WHITE);
                 CFonts.SFPT_REGULAR_16.drawString(healthperStr + "%", x + width - lengthh - 4, y + 34 + 6 - stringheight, Color.WHITE);
                 break;
-            case "Exhi":
-                width = 150f;
-                height = 55f;
-                RenderUtil.rectangleBordered(x -2.5,y - 2.5,x + width + 2.5,x + 40 + 2.5,0.5,RenderUtil.getColor(60), RenderUtil.getColor(10));
+            case "Atmosphere":
+                width = 130;
+                height = 34;
+                barrrrwidth = width - 36f;
+                widthoutline = width - 34f;
+
+                athealthWidth = barrrrwidth * (localTarget.getHealth() / localTarget.getMaxHealth());
+                atghostWidth = barrrrwidth * (localTarget.getHealth() / localTarget.getMaxHealth());
+
+                if (athealthWidth != atTargetWidth) {
+                    atTargetWidth = athealthWidth;
+                    if (oldTarget != localTarget.getName()) {
+                        if (animation != null) {
+                            animation.stop();
+                        }
+                        atbarWidth = athealthWidth;
+                        can = true;
+                        oldTarget = localTarget.getName();
+                        return;
+                    }
+
+                    animation = Animation.create(
+                            atbarWidth,
+                            atTargetWidth,
+                            150,
+                            Easing.LINEAR,
+                            val -> atbarWidth = val
+                    );
+
+                    animation.start();
+                }
+                if (atghostWidth != atTargetWidth2) {
+                    atTargetWidth2 = atghostWidth;
+
+                    if (can) {
+                        if (ghostAnimation != null) {
+                            ghostAnimation.stop();
+                        }
+                        atghostBarWidth = atghostWidth;
+                        oldTarget = localTarget.getName();
+                        can = false;
+                        return;
+                    }
+
+                    ghostAnimation = Animation.create(
+                            atghostBarWidth,
+                            atTargetWidth2,
+                            450,
+                            Easing.LINEAR,
+                            val -> atghostBarWidth = val
+                    );
+
+                    ghostAnimation.start();
+                }
+
+                space = 28f;
+                length = CFonts.SFPT_REGULAR_16.getStringWidth(String.format("%.1f", mc.thePlayer.getHealth() - localTarget.getHealth()));
+
+                Rectangle
+                        .create(x, y, width, height)
+                        .color(ATBACKGROUND)
+                        .push(renderable);
+
+                RenderUtil.renderHead(renderable, (EntityPlayer) localTarget, x + 2, y + 2, 30f);
+                CFonts.SFPT_REGULAR_18.drawStringWithShadow(localTarget.getName(), x + 33, y + 1, Color.WHITE);
+
+                Rectangle
+                        .create(x + 33, y + space - 1, widthoutline, 5f)
+                        .color(DARKER_BACKGROUND)
+                        .push(renderable);
+
+                Rectangle
+                        .create(x + 34, y + space, atghostBarWidth, 3f)
+                        .color(color.darker())
+                        .push(renderable);
+
+                Rectangle
+                        .create(x + 34, y + space, atbarWidth, 3f)
+                        .color(color)
+                        .push(renderable);
+
+                itemX = x + 20 + 2;
+                itemY = y + 12.5f;
+
+
+                slot3 = ((EntityPlayer) localTarget).inventory.armorItemInSlot(3);
+                if (slot3 != null) {
+                    itemX += 10 + 1;
+                    RenderUtil.renderScaledItem(slot3, itemX, itemY, 0.8f);
+                }
+
+                slot2 = ((EntityPlayer) localTarget).inventory.armorItemInSlot(2);
+                if (slot2 != null) {
+                    itemX += 10 + 1;
+                    RenderUtil.renderScaledItem(slot2, itemX, itemY, 0.8f);
+                }
+
+                slot1 = ((EntityPlayer) localTarget).inventory.armorItemInSlot(1);
+                if (slot1 != null) {
+                    itemX += 10 + 1;
+                    RenderUtil.renderScaledItem(slot1, itemX, itemY, 0.8f);
+                }
+
+                slot0 = ((EntityPlayer) localTarget).inventory.armorItemInSlot(0);
+                if (slot0 != null) {
+                    itemX += 10 + 1;
+                    RenderUtil.renderScaledItem(slot0, itemX, itemY, 0.8f);
+                }
+
+                currentItem = ((EntityPlayer) localTarget).inventory.getCurrentItem();
+                if (currentItem != null) {
+                    itemX += 10 + 1;
+                    RenderUtil.renderScaledItem(currentItem, itemX + 1, itemY + 1, 0.8f);
+
+                }
+                String healthdif = String.format("%.1f", mc.thePlayer.getHealth() - localTarget.getHealth());
+                if (Float.valueOf(healthdif) > 0) {
+                    healthdif = "+"+healthdif;
+                }
+                length = CFonts.SFPT_REGULAR_16.getStringWidth(healthdif);
+                CFonts.SFPT_REGULAR_16.drawStringWithShadow(healthdif, x + width - (length) - 2, y + 17, Color.WHITE);
                 break;
         }
 
