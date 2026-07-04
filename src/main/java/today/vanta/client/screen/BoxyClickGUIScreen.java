@@ -1,5 +1,7 @@
 package today.vanta.client.screen;
 
+import net.minecraft.util.MathHelper;
+import org.lwjgl.input.Mouse;
 import today.vanta.Vanta;
 import today.vanta.client.event.impl.client.RenderScreenEvent;
 import today.vanta.client.module.Category;
@@ -8,6 +10,9 @@ import today.vanta.client.module.impl.client.ClickGUI;
 import today.vanta.client.module.impl.client.Theme;
 import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.BooleanSetting;
+import today.vanta.client.setting.impl.MultiStringSetting;
+import today.vanta.client.setting.impl.NumberSetting;
+import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.render.ImageUtil;
 import today.vanta.util.game.render.RenderUtil;
@@ -20,9 +25,34 @@ import today.vanta.util.game.render.shape.impl.Rectangle;
 
 import java.awt.Color;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 public class BoxyClickGUIScreen extends VantaScreen {
     private static final float SIDEBAR_WIDTH = 70;
+    private static final float SIDEBAR_HEADER_HEIGHT = 22.5f;
+    private static final float RESIZE_HANDLE_SIZE = 10;
+    private static final float MIN_WIDTH = 250;
+    private static final float MIN_HEIGHT = 190;
+
+    private static final float SETTING_INNER_PAD = 8;
+    private static final float SETTING_SPACING = 5;
+    private static final float SETTING_LABEL_HEIGHT = 10;
+    private static final float SETTING_LABEL_GAP = 2;
+
+    private static final float CHECKBOX_SIZE = 8;
+    private static final float CHECKBOX_FILL_SIZE = 4;
+
+    private static final float SLIDER_CONTROL_HEIGHT = 12;
+    private static final float SLIDER_TRACK_HEIGHT = 4;
+    private static final float SLIDER_THUMB_WIDTH = 4;
+    private static final float SLIDER_THUMB_HEIGHT = 8;
+    private static final float SLIDER_VALUE_WIDTH = 30;
+
+    private static final float DROPDOWN_HEADER_HEIGHT = 14;
+    private static final float DROPDOWN_ITEM_HEIGHT = 14;
+    private static final float MULTI_CHECK_SIZE = 6;
 
     public static final Color GRAY_20 = new Color(20, 20, 20);
     public static final Color GRAY_30 = new Color(30, 30, 30);
@@ -35,6 +65,13 @@ public class BoxyClickGUIScreen extends VantaScreen {
     private float sWidth = 250, sHeight = 190;
     private float x = -999, y = -999;
     private Category selectedCat = Category.COMBAT;
+    private float moduleScroll;
+
+    private boolean dragging, resizing;
+    private float dragOffsetX, dragOffsetY;
+
+    private NumberSetting draggingSlider;
+    private float draggingTrackX, draggingTrackWidth;
 
     @Override
     protected void initScreen() {
@@ -54,7 +91,7 @@ public class BoxyClickGUIScreen extends VantaScreen {
             if (texture.startsWith("cousin")) {
                 texture = "cousin.gif";
             } else if (texture.startsWith("longboy")) {
-                imgHeight = 400 ;
+                imgHeight = 400;
             }
 
             ImageRectangle
@@ -80,6 +117,7 @@ public class BoxyClickGUIScreen extends VantaScreen {
         }
 
         drawBox(event);
+        drawResizeHandle(event);
         RenderUtil.scissor(x, y, sWidth, sHeight, () -> {
             drawSidebar(event);
             drawCategories(event);
@@ -92,8 +130,57 @@ public class BoxyClickGUIScreen extends VantaScreen {
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         if (!RenderUtil.hovered(mouseX, mouseY, x, y, sWidth, sHeight)) return;
 
+        if (mouseButton == 0 && RenderUtil.hovered(mouseX, mouseY, x + sWidth - RESIZE_HANDLE_SIZE, y + sHeight - RESIZE_HANDLE_SIZE, RESIZE_HANDLE_SIZE, RESIZE_HANDLE_SIZE)) {
+            resizing = true;
+            return;
+        }
+
+        if (mouseButton == 0 && RenderUtil.hovered(mouseX, mouseY, x, y, SIDEBAR_WIDTH, SIDEBAR_HEADER_HEIGHT)) {
+            dragging = true;
+            dragOffsetX = mouseX - x;
+            dragOffsetY = mouseY - y;
+            return;
+        }
+
         clickCategory(mouseX, mouseY, mouseButton);
         clickModules(mouseX, mouseY, mouseButton);
+    }
+
+    @Override
+    protected void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick) {
+        if (dragging) {
+            x = mouseX - dragOffsetX;
+            y = mouseY - dragOffsetY;
+        }
+
+        if (resizing) {
+            sWidth = Math.max(MIN_WIDTH, mouseX - x);
+            sHeight = Math.max(MIN_HEIGHT, mouseY - y);
+        }
+
+        if (draggingSlider != null) {
+            updateSliderValue(draggingSlider, mouseX, draggingTrackX, draggingTrackWidth);
+        }
+    }
+
+    @Override
+    protected void mouseReleased(int mouseX, int mouseY, int state) {
+        dragging = false;
+        resizing = false;
+        draggingSlider = null;
+        draggingTrackX = 0;
+        draggingTrackWidth = 0;
+    }
+
+    @Override
+    public void handleMouseInput() throws IOException {
+        super.handleMouseInput();
+
+        int wheel = Mouse.getEventDWheel();
+        if (wheel != 0) {
+            moduleScroll += wheel / 15f;
+            moduleScroll = MathHelper.clamp_float(moduleScroll, getModuleListMinScroll(), 0);
+        }
     }
 
     private void drawBox(RenderScreenEvent event) {
@@ -106,6 +193,15 @@ public class BoxyClickGUIScreen extends VantaScreen {
                 .create(x, y, sWidth, sHeight)
                 .color(GRAY_30)
                 .push(event);
+    }
+
+    private void drawResizeHandle(RenderScreenEvent event) {
+        float gripSize = 6;
+        float gx = x + sWidth - gripSize - 2.5f;
+        float gy = y + sHeight - gripSize - 2.5f;
+
+        Rectangle.create(gx + gripSize - 4, gy + gripSize - 0.5f, 4, 0.5f).color(GRAY_60).push(event);
+        Rectangle.create(gx + gripSize - 0.5f, gy, 0.5f, gripSize).color(GRAY_60).push(event);
     }
 
     private void drawSidebar(RenderScreenEvent event) {
@@ -160,9 +256,12 @@ public class BoxyClickGUIScreen extends VantaScreen {
     }
 
     private void drawModules(RenderScreenEvent event) {
+        moduleScroll = MathHelper.clamp_float(moduleScroll, getModuleListMinScroll(), 0);
+
         float xOffset = x + SIDEBAR_WIDTH + 10;
-        float yOffset = y + 9.5f;
+        float yOffset = y + 9.5f + moduleScroll;
         float moduleWidth = sWidth - SIDEBAR_WIDTH - 10 * 2;
+
         for (Module mod : Vanta.instance.moduleStorage.getModulesByCategory(selectedCat)) {
             float moduleHeight = 18;
 
@@ -200,38 +299,16 @@ public class BoxyClickGUIScreen extends VantaScreen {
             if (mod.isExpanded()) {
                 float settX = xOffset;
                 float settY = yOffset + moduleHeight;
-
                 float settYOffset = settY + 8;
+
                 for (Setting<?> sett : mod.settings) {
                     if (sett.isHidden()) continue;
 
-                    if (sett instanceof BooleanSetting) { //checkbox
-                        BooleanSetting boolSett = (BooleanSetting) sett;
-
-                        Rectangle
-                                .create(settX + 8, settYOffset, 8, 8)
-                                .color(GRAY_20)
-                                .push(event);
-
-                        if (boolSett.getValue()) {
-                            Rectangle
-                                    .create(settX + 8, settYOffset, 8, 8)
-                                    .color(GRAY_3C)
-                                    .push(event);
-
-                            Rectangle
-                                    .create(settX + 8 + 2, settYOffset + 2, 4, 4)
-                                    .color(WHITE)
-                                    .push(event);
-                        }
-
-                        CFonts.getFont("SFPT-Regular", 12).drawString(sett.name.toUpperCase(), settX + 8 + 4.5f + 2 + 5, settYOffset + 0.5f, TEXT_MUTED);
-
-                        settYOffset += 15;
-                        appendHeight += 15;
-                    }
+                    settYOffset += drawSetting(sett, settX, settYOffset, moduleWidth, event);
+                    settYOffset += SETTING_SPACING;
                 }
-                appendHeight += 8.5f;
+
+                appendHeight = getModuleAppendHeight(mod);
 
                 Rectangle
                         .create(settX, settY + appendHeight, moduleWidth, 0.5)
@@ -253,11 +330,277 @@ public class BoxyClickGUIScreen extends VantaScreen {
         }
     }
 
+    private float drawSetting(Setting<?> setting, float x, float y, float width, RenderScreenEvent event) {
+        float height = getSettingHeight(setting);
+        if (height <= 0) return 0;
+
+        if (setting instanceof BooleanSetting) {
+            drawBooleanSetting((BooleanSetting) setting, x, y, width, event);
+        } else if (setting instanceof NumberSetting) {
+            drawNumberSetting((NumberSetting) setting, x, y, width, event);
+        } else if (setting instanceof StringSetting) {
+            drawStringSetting((StringSetting) setting, x, y, width, event);
+        } else if (setting instanceof MultiStringSetting) {
+            drawMultiStringSetting((MultiStringSetting) setting, x, y, width, event);
+        }
+
+        return height;
+    }
+
+    private void drawBooleanSetting(BooleanSetting setting, float x, float y, float width, RenderScreenEvent event) {
+        float controlX = x + SETTING_INNER_PAD;
+        float boxY = y + (15 - CHECKBOX_SIZE) / 2f;
+
+        boolean boxHover = RenderUtil.hovered(event.mouseX, event.mouseY, controlX, boxY, CHECKBOX_SIZE, CHECKBOX_SIZE);
+        Color outline = (boxHover || setting.getValue()) ? GRAY_60 : GRAY_3C;
+
+        Rectangle
+                .create(controlX, boxY, CHECKBOX_SIZE, CHECKBOX_SIZE)
+                .color(GRAY_20)
+                .push(event);
+        drawOutline(controlX, boxY, CHECKBOX_SIZE, CHECKBOX_SIZE, outline, event);
+
+        if (setting.getValue()) {
+            Rectangle
+                    .create(controlX + 0.5f, boxY + 0.5f, CHECKBOX_SIZE - 1, CHECKBOX_SIZE - 1)
+                    .color(GRAY_3C)
+                    .push(event);
+
+            Rectangle
+                    .create(controlX + (CHECKBOX_SIZE - CHECKBOX_FILL_SIZE) / 2f, boxY + (CHECKBOX_SIZE - CHECKBOX_FILL_SIZE) / 2f, CHECKBOX_FILL_SIZE, CHECKBOX_FILL_SIZE)
+                    .color(WHITE)
+                    .push(event);
+        }
+
+        CFonts.getFont("SFPT-Regular", 12).drawString(setting.name.toUpperCase(), controlX + CHECKBOX_SIZE + 5, boxY - 0.5f, TEXT_MUTED);
+    }
+
+    private void drawNumberSetting(NumberSetting setting, float x, float y, float width, RenderScreenEvent event) {
+        float controlX = x + SETTING_INNER_PAD;
+        float controlWidth = width - SETTING_INNER_PAD * 2;
+        float controlY = y + SETTING_LABEL_HEIGHT + SETTING_LABEL_GAP;
+
+        double min = setting.min.doubleValue();
+        double max = setting.max.doubleValue();
+        double value = setting.getValue().doubleValue();
+        double pct = (value - min) / (max - min);
+
+        float trackX = controlX;
+        float trackWidth = controlWidth - SLIDER_VALUE_WIDTH;
+        float trackY = controlY + (SLIDER_CONTROL_HEIGHT - SLIDER_TRACK_HEIGHT) / 2f;
+        float thumbX = trackX + (float) (pct * trackWidth) - SLIDER_THUMB_WIDTH / 2f;
+        float thumbY = controlY + (SLIDER_CONTROL_HEIGHT - SLIDER_THUMB_HEIGHT) / 2f;
+
+        boolean trackHover = RenderUtil.hovered(event.mouseX, event.mouseY, trackX, controlY, trackWidth, SLIDER_CONTROL_HEIGHT);
+        boolean thumbHover = RenderUtil.hovered(event.mouseX, event.mouseY, thumbX, controlY, SLIDER_THUMB_WIDTH, SLIDER_CONTROL_HEIGHT);
+        Color thumbColor = (trackHover || thumbHover) ? WHITE : GRAY_60;
+
+        Rectangle
+                .create(trackX, trackY, trackWidth, SLIDER_TRACK_HEIGHT)
+                .color(GRAY_20)
+                .push(event);
+        drawOutline(trackX, trackY, trackWidth, SLIDER_TRACK_HEIGHT, GRAY_3C, event);
+
+        Rectangle
+                .create(thumbX, thumbY, SLIDER_THUMB_WIDTH, SLIDER_THUMB_HEIGHT)
+                .color(thumbColor)
+                .push(event);
+
+        CFonts.getFont("SFPT-Regular", 12).drawString(setting.name.toUpperCase(), controlX, y + 1, TEXT_MUTED);
+        CFonts.getFont("SFPT-Regular", 12).drawString(formatNumber(setting), trackX + trackWidth + 4, controlY + 2, TEXT_MAIN);
+    }
+
+    private void drawStringSetting(StringSetting setting, float x, float y, float width, RenderScreenEvent event) {
+        float controlX = x + SETTING_INNER_PAD;
+        float controlWidth = width - SETTING_INNER_PAD * 2;
+        float headerY = y + SETTING_LABEL_HEIGHT + SETTING_LABEL_GAP;
+
+        boolean headerHover = RenderUtil.hovered(event.mouseX, event.mouseY, controlX, headerY, controlWidth, DROPDOWN_HEADER_HEIGHT);
+        Color headerOutline = headerHover ? GRAY_60 : GRAY_3C;
+
+        Rectangle
+                .create(controlX, headerY, controlWidth, DROPDOWN_HEADER_HEIGHT)
+                .color(GRAY_20)
+                .push(event);
+        drawOutline(controlX, headerY, controlWidth, DROPDOWN_HEADER_HEIGHT, headerOutline, event);
+
+        CFonts.getFont("SFPT-Regular", 12).drawString(setting.name.toUpperCase(), controlX, y + 1, TEXT_MUTED);
+        CFonts.getFont("SFPT-Regular", 12).drawString(setting.getValue(), controlX + 4, headerY + 3, TEXT_MAIN);
+        CFonts.ICONS_12.drawString(Icons.CARET_DOWN + "", controlX + controlWidth - 10, headerY + 3, TEXT_MAIN);
+
+        if (setting.expanded) {
+            float listY = headerY + DROPDOWN_HEADER_HEIGHT;
+            float listHeight = setting.allValues.length * DROPDOWN_ITEM_HEIGHT;
+
+            Rectangle
+                    .create(controlX, listY, controlWidth, listHeight)
+                    .color(GRAY_20)
+                    .push(event);
+            drawOutline(controlX, listY, controlWidth, listHeight, GRAY_3C, event);
+
+            for (int i = 0; i < setting.allValues.length; i++) {
+                float itemY = listY + i * DROPDOWN_ITEM_HEIGHT;
+                String value = setting.allValues[i];
+                boolean selected = value.equals(setting.getValue());
+                boolean itemHover = RenderUtil.hovered(event.mouseX, event.mouseY, controlX, itemY, controlWidth, DROPDOWN_ITEM_HEIGHT);
+
+                if (itemHover) {
+                    Rectangle
+                            .create(controlX + 0.5f, itemY + 0.5f, controlWidth - 1, DROPDOWN_ITEM_HEIGHT - 1)
+                            .color(GRAY_3C)
+                            .push(event);
+                } else if (selected) {
+                    Rectangle
+                            .create(controlX + 0.5f, itemY + 0.5f, controlWidth - 1, DROPDOWN_ITEM_HEIGHT - 1)
+                            .color(GRAY_30)
+                            .push(event);
+                }
+
+                if (selected) {
+                    Rectangle
+                            .create(controlX, itemY, 1, DROPDOWN_ITEM_HEIGHT)
+                            .color(GRAY_60)
+                            .push(event);
+                }
+
+                CFonts.getFont("SFPT-Regular", 12).drawString(value, controlX + 4, itemY + 3, selected || itemHover ? WHITE : TEXT_MAIN);
+            }
+        }
+    }
+
+    private void drawMultiStringSetting(MultiStringSetting setting, float x, float y, float width, RenderScreenEvent event) {
+        float controlX = x + SETTING_INNER_PAD;
+        float controlWidth = width - SETTING_INNER_PAD * 2;
+        float headerY = y + SETTING_LABEL_HEIGHT + SETTING_LABEL_GAP;
+
+        boolean headerHover = RenderUtil.hovered(event.mouseX, event.mouseY, controlX, headerY, controlWidth, DROPDOWN_HEADER_HEIGHT);
+        Color headerOutline = headerHover ? GRAY_60 : GRAY_3C;
+
+        Rectangle
+                .create(controlX, headerY, controlWidth, DROPDOWN_HEADER_HEIGHT)
+                .color(GRAY_20)
+                .push(event);
+        drawOutline(controlX, headerY, controlWidth, DROPDOWN_HEADER_HEIGHT, headerOutline, event);
+
+        int selectedCount = setting.getValue().length;
+        String headerText = selectedCount == 0 ? "None Selected" : selectedCount + " Selected";
+
+        CFonts.getFont("SFPT-Regular", 12).drawString(setting.name.toUpperCase(), controlX, y + 1, TEXT_MUTED);
+        CFonts.getFont("SFPT-Regular", 12).drawString(headerText, controlX + 4, headerY + 3, TEXT_MAIN);
+        CFonts.ICONS_12.drawString(Icons.CARET_DOWN + "", controlX + controlWidth - 10, headerY + 3, TEXT_MAIN);
+
+        if (setting.expanded) {
+            float listY = headerY + DROPDOWN_HEADER_HEIGHT;
+            float listHeight = setting.allValues.length * DROPDOWN_ITEM_HEIGHT;
+
+            Rectangle
+                    .create(controlX, listY, controlWidth, listHeight)
+                    .color(GRAY_20)
+                    .push(event);
+            drawOutline(controlX, listY, controlWidth, listHeight, GRAY_3C, event);
+
+            for (int i = 0; i < setting.allValues.length; i++) {
+                float itemY = listY + i * DROPDOWN_ITEM_HEIGHT;
+                String value = setting.allValues[i];
+                boolean selected = isMultiSelected(setting, value);
+                boolean itemHover = RenderUtil.hovered(event.mouseX, event.mouseY, controlX, itemY, controlWidth, DROPDOWN_ITEM_HEIGHT);
+
+                if (itemHover) {
+                    Rectangle
+                            .create(controlX + 0.5f, itemY + 0.5f, controlWidth - 1, DROPDOWN_ITEM_HEIGHT - 1)
+                            .color(GRAY_3C)
+                            .push(event);
+                } else if (selected) {
+                    Rectangle
+                            .create(controlX + 0.5f, itemY + 0.5f, controlWidth - 1, DROPDOWN_ITEM_HEIGHT - 1)
+                            .color(GRAY_30)
+                            .push(event);
+                }
+
+                if (selected) {
+                    Rectangle
+                            .create(controlX, itemY, 1, DROPDOWN_ITEM_HEIGHT)
+                            .color(GRAY_60)
+                            .push(event);
+                }
+
+                float checkX = controlX + 4;
+                float checkY = itemY + (DROPDOWN_ITEM_HEIGHT - MULTI_CHECK_SIZE) / 2f;
+
+                Rectangle
+                        .create(checkX, checkY, MULTI_CHECK_SIZE, MULTI_CHECK_SIZE)
+                        .color(GRAY_20)
+                        .push(event);
+                drawOutline(checkX, checkY, MULTI_CHECK_SIZE, MULTI_CHECK_SIZE, GRAY_3C, event);
+
+                if (selected) {
+                    Rectangle
+                            .create(checkX + 0.5f, checkY + 0.5f, MULTI_CHECK_SIZE - 1, MULTI_CHECK_SIZE - 1)
+                            .color(GRAY_60)
+                            .push(event);
+                }
+
+                CFonts.getFont("SFPT-Regular", 12).drawString(value, checkX + MULTI_CHECK_SIZE + 4, itemY + 3, selected || itemHover ? WHITE : TEXT_MAIN);
+            }
+        }
+    }
+
+    private float getSettingHeight(Setting<?> setting) {
+        if (setting.isHidden()) return 0;
+
+        if (setting instanceof BooleanSetting) {
+            return 15;
+        } else if (setting instanceof NumberSetting) {
+            return SETTING_LABEL_HEIGHT + SETTING_LABEL_GAP + SLIDER_CONTROL_HEIGHT;
+        } else if (setting instanceof StringSetting) {
+            StringSetting s = (StringSetting) setting;
+            float h = SETTING_LABEL_HEIGHT + SETTING_LABEL_GAP + DROPDOWN_HEADER_HEIGHT;
+            if (s.expanded) h += s.allValues.length * DROPDOWN_ITEM_HEIGHT;
+            return h;
+        } else if (setting instanceof MultiStringSetting) {
+            MultiStringSetting s = (MultiStringSetting) setting;
+            float h = SETTING_LABEL_HEIGHT + SETTING_LABEL_GAP + DROPDOWN_HEADER_HEIGHT;
+            if (s.expanded) h += s.allValues.length * DROPDOWN_ITEM_HEIGHT;
+            return h;
+        }
+
+        return 0;
+    }
+
+    private float getModuleAppendHeight(Module mod) {
+        if (!mod.isExpanded()) return 0;
+
+        float height = 16;
+        int count = 0;
+
+        for (Setting<?> sett : mod.settings) {
+            if (sett.isHidden()) continue;
+            height += getSettingHeight(sett);
+            count++;
+        }
+
+        if (count > 0) height += (count - 1) * SETTING_SPACING;
+        return height;
+    }
+
+    private float getModuleListMinScroll() {
+        float contentHeight = 0;
+        for (Module mod : Vanta.instance.moduleStorage.getModulesByCategory(selectedCat)) {
+            contentHeight += 18 + 10 + getModuleAppendHeight(mod);
+        }
+
+        float viewHeight = sHeight - 9.5f;
+        float hidden = contentHeight - viewHeight;
+        return hidden > 0 ? -hidden : 0;
+    }
+
     private void clickCategory(int mouseX, int mouseY, int mouseButton) {
         float yOffset = y + 7.5f + 7.5f + 7.5f;
         for (Category cat : Category.values()) {
             if (RenderUtil.hovered(mouseX, mouseY, x, yOffset, SIDEBAR_WIDTH, 20) && mouseButton == 0) {
+                closeAllDropdowns();
                 selectedCat = cat;
+                moduleScroll = 0;
             }
             yOffset += 20;
         }
@@ -265,24 +608,201 @@ public class BoxyClickGUIScreen extends VantaScreen {
 
     private void clickModules(int mouseX, int mouseY, int mouseButton) {
         float xOffset = x + SIDEBAR_WIDTH + 10;
-        float yOffset = y + 9.5f;
+        float yOffset = y + 9.5f + moduleScroll;
         float moduleWidth = sWidth - SIDEBAR_WIDTH - 10 * 2;
+        boolean hitDropdown = false;
+
         for (Module mod : Vanta.instance.moduleStorage.getModulesByCategory(selectedCat)) {
             float moduleHeight = 18;
-            boolean hover = RenderUtil.hovered(mouseX, mouseY, xOffset, yOffset, moduleWidth, moduleHeight);
+            boolean headerHover = RenderUtil.hovered(mouseX, mouseY, xOffset, yOffset, moduleWidth, moduleHeight);
 
-            if (hover && mouseButton == 0) {
+            if (headerHover && mouseButton == 0) {
                 mod.setEnabled(!mod.isEnabled());
-            } else if (hover && mouseButton == 1) {
+            } else if (headerHover && mouseButton == 1) {
                 mod.setExpanded(!mod.isExpanded());
+                closeAllDropdowns();
             }
 
-            float appendHeight = 0;
             if (mod.isExpanded()) {
-                appendHeight += 30;
+                float settX = xOffset;
+                float settYOffset = yOffset + moduleHeight + 8;
+
+                for (Setting<?> sett : mod.settings) {
+                    if (sett.isHidden()) continue;
+
+                    if (clickSetting(sett, settX, settYOffset, moduleWidth, mouseX, mouseY, mouseButton)) {
+                        if (sett instanceof StringSetting || sett instanceof MultiStringSetting) {
+                            hitDropdown = true;
+                        }
+                    }
+
+                    settYOffset += getSettingHeight(sett) + SETTING_SPACING;
+                }
             }
 
-            yOffset += moduleHeight + 10 + appendHeight;
+            yOffset += moduleHeight + 10 + getModuleAppendHeight(mod);
+        }
+
+        if (!hitDropdown && mouseButton == 0) {
+            closeAllDropdowns();
+        }
+    }
+
+    private boolean clickSetting(Setting<?> setting, float x, float y, float width, float mouseX, float mouseY, int mouseButton) {
+        float height = getSettingHeight(setting);
+        if (height <= 0) return false;
+        if (!RenderUtil.hovered(mouseX, mouseY, x, y, width, height)) return false;
+
+        float controlX = x + SETTING_INNER_PAD;
+        float controlWidth = width - SETTING_INNER_PAD * 2;
+
+        if (setting instanceof BooleanSetting && mouseButton == 0) {
+            BooleanSetting s = (BooleanSetting) setting;
+            s.setValue(!s.getValue());
+            return true;
+        }
+
+        if (setting instanceof NumberSetting && mouseButton == 0) {
+            NumberSetting s = (NumberSetting) setting;
+            float controlY = y + SETTING_LABEL_HEIGHT + SETTING_LABEL_GAP;
+            float trackX = controlX;
+            float trackWidth = controlWidth - SLIDER_VALUE_WIDTH;
+
+            if (RenderUtil.hovered(mouseX, mouseY, trackX, controlY, trackWidth, SLIDER_CONTROL_HEIGHT)) {
+                draggingSlider = s;
+                draggingTrackX = trackX;
+                draggingTrackWidth = trackWidth;
+                updateSliderValue(s, mouseX, trackX, trackWidth);
+            }
+            return true;
+        }
+
+        if (setting instanceof StringSetting) {
+            StringSetting s = (StringSetting) setting;
+            float headerY = y + SETTING_LABEL_HEIGHT + SETTING_LABEL_GAP;
+            float listY = headerY + DROPDOWN_HEADER_HEIGHT;
+
+            if (s.expanded && mouseButton == 0) {
+                for (int i = 0; i < s.allValues.length; i++) {
+                    if (RenderUtil.hovered(mouseX, mouseY, controlX, listY + i * DROPDOWN_ITEM_HEIGHT, controlWidth, DROPDOWN_ITEM_HEIGHT)) {
+                        s.setValue(s.allValues[i]);
+                        s.expanded = false;
+                        return true;
+                    }
+                }
+            }
+
+            if (RenderUtil.hovered(mouseX, mouseY, controlX, headerY, controlWidth, DROPDOWN_HEADER_HEIGHT) && mouseButton == 0) {
+                closeAllDropdownsExcept(s);
+                s.expanded = !s.expanded;
+                return true;
+            }
+            return true;
+        }
+
+        if (setting instanceof MultiStringSetting) {
+            MultiStringSetting s = (MultiStringSetting) setting;
+            float headerY = y + SETTING_LABEL_HEIGHT + SETTING_LABEL_GAP;
+            float listY = headerY + DROPDOWN_HEADER_HEIGHT;
+
+            if (s.expanded && mouseButton == 0) {
+                for (int i = 0; i < s.allValues.length; i++) {
+                    if (RenderUtil.hovered(mouseX, mouseY, controlX, listY + i * DROPDOWN_ITEM_HEIGHT, controlWidth, DROPDOWN_ITEM_HEIGHT)) {
+                        toggleMultiValue(s, s.allValues[i]);
+                        return true;
+                    }
+                }
+            }
+
+            if (RenderUtil.hovered(mouseX, mouseY, controlX, headerY, controlWidth, DROPDOWN_HEADER_HEIGHT) && mouseButton == 0) {
+                closeAllDropdownsExcept(s);
+                s.expanded = !s.expanded;
+                return true;
+            }
+            return true;
+        }
+
+        return false;
+    }
+
+    private void drawOutline(float x, float y, float width, float height, Color color, RenderScreenEvent event) {
+        Rectangle.create(x, y, width, 0.5f).color(color).push(event);
+        Rectangle.create(x, y + height - 0.5f, width, 0.5f).color(color).push(event);
+        Rectangle.create(x, y + 0.5f, 0.5f, height - 1).color(color).push(event);
+        Rectangle.create(x + width - 0.5f, y + 0.5f, 0.5f, height - 1).color(color).push(event);
+    }
+
+    private void updateSliderValue(NumberSetting setting, float mouseX, float trackX, float trackWidth) {
+        double min = setting.min.doubleValue();
+        double max = setting.max.doubleValue();
+        double pct = MathHelper.clamp_double((mouseX - trackX) / trackWidth, 0, 1);
+        double raw = min + pct * (max - min);
+
+        double value;
+        if (setting.places <= 0) {
+            value = Math.round(raw);
+        } else {
+            double factor = Math.pow(10, setting.places);
+            value = Math.round(raw * factor) / factor;
+        }
+
+        value = MathHelper.clamp_double(value, min, max);
+        setting.setValue(value);
+    }
+
+    private String formatNumber(NumberSetting setting) {
+        double value = setting.getValue().doubleValue();
+        if (setting.places <= 0) {
+            return (int) Math.round(value) + setting.suffix;
+        }
+        return String.format(Locale.US, "%." + setting.places + "f%s", value, setting.suffix);
+    }
+
+    private boolean isMultiSelected(MultiStringSetting setting, String value) {
+        for (String s : setting.getValue()) {
+            if (s.equals(value)) return true;
+        }
+        return false;
+    }
+
+    private void toggleMultiValue(MultiStringSetting setting, String value) {
+        List<String> selected = new ArrayList<>();
+        for (String val : setting.allValues) {
+            if (isMultiSelected(setting, val)) selected.add(val);
+        }
+
+        if (selected.contains(value)) {
+            selected.remove(value);
+        } else {
+            selected.add(value);
+        }
+
+        setting.setValue(selected.toArray(new String[0]));
+    }
+
+    private void closeAllDropdowns() {
+        for (Module mod : Vanta.instance.moduleStorage.list) {
+            for (Setting<?> sett : mod.settings) {
+                if (sett instanceof StringSetting) {
+                    ((StringSetting) sett).expanded = false;
+                } else if (sett instanceof MultiStringSetting) {
+                    ((MultiStringSetting) sett).expanded = false;
+                }
+            }
+        }
+    }
+
+    private void closeAllDropdownsExcept(Setting<?> current) {
+        for (Module mod : Vanta.instance.moduleStorage.list) {
+            for (Setting<?> sett : mod.settings) {
+                if (sett == current) continue;
+
+                if (sett instanceof StringSetting) {
+                    ((StringSetting) sett).expanded = false;
+                } else if (sett instanceof MultiStringSetting) {
+                    ((MultiStringSetting) sett).expanded = false;
+                }
+            }
         }
     }
 }
