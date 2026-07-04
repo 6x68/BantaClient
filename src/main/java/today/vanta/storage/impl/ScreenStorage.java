@@ -12,9 +12,10 @@ public class ScreenStorage extends Storage<GuiScreen> implements IMinecraft {
         super.subscribe();
 
         list.add(new MainMenuScreen());
+        list.add(new AltLoginScreen());
         list.add(new ClickGUIScreen());
         list.add(new ImGuiClickGUIScreen());
-        list.add(new AltLoginScreen());
+        list.add(new BoxyClickGUIScreen());
     }
 
     public void stop() {
