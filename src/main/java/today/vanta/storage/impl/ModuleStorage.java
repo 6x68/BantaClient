@@ -81,6 +81,7 @@ public class ModuleStorage extends Storage<Module> {
         list.add(new Crosshair());
         list.add(new TargetList());
         list.add(new Information());
+        list.add(new KillStats());
 
         this.context = null;
     }

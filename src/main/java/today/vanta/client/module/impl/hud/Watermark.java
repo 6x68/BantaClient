@@ -94,7 +94,7 @@ public class Watermark extends Module {
                 break;
             case "Fanta":
                 ImageRectangle
-                        .create(2, 2 , 100, 100, -1)
+                        .create(-25, 2 , 100, 100, -1)
                         .resource(ImageUtil.getTexture("fanta.png"))
                         .push(event);
                 break;
