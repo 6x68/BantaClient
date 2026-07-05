@@ -24,7 +24,7 @@ public class AutoPlay extends Module {
     @EventListen
     private void onChat(PrintChatMessage event) {
         if (event.message.contains("§6§lQueueing next game in 15 seconds (or click Next Game to queue immediately)...")) {
-            mc.thePlayer.addChatMessage(new ChatComponentText("/server skywars"));
+            mc.thePlayer.sendChatMessage("/server skywars");
         }
     }
 }

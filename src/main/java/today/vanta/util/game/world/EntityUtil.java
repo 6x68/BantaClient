@@ -110,6 +110,19 @@ public class EntityUtil implements IMinecraft {
         return validType;
     }
 
+    public static boolean isValidforKill(EntityLivingBase entity, boolean raytrace, float searchRange) {
+        if (entity == mc.thePlayer ||
+                entity.getName().isEmpty() ||
+                entity.isInvisible() ||
+                (raytrace && !mc.thePlayer.canEntityBeSeen(entity)) ||
+                TargetProcessor.getInstance().friends.contains(entity.getDisplayName().getUnformattedText()) ||
+                TargetProcessor.getInstance().bots.contains(entity.getDisplayName().getUnformattedText()) ||
+                entity.getDistanceToEntity(mc.thePlayer) > searchRange) {
+            return false;
+        }
+        return true;
+    }
+
     public static BufferedImage downloadSkinImage(String uuid) {
         try {
             String skinUrl = "https://crafatar.com/skins/" + uuid;

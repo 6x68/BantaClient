@@ -152,7 +152,6 @@ public class Speed extends Module {
 
                     if (offGroundTicks == 2 && mc.thePlayer.isPotionActive(Potion.moveSpeed)) {
                         MovementUtil.strafe(0.48f);
-                        ChatUtil.send(ChatUtil.Prefix.INFO, "yes" + Math.random());
                     }
                     if (offGroundTicks == 2 && !mc.thePlayer.isPotionActive(Potion.moveSpeed)) {
                         MovementUtil.strafe(0.33f);

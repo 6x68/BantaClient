@@ -597,7 +597,8 @@ public class TargetHUD extends Module {
                 float healthper = (localTarget.getHealth() / localTarget.getMaxHealth()) * 100;
                 String healthperStr = String.format("%.1f", healthper);
                 float lengthh = CFonts.SFPT_REGULAR_16.getStringWidth(healthperStr + "%");
-                float ratio = Float.valueOf(String.format("%.1f", mc.thePlayer.getHealth() - localTarget.getHealth()));
+                String ratiostr = String.format("%.1f", mc.thePlayer.getHealth() - localTarget.getHealth());
+                float ratio = Float.parseFloat(ratiostr);
                 if (ratio > 0 && ratio != 0) {
                     winratio = EnumChatFormatting.GRAY+"Winning"+ EnumChatFormatting.DARK_GRAY + " ("+ "+"+ratio+")";
                 }
@@ -727,7 +728,7 @@ public class TargetHUD extends Module {
 
                 }
                 String healthdif = String.format("%.1f", mc.thePlayer.getHealth() - localTarget.getHealth());
-                if (Float.valueOf(healthdif) > 0) {
+                if (Float.parseFloat(healthdif) > 0) {
                     healthdif = "+"+healthdif;
                 }
                 length = CFonts.SFPT_REGULAR_16.getStringWidth(healthdif);

@@ -38,7 +38,6 @@ public class ClientSounds extends Module {
         if (event.module instanceof ClickGUI) return;
 
         Sounds.OFF.play();
-        ChatUtil.send(ChatUtil.Prefix.INFO, "aa");
     }
 
     @EventListen

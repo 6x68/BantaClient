@@ -23,7 +23,7 @@ import java.util.Calendar;
 import java.util.Formatter;
 
 public class Watermark extends Module {
-    private final StringSetting style = Setting.of("Style", "Vanta", "Vanta", "Jello", "Char", "Exhi", "Adjust" , "Vestige", "Fanta");
+    private final StringSetting style = Setting.of("Style", "Vanta", "Vanta", "Jello", "Char", "Exhi", "Adjust" , "Vestige", "Fanta", "");
     private final BooleanSetting mcfont = Setting.of("Vanilla font", true).hide(() -> !style.getValue().equals("Exhi"));
     private static final Color BACKGROUND = new Color(20, 20, 20, 190);
 
