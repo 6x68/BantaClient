@@ -1,5 +1,6 @@
 package today.vanta.client.module.impl.hud;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiChat;
 import org.lwjgl.input.Mouse;
@@ -89,8 +90,8 @@ public class Information extends Module {
                 mc.exhiFontRendererObj.drawString("BPS: " + MovementUtil.getBPS(), 2, ydraw + 10, Color.WHITE,true);
                 break;
             case "Window":
-                WIDTH = 140;
-                HEIGHT = 60;
+                WIDTH = 145;
+                HEIGHT = 63;
 
                 Rectangle
                         .create(x.getValue().floatValue(),y.getValue().floatValue(),WIDTH,12)
@@ -102,11 +103,12 @@ public class Information extends Module {
                         .color(BACKGROUND)
                         .push(event);
 
-                RenderUtil.renderHead(event,mc.thePlayer,x.getValue().floatValue() + 2,y.getValue().floatValue() + 14,44);
-                CFonts.SFPT_REGULAR_18.drawStringWithShadow(mc.thePlayer.getName(), x.getValue().floatValue() + 48, y.getValue().floatValue() + 14, Color.WHITE);
-                CFonts.SFPT_REGULAR_18.drawStringWithShadow("BPS: "+ MovementUtil.getBPS(), x.getValue().floatValue() + 48, y.getValue().floatValue() + 24, Color.WHITE);
-                CFonts.SFPT_REGULAR_18.drawStringWithShadow("Ping: "+ PlayerUtil.getPing(mc.thePlayer), x.getValue().floatValue() + 48, y.getValue().floatValue() + 34, Color.WHITE);
-                CFonts.SFPT_REGULAR_18.drawStringWithShadow("Session: " + MathUtil.formatDuration(playTime.getElapsedTime()), x.getValue().floatValue() + 48, y.getValue().floatValue() + 44, Color.WHITE);
+                RenderUtil.renderHead(event,mc.thePlayer,x.getValue().floatValue() + 2,y.getValue().floatValue() + 14,47);
+                CFonts.SFPT_REGULAR_18.drawStringWithShadow(mc.thePlayer.getName(), x.getValue().floatValue() + 51, y.getValue().floatValue() + 11, Color.WHITE);
+                CFonts.SFPT_REGULAR_18.drawStringWithShadow("FPS: "+ Minecraft.getDebugFPS(), x.getValue().floatValue() + 51, y.getValue().floatValue() + 21, Color.WHITE);
+                CFonts.SFPT_REGULAR_18.drawStringWithShadow("BPS: "+ MovementUtil.getBPS(), x.getValue().floatValue() + 51, y.getValue().floatValue() + 31, Color.WHITE);
+                CFonts.SFPT_REGULAR_18.drawStringWithShadow("Ping: "+ PlayerUtil.getPing(mc.thePlayer), x.getValue().floatValue() + 51, y.getValue().floatValue() + 41, Color.WHITE);
+                CFonts.SFPT_REGULAR_18.drawStringWithShadow("Session: " + MathUtil.formatDuration(playTime.getElapsedTime()), x.getValue().floatValue() + 51, y.getValue().floatValue() + 51, Color.WHITE);
 
                 break;
 
