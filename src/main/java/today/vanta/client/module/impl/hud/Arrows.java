@@ -1,0 +1,67 @@
+package today.vanta.client.module.impl.hud;
+
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.MathHelper;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL20;
+import today.vanta.Vanta;
+import today.vanta.client.event.impl.client.RenderOverlayEvent;
+import today.vanta.client.event.impl.game.render.RenderEvent;
+import today.vanta.client.module.Category;
+import today.vanta.client.module.Module;
+import today.vanta.client.module.impl.combat.KillAura;
+import today.vanta.util.game.events.EventListen;
+import today.vanta.util.game.player.ChatUtil;
+import today.vanta.util.game.render.RenderUtil;
+import today.vanta.util.game.render.shape.impl.Rectangle;
+import today.vanta.util.game.render.shape.impl.Triangle;
+import today.vanta.util.game.world.EntityUtil;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Arrows extends Module {
+    EntityPlayer entity;
+    List<EntityPlayer> list = new ArrayList<>();
+
+    public Arrows() {
+        super("Arrows", "Triangles pointing to players.", Category.HUD);
+    }
+
+    @EventListen
+    public void onRender2D(RenderOverlayEvent event) {
+        list.clear();
+        mc.theWorld.getLoadedEntityList().stream()
+                .filter(entity -> entity instanceof EntityPlayer && entity != mc.thePlayer && !entity.isDead)
+                .map(entity -> (EntityPlayer) entity)
+                .sorted(EntityUtil.getComparatorForSorting("Range"))
+                .forEachOrdered(list::add);
+        entity = list.isEmpty() ? null : list.get(0);
+        if (entity != null) {
+            if (mc.gameSettings.thirdPersonView != 0) return;
+            // yes this is vibecoded, I couldn't figure it out :sob:
+            float centerX = event.scaledResolution.getScaledWidth() / 2f;
+            float centerY = event.scaledResolution.getScaledHeight() / 2f;
+            float radius = 60f;
+
+            double dx = entity.posX - mc.thePlayer.posX;
+            double dz = entity.posZ - mc.thePlayer.posZ;
+            double angleToEntity = Math.toDegrees(Math.atan2(dz, dx)) - 90.0;
+            double relativeYaw = MathHelper.wrapAngleTo180_double(angleToEntity - mc.thePlayer.rotationYaw);
+
+
+            double rad = Math.toRadians(relativeYaw - 90);
+            float posX = centerX + (float) (radius * Math.cos(rad));
+            float posY = centerY + (float) (radius * Math.sin(rad));
+            float width = 20;
+            float height = 15;
+            Triangle.create(posX - width / 2, posY - width / 2, width, height)
+                    .color(Color.white)
+                    .rotate((float) relativeYaw) // adjust +90/-90 offset until the tip points the right way
+                    .push(event);
+        }
+
+    }
+}

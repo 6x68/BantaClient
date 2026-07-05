@@ -10,8 +10,11 @@ import today.vanta.client.module.impl.combat.KillAura;
 import today.vanta.client.processor.impl.TargetProcessor;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.player.ChatUtil;
+import today.vanta.util.game.render.RenderUtil;
+import today.vanta.util.game.render.font.CFonts;
 import today.vanta.util.game.world.EntityUtil;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,16 +39,38 @@ public class KillStats extends Module {
                 .forEachOrdered(list::add);
 
         target = list.isEmpty() ? null : list.get(0);
-        if (killaura.isEnabled() && target != null) {
-            if (target.isDead && !target.getName().equals(oldTarget)) {
-                oldTarget = target.getName();
-                kills++;
-                ChatUtil.send(ChatUtil.Prefix.INFO, String.valueOf(kills));
-                list.remove(0);
+        if (!list.isEmpty()) {
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i).isDead) {
+                    if (list.get(i).getLastAttacker() == null) return;
+                    ChatUtil.send(ChatUtil.Prefix.INFO, list.get(i).getName() + " Killer: "+ list.get(i).getLastAttacker().getName());
+                    if (list.get(i).getLastAttacker() == mc.thePlayer) {
+                        kills++;
+                        list.remove(i);
+                    }
+                }
             }
         }
-        if (target == null) {
-            oldTarget = "";
+        if (mc.thePlayer == null || mc.theWorld == null) {
+            kills = 0;
         }
+//        if (target != null && target.getAttackingEntity() != null) {
+//            ChatUtil.send(ChatUtil.Prefix.INFO, target.getAttackingEntity().getName());
+//            target.getl
+//        }
+//        if (killaura.isEnabled() && target != null) {
+//            if (target.isDead && !target.getName().equals(oldTarget)) {
+//                oldTarget = target.getName();
+//                kills++;
+//                ChatUtil.send(ChatUtil.Prefix.INFO, String.valueOf(kills));
+//                list.remove(0);
+//            }
+//        }
+//        if (target == null) {
+//            oldTarget = "";
+//        }
+
+        RenderUtil.drawWindowRectangle(event, "Kill Stats", 90,90,50,25);
+        CFonts.SFPT_REGULAR_16.drawStringWithShadow(String.valueOf(kills), 91,102, Color.WHITE);
     }
 }
