@@ -70,22 +70,6 @@ public class ClickGUIScreen extends VantaScreen {
             return;
         }
 
-        if (Vanta.instance.moduleStorage.getT(ClickGUI.class).image.getValue()) {
-            float imgWidth = 300 * globalAnim;
-            float imgHeight = 300 * globalAnim;
-
-            String texture = Vanta.instance.moduleStorage.getT(ClickGUI.class).mascot.getValue() + ".png";
-            if (texture.startsWith("cousin")) {
-                texture = "cousin.gif";
-            } else if (texture.startsWith("longboy")) {
-                imgHeight = 400 * globalAnim;
-            }
-
-            ImageRectangle
-                    .create(width - 175 - (imgWidth / 2), height - 210 - (imgHeight / 2), imgWidth, imgHeight, -1)
-                    .resource(ImageUtil.getTexture(texture))
-                    .push(event);
-        }
 
         if (Vanta.instance.moduleStorage.getT(ClickGUI.class).darkenBackground.getValue()) {
             Rectangle.create(0, 0, width, height)
@@ -100,6 +84,23 @@ public class ClickGUIScreen extends VantaScreen {
                     .firstColor(new Color(0, 0, 0, (int) (150 * globalAnim)))
                     .secondColor(new Color(color1.getRed(), color1.getGreen(), color1.getBlue(), (int) (150 * globalAnim)))
                     .gradientMode(GradientMode.VERTICAL)
+                    .push(event);
+        }
+
+        if (Vanta.instance.moduleStorage.getT(ClickGUI.class).image.getValue()) {
+            float imgWidth = 300 * globalAnim;
+            float imgHeight = 300 * globalAnim;
+
+            String texture = Vanta.instance.moduleStorage.getT(ClickGUI.class).mascot.getValue() + ".png";
+            if (texture.startsWith("cousin")) {
+                texture = "cousin.gif";
+            } else if (texture.startsWith("longboy")) {
+                imgHeight = 400 * globalAnim;
+            }
+
+            ImageRectangle
+                    .create(width - 175 - (imgWidth / 2), height - 210 - (imgHeight / 2), imgWidth, imgHeight, -1)
+                    .resource(ImageUtil.getTexture(texture))
                     .push(event);
         }
 
