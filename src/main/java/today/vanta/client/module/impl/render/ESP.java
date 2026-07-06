@@ -13,15 +13,18 @@ import today.vanta.client.module.Module;
 import today.vanta.client.module.impl.client.Theme;
 import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.MultiStringSetting;
+import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.events.EventListen;
+import today.vanta.util.game.render.ImageUtil;
 import today.vanta.util.game.render.ProjectionUtil;
+import today.vanta.util.game.render.shape.impl.ImageRectangle;
 import today.vanta.util.game.render.shape.impl.Rectangle;
 
 import java.awt.*;
 
 public class ESP extends Module {
     private final MultiStringSetting entities = Setting.of("Entities", new String[]{"Players"}, new String[]{"Players", "Monsters", "Animals", "Local", "Invisibles"});
-
+    private final StringSetting image = Setting.of("Image", "None","ermwhat", "fanta", "longboy", "silly", "cousin", "None");
     public ESP() {
         super("ESP", "Extra-sensory perception.", Category.RENDER);
     }
@@ -66,6 +69,15 @@ public class ESP extends Module {
                     .color(Color.BLACK)
                     .outlineWidth(1.0f)
                     .push(event);
+
+            if (!image.getValue().equals("None")) {
+                String texture = image.getValue() +".png";
+                if (texture.startsWith("cousin")) texture = "cousin.gif";
+                ImageRectangle
+                        .create(x + 2,y + 2,width - 4,height - 4, -1)
+                        .resource(ImageUtil.getTexture(image.getValue() +".png"))
+                        .push(event);
+            }
         }
     }
 
