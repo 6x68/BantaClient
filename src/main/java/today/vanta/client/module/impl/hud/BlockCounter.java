@@ -71,7 +71,7 @@ public class BlockCounter extends Module {
 
     @EventListen
     private void onDrawScreen(RenderScreenEvent event) {
-        if (mc.thePlayer == null) return;
+        if (mc.thePlayer == null) {maxBlocks = 0; return;}
         blocks = InventoryUtil.getHotbarBlockCount();
 
 
