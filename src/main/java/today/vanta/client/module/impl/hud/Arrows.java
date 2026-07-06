@@ -10,6 +10,7 @@ import today.vanta.client.event.impl.client.RenderOverlayEvent;
 import today.vanta.client.event.impl.game.render.RenderEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
+import today.vanta.client.module.impl.client.Theme;
 import today.vanta.client.module.impl.combat.KillAura;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.player.ChatUtil;
@@ -57,8 +58,14 @@ public class Arrows extends Module {
             float posY = centerY + (float) (radius * Math.sin(rad));
             float width = 20;
             float height = 15;
+            float outlineWidth = 22;
+            float outlineHeight = 17;
+            Triangle.create(posX - outlineWidth / 2 + 0.5f, posY - outlineWidth / 2 + 0.5f, outlineWidth, outlineHeight)
+                            .color(Color.black)
+                            .rotate((float) relativeYaw)
+                            .push(event);
             Triangle.create(posX - width / 2, posY - width / 2, width, height)
-                    .color(Color.white)
+                    .color(Vanta.instance.moduleStorage.getT(Theme.class).colors[0])
                     .rotate((float) relativeYaw) // adjust +90/-90 offset until the tip points the right way
                     .push(event);
         }
