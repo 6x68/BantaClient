@@ -75,7 +75,7 @@ public class ESP extends Module {
                 if (texture.startsWith("cousin")) texture = "cousin.gif";
                 ImageRectangle
                         .create(x + 2,y + 2,width - 4,height - 4, -1)
-                        .resource(ImageUtil.getTexture(image.getValue() +".png"))
+                        .resource(ImageUtil.getTexture(texture))
                         .push(event);
             }
         }
