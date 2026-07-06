@@ -22,6 +22,8 @@ public class Fly extends Module {
 
     private final Counter jumpCounter = new Counter();
 
+    double prevposY;
+
     public Fly() {
         super("Fly", "Allows you to fly like a pelican.", Category.MOVEMENT);
         displayNames = new String[]{"Fly", "Flight", "AirWalk", "AirJump"};
@@ -33,10 +35,6 @@ public class Fly extends Module {
             mc.thePlayer.cameraYaw = viewBobbing.getValue().floatValue() / 1000.0F;
         }
         switch (mode.getValue()) {
-            case "Miniblox":
-                mc.thePlayer.motionY = 0f;
-                MovementUtil.strafe(0.15f);
-                break;
             case "Vanilla":
                 mc.thePlayer.motionY = 0f;
                 MovementUtil.strafe(1f);
@@ -58,6 +56,14 @@ public class Fly extends Module {
 
     @EventListen
     private void onMotion(MotionEvent event) {
+        if (mode.getValue().equals("Miniblox")) {
+            // dont work xd
+//                mc.gameSettings.keyBindSneak.pressed = true;
+            MovementUtil.strafe(0.15f);
+            if (mc.thePlayer.posY <= prevposY) {
+                mc.thePlayer.jump();
+            }
+        }
         if (event.state == EventState.PRE) {
             switch (mode.getValue()) {
                 case "Teleport":
@@ -90,16 +96,14 @@ public class Fly extends Module {
     public void onEnable() {
         if (mc.thePlayer == null) return;
 
-        if (mode.getValue().equals("Miniblox"))
-            mc.thePlayer.sendChatMessage("/desync");
+        prevposY = mc.thePlayer.posY;
+
     }
 
     @Override
     public void onDisable() {
         if (mc.thePlayer == null) return;
 
-        if (mode.getValue().equals("Miniblox"))
-            mc.thePlayer.sendChatMessage("/desync");
     }
 
     @Override

@@ -17,7 +17,7 @@ import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.events.EventState;
 
 public class Animations extends Module {
-    private final StringSetting mode = Setting.of("Mode", "1.7", "1.7", "Interia", "Exhibition", "Exhibition Tilt", "Sigma", "Stella", "Smooth");
+    private final StringSetting mode = Setting.of("Mode", "1.7", "1.7", "Interia", "Exhibition", "Exhibition Tilt", "Sigma", "Stella", "Smooth", "Up", "Claude");
     private final NumberSetting swingSpeed = Setting.of("Swing speed", 1, 0.1, 3.0, 1);
 
     private final BooleanSetting
@@ -124,6 +124,20 @@ public class Animations extends Module {
                 GlStateManager.translate(-0.05f, 0.3f, 0.3f);
                 GlStateManager.rotate(-var9 * 140.0f, 8.0f, 0.0f, 8.0f);
                 GlStateManager.rotate(var9 * 90.0f, 8.0f, 0.0f, 8.0f);
+                break;
+            case "Up":
+                GL11.glTranslated(-0.04D, 0.13D, 0.0D);
+                renderer.transformFirstPersonItem(f * 2.5F, 0.0f);
+                GlStateManager.rotate(var9 * 10.0F, 1.5f, -var9 * 0.1f, -0.0F);
+                renderer.doBlockTransformations();
+                break;
+            case "Claude":
+                // I told Claude to make random values with the one above so this is what it gave me
+                GL11.glTranslated(-0.04D + var9 * 0.05D, 0.13D + f1 * 0.1D, 0.0D);
+                renderer.transformFirstPersonItem(f * 2.5F, var9 * 15.0f);
+                GlStateManager.rotate(var9 * 25.0F, 1.5f, f1 * 2.0f, -f * 5.0F);
+                GlStateManager.scale(1.0F, 1.0F, 1.0F + var9 * 0.2F);
+                renderer.doBlockTransformations();
                 break;
         }
     }
