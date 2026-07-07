@@ -48,7 +48,7 @@ public class MainMenuScreen extends VantaScreen {
     private void onRender(RenderScreenEvent event) {
         Rectangle
                 .create(0, 0, width, height)
-                .color(new Color(20, 20, 20))
+                .color(new Color(20, 20, 20, 0))
                 .push(event);
 
         float middleY = 5;
@@ -94,6 +94,11 @@ public class MainMenuScreen extends VantaScreen {
         if (rotation > 360) {
             rotation = 0;
         }
+
+        Rectangle
+                .create(width - 100 - 20, 20, 100, 100)
+                .color(new Color(20, 20, 20))
+                .push(event);
 
         ImageRectangle
                 .create(width - 100 - 20, 20, 100, 100, -1)
