@@ -19,6 +19,13 @@ public class ConfigFile extends File {
         super("configs/default");
     }
 
+    private boolean isMetaSetting(Module mod, Setting<?> setting) {
+        return setting == mod.displayNameSetting
+                || setting == mod.hideFromArraylistSetting
+                || setting == mod.addSuffixSetting
+                || setting == mod.addToConfigSetting;
+    }
+
     @Override
     protected JsonObject writeJson() {
         JsonObject config = new JsonObject();
@@ -28,8 +35,12 @@ public class ConfigFile extends File {
 
             modObject.addProperty("Enabled", mod.isEnabled());
 
-            if (mod.addToConfig) {
+            if (mod.addToConfigSetting.getValue()) {
                 for (Setting<?> setting : mod.settings) {
+                    if (isMetaSetting(mod, setting)) {
+                        continue;
+                    }
+
                     JsonElement value = JsonNull.INSTANCE;
 
                     if (setting instanceof BooleanSetting) {
@@ -65,8 +76,12 @@ public class ConfigFile extends File {
 
             mod.setEnabled(false, true);
 
-            if (mod.addToConfig) {
+            if (mod.addToConfigSetting.getValue()) {
                 for (Setting<?> setting : mod.settings) {
+                    if (isMetaSetting(mod, setting)) {
+                        continue;
+                    }
+
                     if (!modObject.has(setting.name)) {
                         continue;
                     }

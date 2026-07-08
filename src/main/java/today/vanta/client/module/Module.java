@@ -6,6 +6,8 @@ import today.vanta.client.event.impl.client.ModuleEnableEvent;
 import today.vanta.client.event.impl.client.ModuleExpandedEvent;
 import today.vanta.client.event.impl.client.ModuleRenamedEvent;
 import today.vanta.client.setting.Setting;
+import today.vanta.client.setting.impl.BooleanSetting;
+import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.IMinecraft;
 import today.vanta.util.system.math.ColorUtil;
 
@@ -29,6 +31,15 @@ public abstract class Module implements IMinecraft {
 
     public boolean frozen; // When true, module is not toggleable.
 
+    public boolean addSuffix = true;
+    public boolean hideFromArraylist;
+    public boolean addToConfig = true;
+
+    public StringSetting displayNameSetting;
+    public BooleanSetting hideFromArraylistSetting;
+    public BooleanSetting addSuffixSetting;
+    public BooleanSetting addToConfigSetting;
+
     public Module(String name, String description, Category category, int key) {
         this.name = name;
         this.category = category;
@@ -39,11 +50,32 @@ public abstract class Module implements IMinecraft {
         this.displayNames = new String[]{displayName};
 
         Vanta.instance.moduleStorage.context = this;
+
+        this.displayNameSetting = Setting.of("Display name", displayName, displayNames)
+                .hide(() -> displayNames.length <= 1 || hideFromArraylist);
+        this.displayNameSetting.addListener((setting, oldValue, newValue) -> {
+            this.displayName = newValue;
+            new ModuleRenamedEvent(this).call();
+        });
+
+        this.hideFromArraylistSetting = Setting.of("Hide from arraylist", hideFromArraylist)
+                .hide(() -> frozen);
+        this.hideFromArraylistSetting.addListener((setting, oldValue, newValue) -> this.hideFromArraylist = newValue);
+
+        this.addToConfigSetting = Setting.of("Save in config", addToConfig);
+        this.addToConfigSetting.addListener((setting, oldValue, newValue) -> this.addToConfig = newValue);
+
+        this.addSuffixSetting = Setting.of("Show suffix", addSuffix)
+                .hide(() -> getSuffix() == null || hideFromArraylist);
+        this.addSuffixSetting.addListener((setting, oldValue, newValue) -> this.addSuffix = newValue);
     }
 
-    public boolean addSuffix = true;
-    public boolean hideFromArraylist;
-    public boolean addToConfig = true;
+    public void setup() {
+        this.displayNameSetting.allValues = displayNames;
+        this.hideFromArraylistSetting.setValue(hideFromArraylist);
+        this.addToConfigSetting.setValue(addToConfig);
+        this.addSuffixSetting.setValue(addSuffix);
+    }
 
     public Module(String name, String description, Category category) {
         this(name, description, category, 0);
@@ -101,26 +133,15 @@ public abstract class Module implements IMinecraft {
     public List<Setting<?>> settings = new ArrayList<>();
 
     public void next() {
-        int currentIndex = index();
-        int nextIndex = (currentIndex + 1) % displayNames.length;
-        displayName = displayNames[nextIndex];
-        new ModuleRenamedEvent(this).call();
+        displayNameSetting.next();
     }
 
     public void previous() {
-        int currentIndex = index();
-        int previousIndex = (currentIndex - 1 + displayNames.length) % displayNames.length;
-        displayName = displayNames[previousIndex];
-        new ModuleRenamedEvent(this).call();
+        displayNameSetting.previous();
     }
 
     private int index() {
-        for (int i = 0; i < displayNames.length; i++) {
-            if (displayNames[i].equals(displayName)) {
-                return i;
-            }
-        }
-        return -1;
+        return displayNameSetting.index();
     }
 
     public String getSuffix() {

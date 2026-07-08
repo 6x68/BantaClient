@@ -83,6 +83,22 @@ public class BoxyClickGUIScreen extends VantaScreen {
 
     @EventListen
     private void onRender(RenderScreenEvent event) {
+        if (Vanta.instance.moduleStorage.getT(ClickGUI.class).darkenBackground.getValue()) {
+            Rectangle.create(0, 0, width, height)
+                    .color(new Color(0, 0, 0, 150))
+                    .push(event);
+        }
+
+        Color color1 = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
+
+        if (Vanta.instance.moduleStorage.getT(ClickGUI.class).gradientBackground.getValue()) {
+            GradientRectangle.create(0, 0, width, height)
+                    .firstColor(new Color(0, 0, 0, 150))
+                    .secondColor(new Color(color1.getRed(), color1.getGreen(), color1.getBlue(), 150))
+                    .gradientMode(GradientMode.VERTICAL)
+                    .push(event);
+        }
+
         if (Vanta.instance.moduleStorage.getT(ClickGUI.class).image.getValue()) {
             float imgWidth = 300;
             float imgHeight = 300;
@@ -97,22 +113,6 @@ public class BoxyClickGUIScreen extends VantaScreen {
             ImageRectangle
                     .create(width - 175 - (imgWidth / 2), height - 210 - (imgHeight / 2), imgWidth, imgHeight, -1)
                     .resource(ImageUtil.getTexture(texture))
-                    .push(event);
-        }
-
-        if (Vanta.instance.moduleStorage.getT(ClickGUI.class).darkenBackground.getValue()) {
-            Rectangle.create(0, 0, width, height)
-                    .color(new Color(0, 0, 0, 150))
-                    .push(event);
-        }
-
-        Color color1 = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
-
-        if (Vanta.instance.moduleStorage.getT(ClickGUI.class).gradientBackground.getValue()) {
-            GradientRectangle.create(0, 0, width, height)
-                    .firstColor(new Color(0, 0, 0, 150))
-                    .secondColor(new Color(color1.getRed(), color1.getGreen(), color1.getBlue(), 150))
-                    .gradientMode(GradientMode.VERTICAL)
                     .push(event);
         }
 

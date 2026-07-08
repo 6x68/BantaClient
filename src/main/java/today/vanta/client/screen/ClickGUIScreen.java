@@ -129,14 +129,7 @@ public class ClickGUIScreen extends VantaScreen {
                 ignoreThis += 14;
 
                 float moduleContentHeight = 0;
-                if (module.displayNames.length > 1 && !module.hideFromArraylist)
-                    moduleContentHeight += 14;
                 if (!module.frozen)
-                    moduleContentHeight += 14;
-                if (!module.frozen)
-                    moduleContentHeight += 14;
-                moduleContentHeight += 14;
-                if (module.getSuffix() != null && !module.hideFromArraylist)
                     moduleContentHeight += 14;
 
                 if (!module.settings.isEmpty()) {
@@ -187,26 +180,6 @@ public class ClickGUIScreen extends VantaScreen {
                 float moduleAnim = getAnimationValue(module, module.isExpanded() ? 1f : 0f, 250, Easing.EASE_OUT_EXPO);
 
                 if (moduleAnim > 0) {
-                    if (module.displayNames.length > 1 && !module.hideFromArraylist) {
-                        boolean hoverDisplayName = RenderUtil.hovered(mouseX, mouseY, x + 1.5f, y, PANEL_WIDTH - 3, 14 * moduleAnim);
-                        Rectangle
-                                .create(x + 1.5f, y, PANEL_WIDTH - 3, 14 * moduleAnim)
-                                .color(hoverDisplayName ? new Color(42, 42, 42) : new Color(38, 38, 38))
-                                .push(event);
-                        if (moduleAnim > 0.5f) {
-                            sett.drawString("Display name", x + 3, y + 2, -1);
-
-                            float bX = x + PANEL_WIDTH - 5;
-                            Rectangle
-                                    .create(bX - sett.getStringWidth(module.displayName) - 2, y + 2.5, sett.getStringWidth(module.displayName) + 4, 9)
-                                    .color(new Color(45, 45, 45))
-                                    .push(event);
-                            sett.drawString(module.displayName, bX - sett.getStringWidth(module.displayName) - 1, y + 2, -1);
-                        }
-
-                        y += 14 * moduleAnim;
-                    }
-
                     if (!module.frozen) {
                         boolean hoverKeybind = RenderUtil.hovered(mouseX, mouseY, x + 1.5f, y, PANEL_WIDTH - 3, 14 * moduleAnim);
                         Rectangle
@@ -232,83 +205,6 @@ public class ClickGUIScreen extends VantaScreen {
                                     .color(new Color(45, 45, 45))
                                     .push(event);
                             sett.drawString(keyName, bXKey - animatedKBWidth - 1, y + 2, ColorUtil.interpolateColor(Color.WHITE, Color.GRAY, kbFade));
-                        }
-
-                        y += 14 * moduleAnim;
-                    }
-
-                    if (!module.frozen) {
-                        boolean hoverHide = RenderUtil.hovered(mouseX, mouseY, x + 1.5f, y, PANEL_WIDTH - 3, 14 * moduleAnim);
-                        Rectangle
-                                .create(x + 1.5f, y, PANEL_WIDTH - 3, 14 * moduleAnim)
-                                .color(hoverHide ? new Color(42, 42, 42) : new Color(38, 38, 38))
-                                .push(event);
-                        if (moduleAnim > 0.5f) {
-                            sett.drawString("Hide on arraylist", x + 3, y + 2, -1);
-
-                            boolean hidden = module.hideFromArraylist;
-                            float hiddenAnim = getAnimationValue(module + "_hidden", hidden ? 1f : 0f, 200, Easing.EASE_OUT_QUAD);
-                            float bXHidden = x + PANEL_WIDTH - 5;
-                            Rectangle
-                                    .create(bXHidden - 17, y + 3.5f, 17, 7)
-                                    .color(ColorUtil.interpolateColor(new Color(0xA3A3A3), color1.brighter(), hiddenAnim))
-                                    .push(event);
-
-                            Rectangle
-                                    .create(bXHidden - 17 - 1 + (9 * hiddenAnim), y + 2.5f, 9, 9)
-                                    .color(ColorUtil.interpolateColor(Color.WHITE, color1, hiddenAnim))
-                                    .push(event);
-                        }
-
-                        y += 14 * moduleAnim;
-                    }
-
-                    boolean hoverSave = RenderUtil.hovered(mouseX, mouseY, x + 1.5f, y, PANEL_WIDTH - 3, 14 * moduleAnim);
-                    Rectangle
-                            .create(x + 1.5f, y, PANEL_WIDTH - 3, 14 * moduleAnim)
-                            .color(hoverSave ? new Color(42, 42, 42) : new Color(38, 38, 38))
-                            .push(event);
-                    if (moduleAnim > 0.5f) {
-                        sett.drawString("Save in config", x + 3, y + 2, -1);
-
-                        boolean save = module.addToConfig;
-                        float saveAnim = getAnimationValue(module + "_save", save ? 1f : 0f, 200, Easing.EASE_OUT_QUAD);
-                        float bXSave = x + PANEL_WIDTH - 5;
-
-                        Rectangle
-                                .create(bXSave - 17, y + 3.5f, 17, 7)
-                                .color(ColorUtil.interpolateColor(new Color(0xA3A3A3), color1.brighter(), saveAnim))
-                                .push(event);
-
-                        Rectangle
-                                .create(bXSave - 17 - 1 + (9 * saveAnim), y + 2.5f, 9, 9)
-                                .color(ColorUtil.interpolateColor(Color.WHITE, color1, saveAnim))
-                                .push(event);
-                    }
-
-                    y += 14 * moduleAnim;
-
-                    if (module.getSuffix() != null && !module.hideFromArraylist) {
-                        boolean hoverSuffix = RenderUtil.hovered(mouseX, mouseY, x + 1.5f, y, PANEL_WIDTH - 3, 14 * moduleAnim);
-                        Rectangle
-                                .create(x + 1.5f, y, PANEL_WIDTH - 3, 14 * moduleAnim)
-                                .color(hoverSuffix ? new Color(42, 42, 42) : new Color(38, 38, 38))
-                                .push(event);
-                        if (moduleAnim > 0.5f) {
-                            sett.drawString("Show suffix", x + 3, y + 2, -1);
-
-                            boolean suffix = module.addSuffix;
-                            float suffixAnim = getAnimationValue(module + "_suffix", suffix ? 1f : 0f, 200, Easing.EASE_OUT_QUAD);
-                            float bXSuffix = x + PANEL_WIDTH - 5;
-                            Rectangle
-                                    .create(bXSuffix - 17, y + 3.5f, 17, 7)
-                                    .color(ColorUtil.interpolateColor(new Color(0xA3A3A3), color1.brighter(), suffixAnim))
-                                    .push(event);
-
-                            Rectangle
-                                    .create(bXSuffix - 17 - 1 + (9 * suffixAnim), y + 2.5f, 9, 9)
-                                    .color(ColorUtil.interpolateColor(Color.WHITE, color1, suffixAnim))
-                                    .push(event);
                         }
 
                         y += 14 * moduleAnim;
@@ -517,56 +413,12 @@ public class ClickGUIScreen extends VantaScreen {
                 float moduleAnim = animationMap.getOrDefault(module, module.isExpanded() ? 1f : 0f);
 
                 if (moduleAnim > 0.5f) {
-                    if (module.displayNames.length > 1 && !module.hideFromArraylist) {
-                        float bXDisplayName = x + PANEL_WIDTH - 5;
-                        if (RenderUtil.hovered(mouseX, mouseY, bXDisplayName - sett.getStringWidth(module.displayName) - 2, y + 2.5f, sett.getStringWidth(module.displayName) + 4, 9)) {
-                            switch (mouseButton) {
-                                case 0:
-                                    module.next();
-                                    break;
-                                case 1:
-                                    module.previous();
-                                    break;
-                            }
-                        }
-
-                        y += 14 * moduleAnim;
-                    }
-
                     if (!module.frozen) {
                         if (RenderUtil.hovered(mouseX, mouseY, x + 1.5f, y + 2.5f, PANEL_WIDTH - 3, 9)) {
                             if (listeningModule != null && listeningModule.equals(module))
                                 listeningModule = null;
                             else
                                 listeningModule = module;
-                        }
-
-                        y += 14 * moduleAnim;
-                    }
-
-                    if (!module.frozen) {
-                        float bXHidden = x + PANEL_WIDTH - 5;
-                        boolean hoverHide = RenderUtil.hovered(mouseX, mouseY, bXHidden - 17, y + 3.5f, 17, 7);
-                        if (hoverHide && mouseButton == 0) {
-                            module.hideFromArraylist = !module.hideFromArraylist;
-                        }
-
-                        y += 14 * moduleAnim;
-                    }
-
-                    float bXSave = x + PANEL_WIDTH - 5;
-                    boolean hoverSave = RenderUtil.hovered(mouseX, mouseY, bXSave - 17, y + 3.5f, 17, 7);
-                    if (hoverSave && mouseButton == 0) {
-                        module.addToConfig = !module.addToConfig;
-                    }
-
-                    y += 14 * moduleAnim;
-
-                    if (module.getSuffix() != null && !module.hideFromArraylist) {
-                        float bXSuffix = x + PANEL_WIDTH - 5;
-                        boolean hoverSuffix = RenderUtil.hovered(mouseX, mouseY, bXSuffix - 17, y + 3.5f, 17, 7);
-                        if (hoverSuffix && mouseButton == 0) {
-                            module.addSuffix = !module.addSuffix;
                         }
 
                         y += 14 * moduleAnim;

@@ -87,6 +87,11 @@ public class ModuleStorage extends Storage<Module> {
         list.add(new Arrows());
         list.add(new WindowSettings());
 
+        for (Module mod : list) {
+            this.context = mod;
+            mod.setup();
+        }
+
         this.context = null;
     }
 

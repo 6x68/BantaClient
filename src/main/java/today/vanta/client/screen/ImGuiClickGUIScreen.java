@@ -120,12 +120,6 @@ public class ImGuiClickGUIScreen extends VantaScreen implements IClient {
                         }
                         ImGui.separator();
 
-                        if (currentModule.displayNames.length > 1 && !currentModule.hideFromArraylist) {
-                            if (ImGui.button("Display name: " + currentModule.displayName, fullWidth, 20)) {
-                                currentModule.next();
-                            }
-                        }
-
                         if (!currentModule.frozen) {
                             String keyName = Keyboard.getKeyName(currentModule.key);
                             if (listeningModule != null && listeningModule.equals(currentModule)) {
@@ -133,22 +127,6 @@ public class ImGuiClickGUIScreen extends VantaScreen implements IClient {
                             }
                             if (ImGui.button("Keybind: " + keyName, fullWidth, 20)) {
                                 listeningModule = currentModule;
-                            }
-                        }
-
-                        if (!currentModule.frozen) {
-                            if (ImGui.button("Hide on arraylist: " + (currentModule.hideFromArraylist ? "enabled" : "disabled"), fullWidth, 20)) {
-                                currentModule.hideFromArraylist = !currentModule.hideFromArraylist;
-                            }
-                        }
-
-                        if (ImGui.button("Save in config: " + (currentModule.addToConfig ? "enabled" : "disabled"), fullWidth, 20)) {
-                            currentModule.addToConfig = !currentModule.addToConfig;
-                        }
-
-                        if (currentModule.getSuffix() != null && !currentModule.hideFromArraylist) {
-                            if (ImGui.button("Show suffix: " + (currentModule.addSuffix ? "enabled" : "disabled"), fullWidth, 20)) {
-                                currentModule.addSuffix = !currentModule.addSuffix;
                             }
                         }
 

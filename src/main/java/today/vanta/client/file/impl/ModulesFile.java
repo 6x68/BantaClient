@@ -18,11 +18,11 @@ public class ModulesFile extends File {
             JsonObject modObject = new JsonObject();
 
             modObject.addProperty("Key", mod.key);
-            modObject.addProperty("Hidden", mod.hideFromArraylist);
-            modObject.addProperty("Suffix", mod.addSuffix);
-            modObject.addProperty("Savable", mod.addToConfig);
+            modObject.addProperty("Hidden", mod.hideFromArraylistSetting.getValue());
+            modObject.addProperty("Suffix", mod.addSuffixSetting.getValue());
+            modObject.addProperty("Savable", mod.addToConfigSetting.getValue());
             modObject.addProperty("Expanded", mod.isExpanded());
-            modObject.addProperty("Display name", mod.displayName);
+            modObject.addProperty("Display name", mod.displayNameSetting.getValue());
 
             moduleObject.add(mod.name, modObject);
         }
@@ -46,15 +46,15 @@ public class ModulesFile extends File {
             }
 
             if (modObject.has("Hidden")) {
-                mod.hideFromArraylist = modObject.get("Hidden").getAsBoolean();
+                mod.hideFromArraylistSetting.setValue(modObject.get("Hidden").getAsBoolean());
             }
 
             if (modObject.has("Suffix")) {
-                mod.addSuffix = modObject.get("Suffix").getAsBoolean();
+                mod.addSuffixSetting.setValue(modObject.get("Suffix").getAsBoolean());
             }
 
             if (modObject.has("Savable")) {
-                mod.addToConfig = modObject.get("Savable").getAsBoolean();
+                mod.addToConfigSetting.setValue(modObject.get("Savable").getAsBoolean());
             }
 
             if (modObject.has("Expanded")) {
@@ -62,7 +62,7 @@ public class ModulesFile extends File {
             }
 
             if (modObject.has("Display name")) {
-                mod.displayName = modObject.get("Display name").getAsString();
+                mod.displayNameSetting.setValue(modObject.get("Display name").getAsString());
             }
         }
     }
