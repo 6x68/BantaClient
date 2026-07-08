@@ -46,6 +46,7 @@ public class TargetHUD extends Module {
 
     private boolean dragging;
     private float dragX, dragY;
+    private float amount;
 
     private final StringSetting mode = Setting.of("Mode", "Vanta", "Classic", "Vanta", "Adjust", "ID-Card", "Aged", "Novoline", "Old Atmosphere", "Atmosphere");
     private final NumberSetting
@@ -100,10 +101,10 @@ public class TargetHUD extends Module {
         }
     }
 
-    private float barWidth = width;
-    private float ghostBarWidth = width;
-    private float targetWidth = width;
-    private float targetWidth2 = width;
+    private float barWidth = width - 36f - 6f;
+    private float ghostBarWidth = width - 36f - 6f;
+    private float targetWidth = width - 36f - 6f;
+    private float targetWidth2 = width - 36f - 6f;
     private float adtargetWidth = width - 4f;
     private float adtargetWidth2 = width - 4f;
     private float adghostBarWidth = width - 4f;
@@ -127,8 +128,14 @@ public class TargetHUD extends Module {
 
         switch (mode.getValue()) {
             case "Vanta":
+                int hurt = localTarget.hurtTime;
+                // thanks claude
+                float distFromMid = Math.abs(hurt - 5);
+                float amount = 0.8f + (distFromMid / 5f) * 0.2f;
+                float headSize = 36f * amount;
+                ChatUtil.send(ChatUtil.Prefix.INFO, String.valueOf(amount));
 
-                width = 130;
+                width = 137;
                 height = 40;
 
                 Rectangle
@@ -136,17 +143,21 @@ public class TargetHUD extends Module {
                         .color(new Color(28, 29, 33))
                         .push(renderable);
 
-                RenderUtil.renderHead(renderable, (EntityPlayer) localTarget, x, y, 36f);
-                CFonts.SFPT_MEDIUM_20.drawStringWithShadow(localTarget.getName(), x + 38, y + 4, Color.WHITE);
-                CFonts.SFPT_REGULAR_18.drawStringWithShadow(String.format("%.1f", localTarget.getHealth()), x + 38, y + 15, Color.WHITE);
+                RenderUtil.renderHead(renderable, (EntityPlayer) localTarget, x + 20f - (headSize / 2), y - (headSize / 2) + (height / 2), headSize);
+                CFonts.SFPT_MEDIUM_20.drawStringWithShadow(localTarget.getName(), x + 38, y + 1, Color.WHITE);
+                CFonts.SFPT_REGULAR_18.drawStringWithShadow(String.format("%.1f", localTarget.getHealth()), x + 38, y + 11, Color.WHITE);
 
-                float healthWidth = width * (localTarget.getHealth() / localTarget.getMaxHealth());
-                float ghostWidth = width * (localTarget.getHealth() / localTarget.getMaxHealth());
+                float barrwidth = width - 36f - 6f;
+                float healthWidth = barrwidth * (localTarget.getHealth() / localTarget.getMaxHealth());
+                float ghostWidth = barrwidth * (localTarget.getHealth() / localTarget.getMaxHealth());
 
                 if (healthWidth != targetWidth) {
                     targetWidth = healthWidth;
                     if (oldTarget != localTarget.getName()) {
-                        barWidth = targetWidth;
+                        if (animation != null) {
+                            animation.stop();
+                        }
+                        barWidth = healthWidth;
                         can = true;
                         oldTarget = localTarget.getName();
                         return;
@@ -155,7 +166,7 @@ public class TargetHUD extends Module {
                     animation = Animation.create(
                             barWidth,
                             targetWidth,
-                            150,
+                            100,
                             Easing.LINEAR,
                             val -> barWidth = val
                     );
@@ -166,7 +177,10 @@ public class TargetHUD extends Module {
                     targetWidth2 = ghostWidth;
 
                     if (can) {
-                        ghostBarWidth = targetWidth2;
+                        if (ghostAnimation != null) {
+                            ghostAnimation.stop();
+                        }
+                        ghostBarWidth = ghostWidth;
                         oldTarget = localTarget.getName();
                         can = false;
                         return;
@@ -175,7 +189,7 @@ public class TargetHUD extends Module {
                     ghostAnimation = Animation.create(
                             ghostBarWidth,
                             targetWidth2,
-                            450,
+                            300,
                             Easing.LINEAR,
                             val -> ghostBarWidth = val
                     );
@@ -184,18 +198,18 @@ public class TargetHUD extends Module {
                 }
 
                 Rectangle
-                        .create(x, y + 36, width - 2.5f, 4f)
+                        .create(x + 40f, y + 32, barrwidth, 6f)
                         .color(DARKER_BACKGROUND)
                         .push(renderable);
 
                 Rectangle
-                        .create(x, y + 36, ghostBarWidth, 4f)
+                        .create(x + 40f, y + 32, ghostBarWidth, 6f)
                         .color(color.darker())
                         .push(renderable);
 
                 GradientRectangle
-                        .create(x, y + 36, barWidth, 4f)
-                        .firstColor(color2)
+                        .create(x + 40f, y + 32, barWidth, 6f)
+                        .firstColor(color.darker())
                         .secondColor(color)
                         .push(renderable);
                 break;

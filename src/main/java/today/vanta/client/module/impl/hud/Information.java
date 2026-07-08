@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiChat;
 import org.lwjgl.input.Mouse;
+import org.w3c.dom.css.Rect;
 import today.vanta.Vanta;
 import today.vanta.client.event.impl.client.RenderOverlayEvent;
 import today.vanta.client.event.impl.client.RenderScreenEvent;
@@ -17,6 +18,7 @@ import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.player.MovementUtil;
 import today.vanta.util.game.player.PlayerUtil;
 import today.vanta.util.game.render.RenderUtil;
+import today.vanta.util.game.render.Renderable;
 import today.vanta.util.game.render.font.CFonts;
 import today.vanta.util.game.render.shape.impl.GradientRectangle;
 import today.vanta.util.game.render.shape.impl.Rectangle;
@@ -40,6 +42,9 @@ public class Information extends Module {
     private static final Color BACKGROUND = new Color(20, 20, 20, 190);
     private Counter playTime = new Counter();
     private String oldServer;
+    private float totalHeight;
+    private float totalWidth;
+    private float outlineWidth;
     public Information() {
         super("Information", "Provides information on the player.", Category.HUD);
     }
@@ -82,6 +87,9 @@ public class Information extends Module {
         }
         switch (mode.getValue()) {
             case "Text":
+                totalHeight = HEIGHT;
+                totalWidth = WIDTH;
+                outlineWidth = 0;
                 float ydraw = event.scaledResolution.getScaledHeight() - 19;
                 if (mc.currentScreen instanceof GuiChat) {
                     ydraw = event.scaledResolution.getScaledHeight() - 230;
@@ -91,17 +99,22 @@ public class Information extends Module {
                 break;
             case "Window":
                 WIDTH = 145;
-                HEIGHT = 63;
+                HEIGHT = 51;
+                totalHeight = RenderUtil.getTotalWindowHeight(HEIGHT);
+                totalWidth = RenderUtil.getTotalWindowWidth(WIDTH);
+                outlineWidth = RenderUtil.getOutlineWidth();
+                RenderUtil.drawWindowRectangle(event,"Information",x.getValue().floatValue(),y.getValue().floatValue(),WIDTH,HEIGHT);
 
-                Rectangle
-                        .create(x.getValue().floatValue(),y.getValue().floatValue(),WIDTH,12)
-                        .color(WINDOWBG)
-                        .push(event);
-                CFonts.SFPT_REGULAR_18.drawStringWithShadow("Information", x.getValue().floatValue() + 1, y.getValue().floatValue(), Color.white);
-                Rectangle
-                        .create(x.getValue().floatValue(),y.getValue().floatValue() + 12,WIDTH,HEIGHT - 12)
-                        .color(BACKGROUND)
-                        .push(event);
+
+//                Rectangle
+//                        .create(x.getValue().floatValue(),y.getValue().floatValue(),WIDTH,12)
+//                        .color(WINDOWBG)
+//                        .push(event);
+//                CFonts.SFPT_REGULAR_18.drawStringWithShadow("Information", x.getValue().floatValue() + 1, y.getValue().floatValue(), Color.white);
+//                Rectangle
+//                        .create(x.getValue().floatValue(),y.getValue().floatValue() + 12,WIDTH,HEIGHT - 12)
+//                        .color(BACKGROUND)
+//                        .push(event);
 
                 RenderUtil.renderHead(event,mc.thePlayer,x.getValue().floatValue() + 2,y.getValue().floatValue() + 14,47);
                 CFonts.SFPT_REGULAR_18.drawStringWithShadow(mc.thePlayer.getName(), x.getValue().floatValue() + 51, y.getValue().floatValue() + 11, Color.WHITE);
@@ -116,7 +129,7 @@ public class Information extends Module {
 
         if (dragging && mc.currentScreen instanceof GuiChat) {
                 Rectangle
-                        .create(x.getValue().floatValue() - 0.5f, y.getValue().floatValue() - 0.5f, WIDTH + 1, HEIGHT + 1)
+                        .create(x.getValue().floatValue() - outlineWidth - 0.5f, y.getValue().floatValue() - outlineWidth -  0.5f, totalWidth + 1, totalHeight + 1)
                         .color(color1)
                         .outline(true)
                         .push(event);

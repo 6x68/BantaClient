@@ -16,7 +16,11 @@ import net.minecraft.util.MathHelper;
 import net.optifine.reflect.Reflector;
 import org.lwjgl.opengl.GL11;
 import today.vanta.Vanta;
+import today.vanta.client.module.impl.client.Theme;
+import today.vanta.client.module.impl.hud.WindowSettings;
 import today.vanta.util.game.render.font.CFonts;
+import today.vanta.util.game.render.shape.GradientMode;
+import today.vanta.util.game.render.shape.impl.GradientRectangle;
 import today.vanta.util.game.render.shape.impl.ImageRectangle;
 import today.vanta.util.game.render.shape.impl.Rectangle;
 
@@ -178,17 +182,92 @@ public class RenderUtil {
         Color WINDOWBG = new Color(20, 20, 20, 220);
         Color BACKGROUND = new Color(20, 20, 20, 190);
         float windowHeight = 12;
+        float textHeight = CFonts.SFPT_REGULAR_18.getFontHeight();
+        Color outlineColor = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
+        Color outlineColor2 = Vanta.instance.moduleStorage.getT(Theme.class).colors[1];
+        float outlineWidth = 0.5f;
+
 
         Rectangle
                 .create(x,y,width,windowHeight)
                 .color(WINDOWBG)
                 .push(renderable);
-        CFonts.SFPT_REGULAR_18.drawStringWithShadow(title, x + 1, y, Color.white);
+        switch (Vanta.instance.moduleStorage.getT(WindowSettings.class).textAlignment.getValue()) {
+            case "Left":
+                CFonts.SFPT_REGULAR_18.drawStringWithShadow(title, x + 0.5f,  y - (textHeight / 2) - 2.5f + (windowHeight / 2), Color.white);
+                break;
+            case "Center":
+                float textWidth = CFonts.SFPT_REGULAR_18.getStringWidth(title);
+                CFonts.SFPT_REGULAR_18.drawStringWithShadow(title, x + (width / 2) - (textWidth / 2), y - (textHeight / 2) - 2.5f + (windowHeight / 2), Color.white);
+                break;
+        }
+
         Rectangle
                 .create(x,y + windowHeight,width,height)
                 .color(BACKGROUND)
                 .push(renderable);
+        String outlineMode = Vanta.instance.moduleStorage.getT(WindowSettings.class).outline.getValue();
+        if (outlineMode == null) {System.out.println("Fuck off"); return;}
+        if (outlineMode != null && !outlineMode.equals("None")) {
+            switch (outlineMode) {
+                case "Primary":
+                    Rectangle
+                            .create(x - (outlineWidth / 2), y - (outlineWidth / 2), width + outlineWidth, height + windowHeight + outlineWidth)
+                            .color(outlineColor)
+                            .outline(true)
+                            .outlineWidth(outlineWidth)
+                            .push(renderable);
+                    break;
+                case "Secondary":
+                    Rectangle
+                            .create(x - (outlineWidth / 2), y - (outlineWidth / 2), width + outlineWidth, height + windowHeight + outlineWidth)
+                            .color(outlineColor2)
+                            .outline(true)
+                            .outlineWidth(outlineWidth)
+                            .push(renderable);
+                    break;
+                case "Horizontal gradient":
+                    GradientRectangle
+                            .create(x - (outlineWidth / 2), y - (outlineWidth / 2), width + outlineWidth, height + windowHeight + outlineWidth)
+                            .firstColor(outlineColor)
+                            .secondColor(outlineColor2)
+                            .outline(true)
+                            .outlineWidth(outlineWidth)
+                            .gradientMode(GradientMode.HORIZONTAL)
+                            .push(renderable);
+                    break;
+                case "Vertical gradient":
+                    GradientRectangle
+                            .create(x - (outlineWidth / 2), y - (outlineWidth / 2), width + outlineWidth, height + windowHeight + outlineWidth)
+                            .firstColor(outlineColor)
+                            .secondColor(outlineColor2)
+                            .outline(true)
+                            .outlineWidth(outlineWidth)
+                            .gradientMode(GradientMode.VERTICAL)
+                            .push(renderable);
+                    break;
+            }
+        }
+    }
 
+    public static float getTotalWindowHeight(float height) {
+        return height + 12;
+    }
+
+    public static float getTotalWindowWidth(float width) {
+        float total = width;
+        if (Vanta.instance.moduleStorage.getT(WindowSettings.class).outline.getValue() != "None") {
+            total += 0.5f;
+        }
+        return total;
+    }
+
+    public static float getOutlineWidth() {
+        if (Vanta.instance.moduleStorage.getT(WindowSettings.class).outline.getValue() != "None") {
+            return 0.5f;
+        } else {
+            return 0;
+        }
     }
 
     public static void renderHead(Renderable renderable, EntityPlayer target, float x, float y, float headSize) throws NullPointerException {

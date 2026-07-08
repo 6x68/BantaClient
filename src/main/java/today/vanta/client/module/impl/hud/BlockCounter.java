@@ -185,8 +185,8 @@ public class BlockCounter extends Module {
 
                 float startX = xce - totalLength / 2f;
 
-                CFonts.getFont("SFPT-Medium", 24).drawStringWithShadow(numberStr, startX, y - 70, color);
-                CFonts.getFont("SFPT-Regular", 24).drawStringWithShadow("blocks", startX + numberLength + spaceLength, y - 70, Color.white);
+                CFonts.getFont("SFPT-Medium", 24).drawStringWithShadow(numberStr, startX, y - 83, color);
+                CFonts.getFont("SFPT-Regular", 24).drawStringWithShadow("blocks", startX + numberLength + spaceLength, y - 83, Color.white);
                 break;
         }
 

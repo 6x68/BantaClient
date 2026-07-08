@@ -58,6 +58,7 @@ public class ModuleStorage extends Storage<Module> {
         list.add(new ResetVL());
         list.add(new ChestStealer());
         list.add(new InventoryManager());
+        list.add(new NoFall());
 
         // Render
         list.add(new ESP());
@@ -72,6 +73,7 @@ public class ModuleStorage extends Storage<Module> {
         list.add(new Timer());
         list.add(new AntiExploit());
         list.add(new AntiCheat());
+        list.add(new MinibloxFix());
 
         //Hud
         list.add(new Arraylist());
@@ -83,6 +85,7 @@ public class ModuleStorage extends Storage<Module> {
         list.add(new Information());
         list.add(new KillStats());
         list.add(new Arrows());
+        list.add(new WindowSettings());
 
         this.context = null;
     }

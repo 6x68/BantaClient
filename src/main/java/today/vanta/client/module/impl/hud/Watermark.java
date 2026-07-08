@@ -1,5 +1,6 @@
 package today.vanta.client.module.impl.hud;
 
+import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.util.EnumChatFormatting;
 import today.vanta.Vanta;
 import today.vanta.client.event.impl.client.RenderOverlayEvent;
@@ -13,6 +14,7 @@ import today.vanta.util.client.IClient;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.events.EventPriority;
 import today.vanta.util.game.render.ImageUtil;
+import today.vanta.util.game.render.RenderUtil;
 import today.vanta.util.game.render.font.CFonts;
 import today.vanta.util.game.render.shape.impl.GradientRectangle;
 import today.vanta.util.game.render.shape.impl.ImageRectangle;
@@ -43,6 +45,8 @@ public class Watermark extends Module {
 
         float x = 5;
         float y = 5;
+
+        RenderUtil.drawWindowRectangle(event,"HELLOOOO", 10,10,100,50);
 
         switch (style.getValue()) {
             case "Vanta":
