@@ -1388,7 +1388,7 @@ public abstract class Entity implements ICommandSender {
     }
 
     public float getCollisionBorderSize() {
-        EntityCollisionBorderSizeEvent entityCollisionBorderSizeEvent = new EntityCollisionBorderSizeEvent(this, 0.1F);
+        EntityCollisionBorderSizeEvent entityCollisionBorderSizeEvent = new EntityCollisionBorderSizeEvent(this, 0.0F);
         entityCollisionBorderSizeEvent.call();
         return entityCollisionBorderSizeEvent.size;
     }
