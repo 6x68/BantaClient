@@ -1443,45 +1443,48 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
                     if (this.currentScreen != null) {
                         this.currentScreen.handleKeyboardInput();
                     } else {
-                        if (k == 1) {
+                        if (k == Keyboard.KEY_ESCAPE) {
                             this.displayInGameMenu();
                         }
 
-                        if (k == 32 && Keyboard.isKeyDown(61) && this.ingameGUI != null) {
+                        if (k == Keyboard.KEY_D && Keyboard.isKeyDown(Keyboard.KEY_F3) && this.ingameGUI != null) {
                             this.ingameGUI.getChatGUI().clearChatMessages();
                         }
 
-                        if (k == 31 && Keyboard.isKeyDown(61)) {
+                        if (k == Keyboard.KEY_S && Keyboard.isKeyDown(Keyboard.KEY_F3)) {
                             this.refreshResources();
                         }
 
-                        if (k == 33 && Keyboard.isKeyDown(61)) {
-                            this.gameSettings.setOptionValue(GameSettings.Options.RENDER_DISTANCE, GuiScreen.isShiftKeyDown() ? -1 : 1);
+                        if (k == Keyboard.KEY_F && Keyboard.isKeyDown(Keyboard.KEY_F3)) {
+                            this.gameSettings.setOptionValue(
+                                    GameSettings.Options.RENDER_DISTANCE,
+                                    GuiScreen.isShiftKeyDown() ? -1 : 1
+                            );
                         }
 
-                        if (k == 30 && Keyboard.isKeyDown(61)) {
+                        if (k == Keyboard.KEY_A && Keyboard.isKeyDown(Keyboard.KEY_F3)) {
                             this.renderGlobal.loadRenderers();
                         }
 
-                        if (k == 35 && Keyboard.isKeyDown(61)) {
+                        if (k == Keyboard.KEY_H && Keyboard.isKeyDown(Keyboard.KEY_F3)) {
                             this.gameSettings.advancedItemTooltips = !this.gameSettings.advancedItemTooltips;
                             this.gameSettings.saveOptions();
                         }
 
-                        if (k == 48 && Keyboard.isKeyDown(61)) {
+                        if (k == Keyboard.KEY_B && Keyboard.isKeyDown(Keyboard.KEY_F3)) {
                             this.renderManager.setDebugBoundingBox(!this.renderManager.isDebugBoundingBox());
                         }
 
-                        if (k == 25 && Keyboard.isKeyDown(61)) {
+                        if (k == Keyboard.KEY_P && Keyboard.isKeyDown(Keyboard.KEY_F3)) {
                             this.gameSettings.pauseOnLostFocus = !this.gameSettings.pauseOnLostFocus;
                             this.gameSettings.saveOptions();
                         }
 
-                        if (k == 59) {
+                        if (k == Keyboard.KEY_F1) {
                             this.gameSettings.hideGUI = !this.gameSettings.hideGUI;
                         }
 
-                        if (k == 61) {
+                        if (k == Keyboard.KEY_F3) {
                             this.gameSettings.showDebugInfo = !this.gameSettings.showDebugInfo;
                             this.gameSettings.showDebugProfilerChart = GuiScreen.isShiftKeyDown();
                             this.gameSettings.showLagometer = GuiScreen.isAltKeyDown();
