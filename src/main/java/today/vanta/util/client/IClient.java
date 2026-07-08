@@ -26,6 +26,7 @@ public interface IClient {
             "[+] Added AutoPlay",
             "[+] Added AntiVoid",
             "[+] Added NoFall",
-            "[+] Added Arrows"
+            "[+] Added Arrows",
+            "[+] Added VClip"
     );
 }

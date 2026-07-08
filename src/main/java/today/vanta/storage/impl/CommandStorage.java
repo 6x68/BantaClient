@@ -23,6 +23,7 @@ public class CommandStorage extends Storage<Command> {
         list.add(new Bind());
         list.add(new Config());
         list.add(new Teleport());
+        list.add(new VClip());
 
         this.context = null;
     }
