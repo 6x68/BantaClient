@@ -16,7 +16,7 @@ public class ResetVL extends Module {
     }
 
     @EventListen
-    public void onUpdate(UpdateEvent event) {
+    private void onUpdate(UpdateEvent event) {
         MovementUtil.blockMovement();
         if (mc.thePlayer.onGround) {
             mc.thePlayer.motionY = 0.2f;

@@ -10,11 +10,11 @@ import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.module.impl.client.Theme;
 import today.vanta.client.module.impl.combat.KillAura;
+import today.vanta.client.processor.impl.TargetProcessor;
 import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.NumberSetting;
 import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.events.EventListen;
-import today.vanta.util.game.player.PlayerUtil;
 import today.vanta.util.game.render.RenderUtil;
 import today.vanta.util.game.render.font.CFonts;
 import today.vanta.util.game.render.shape.impl.Rectangle;
@@ -27,13 +27,16 @@ public class TargetList extends Module {
     private final StringSetting mode = Setting.of("Mode", "Novoline", "Novoline", "Window");
     private static final Color BACKGROUND = new Color(20, 20, 20, 200);
     private static final Color DARKER_BACKGROUND = new Color(20, 20, 20, 255);
+
     private final NumberSetting
             x = Setting.of("X position", 20, 0, 2000),
             y = Setting.of("Y position", 20, 0, 2000);
+
     private boolean dragging;
     private float dragX, dragY;
-    private float WIDTH = 100f;
-    private float HEIGHT = 10f;
+    private float width = 100f;
+    private float height = 10f;
+
     private final List<EntityPlayer> list = new ArrayList<>();
 
     public TargetList() {
@@ -42,7 +45,7 @@ public class TargetList extends Module {
 
     private void handleDragging(float mouseX, float mouseY) {
         if (Mouse.isButtonDown(0)) {
-            if (!dragging && RenderUtil.hovered(mouseX, mouseY, x.getValue().floatValue(), y.getValue().floatValue(), WIDTH, HEIGHT + 10f)) {
+            if (!dragging && RenderUtil.hovered(mouseX, mouseY, x.getValue().floatValue(), y.getValue().floatValue(), width, height + 10f)) {
                 dragging = true;
                 dragX = mouseX - x.getValue().floatValue();
                 dragY = mouseY - y.getValue().floatValue();
@@ -58,14 +61,14 @@ public class TargetList extends Module {
     }
 
     @EventListen
-    public void onDrawScreen(RenderScreenEvent event) {
+    private void onRenderScreen(RenderScreenEvent event) {
         if (mc.currentScreen instanceof GuiChat) {
             handleDragging(event.mouseX, event.mouseY);
         }
     }
 
     @EventListen
-    private void onRender2D(RenderOverlayEvent event) {
+    private void onRenderOverlay(RenderOverlayEvent event) {
         if (mc.thePlayer == null) {
             return;
         }
@@ -73,22 +76,16 @@ public class TargetList extends Module {
         list.clear();
 
         mc.theWorld.getLoadedEntityList().stream()
-                .filter(entity -> entity instanceof EntityPlayer && entity != mc.thePlayer && !entity.isDead && mc.thePlayer.getDistanceToEntity(entity) < Vanta.instance.moduleStorage.getT(KillAura.class).attackRange.getValue().floatValue())
+                .filter(entity -> entity instanceof EntityPlayer && entity != mc.thePlayer && !entity.isDead && mc.thePlayer.getDistanceToEntity(entity) < TargetProcessor.getInstance().killaura.attackRange.getValue().floatValue())
                 .map(entity -> (EntityPlayer) entity)
                 .forEachOrdered(list::add);
 
-//        for (int i = 0; i < list.size(); i++) {
-//            boolean isIllegal = PlayerUtil.checkIllegal(list.get(i));
-//            if (isIllegal) {
-//                list.remove(i);
-//            }
-//        }
-        switch(mode.getValue()) {
+        switch (mode.getValue()) {
             case "Novoline":
-                WIDTH = 100f;
-                HEIGHT = 10f * list.size();
+                width = 100f;
+                height = 10f * list.size();
                 Rectangle
-                        .create(x.getValue().floatValue(), y.getValue().floatValue(), WIDTH, 10)
+                        .create(x.getValue().floatValue(), y.getValue().floatValue(), width, 10)
                         .color(DARKER_BACKGROUND)
                         .push(event);
 
@@ -96,26 +93,26 @@ public class TargetList extends Module {
 
 
                 Rectangle
-                        .create(x.getValue().floatValue(), y.getValue().floatValue() + 10, WIDTH, HEIGHT)
+                        .create(x.getValue().floatValue(), y.getValue().floatValue() + 10, width, height)
                         .color(BACKGROUND)
                         .push(event);
                 float ydraw = y.getValue().floatValue() + 10;
 
                 for (EntityPlayer entityPlayer : list) {
                     String name = entityPlayer.getName();
-                    mc.exhiFontRendererObj.drawString(name, x.getValue().floatValue(),y.getValue().floatValue() + ydraw, Color.WHITE);
+                    mc.exhiFontRendererObj.drawString(name, x.getValue().floatValue(), y.getValue().floatValue() + ydraw, Color.WHITE);
                     ydraw += 10f;
                 }
                 break;
             case "Window":
-                WIDTH = 125f;
-                HEIGHT = 10f * list.size();
-                RenderUtil.drawWindowRectangle(event,"TargetList",x.getValue().floatValue(),y.getValue().floatValue(),WIDTH,HEIGHT);
+                width = 125f;
+                height = 10f * list.size();
+                RenderUtil.drawWindowRectangle(event, "TargetList", x.getValue().floatValue(), y.getValue().floatValue(), width, height);
                 ydraw = y.getValue().floatValue() + 11f;
-                for(EntityPlayer entityPlayer : list) {
-                    RenderUtil.renderHead(event,entityPlayer,x.getValue().floatValue() + 1,ydraw + 2,8);
+                for (EntityPlayer entityPlayer : list) {
+                    RenderUtil.renderHead(event, entityPlayer, x.getValue().floatValue() + 1, ydraw + 2, 8);
                     String name = entityPlayer.getName();
-                    CFonts.SFPT_REGULAR_18.drawStringWithShadow(name,x.getValue().floatValue() + 9,ydraw,Color.WHITE);
+                    CFonts.SFPT_REGULAR_18.drawStringWithShadow(name, x.getValue().floatValue() + 9, ydraw, Color.WHITE);
                     ydraw += 10f;
                 }
                 break;
@@ -123,7 +120,7 @@ public class TargetList extends Module {
 
         if (dragging) {
             Rectangle
-                    .create(x.getValue().floatValue() - 0.5f, y.getValue().floatValue() - 0.5f, WIDTH + 1, HEIGHT + 12f)
+                    .create(x.getValue().floatValue() - 0.5f, y.getValue().floatValue() - 0.5f, width + 1, height + 12f)
                     .color(Vanta.instance.moduleStorage.getT(Theme.class).colors[0])
                     .outline(true)
                     .push(event);

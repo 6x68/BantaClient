@@ -11,7 +11,7 @@ public class BlockHit extends Module {
     }
 
     @EventListen
-    private void onBlock(AllowAttackWhileBlockingEvent event) {
+    private void onAllowAttackWhileBlocking(AllowAttackWhileBlockingEvent event) {
         event.cancelled = true;
     }
 }

@@ -9,9 +9,9 @@ import today.vanta.util.system.math.Counter;
 
 public class TriggerBot extends Module {
     private final Counter attackCounter = new Counter();
-    EntityLivingBase target;
-    int mincps = 11;
-    int maxcps = 13;
+    private EntityLivingBase target;
+    private final int mincps = 11;
+    private final int maxcps = 13;
     public TriggerBot() {
         super("TriggerBot", "Clicks Left trigger when hovering player.", Category.COMBAT);
     }
@@ -22,7 +22,7 @@ public class TriggerBot extends Module {
     }
 
     @EventListen
-    public void onUpdate(UpdateEvent event) {
+    private void onUpdate(UpdateEvent event) {
         if (mc.objectMouseOver.entityHit instanceof EntityLivingBase) {
             target = (EntityLivingBase) mc.objectMouseOver.entityHit;
             if (attackCounter.hasElapsed(calculateAttackDelay(), true)) {

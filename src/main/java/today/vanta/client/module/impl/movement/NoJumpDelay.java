@@ -11,7 +11,7 @@ public class NoJumpDelay extends Module {
     }
 
     @EventListen
-    public void onJumpDelay(JumpDelayEvent event) {
+    private void onJumpDelay(JumpDelayEvent event) {
         event.cancelled = true;
     }
 }

@@ -40,25 +40,24 @@ public class Scaffold extends Module {
             towerMode = Setting.of("Tower mode", "Jump", "Jump", "Motion", "Low"),
             sprintMode = Setting.of("Sprint mode", "Manual", "None", "Always");
 
-    private final BooleanSetting sneak = Setting.of("Sneak", false).hide(() -> rotationMode.getValue().equals("Godbridge"));
+    private final BooleanSetting sneak = Setting.of("Sneak", false).hide(() -> rotationMode.isValue("Godbridge"));
     private final StringSetting sneakMode = Setting.of("Sneak mode", "Eagle", "Eagle", "Blatant", "Always").hide(() -> !sneak.getValue());
 
     private final NumberSetting
             sneakDelay = Setting.of("Sneak delay", 57, 0, 300, "ms")
-            .hide(() -> !sneak.getValue() || !(sneakMode.getValue().equals("Eagle") || sneakMode.getValue().equals("Blatant"))),
+            .hide(() -> !sneak.getValue() || !(sneakMode.isValue("Eagle") || sneakMode.isValue("Blatant"))),
             unSneakDelay = Setting.of("Unsneak delay", 299, 0, 300, "ms"
-            ).hide(() -> !sneak.getValue() || !(sneakMode.getValue().equals("Eagle") || sneakMode.getValue().equals("Blatant")));
+            ).hide(() -> !sneak.getValue() || !(sneakMode.isValue("Eagle") || sneakMode.isValue("Blatant")));
 
     private final BooleanSetting
-            keepY = Setting.of("Keep Y", false).hide(() -> rotationMode.getValue().equals("Godbridge")),
-            speedKeepY = Setting.of("Keep Y on speed", false).hide(() -> rotationMode.getValue().equals("Godbridge") || keepY.getValue()),
-            downwards = Setting.of("Downwards", false).hide(() -> rotationMode.getValue().equals("Godbridge")),
-            smoothRotations = Setting.of("Smooth rotations", false).hide(() -> rotationMode.getValue().equals("Godbridge"));
+            keepY = Setting.of("Keep Y", false).hide(() -> rotationMode.isValue("Godbridge")),
+            speedKeepY = Setting.of("Keep Y on speed", false).hide(() -> rotationMode.isValue("Godbridge") || keepY.getValue()),
+            downwards = Setting.of("Downwards", false).hide(() -> rotationMode.isValue("Godbridge")),
+            smoothRotations = Setting.of("Smooth rotations", false).hide(() -> rotationMode.isValue("Godbridge"));
 
     private final DistanceCounter distCounter = new DistanceCounter();
     private int targetDistance = 7;
     private int tick;
-    private boolean cantick;
 
     private final Counter unSneakCounter = new Counter(), sneakCounter = new Counter();
 
@@ -93,7 +92,7 @@ public class Scaffold extends Module {
     }
 
     @EventListen
-    private void onTick(UpdateEvent event) {
+    private void onUpdate(UpdateEvent event) {
         if (!mc.thePlayer.onGround) {
             tick++;
         } else {
@@ -109,11 +108,11 @@ public class Scaffold extends Module {
                 return;
             }
 
-            if (sprintMode.getValue().equals("Always")) {
+            if (sprintMode.isValue("Always")) {
                 mc.gameSettings.keyBindSprint.pressed = true;
             }
 
-            if (itemSwitchMode.getValue().equals("Spoof")) {
+            if (itemSwitchMode.isValue("Spoof")) {
                 int blockSlot = -1;
                 for (int i = 0; i < 9; i++) {
                     ItemStack stack = mc.thePlayer.inventory.getStackInSlot(i);
@@ -150,10 +149,9 @@ public class Scaffold extends Module {
                         }
                         break;
                 }
-            } else {
             }
 
-            if (rotationMode.getValue().equals("Godbridge")) {
+            if (rotationMode.isValue("Godbridge")) {
                 distCounter.tick(mc.thePlayer);
                 if (distCounter.getTravelled() >= targetDistance) {
                     if (mc.thePlayer.onGround) {
@@ -162,7 +160,7 @@ public class Scaffold extends Module {
                     distCounter.reset();
                     targetDistance = 7 + new Random().nextInt(3);
                 }
-            } else if (sneak.getValue() && sneakMode.getValue().equals("Blatant")) {
+            } else if (sneak.getValue() && sneakMode.isValue("Blatant")) {
                 if (unSneakCounter.hasElapsed(unSneakDelay.getValue().longValue(), true)) {
                     mc.gameSettings.keyBindSneak.pressed = Keyboard.isKeyDown(mc.gameSettings.keyBindSneak.getKeyCode());
                 }
@@ -187,7 +185,7 @@ public class Scaffold extends Module {
     }
 
     @EventListen(priority = EventPriority.HIGHEST)
-    private void onRotation(MotionEvent event) {
+    private void onMotion(MotionEvent event) {
         if (TargetProcessor.getInstance().cache != null && lastRots != null) {
             switch (rotationMode.getValue()) {
                 case "Simple":
@@ -218,20 +216,7 @@ public class Scaffold extends Module {
                 RotationProcessor.getInstance().setTargetRotation(rots);
             }
         }
-    }
 
-    @EventListen
-    private void onPacket(SendPacketEvent event) {
-        if (itemSwitchMode.getValue().equals("Spoof") && event.packet instanceof C09PacketHeldItemChange) {
-            C09PacketHeldItemChange packet = (C09PacketHeldItemChange) event.packet;
-            if (packet.getSlotId() != lastSlot) {
-                event.cancelled = true;
-            }
-        }
-    }
-
-    @EventListen
-    private void onMotion(MotionEvent event) {
         if (event.state.equals(EventState.PRE)) {
             if (sneak.getValue()) {
                 switch (sneakMode.getValue()) {
@@ -255,7 +240,7 @@ public class Scaffold extends Module {
             if (mc.thePlayer != null && TargetProcessor.getInstance().cache != null) {
                 ItemStack heldItemStack = mc.thePlayer.getHeldItem();
 
-                if (itemSwitchMode.getValue().equals("Spoof") && lastSlot != -1) {
+                if (itemSwitchMode.isValue("Spoof") && lastSlot != -1) {
                     heldItemStack = mc.thePlayer.inventory.getStackInSlot(lastSlot);
                 }
 
@@ -269,8 +254,18 @@ public class Scaffold extends Module {
     }
 
     @EventListen
+    private void onSendPacket(SendPacketEvent event) {
+        if (itemSwitchMode.isValue("Spoof") && event.packet instanceof C09PacketHeldItemChange) {
+            C09PacketHeldItemChange packet = (C09PacketHeldItemChange) event.packet;
+            if (packet.getSlotId() != lastSlot) {
+                event.cancelled = true;
+            }
+        }
+    }
+
+    @EventListen
     private void onSprint(SprintEvent event) {
-        if (sprintMode.getValue().equals("None") && rots != null) {
+        if (sprintMode.isValue("None") && rots != null) {
             event.cancelled = true;
         }
     }
@@ -290,7 +285,7 @@ public class Scaffold extends Module {
         KeyBinding.setKeyBindState(mc.gameSettings.keyBindSprint.getKeyCode(), Keyboard.isKeyDown(mc.gameSettings.keyBindSprint.getKeyCode()));
         KeyBinding.setKeyBindState(mc.gameSettings.keyBindSneak.getKeyCode(), Keyboard.isKeyDown(mc.gameSettings.keyBindSneak.getKeyCode()));
 
-        if (itemSwitchMode.getValue().equals("Spoof") && lastSlot != -1 && lastSlot != mc.thePlayer.inventory.currentItem) {
+        if (itemSwitchMode.isValue("Spoof") && lastSlot != -1 && lastSlot != mc.thePlayer.inventory.currentItem) {
             sendPacket(new C09PacketHeldItemChange(mc.thePlayer.inventory.currentItem));
         }
 
@@ -317,7 +312,7 @@ public class Scaffold extends Module {
         posY = mc.thePlayer.posY - 0.9;
         lastSlot = -1;
 
-        if (itemSwitchMode.getValue().equals("Spoof")) {
+        if (itemSwitchMode.isValue("Spoof")) {
             for (int i = 0; i < 9; i++) {
                 ItemStack stack = mc.thePlayer.inventory.getStackInSlot(i);
                 if (stack != null && stack.getItem() instanceof ItemBlock && stack.stackSize > 0) {
@@ -326,7 +321,7 @@ public class Scaffold extends Module {
                     break;
                 }
             }
-        } else if (itemSwitchMode.getValue().equals("Switch")) {
+        } else if (itemSwitchMode.isValue("Switch")) {
             InventoryUtil.switchToNextSlot();
         }
     }

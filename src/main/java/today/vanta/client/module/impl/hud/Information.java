@@ -1,10 +1,8 @@
 package today.vanta.client.module.impl.hud;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiChat;
 import org.lwjgl.input.Mouse;
-import org.w3c.dom.css.Rect;
 import today.vanta.Vanta;
 import today.vanta.client.event.impl.client.RenderOverlayEvent;
 import today.vanta.client.event.impl.client.RenderScreenEvent;
@@ -18,41 +16,38 @@ import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.player.MovementUtil;
 import today.vanta.util.game.player.PlayerUtil;
 import today.vanta.util.game.render.RenderUtil;
-import today.vanta.util.game.render.Renderable;
 import today.vanta.util.game.render.font.CFonts;
-import today.vanta.util.game.render.shape.impl.GradientRectangle;
 import today.vanta.util.game.render.shape.impl.Rectangle;
 import today.vanta.util.system.math.Counter;
 import today.vanta.util.system.math.MathUtil;
 
 import java.awt.*;
+import java.util.Objects;
 
 public class Information extends Module {
     private final StringSetting mode = Setting.of("Mode", "Text", "Window", "Text");
     private final NumberSetting
             x = Setting.of("X position", 20, 0, 2000),
             y = Setting.of("Y position", 20, 0, 2000);
-    private float WIDTH = 75;
-    private float HEIGHT = 50;
+
+    private float width = 75;
+    private float height = 50;
     private boolean dragging;
     private float dragX, dragY;
-    private Color color1 = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
-    private Color color2 = Vanta.instance.moduleStorage.getT(Theme.class).colors[1];
-    private static final Color WINDOWBG = new Color(20, 20, 20, 220);
-    private static final Color BACKGROUND = new Color(20, 20, 20, 190);
-    private Counter playTime = new Counter();
+    private final Counter playTime = new Counter();
     private String oldServer;
     private float totalHeight;
     private float totalWidth;
     private float outlineWidth;
+
     public Information() {
         super("Information", "Provides information on the player.", Category.HUD);
     }
 
     private void handleDragging(float mouseX, float mouseY) {
-        if (mode.getValue().equals("Text")) return;
+        if (mode.isValue("Text")) return;
         if (Mouse.isButtonDown(0)) {
-            if (!dragging && RenderUtil.hovered(mouseX, mouseY, x.getValue().floatValue(), y.getValue().floatValue(), WIDTH, HEIGHT)) {
+            if (!dragging && RenderUtil.hovered(mouseX, mouseY, x.getValue().floatValue(), y.getValue().floatValue(), width, height)) {
                 dragging = true;
                 dragX = mouseX - x.getValue().floatValue();
                 dragY = mouseY - y.getValue().floatValue();
@@ -68,27 +63,27 @@ public class Information extends Module {
     }
 
     @EventListen
-    public void onDrawScreen(RenderScreenEvent event) {
+    private void onRenderScreen(RenderScreenEvent event) {
         if (mc.currentScreen instanceof GuiChat) {
             handleDragging(event.mouseX, event.mouseY);
         }
     }
 
     @EventListen
-    public void onRender2D(RenderOverlayEvent event) {
-        color1 = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
-        color2 = Vanta.instance.moduleStorage.getT(Theme.class).colors[1];
+    private void onRenderOverlay(RenderOverlayEvent event) {
+        Color color1 = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
+
         if (!mc.isSingleplayer() && mc.getCurrentServerData().serverIP != null) {
-            if (oldServer != mc.getCurrentServerData().serverIP) {
+            if (!Objects.equals(oldServer, mc.getCurrentServerData().serverIP)) {
                 playTime.reset();
                 oldServer = mc.getCurrentServerData().serverIP;
-
             }
         }
+
         switch (mode.getValue()) {
             case "Text":
-                totalHeight = HEIGHT;
-                totalWidth = WIDTH;
+                totalHeight = height;
+                totalWidth = width;
                 outlineWidth = 0;
                 float ydraw = event.scaledResolution.getScaledHeight() - 19;
                 if (mc.currentScreen instanceof GuiChat) {
@@ -98,12 +93,12 @@ public class Information extends Module {
                 mc.exhiFontRendererObj.drawString("BPS: " + MovementUtil.getBPS(), 2, ydraw + 10, Color.WHITE,true);
                 break;
             case "Window":
-                WIDTH = 145;
-                HEIGHT = 51;
-                totalHeight = RenderUtil.getTotalWindowHeight(HEIGHT);
-                totalWidth = RenderUtil.getTotalWindowWidth(WIDTH);
+                width = 145;
+                height = 51;
+                totalHeight = RenderUtil.getTotalWindowHeight(height);
+                totalWidth = RenderUtil.getTotalWindowWidth(width);
                 outlineWidth = RenderUtil.getOutlineWidth();
-                RenderUtil.drawWindowRectangle(event,"Information",x.getValue().floatValue(),y.getValue().floatValue(),WIDTH,HEIGHT);
+                RenderUtil.drawWindowRectangle(event,"Information",x.getValue().floatValue(),y.getValue().floatValue(), width, height);
 
 
 //                Rectangle

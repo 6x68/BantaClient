@@ -19,20 +19,20 @@ import today.vanta.util.game.player.MovementUtil;
 public class Speed extends Module {
     private final StringSetting
             mode = Setting.of("Mode", "NCP", "OldNCP", "Mospixel-Basic", "Mospixel", "NCP", "Miniblox-Ground", "Custom"),
-            oncpmode = Setting.of("OldNCP mode", "Y-Port", "Y-Port", "Strafe").hide(() -> !mode.getValue().equals("OldNCP"));
+            oncpmode = Setting.of("OldNCP mode", "Y-Port", "Y-Port", "Strafe").hide(() -> !mode.isValue("OldNCP"));
 
-    private final BooleanSetting shouldjump = Setting.of("Should jump", true).hide(() -> !mode.getValue().equals("Custom"));
-    private final NumberSetting jumpamount = Setting.of("Jump motion", 0.42f, 0.01, 2, 3).hide(() -> !shouldjump.getValue() || !mode.getValue().equals("Custom"));
-    private final BooleanSetting strafe = Setting.of("Should strafe", true).hide(() -> !mode.getValue().equals("Custom"));
-    private final NumberSetting strafeamount = Setting.of("Strafe amount", 0, 0, 2, 2).hide(() -> !strafe.getValue() || !mode.getValue().equals("Custom"));
-    private final BooleanSetting groundstrafe = Setting.of("Should ground strafe", true).hide(() -> !mode.getValue().equals("Custom"));
-    private final NumberSetting groundstrafeamount = Setting.of("Ground strafe amount", 0.2, 0.01, 2, 2).hide(() -> !groundstrafe.getValue() || !mode.getValue().equals("Custom"));
-    private final BooleanSetting groundonstrafe = Setting.of("Ground strafe only strafe", true).hide(() -> !mode.getValue().equals("Custom") || !groundstrafe.getValue());
-    private final BooleanSetting shouldtickstrafe = Setting.of("Should tick strafe", false).hide(() -> !mode.getValue().equals("Custom"));
-    private final NumberSetting tickstrafeamount = Setting.of("Tick strafe amount", 0.2, 0.01, 2, 2).hide(() -> !shouldtickstrafe.getValue() || !mode.getValue().equals("Custom"));
-    private final BooleanSetting shouldlowhop = Setting.of("Should low-hop", false).hide(() -> !mode.getValue().equals("Custom"));
-    private final NumberSetting lowhopstrength = Setting.of("Low-hop strength", 0.2, 0.01, 10, 2).hide(() -> !shouldlowhop.getValue() || !mode.getValue().equals("Custom")),
-            lowhoptick = Setting.of("Low-hop tick", 2, 1, 50, 0).hide(() -> !shouldlowhop.getValue() || !mode.getValue().equals("Custom"));
+    private final BooleanSetting shouldjump = Setting.of("Should jump", true).hide(() -> !mode.isValue("Custom"));
+    private final NumberSetting jumpamount = Setting.of("Jump motion", 0.42f, 0.01, 2, 3).hide(() -> !shouldjump.getValue() || !mode.isValue("Custom"));
+    private final BooleanSetting strafe = Setting.of("Should strafe", true).hide(() -> !mode.isValue("Custom"));
+    private final NumberSetting strafeamount = Setting.of("Strafe amount", 0, 0, 2, 2).hide(() -> !strafe.getValue() || !mode.isValue("Custom"));
+    private final BooleanSetting groundstrafe = Setting.of("Should ground strafe", true).hide(() -> !mode.isValue("Custom"));
+    private final NumberSetting groundstrafeamount = Setting.of("Ground strafe amount", 0.2, 0.01, 2, 2).hide(() -> !groundstrafe.getValue() || !mode.isValue("Custom"));
+    private final BooleanSetting groundonstrafe = Setting.of("Ground strafe only strafe", true).hide(() -> !mode.isValue("Custom") || !groundstrafe.getValue());
+    private final BooleanSetting shouldtickstrafe = Setting.of("Should tick strafe", false).hide(() -> !mode.isValue("Custom"));
+    private final NumberSetting tickstrafeamount = Setting.of("Tick strafe amount", 0.2, 0.01, 2, 2).hide(() -> !shouldtickstrafe.getValue() || !mode.isValue("Custom"));
+    private final BooleanSetting shouldlowhop = Setting.of("Should low-hop", false).hide(() -> !mode.isValue("Custom"));
+    private final NumberSetting lowhopstrength = Setting.of("Low-hop strength", 0.2, 0.01, 10, 2).hide(() -> !shouldlowhop.getValue() || !mode.isValue("Custom")),
+            lowhoptick = Setting.of("Low-hop tick", 2, 1, 50, 0).hide(() -> !shouldlowhop.getValue() || !mode.isValue("Custom"));
 
     public Speed() {
         super("Speed", "Makes you go faster.", Category.MOVEMENT);
@@ -45,7 +45,7 @@ public class Speed extends Module {
     private boolean flag;
 
     @EventListen
-    private void onMotionEvent(MotionEvent event) {
+    private void onMotion(MotionEvent event) {
         if (!mc.thePlayer.onGround) {
             offGroundTicks++;
         } else {
@@ -54,14 +54,14 @@ public class Speed extends Module {
     }
 
     @EventListen
-    private void onRender2D(RenderOverlayEvent event) {
+    private void onRenderOverlay(RenderOverlayEvent event) {
         if (flag) {
             mc.fontRendererObj.drawString("Detected flag! Ticks left: " + (60 - tick), (float) event.scaledResolution.getScaledWidth() / 2 - ((float) mc.fontRendererObj.getStringWidth("Detected flag! Ticks left: " + (60 - tick)) / 2), 400, 0xFFFFFF, true);
         }
     }
 
     @EventListen
-    private void onPacket(ReceivePacketEvent event) {
+    private void onReceivePacket(ReceivePacketEvent event) {
         if (event.packet instanceof S08PacketPlayerPosLook) {
             flag = true;
         }

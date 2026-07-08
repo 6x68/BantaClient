@@ -74,7 +74,7 @@ public class Scoreboard extends Module {
     }
 
     @EventListen
-    private void onDrawScreen(RenderScreenEvent event) {
+    private void onRenderScreen(RenderScreenEvent event) {
         if (mc.thePlayer == null || mc.theWorld == null) return;
 
         ScoreboardLayout layout = resolveLayout();
@@ -206,14 +206,14 @@ public class Scoreboard extends Module {
     }
 
     private static class ScoreboardLayout {
-        final net.minecraft.scoreboard.Scoreboard scoreboard;
-        final ScoreObjective objective;
-        final List<Score> scores;
-        final int width;
-        final float totalWidth;
-        final float totalHeight;
-        final float defaultX;
-        final float defaultY;
+        private final net.minecraft.scoreboard.Scoreboard scoreboard;
+        private final ScoreObjective objective;
+        private final List<Score> scores;
+        private final int width;
+        private final float totalWidth;
+        private final float totalHeight;
+        private final float defaultX;
+        private final float defaultY;
 
         ScoreboardLayout(net.minecraft.scoreboard.Scoreboard scoreboard, ScoreObjective objective, List<Score> scores, int width, float totalWidth, float totalHeight, float defaultX, float defaultY) {
             this.scoreboard = scoreboard;

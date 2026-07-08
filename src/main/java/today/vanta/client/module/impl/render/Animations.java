@@ -31,12 +31,12 @@ public class Animations extends Module {
     }
 
     @EventListen
-    private void onBob(BobArmEvent event) {
+    private void onBobArm(BobArmEvent event) {
         event.cancelled = noSway.getValue();
     }
 
     @EventListen
-    private void onItemSwing(RenderItemSwingEvent event) {
+    private void onRenderItemSwing(RenderItemSwingEvent event) {
         if (smoothSwing.getValue()) {
             event.cancelled = true;
             event.renderer.doItemUsedTransformations(0);
@@ -68,7 +68,7 @@ public class Animations extends Module {
     }
 
     @EventListen
-    private void onPerform(PerformBlockEvent event) {
+    private void onPerformBlock(PerformBlockEvent event) {
         event.cancelled = true;
         ItemRenderer renderer = event.renderer;
 

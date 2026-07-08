@@ -1,14 +1,12 @@
 package today.vanta.client.module.impl.movement;
 
-import today.vanta.Vanta;
 import today.vanta.client.event.impl.game.player.JumpEvent;
 import today.vanta.client.event.impl.game.player.MoveFlyingEvent;
 import today.vanta.client.event.impl.game.player.MoveInputEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
-import today.vanta.client.module.impl.combat.KillAura;
-import today.vanta.client.module.impl.player.Scaffold;
 import today.vanta.client.processor.impl.RotationProcessor;
+import today.vanta.client.processor.impl.TargetProcessor;
 import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.MultiStringSetting;
 import today.vanta.util.game.events.EventListen;
@@ -31,7 +29,7 @@ public class MovementFix extends Module {
     }
 
     @EventListen
-    private void onStrafe(MoveFlyingEvent event) {
+    private void onMoveFlying(MoveFlyingEvent event) {
         if (getRotations() == null) return;
         if (isExempted()) return;
         event.yaw = getRotations().yaw;
@@ -54,10 +52,10 @@ public class MovementFix extends Module {
 
     private boolean isExempted() {
         boolean scaffoldEnabled = exemptions.isEnabled("Scaffold")
-                && Vanta.instance.moduleStorage.getT(Scaffold.class).isEnabled();
+                && TargetProcessor.getInstance().scaffold.isEnabled();
 
         boolean killAuraEnabled = exemptions.isEnabled("KillAura")
-                && Vanta.instance.moduleStorage.getT(KillAura.class).isEnabled();
+                && TargetProcessor.getInstance().killaura.isEnabled();
 
         if (scaffoldEnabled) {
             return true;

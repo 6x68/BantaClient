@@ -9,6 +9,7 @@ public class NoFall extends Module {
     public NoFall() {
         super("NoFall", "No fall damage.", Category.PLAYER);
     }
+
     @EventListen
     private void onUpdate(UpdateEvent event) {
         mc.thePlayer.fallDistance = 0.0f;

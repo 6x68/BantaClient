@@ -2,9 +2,7 @@ package today.vanta.client.module.impl.hud;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import today.vanta.Vanta;
 import today.vanta.client.event.impl.client.RenderOverlayEvent;
-import today.vanta.client.event.impl.game.GameLoopEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.module.impl.combat.KillAura;
@@ -20,31 +18,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class KillStats extends Module {
-    KillAura killaura = Vanta.instance.moduleStorage.getT(KillAura.class);
-    List<EntityLivingBase> list = new ArrayList<>();
-    EntityLivingBase target;
-    int kills = 0;
-    String oldTarget = "";
+    private final List<EntityLivingBase> list = new ArrayList<>();
+    private int kills = 0;
+
     public KillStats() {
-        super("Kill Stats", "Keeps track of your kills.", Category.HUD);
+        super("KillStats", "Keeps track of your kills.", Category.HUD);
     }
+
     @EventListen
-    public void onRenderOverlay(RenderOverlayEvent event) {
+    private void onRenderOverlay(RenderOverlayEvent event) {
+        KillAura killAura = TargetProcessor.getInstance().killaura;
         list.clear();
 
         mc.theWorld.getLoadedEntityList().stream()
                 .filter(e -> e instanceof EntityPlayer)
                 .map(e -> (EntityLivingBase) e)
-                .filter(e -> EntityUtil.isValidforKill(e, killaura.raytrace.getValue(), killaura.searchRange.getValue().floatValue()))
-                .sorted(EntityUtil.getComparatorForSorting(killaura.sortMode.getValue()))
+                .filter(e -> EntityUtil.isValidforKill(e, killAura.raytrace.getValue(), killAura.searchRange.getValue().floatValue()))
+                .sorted(EntityUtil.getComparatorForSorting(killAura.sortMode.getValue()))
                 .forEachOrdered(list::add);
 
-        target = list.isEmpty() ? null : list.get(0);
         if (!list.isEmpty()) {
             for (int i = 0; i < list.size(); i++) {
                 if (list.get(i).isDead) {
                     if (list.get(i).getLastAttacker() == null) return;
-                    ChatUtil.send(ChatUtil.Prefix.INFO, list.get(i).getName() + " Killer: "+ list.get(i).getLastAttacker().getName());
+                    ChatUtil.send(ChatUtil.Prefix.INFO, list.get(i).getName() + " Killer: " + list.get(i).getLastAttacker().getName());
                     if (list.get(i).getLastAttacker() == mc.thePlayer) {
                         kills++;
                         list.remove(i);
@@ -52,26 +49,12 @@ public class KillStats extends Module {
                 }
             }
         }
+
         if (mc.thePlayer == null || mc.theWorld == null) {
             kills = 0;
         }
-//        if (target != null && target.getAttackingEntity() != null) {
-//            ChatUtil.send(ChatUtil.Prefix.INFO, target.getAttackingEntity().getName());
-//            target.getl
-//        }
-//        if (killaura.isEnabled() && target != null) {
-//            if (target.isDead && !target.getName().equals(oldTarget)) {
-//                oldTarget = target.getName();
-//                kills++;
-//                ChatUtil.send(ChatUtil.Prefix.INFO, String.valueOf(kills));
-//                list.remove(0);
-//            }
-//        }
-//        if (target == null) {
-//            oldTarget = "";
-//        }
 
-        RenderUtil.drawWindowRectangle(event, "Kill Stats", 90,90,50,25);
-        CFonts.SFPT_REGULAR_16.drawStringWithShadow(String.valueOf(kills), 91,102, Color.WHITE);
+        RenderUtil.drawWindowRectangle(event, "Kill Stats", 90, 90, 50, 25);
+        CFonts.SFPT_REGULAR_16.drawStringWithShadow(String.valueOf(kills), 91, 102, Color.WHITE);
     }
 }

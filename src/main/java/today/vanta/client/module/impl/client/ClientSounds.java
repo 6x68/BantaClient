@@ -16,9 +16,9 @@ import today.vanta.util.system.math.Counter;
 public class ClientSounds extends Module {
     private final BooleanSetting toggleSounds = Setting.of("Toggle sounds", true);
     private final BooleanSetting expandSounds = Setting.of("Expand sounds", true);
-    Counter counter = new Counter();
-    float oldPlay = 0;
-    float oldDisable = 0;
+    private final Counter counter = new Counter();
+    private float oldPlay = 0;
+    private float oldDisable = 0;
 
     public ClientSounds() {
         super("ClientSounds", "Client Sounds.", Category.CLIENT);
@@ -47,7 +47,7 @@ public class ClientSounds extends Module {
     }
 
     @EventListen
-    private void onModuleExpand(ModuleExpandedEvent event) {
+    private void onModuleExpanded(ModuleExpandedEvent event) {
         if (!expandSounds.getValue()) return;
         if (event.config) return;
         if (!(mc.currentScreen instanceof ClickGUIScreen)) return;

@@ -4,7 +4,7 @@ import today.vanta.util.game.render.font.IRenderer;
 import java.awt.Color;
 
 public abstract class ArraylistRenderer {
-    protected final IRenderer renderer;
+    public final IRenderer renderer;
 
     public ArraylistRenderer(IRenderer renderer) {
         this.renderer = renderer;

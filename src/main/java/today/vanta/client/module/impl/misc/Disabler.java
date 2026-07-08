@@ -4,6 +4,8 @@ import io.netty.buffer.Unpooled;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.client.*;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import today.vanta.Vanta;
 import today.vanta.client.event.impl.game.network.SendPacketEvent;
 import today.vanta.client.event.impl.game.world.UpdateEvent;
@@ -45,14 +47,20 @@ public class Disabler extends Module {
                 isProcessing = false;
             }
         }
+
+        if (disable.isEnabled("Miniblox")) {
+            PotionEffect speedEffect = mc.thePlayer.getActivePotionEffect(Potion.moveSpeed);
+            if (speedEffect != null) {
+                mc.thePlayer.moveForward = mc.thePlayer.capabilities.getWalkSpeed() * speedEffect.getAmplifier();
+            }
+        }
     }
 
     @EventListen
-    private void onPacket(SendPacketEvent event) {
+    private void onSendPacket(SendPacketEvent event) {
         if (isProcessing || mc.thePlayer == null) return;
 
         if (disable.isEnabled("Miniblox")) {
-
             if (event.packet instanceof C03PacketPlayer) {
                 PacketBuffer packetbuffer = new PacketBuffer(Unpooled.buffer());
                 packetbuffer.writeDouble(mc.thePlayer.lastTickPosX);

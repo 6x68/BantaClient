@@ -27,7 +27,7 @@ public class NoSlowdown extends Module {
     }
 
     @EventListen
-    private void onSlow(SlowdownEvent event) {
+    private void onSlowdown(SlowdownEvent event) {
         ItemStack currentItem = mc.thePlayer.getCurrentEquippedItem();
 
         if (currentItem == null || !mc.thePlayer.isUsingItem() || !MovementUtil.isMoving()) {

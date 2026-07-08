@@ -97,7 +97,7 @@ public class InventoryManager extends Module {
     }
 
     @EventListen
-    private void onInitGui(DisplayGuiScreenEvent event) {
+    private void onDisplayGuiScreen(DisplayGuiScreenEvent event) {
         if (event.screen instanceof GuiInventory) {
             resetTimers();
         }

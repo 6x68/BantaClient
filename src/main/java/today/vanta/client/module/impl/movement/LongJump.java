@@ -14,9 +14,9 @@ public class LongJump extends Module {
     private final StringSetting mode = Setting.of("Mode", "NCP", "NCP", "Mospixel-Jump");
 
     private final NumberSetting
-            timer = Setting.of("Timer speed", 1, 0.1, 2, 1).hide(() -> !mode.getValue().equals("NCP")),
-            groundSpeed = Setting.of("Ground speed", 0.4, 0.1, 3, 1).hide(() -> !mode.getValue().equals("NCP")),
-            airSpeed = Setting.of("Air speed", 1.4, 0.1, 3, 1).hide(() -> !mode.getValue().equals("NCP"));
+            timer = Setting.of("Timer speed", 1, 0.1, 2, 1).hide(() -> !mode.isValue("NCP")),
+            groundSpeed = Setting.of("Ground speed", 0.4, 0.1, 3, 1).hide(() -> !mode.isValue("NCP")),
+            airSpeed = Setting.of("Air speed", 1.4, 0.1, 3, 1).hide(() -> !mode.isValue("NCP"));
 
     public LongJump() {
         super("LongJump", "Makes you jump longer.", Category.MOVEMENT);

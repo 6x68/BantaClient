@@ -46,7 +46,6 @@ public class TargetHUD extends Module {
 
     private boolean dragging;
     private float dragX, dragY;
-    private float amount;
 
     private final StringSetting mode = Setting.of("Mode", "Vanta", "Classic", "Vanta", "Adjust", "ID-Card", "Aged", "Novoline", "Old Atmosphere", "Atmosphere");
     private final NumberSetting
@@ -58,7 +57,7 @@ public class TargetHUD extends Module {
     }
 
     @EventListen
-    private void onDrawScreen(RenderScreenEvent event) {
+    private void onRenderScreen(RenderScreenEvent event) {
         if (mc.thePlayer == null) return;
 
         if (!(mc.currentScreen instanceof GuiChat) && TargetProcessor.getInstance().target == null) {
@@ -751,7 +750,7 @@ public class TargetHUD extends Module {
         }
 
         if (dragging && mc.currentScreen instanceof GuiChat) {
-            if (mode.getValue().equals("Aged")) {
+            if (mode.isValue("Aged")) {
                 GradientRectangle
                         .create(x - 0.5, y - 0.5, width + 1, height + 1)
                         .firstColor(color)

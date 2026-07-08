@@ -29,7 +29,7 @@ public class Criticals extends Module {
     private static final double PACKET_CRIT_OFFSET = 0.01125D;
     private static final double RANDOM_OFFSET_MIN = 0.001D;
     private static final double RANDOM_OFFSET_MAX = 0.0011D;
-    int tick;
+    private int tick;
 
     private final StringSetting mode = Setting.of("Mode", "Edit", "Edit", "Packet", "Old Watchdog", "Mospixel");
 
@@ -40,32 +40,32 @@ public class Criticals extends Module {
     @EventListen
     private void onMotion(MotionEvent event) {
         if (event.state != EventState.PRE) return;
-        if (mode.getValue().equals("Packet")) return;
+        if (mode.isValue("Packet")) return;
 
-//        if (!shouldCrit() && !mode.getValue().equals("Mospixel Post")) return;
+//        if (!shouldCrit() && !mode.isValue("Mospixel Post")) return;
 
         Entity target = getTarget();
         if (target == null) return;
 
         int hurtResistantTime = target.hurtResistantTime;
 
-        if (mode.getValue().equals("Old Watchdog")) {
+        if (mode.isValue("Old Watchdog")) {
             applyHypixelCrit(event, hurtResistantTime);
         }
-        if (mode.getValue().equals("Mospixel")) {
+        if (mode.isValue("Mospixel")) {
             applyMospixelCrit(event,hurtResistantTime);
         }
 //            applyStandardCrit(event, hurtResistantTime);
     }
 
     @EventListen
-    public void onTick(UpdateEvent event) {
+    private void onUpdate(UpdateEvent event) {
         tick++;
     }
 
     @EventListen
-    private void onPacket(SendPacketEvent event) {
-        if (!mode.getValue().equals("Packet")) return;
+    private void onSendPacket(SendPacketEvent event) {
+        if (!mode.isValue("Packet")) return;
 
         if (!(event.packet instanceof C0APacketAnimation)) return;
 

@@ -16,13 +16,13 @@ import today.vanta.util.system.math.Counter;
 public class Fly extends Module {
     private final StringSetting mode = Setting.of("Mode", "Vanilla", "Vanilla", "Miniblox", "Teleport", "Jump");
 
-    private final NumberSetting distance = Setting.of("TP distance", 3, 0, 10, "m").hide(() -> !mode.getValue().equals("Teleport"));
-    private final NumberSetting ticks = Setting.of("TP ticks", 10, 1, 20).hide(() -> !mode.getValue().equals("Teleport"));
+    private final NumberSetting distance = Setting.of("TP distance", 3, 0, 10, "m").hide(() -> !mode.isValue("Teleport"));
+    private final NumberSetting ticks = Setting.of("TP ticks", 10, 1, 20).hide(() -> !mode.isValue("Teleport"));
     private final NumberSetting viewBobbing = Setting.of("View-bob amount", 60.0f,0.0f,100f);
 
     private final Counter jumpCounter = new Counter();
 
-    double prevposY;
+    private double prevposY;
 
     public Fly() {
         super("Fly", "Allows you to fly like a pelican.", Category.MOVEMENT);
@@ -56,7 +56,7 @@ public class Fly extends Module {
 
     @EventListen
     private void onMotion(MotionEvent event) {
-        if (mode.getValue().equals("Miniblox")) {
+        if (mode.isValue("Miniblox")) {
             // dont work xd
 //                mc.gameSettings.keyBindSneak.pressed = true;
             MovementUtil.strafe(0.15f);
@@ -87,7 +87,7 @@ public class Fly extends Module {
 
     @EventListen
     private void onMove(MoveEvent event) {
-        if (mode.getValue().equals("Teleport")) {
+        if (mode.isValue("Teleport")) {
             event.setSpeed(0);
         }
     }

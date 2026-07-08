@@ -7,10 +7,9 @@ import today.vanta.client.event.impl.game.network.ReceivePacketEvent;
 import today.vanta.client.event.impl.game.player.ChangeWorldEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
-import today.vanta.client.module.impl.combat.KillAura;
 import today.vanta.client.module.impl.movement.Fly;
 import today.vanta.client.module.impl.movement.Speed;
-import today.vanta.client.module.impl.player.Scaffold;
+import today.vanta.client.processor.impl.TargetProcessor;
 import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.BooleanSetting;
 import today.vanta.client.setting.impl.MultiStringSetting;
@@ -34,7 +33,7 @@ public class AutoDisable extends Module {
     }
 
     @EventListen
-    private void onTick(RunTickEvent event) {
+    private void onRunTick(RunTickEvent event) {
         if (mc.thePlayer == null) return;
 
         if (!mc.thePlayer.isEntityAlive() && onDeath.getValue()) {
@@ -43,7 +42,7 @@ public class AutoDisable extends Module {
     }
 
     @EventListen
-    private void onReceive(ReceivePacketEvent event) {
+    private void onReceivePacket(ReceivePacketEvent event) {
         if (mc.thePlayer == null) return;
 
         if (event.packet instanceof S08PacketPlayerPosLook && onTeleport.getValue()) {
@@ -52,7 +51,7 @@ public class AutoDisable extends Module {
     }
 
     @EventListen
-    private void onUpdate(ChangeWorldEvent event) {
+    private void onChangeWorld(ChangeWorldEvent event) {
         if (onWorldChange.getValue()) {
             tryDisableModules(Reason.WORLD);
         }
@@ -82,11 +81,11 @@ public class AutoDisable extends Module {
 
     private void disableModules() {
         if (modules.isEnabled("Scaffold")) {
-            Vanta.instance.moduleStorage.getT(Scaffold.class).setEnabled(false);
+            TargetProcessor.getInstance().scaffold.setEnabled(false);
         }
 
         if (modules.isEnabled("KillAura")) {
-            Vanta.instance.moduleStorage.getT(KillAura.class).setEnabled(false);
+            TargetProcessor.getInstance().killaura.setEnabled(false);
         }
 
         if (modules.isEnabled("Speed")) {

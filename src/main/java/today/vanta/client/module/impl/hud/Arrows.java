@@ -1,21 +1,13 @@
 package today.vanta.client.module.impl.hud;
 
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL20;
 import today.vanta.Vanta;
 import today.vanta.client.event.impl.client.RenderOverlayEvent;
-import today.vanta.client.event.impl.game.render.RenderEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.module.impl.client.Theme;
-import today.vanta.client.module.impl.combat.KillAura;
 import today.vanta.util.game.events.EventListen;
-import today.vanta.util.game.player.ChatUtil;
-import today.vanta.util.game.render.RenderUtil;
-import today.vanta.util.game.render.shape.impl.Rectangle;
 import today.vanta.util.game.render.shape.impl.Triangle;
 import today.vanta.util.game.world.EntityUtil;
 
@@ -24,15 +16,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Arrows extends Module {
-    EntityPlayer entity;
-    List<EntityPlayer> list = new ArrayList<>();
+    private EntityPlayer entity;
+    private final List<EntityPlayer> list = new ArrayList<>();
 
     public Arrows() {
         super("Arrows", "Triangles pointing to players.", Category.HUD);
     }
 
     @EventListen
-    public void onRender2D(RenderOverlayEvent event) {
+    private void onRenderOverlay(RenderOverlayEvent event) {
         list.clear();
         mc.theWorld.getLoadedEntityList().stream()
                 .filter(entity -> entity instanceof EntityPlayer && entity != mc.thePlayer && !entity.isDead)

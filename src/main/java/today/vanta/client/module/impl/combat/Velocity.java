@@ -22,7 +22,7 @@ public class Velocity extends Module {
     }
 
     @EventListen
-    private void onPacket(ReceivePacketEvent event) {
+    private void onReceivePacket(ReceivePacketEvent event) {
         if (mc.thePlayer == null) return;
         if (staffSafe.getValue() && TargetProcessor.getInstance().target == null) return;
         if (event.packet instanceof S12PacketEntityVelocity) {

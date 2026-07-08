@@ -100,7 +100,7 @@ public class MainMenuScreen extends VantaScreen {
 
         ImageRectangle
                 .create(width - 100 - 20, 20, 100, 100, -1)
-                .resource(ImageUtil.getTexture("cousin.gif"))
+                .resource(ImageUtil.getTexture("cousin.png"))
                 .rotate(rotation)
                 .push(event);
 

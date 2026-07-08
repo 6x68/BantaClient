@@ -24,8 +24,8 @@ public class Jesus extends Module {
     }
 
     @EventListen
-    private void onBB(BlockCollisionEvent event) {
-        if (!mode.getValue().equals("Collision")) return;
+    private void onBlockCollision(BlockCollisionEvent event) {
+        if (!mode.isValue("Collision")) return;
         if (mc.thePlayer == null) return;
 
         if (event.block != Blocks.water) return;

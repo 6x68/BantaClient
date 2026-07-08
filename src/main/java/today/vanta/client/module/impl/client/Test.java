@@ -14,7 +14,7 @@ public class Test extends Module {
     }
 
     @EventListen
-    private void onRender(RenderOverlayEvent event) {
+    private void onRenderOverlay(RenderOverlayEvent event) {
         Triangle
                 .create(15, 15 + 150, 150, 149)
                 .rotate(90)

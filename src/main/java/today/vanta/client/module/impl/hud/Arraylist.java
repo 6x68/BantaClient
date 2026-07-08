@@ -36,9 +36,9 @@ public class Arraylist extends Module {
 
     private final StringSetting
             font = Setting.of("Font", "SFPT", "SFPT", "Tahoma", "Minecraft", "Exhibition"),
-            fontStyle = Setting.of("Font style", "Medium", "Light", "Medium", "Semibold", "Bold", "Heavy", "Regular").hide(() -> !font.getValue().equals("SFPT"));
+            fontStyle = Setting.of("Font style", "Medium", "Light", "Medium", "Semibold", "Bold", "Heavy", "Regular").hide(() -> !font.isValue("SFPT"));
 
-    private final NumberSetting fontSize = Setting.of("Font size", 24, 10, 42, "px").hide(() -> !font.getValue().equals("SFPT") && !font.getValue().equals("Tahoma"));
+    private final NumberSetting fontSize = Setting.of("Font size", 24, 10, 42, "px").hide(() -> !font.isValue("SFPT") && !font.isValue("Tahoma"));
 
     private final BooleanSetting
             fontShadow = Setting.of("Font shadow", true),
@@ -97,7 +97,7 @@ public class Arraylist extends Module {
     }
 
     @EventListen
-    private void onModEnable(ModuleEnableEvent event) {
+    private void onModuleEnable(ModuleEnableEvent event) {
         if (!enabledModules.contains(event.module)) {
             enabledModules.add(event.module);
         }
@@ -105,7 +105,7 @@ public class Arraylist extends Module {
     }
 
     @EventListen
-    private void onRename(ModuleRenamedEvent e) {
+    private void onModuleRenamed(ModuleRenamedEvent e) {
         resortModules();
     }
 
@@ -117,7 +117,7 @@ public class Arraylist extends Module {
     }
 
     @EventListen
-    private void onRender(RenderOverlayEvent event) {
+    private void onRenderOverlay(RenderOverlayEvent event) {
         if (enabledModules.isEmpty()) return;
 
         List<Module> visibleModules = new ArrayList<>();
@@ -187,7 +187,7 @@ public class Arraylist extends Module {
                                 .push(event);
                     }
 
-                    if (line.getValue().equals("Top+right")) {
+                    if (line.isValue("Top+right")) {
                         // right side
                         Rectangle
                                 .create(rectX + rectWidth, rectY - 1, 1, rectHeight + 1)
@@ -270,7 +270,7 @@ public class Arraylist extends Module {
 
             arraylistFontRenderer.drawString(name, x, y + 0.5f, color, fontShadow.getValue());
 
-            y += (background.getValue() || !line.getValue().equals("None")) ? arraylistFontRenderer.getBoxHeight() : arraylistFontRenderer.getFontHeight() + 2;
+            y += (background.getValue() || !line.isValue("None")) ? arraylistFontRenderer.getBoxHeight() : arraylistFontRenderer.getFontHeight() + 2;
             counter++;
         }
     }

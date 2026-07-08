@@ -35,7 +35,6 @@ import net.minecraft.world.border.WorldBorder;
 import net.optifine.CustomColors;
 import today.vanta.Vanta;
 import today.vanta.client.event.impl.game.render.*;
-import today.vanta.client.module.impl.render.Animations;
 import today.vanta.util.game.render.font.impl.BitMapFontRenderer;
 
 import java.util.Collection;

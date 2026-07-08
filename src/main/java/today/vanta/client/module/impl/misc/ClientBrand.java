@@ -35,7 +35,7 @@ public class ClientBrand extends Module {
     }
 
     @EventListen
-    private void onUpdate(ClientBrandEvent event) {
+    private void onClientBrand(ClientBrandEvent event) {
         event.brand = brand.getValue();
     }
 

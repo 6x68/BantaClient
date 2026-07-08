@@ -42,24 +42,22 @@ public class Nametags extends Module {
     private final StringSetting colMode = Setting.of("Health color", "Gradient", "Health", "Gradient").hide(() -> !healthbar.getValue());
 
     private static final Color BACKGROUND = new Color(20, 20, 20, 200);
-    private static final Color DARKER_BACKGROUND = new Color(20, 20, 20, 255);
 
     public Nametags() {
         super("Nametags", "Renders better styled nametags than vanilla above entities.", Category.RENDER);
     }
 
     @EventListen
-    private void onRenderNametag(RenderNametagsEvent event) {
+    private void onRenderNametags(RenderNametagsEvent event) {
         if (canRender(event.entity)) {
             event.cancelled = true;
         }
     }
 
     @EventListen
-    private void onRender(RenderOverlayEvent event) {
+    private void onRenderOverlay(RenderOverlayEvent event) {
         float ticks = event.partialTicks;
         ScaledResolution sr = event.scaledResolution;
-        Color color = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
 
         for (Entity entity : mc.theWorld.loadedEntityList) {
             if (!(entity instanceof EntityLivingBase)) continue;
@@ -145,7 +143,7 @@ public class Nametags extends Module {
             }
 
             if (healthbar.getValue()) {
-                if (colMode.getValue().equals("Gradient")) {
+                if (colMode.isValue("Gradient")) {
                     GradientRectangle
                             .create(startX + (idk / 2), textY + 12, idkbar1, 1)
                             .firstColor(gradcolor2)

@@ -104,9 +104,7 @@ public class BoxyClickGUIScreen extends VantaScreen {
             float imgHeight = 300;
 
             String texture = Vanta.instance.moduleStorage.getT(ClickGUI.class).mascot.getValue() + ".png";
-            if (texture.startsWith("cousin")) {
-                texture = "cousin.gif";
-            } else if (texture.startsWith("longboy")) {
+            if (texture.startsWith("longboy")) {
                 imgHeight = 400;
             }
 

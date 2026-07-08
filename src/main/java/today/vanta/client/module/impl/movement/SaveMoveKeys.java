@@ -14,7 +14,7 @@ public class SaveMoveKeys extends Module {
     }
 
     @EventListen
-    public void onUpdate(UpdateEvent event) {
+    private void onUpdate(UpdateEvent event) {
         if (mc.currentScreen != null) {
             return;
         }

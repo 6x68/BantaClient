@@ -14,7 +14,6 @@ import today.vanta.client.setting.impl.NumberSetting;
 import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.player.InventoryUtil;
-import today.vanta.util.game.player.PlayerUtil;
 import today.vanta.util.game.render.RenderUtil;
 import today.vanta.util.game.render.Renderable;
 import today.vanta.util.game.render.font.CFonts;
@@ -57,7 +56,7 @@ public class BlockCounter extends Module {
     }
 
     @EventListen
-    public void onRender2D(RenderOverlayEvent event) {
+    private void onRenderOverlay(RenderOverlayEvent event) {
         color = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
         float centerValueX = ((float) event.scaledResolution.getScaledWidth() / 2) - (WIDTH / 2);
         if (x.getValue() == null) {return;}
@@ -67,10 +66,13 @@ public class BlockCounter extends Module {
                     .color(new Color(200,200,200,180))
                     .push(event);
         }
+
+        xce = (float) event.scaledResolution.getScaledWidth() / 2;
+        yce = (float) event.scaledResolution.getScaledHeight() / 2;
     }
 
     @EventListen
-    private void onDrawScreen(RenderScreenEvent event) {
+    private void onRenderScreen(RenderScreenEvent event) {
         if (mc.thePlayer == null) {maxBlocks = 0; return;}
         blocks = InventoryUtil.getHotbarBlockCount();
 
@@ -85,12 +87,6 @@ public class BlockCounter extends Module {
                 handleDragging(event.mouseX, event.mouseY);
             }
         }
-    }
-
-    @EventListen
-    private void onRender(RenderOverlayEvent event) {
-        xce = (float) event.scaledResolution.getScaledWidth() / 2;
-        yce = (float) event.scaledResolution.getScaledHeight() / 2;
     }
 
     private void handleDragging(float mouseX, float mouseY) {

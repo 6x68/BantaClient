@@ -11,7 +11,7 @@ public class KeepSprint extends Module {
     }
 
     @EventListen
-    private void onSprint(KeepSprintEvent event) {
+    private void onKeepSprint(KeepSprintEvent event) {
         event.greater = false;
     }
 }

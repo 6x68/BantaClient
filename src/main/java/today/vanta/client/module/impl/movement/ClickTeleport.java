@@ -36,11 +36,11 @@ public class ClickTeleport extends Module {
     private final StringSetting mode = Setting.of("Mode", "Direct", "Direct", "Pathed chunks", "Chunked", "Hybrid");
     private final NumberSetting reach = Setting.of("Reach", 50, 3, 200, "blocks");
     private final NumberSetting delay = Setting.of("Delay", 50, 0, 1000, "ms")
-            .hide(() -> mode.getValue().equals("Direct"));
+            .hide(() -> mode.isValue("Direct"));
     private final NumberSetting chunkLength = Setting.of("Chunk length", 5, 1, 20, "blocks")
-            .hide(() -> mode.getValue().equals("Direct"));
+            .hide(() -> mode.isValue("Direct"));
     private final NumberSetting directPackets = Setting.of("Direct packets", 3, 1, 20)
-            .hide(() -> !mode.getValue().equals("Direct"));
+            .hide(() -> !mode.isValue("Direct"));
 
     private PathEntity chunkedPath;
     private int chunkedIndex;
@@ -373,7 +373,7 @@ public class ClickTeleport extends Module {
     }
 
     @EventListen
-    private void onRenderWorldLast(Render3DEvent event) {
+    private void onRender3D(Render3DEvent event) {
         if (mc.thePlayer == null || mc.theWorld == null || previewTarget == null) {
             return;
         }

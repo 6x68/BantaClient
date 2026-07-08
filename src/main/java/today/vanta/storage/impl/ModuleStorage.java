@@ -73,7 +73,8 @@ public class ModuleStorage extends Storage<Module> {
         list.add(new Timer());
         list.add(new AntiExploit());
         list.add(new AntiCheat());
-        list.add(new MinibloxFix());
+        list.add(new AutoRegister());
+        list.add(new AutoPlay());
 
         //Hud
         list.add(new Arraylist());

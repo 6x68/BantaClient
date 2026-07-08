@@ -36,7 +36,7 @@ public class Crosshair extends Module {
     }
 
     @EventListen
-    private void onRender2D(RenderOverlayEvent event) {
+    private void onRenderOverlay(RenderOverlayEvent event) {
         if (mc.gameSettings.thirdPersonView != 0) {
             return;
         }
@@ -49,7 +49,7 @@ public class Crosshair extends Module {
 
         Color color = Color.WHITE;
 
-        if (colorMode.getValue().equals("Theme")) {
+        if (colorMode.isValue("Theme")) {
             color = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
         }
 

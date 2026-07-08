@@ -133,7 +133,7 @@ public class AntiCheat extends Module {
     }
 
     @EventListen
-    private void onPacket(ReceivePacketEvent event) {
+    private void onReceivePacket(ReceivePacketEvent event) {
         long now = System.currentTimeMillis();
 
         if (event.packet instanceof S0BPacketAnimation) {
@@ -390,9 +390,9 @@ public class AntiCheat extends Module {
     private enum RecordType {SWING, BREAK, HURT, DESTROY}
 
     private static class PacketRecord {
-        final int entityId;
-        final long time;
-        final RecordType type;
+        private final int entityId;
+        private final long time;
+        private final RecordType type;
 
         PacketRecord(int entityId, long time, RecordType type) {
             this.entityId = entityId;
@@ -402,13 +402,13 @@ public class AntiCheat extends Module {
     }
 
     private static class TrackedPlayer {
-        boolean firstUpdate = true;
-        double lastX, lastY, lastZ;
-        boolean lastOnGround;
-        int airTicks;
-        int speedTicks;
-        long lastSwingTime;
-        final Deque<Long> swings = new ArrayDeque<>();
-        final Deque<Long> breaks = new ArrayDeque<>();
+        private boolean firstUpdate = true;
+        private double lastX, lastY, lastZ;
+        private boolean lastOnGround;
+        private int airTicks;
+        private int speedTicks;
+        private long lastSwingTime;
+        private final Deque<Long> swings = new ArrayDeque<>();
+        private final Deque<Long> breaks = new ArrayDeque<>();
     }
 }

@@ -11,7 +11,7 @@ public class FastSneak extends Module {
     }
 
     @EventListen
-    private void onSneak(SneakInputEvent event) {
+    private void onSneakInput(SneakInputEvent event) {
         event.cancelled = true;
     }
 }

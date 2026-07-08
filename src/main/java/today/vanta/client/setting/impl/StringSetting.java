@@ -45,6 +45,10 @@ public class StringSetting extends Setting<String> {
         allValues = newValues;
     }
 
+    public boolean isValue(String value) {
+        return getValue().equals(value);
+    }
+
     public static StringSettingBuilder builder() {
         return new StringSettingBuilder();
     }

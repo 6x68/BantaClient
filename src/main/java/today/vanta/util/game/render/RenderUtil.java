@@ -1,6 +1,5 @@
 package today.vanta.util.game.render;
 
-import com.sun.org.apache.bcel.internal.generic.NEW;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.ScaledResolution;
@@ -12,12 +11,11 @@ import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.MathHelper;
 import net.optifine.reflect.Reflector;
 import org.lwjgl.opengl.GL11;
 import today.vanta.Vanta;
 import today.vanta.client.module.impl.client.Theme;
-import today.vanta.client.module.impl.hud.WindowSettings;
+import today.vanta.client.module.impl.client.WindowSettings;
 import today.vanta.util.game.render.font.CFonts;
 import today.vanta.util.game.render.shape.GradientMode;
 import today.vanta.util.game.render.shape.impl.GradientRectangle;
@@ -104,81 +102,8 @@ public class RenderUtil {
     public static void renderEntity(int posX, int posY, int scale, float mouseX, float mouseY, EntityLivingBase entity) {
         GuiInventory.drawEntityOnScreen(posX, posY, scale, mouseX, mouseY, entity);
     }
-    public static void exhirectangle(double left, double top, double right, double bottom, final int color) {
-        if (left < right) {
-            double var5 = left;
-            left = right;
-            right = var5;
-        }
-        if (top < bottom) {
-            double var5 = top;
-            top = bottom;
-            bottom = var5;
-        }
-        float var11 = (color >> 24 & 0xFF) / 255.0F;
-        float var6 = (color >> 16 & 0xFF) / 255.0F;
-        float var7 = (color >> 8 & 0xFF) / 255.0F;
-        float var8 = (color & 0xFF) / 255.0F;
-        GlStateManager.enableBlend();
-        GlStateManager.disableTexture2D();
-        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-        GlStateManager.color(var6, var7, var8, var11);
-        GL11.glBegin(GL_QUADS);
-        GL11.glVertex3d(left, bottom, 0.0D);
-        GL11.glVertex3d(right, bottom, 0.0D);
-        GL11.glVertex3d(right, top, 0.0D);
-        GL11.glVertex3d(left, top, 0.0D);
-        GL11.glEnd();
-        GlStateManager.enableTexture2D();
-        GlStateManager.disableBlend();
-        GlStateManager.color(1, 1, 1, 1);
-    }
-    public static int getColor(Color color) {
-        return getColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
-    }
 
-    public static int getColor(Color color, int alpha) {
-        return getColor(color.getRed(), color.getGreen(), color.getBlue(), MathHelper.clamp_int(alpha, 0, 255));
-    }
-
-    public static int getColor(int brightness) {
-        return getColor(brightness, brightness, brightness, 255);
-    }
-
-    public static int getColor(int brightness, int alpha) {
-        return getColor(brightness, brightness, brightness, alpha);
-    }
-
-    public static int getColor(int red, int green, int blue) {
-        return getColor(red, green, blue, 255);
-    }
-
-    public static int getColor(int red, int green, int blue, int alpha) {
-        int color = 0;
-        color |= MathHelper.clamp_int(alpha, 0, 255) << 24;
-        color |= MathHelper.clamp_int(red, 0, 255) << 16;
-        color |= MathHelper.clamp_int(green, 0, 255) << 8;
-        color |= MathHelper.clamp_int(blue, 0, 255);
-        return color;
-    }
-
-    public static int getColorOpacity(int color, int alpha) {
-        int red = (color >> 16 & 0xFF);
-        int green = (color >> 8 & 0xFF);
-        int blue = (color & 0xFF);
-        return getColor(red, green, blue, MathHelper.clamp_int(alpha, 0, 255));
-    }
-
-    public static void rectangleBordered(final double x, final double y, final double x1, final double y1, final double width, final int internalColor, final int borderColor) {
-        exhirectangle(x + width, y + width, x1 - width, y1 - width, internalColor);
-       exhirectangle(x + width, y, x1 - width, y + width, borderColor);
-        exhirectangle(x, y, x + width, y1, borderColor);
-        exhirectangle(x1 - width, y, x1, y1, borderColor);
-        exhirectangle(x + width, y1 - width, x1 - width, y1, borderColor);
-    }
-
-
-    public static void drawWindowRectangle(Renderable renderable,String title,float x,float y,float width, float height) {
+    public static void drawWindowRectangle(Renderable renderable, String title, float x, float y, float width, float height) {
         Color WINDOWBG = new Color(20, 20, 20, 220);
         Color BACKGROUND = new Color(20, 20, 20, 190);
         float windowHeight = 12;
@@ -187,14 +112,13 @@ public class RenderUtil {
         Color outlineColor2 = Vanta.instance.moduleStorage.getT(Theme.class).colors[1];
         float outlineWidth = 0.5f;
 
-
         Rectangle
-                .create(x,y,width,windowHeight)
+                .create(x, y, width, windowHeight)
                 .color(WINDOWBG)
                 .push(renderable);
         switch (Vanta.instance.moduleStorage.getT(WindowSettings.class).textAlignment.getValue()) {
             case "Left":
-                CFonts.SFPT_REGULAR_18.drawStringWithShadow(title, x + 0.5f,  y - (textHeight / 2) - 2.5f + (windowHeight / 2), Color.white);
+                CFonts.SFPT_REGULAR_18.drawStringWithShadow(title, x + 0.5f, y - (textHeight / 2) - 2.5f + (windowHeight / 2), Color.white);
                 break;
             case "Center":
                 float textWidth = CFonts.SFPT_REGULAR_18.getStringWidth(title);
@@ -203,11 +127,10 @@ public class RenderUtil {
         }
 
         Rectangle
-                .create(x,y + windowHeight,width,height)
+                .create(x, y + windowHeight, width, height)
                 .color(BACKGROUND)
                 .push(renderable);
         String outlineMode = Vanta.instance.moduleStorage.getT(WindowSettings.class).outline.getValue();
-        if (outlineMode == null) {System.out.println("Fuck off"); return;}
         if (outlineMode != null && !outlineMode.equals("None")) {
             switch (outlineMode) {
                 case "Primary":
@@ -256,14 +179,14 @@ public class RenderUtil {
 
     public static float getTotalWindowWidth(float width) {
         float total = width;
-        if (Vanta.instance.moduleStorage.getT(WindowSettings.class).outline.getValue() != "None") {
+        if (!Vanta.instance.moduleStorage.getT(WindowSettings.class).outline.isValue("None")) {
             total += 0.5f;
         }
         return total;
     }
 
     public static float getOutlineWidth() {
-        if (Vanta.instance.moduleStorage.getT(WindowSettings.class).outline.getValue() != "None") {
+        if (!Vanta.instance.moduleStorage.getT(WindowSettings.class).outline.isValue("None")) {
             return 0.5f;
         } else {
             return 0;
@@ -271,21 +194,21 @@ public class RenderUtil {
     }
 
     public static void renderHead(Renderable renderable, EntityPlayer target, float x, float y, float headSize) throws NullPointerException {
-            ImageRectangle
-                    .create(x, y, headSize, headSize, -1)
-                    .uv(8, 8)
-                    .uvSize(8, 8)
-                    .tileSize(64, 64)
-                    .resource(((AbstractClientPlayer) target).getLocationSkin())
-                    .push(renderable);
+        ImageRectangle
+                .create(x, y, headSize, headSize, -1)
+                .uv(8, 8)
+                .uvSize(8, 8)
+                .tileSize(64, 64)
+                .resource(((AbstractClientPlayer) target).getLocationSkin())
+                .push(renderable);
 
-            ImageRectangle
-                    .create(x, y, headSize, headSize, -1)
-                    .uv(40, 8)
-                    .uvSize(8, 8)
-                    .tileSize(64, 64)
-                    .resource(((AbstractClientPlayer) target).getLocationSkin())
-                    .push(renderable);
+        ImageRectangle
+                .create(x, y, headSize, headSize, -1)
+                .uv(40, 8)
+                .uvSize(8, 8)
+                .tileSize(64, 64)
+                .resource(((AbstractClientPlayer) target).getLocationSkin())
+                .push(renderable);
     }
 
     public static BufferedImage base64ToBufferedImage(String base64Image) {

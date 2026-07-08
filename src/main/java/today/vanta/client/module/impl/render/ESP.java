@@ -24,13 +24,14 @@ import java.awt.*;
 
 public class ESP extends Module {
     private final MultiStringSetting entities = Setting.of("Entities", new String[]{"Players"}, new String[]{"Players", "Monsters", "Animals", "Local", "Invisibles"});
-    private final StringSetting image = Setting.of("Image", "None","ermwhat", "fanta", "longboy", "silly", "cousin", "None");
+    private final StringSetting image = Setting.of("Image", "None","ermwhat", "longboy", "silly", "cousin", "None");
+
     public ESP() {
         super("ESP", "Extra-sensory perception.", Category.RENDER);
     }
 
     @EventListen
-    private void onRender(RenderOverlayEvent event) {
+    private void onRenderOverlay(RenderOverlayEvent event) {
         float ticks = event.partialTicks;
         ScaledResolution sr = event.scaledResolution;
         Color color = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
@@ -70,9 +71,8 @@ public class ESP extends Module {
                     .outlineWidth(1.0f)
                     .push(event);
 
-            if (!image.getValue().equals("None")) {
+            if (!image.isValue("None")) {
                 String texture = image.getValue() +".png";
-                if (texture.startsWith("cousin")) texture = "cousin.gif";
                 ImageRectangle
                         .create(x + 2,y + 2,width - 4,height - 4, -1)
                         .resource(ImageUtil.getTexture(texture))
