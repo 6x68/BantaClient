@@ -46,8 +46,6 @@ public class Watermark extends Module {
         float x = 5;
         float y = 5;
 
-        RenderUtil.drawWindowRectangle(event,"HELLOOOO", 10,10,100,50);
-
         switch (style.getValue()) {
             case "Vanta":
                 CFonts.SFPT_SEMIBOLD_42.drawStringWithShadow(IClient.CLIENT_NAME, x, y, colors[0]);
