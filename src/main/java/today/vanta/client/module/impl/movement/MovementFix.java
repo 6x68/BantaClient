@@ -14,7 +14,7 @@ import today.vanta.util.game.player.MovementUtil;
 import today.vanta.util.game.player.constructors.Rotation;
 
 public class MovementFix extends Module {
-    private final MultiStringSetting exemptions = Setting.of("Exemptions", new String[]{"Scaffold"}, new String[]{"KillAura", "Scaffold"});
+    private final MultiStringSetting exemptions = Setting.of("Exemptions", new String[]{}, new String[]{"KillAura", "Scaffold"});
 
     public MovementFix() {
         super("MovementFix", "Fixes your movement when in combat.", Category.MOVEMENT);
