@@ -124,7 +124,9 @@ public class Scaffold extends Module {
 
                 if (blockSlot != -1 && lastSlot != blockSlot) {
                     lastSlot = blockSlot;
-                    sendPacket(new C09PacketHeldItemChange(blockSlot));
+                    if (mc.thePlayer.inventory.currentItem != blockSlot) {
+                        sendPacket(new C09PacketHeldItemChange(blockSlot));
+                    }
                 }
             } else if (mc.thePlayer.getHeldItem() == null) {
                 switch (itemSwitchMode.getValue()) {
@@ -317,7 +319,9 @@ public class Scaffold extends Module {
                 ItemStack stack = mc.thePlayer.inventory.getStackInSlot(i);
                 if (stack != null && stack.getItem() instanceof ItemBlock && stack.stackSize > 0) {
                     lastSlot = i;
-                    sendPacket(new C09PacketHeldItemChange(i));
+                    if (mc.thePlayer.inventory.currentItem != i) {
+                        sendPacket(new C09PacketHeldItemChange(i));
+                    }
                     break;
                 }
             }
