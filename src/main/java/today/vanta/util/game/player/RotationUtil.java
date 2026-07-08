@@ -20,7 +20,7 @@ public class RotationUtil implements IMinecraft {
         final float multiplier = sensitivity * 0.6f + 0.2f;
         final float deltaScale = 8.0f * 0.15f;
         final float step = multiplier * deltaScale;
-        final float deltaYaw = rotation.yaw - previousRotation.yaw;
+        final float deltaYaw = MathHelper.wrapAngleTo180_float(rotation.yaw - previousRotation.yaw);
         final float deltaPitch = rotation.pitch - previousRotation.pitch;
         final float yaw = previousRotation.yaw + (float) Math.round(deltaYaw / step) * step;
         final float pitch = previousRotation.pitch + (float) Math.round(deltaPitch / step) * step;

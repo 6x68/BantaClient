@@ -17,7 +17,6 @@ public class RotationProcessor extends Processor {
 
     private Rotation targetRotation;
     private Rotation currentRotation;
-    private Rotation lastRotation;
     private Rotation returnRotation;
     private Rotation lastSentRotation;
 
@@ -40,7 +39,6 @@ public class RotationProcessor extends Processor {
             return;
         }
 
-        lastRotation = currentRotation;
         currentRotation = targetRotation;
     }
 
@@ -58,7 +56,11 @@ public class RotationProcessor extends Processor {
 
         if (currentRotation == null || lastSentRotation == null) return;
 
-        float yawDelta  = (float) ((double) currentRotation.yaw - lastSentRotation.yaw);
+        float currentYaw = currentRotation.yaw;
+        while (currentYaw - lastSentRotation.yaw > 180) currentYaw -= 360;
+        while (currentYaw - lastSentRotation.yaw < -180) currentYaw += 360;
+
+        float yawDelta  = currentYaw - lastSentRotation.yaw;
         float pitchDelta = (float) ((double) currentRotation.pitch - lastSentRotation.pitch);
 
         Rotation raw = new Rotation(
@@ -71,6 +73,8 @@ public class RotationProcessor extends Processor {
         event.yaw = gcdRot.yaw;
         event.pitch = gcdRot.pitch;
 
+        lastSentRotation = gcdRot;
+
         mc.thePlayer.renderPitchHead = currentRotation.pitch;
         mc.thePlayer.rotationYawHead = currentRotation.yaw;
 
@@ -81,7 +85,6 @@ public class RotationProcessor extends Processor {
             state = RotateState.INACTIVE;
             targetRotation = null;
             currentRotation = null;
-            lastRotation = null;
             returnRotation = null;
         }
     }
@@ -106,7 +109,6 @@ public class RotationProcessor extends Processor {
         this.returnRotation = new Rotation(mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch);
 
         if (state == RotateState.INACTIVE) {
-            this.lastRotation = this.returnRotation;
         }
 
         this.lastSentRotation = new Rotation(mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch);
