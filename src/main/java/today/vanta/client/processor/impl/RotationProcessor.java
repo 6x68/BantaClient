@@ -9,6 +9,7 @@ import today.vanta.client.processor.Processor;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.events.EventPriority;
 import today.vanta.util.game.events.EventState;
+import today.vanta.util.game.player.ChatUtil;
 import today.vanta.util.game.player.RotationUtil;
 import today.vanta.util.game.player.constructors.Rotation;
 
@@ -70,15 +71,20 @@ public class RotationProcessor extends Processor {
 
         Rotation gcdRot = RotationUtil.gcd(raw, lastSentRotation);
 
-        event.yaw = gcdRot.yaw;
-        event.pitch = gcdRot.pitch;
+        if (Float.isNaN(gcdRot.yaw) || Float.isNaN(gcdRot.pitch)) {
+            event.yaw = currentRotation.yaw;
+            event.pitch = currentRotation.pitch;
+        } else {
+            event.yaw = gcdRot.yaw;
+            event.pitch = gcdRot.pitch;
+        }
 
-        lastSentRotation = gcdRot;
+        lastSentRotation = new Rotation(event.yaw, event.pitch);
 
         mc.thePlayer.renderPitchHead = currentRotation.pitch;
         mc.thePlayer.rotationYawHead = currentRotation.yaw;
 
-        if (state == RotateState.AIMING && lastUpdateTick != mc.thePlayer.ticksExisted && isClose(currentRotation, targetRotation, 0.4f)) {
+        if (state == RotateState.AIMING && mc.thePlayer.ticksExisted - lastUpdateTick > 1 && isClose(currentRotation, targetRotation, 0.4f)) {
             state = RotateState.RETURNING;
             targetRotation = returnRotation;
         } else if (state == RotateState.RETURNING && isClose(currentRotation, returnRotation, 0.1f)) {
@@ -108,10 +114,10 @@ public class RotationProcessor extends Processor {
         this.lastUpdateTick = mc.thePlayer.ticksExisted;
         this.returnRotation = new Rotation(mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch);
 
-        if (state == RotateState.INACTIVE) {
+        if (state == RotateState.INACTIVE || lastSentRotation == null) {
+            this.lastSentRotation = new Rotation(mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch);
         }
 
-        this.lastSentRotation = new Rotation(mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch);
         this.state = RotateState.AIMING;
     }
 
