@@ -61,7 +61,7 @@ public class RotationUtil implements IMinecraft {
         if (blockCache.facing == EnumFacing.UP) diffY += 0.5;
         if (blockCache.facing == EnumFacing.DOWN) diffY -= 0.5;
 
-        float yaw = (float) Math.toDegrees(Math.atan2(diffZ, diffX)) - 90;
+        float yaw = getAdjustedYaw();
         float pitch = (float) -Math.toDegrees(Math.atan2(diffY, dist));
 
         return new Rotation(MathHelper.wrapAngleTo180_float(yaw), MathHelper.clamp_float(pitch, -90.0f, 90.0f));

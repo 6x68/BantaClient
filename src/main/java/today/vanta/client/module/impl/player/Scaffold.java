@@ -183,42 +183,41 @@ public class Scaffold extends Module {
 
             BlockPos playerBlockPos = new BlockPos(mc.thePlayer.posX, posY, mc.thePlayer.posZ);
             TargetProcessor.getInstance().cache = BlockCache.getCache(playerBlockPos);
+
+            if (TargetProcessor.getInstance().cache != null && lastRots != null) {
+                switch (rotationMode.getValue()) {
+                    case "Simple":
+                        rots = smoothRotations.getValue() ? RotationUtil.getSimpleRotations(TargetProcessor.getInstance().cache, lastRots) : RotationUtil.getSimpleRotations(TargetProcessor.getInstance().cache);
+                        break;
+
+                    case "Godbridge":
+                        rots = RotationUtil.getGodbridgeRotations(TargetProcessor.getInstance().cache, lastRots);
+                        break;
+
+                    case "Static":
+                        rots = RotationUtil.getStaticRotations(TargetProcessor.getInstance().cache, lastRots);
+                        break;
+
+                    case "Forward":
+                        rots = RotationUtil.getForwardRotations(TargetProcessor.getInstance().cache, lastRots);
+                        break;
+
+                    case "Sideways":
+                        rots = RotationUtil.getSidewaysRotations();
+                        break;
+                }
+
+                RotationProcessor.getInstance().setTargetRotation(rots);
+                lastRots = rots;
+            } else if (lastRots != null) {
+                rots = lastRots;
+                RotationProcessor.getInstance().setTargetRotation(rots);
+            }
         }
     }
 
     @EventListen(priority = EventPriority.HIGHEST)
     private void onMotion(MotionEvent event) {
-        if (TargetProcessor.getInstance().cache != null && lastRots != null) {
-            switch (rotationMode.getValue()) {
-                case "Simple":
-                    rots = smoothRotations.getValue() ? RotationUtil.getSimpleRotations(TargetProcessor.getInstance().cache, lastRots) : RotationUtil.getSimpleRotations(TargetProcessor.getInstance().cache);
-                    break;
-
-                case "Godbridge":
-                    rots = RotationUtil.getGodbridgeRotations(TargetProcessor.getInstance().cache, lastRots);
-                    break;
-
-                case "Static":
-                    rots = RotationUtil.getStaticRotations(TargetProcessor.getInstance().cache, lastRots);
-                    break;
-
-                case "Forward":
-                    rots = RotationUtil.getForwardRotations(TargetProcessor.getInstance().cache, lastRots);
-                    break;
-                case "Sideways":
-                    rots = RotationUtil.getSidewaysRotations();
-                    break;
-            }
-
-            RotationProcessor.getInstance().setTargetRotation(rots);
-            lastRots = rots;
-        } else {
-            if (lastRots != null) {
-                rots = lastRots;
-                RotationProcessor.getInstance().setTargetRotation(rots);
-            }
-        }
-
         if (event.state.equals(EventState.PRE)) {
             if (sneak.getValue()) {
                 switch (sneakMode.getValue()) {
