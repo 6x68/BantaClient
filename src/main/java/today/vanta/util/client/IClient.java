@@ -16,6 +16,16 @@ public interface IClient {
     List<String> CHANGELOG = Arrays.asList(
             "[#] Made ClickGui togglable in Main Menu",
             "[#] ClickTeleport now draws destination",
-            "[#] Fixed ClientSounds"
+            "[#] Fixed ClientSounds",
+            "[#] Fixed Scaffold",
+            "[+] Added session stat modules",
+            "[+] Added new Boxy ClickGUI",
+            "[+] Added WindowSettings",
+            "[+] Added AutoRegister",
+            "[+] Added Image ESP",
+            "[+] Added AutoPlay",
+            "[+] Added AntiVoid",
+            "[+] Added NoFall",
+            "[+] Added Arrows"
     );
 }
