@@ -24,7 +24,9 @@ import today.vanta.util.game.events.EventPriority;
 import today.vanta.util.game.events.EventState;
 import today.vanta.util.game.player.RotationUtil;
 import today.vanta.util.game.player.constructors.Rotation;
-import today.vanta.util.system.math.Counter;
+import today.vanta.util.system.math.ClickUtil;
+
+import java.util.concurrent.ThreadLocalRandom;
 
 public class KillAura extends Module {
     public final StringSetting
@@ -38,10 +40,6 @@ public class KillAura extends Module {
             searchRange = Setting.of("Search range", 4.3, 1, 7, 1, "m");
 
     public final MultiStringSetting entities = Setting.of("Entities", new String[]{"Players"}, new String[]{"Players", "Animals", "Mobs", "Miscellaneous"});
-
-    private final NumberSetting
-            maxCPS = Setting.of("Max CPS", 11, 1, 20),
-            minCPS = Setting.of("Min CPS", 10, 1, 20);
 
     public final BooleanSetting
             raytrace = Setting.of("Raytrace", true),
@@ -74,21 +72,9 @@ public class KillAura extends Module {
                 setting.setValue(3.4f);
             }
         });
-
-        maxCPS.addListener((setting, oldValue, newValue) -> {
-            if (newValue.floatValue() < minCPS.getValue().floatValue()) {
-                setting.setValue(minCPS.getValue());
-            }
-        });
-
-        minCPS.addListener((setting, oldValue, newValue) -> {
-            if (newValue.floatValue() > maxCPS.getValue().floatValue()) {
-                setting.setValue(maxCPS.getValue());
-            }
-        });
     }
 
-    private final Counter attackCounter = new Counter();
+    private final ClickUtil clickUtil = new ClickUtil();
     private float rangeFix = 3;
     private boolean isBlocking = false;
     private int blockDelay = 0;
@@ -122,7 +108,7 @@ public class KillAura extends Module {
 
         if (event.state == EventState.PRE) {
             if (mc.thePlayer.ticksExisted % 20 == 0) {
-                rangeFix = (int) (attackRange.getValue().floatValue() + Math.random() * 0.4);
+                rangeFix = (int) (attackRange.getValue().floatValue() + ThreadLocalRandom.current().nextDouble() * 0.4);
             }
 
             if (blockDelay > 0) {
@@ -202,7 +188,7 @@ public class KillAura extends Module {
         if (mc.thePlayer != null && TargetProcessor.getInstance().target != null) {
             switch (attackMode.getValue()) {
                 case "Single":
-                    if (attackCounter.hasElapsed(calculateAttackDelay(), true) &&
+                    if (clickUtil.shouldClick(mc.thePlayer.hurtTime > 0) &&
                             TargetProcessor.getInstance().target.getDistanceToEntity(mc.thePlayer) <= rangeFix) {
 
                         isAttacking = true;
@@ -245,11 +231,6 @@ public class KillAura extends Module {
                     break;
             }
         }
-    }
-
-    private long calculateAttackDelay() {
-        long cps = (minCPS.getValue().longValue() + maxCPS.getValue().longValue()) / 2;
-        return 1000 / cps;
     }
 
     private void performBlock(boolean start) {
