@@ -111,7 +111,7 @@ public class Information extends Module {
                 totalHeight = RenderUtil.getTotalWindowHeight(height);
                 totalWidth = RenderUtil.getTotalWindowWidth(width);
                 outlineWidth = RenderUtil.getOutlineWidth();
-                RenderUtil.drawWindowRectangle(event,"Information",x.getValue().floatValue(),y.getValue().floatValue(), width, height);
+                RenderUtil.drawWindowRectangle(event,displayName,x.getValue().floatValue(),y.getValue().floatValue(), width, height);
 
 
 //                Rectangle

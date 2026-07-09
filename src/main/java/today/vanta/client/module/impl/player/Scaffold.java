@@ -1,6 +1,7 @@
 package today.vanta.client.module.impl.player;
 
 import net.minecraft.block.BlockAir;
+import net.minecraft.block.BlockLadder;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -116,7 +117,7 @@ public class Scaffold extends Module {
                 int blockSlot = -1;
                 for (int i = 0; i < 9; i++) {
                     ItemStack stack = mc.thePlayer.inventory.getStackInSlot(i);
-                    if (stack != null && stack.getItem() instanceof ItemBlock && stack.stackSize > 0) {
+                    if (stack != null && stack.getItem() instanceof ItemBlock && stack.stackSize > 0 && !(((ItemBlock) stack.getItem()).getBlock() instanceof BlockLadder)) {
                         blockSlot = i;
                         break;
                     }
