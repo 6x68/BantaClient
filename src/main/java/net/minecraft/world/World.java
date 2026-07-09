@@ -30,6 +30,7 @@ import net.minecraft.world.gen.structure.StructureBoundingBox;
 import net.minecraft.world.storage.ISaveHandler;
 import net.minecraft.world.storage.MapStorage;
 import net.minecraft.world.storage.WorldInfo;
+import today.vanta.client.event.impl.game.world.SkyColorEvent;
 
 import java.util.*;
 import java.util.concurrent.Callable;
@@ -1033,7 +1034,9 @@ public abstract class World implements IBlockAccess {
             f5 = f5 * (1.0F - f12) + f12;
         }
 
-        return new Vec3(f3, f4, f5);
+        SkyColorEvent skyColorEvent = new SkyColorEvent(f3, f4, f5, partialTicks);
+        skyColorEvent.call();
+        return new Vec3(skyColorEvent.red, skyColorEvent.green, skyColorEvent.blue);
     }
 
     public float getCelestialAngle(float partialTicks) {

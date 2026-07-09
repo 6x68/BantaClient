@@ -74,7 +74,9 @@ import org.lwjgl.opengl.GLContext;
 import org.lwjgl.util.glu.Project;
 import today.vanta.client.event.impl.game.FrameEvent;
 import today.vanta.client.event.impl.game.render.RenderEvent;
+import today.vanta.client.event.impl.game.render.FogColorEvent;
 import today.vanta.client.event.impl.game.render.Render3DEvent;
+import today.vanta.client.event.impl.game.render.WorldTintEvent;
 import today.vanta.util.system.lwjgl.imgui.ImGuiImpl;
 
 import java.io.IOException;
@@ -1534,6 +1536,7 @@ public class EntityRenderer implements IResourceManagerReloadListener {
         }
 
         new Render3DEvent(partialTicks).call();
+        new WorldTintEvent(partialTicks).call();
 
         this.mc.mcProfiler.endStartSection("hand");
 
@@ -1968,6 +1971,12 @@ public class EntityRenderer implements IResourceManagerReloadListener {
             this.fogColorGreen = Reflector.getFieldValueFloat(object, Reflector.EntityViewRenderEvent_FogColors_green, this.fogColorGreen);
             this.fogColorBlue = Reflector.getFieldValueFloat(object, Reflector.EntityViewRenderEvent_FogColors_blue, this.fogColorBlue);
         }
+
+        FogColorEvent fogColorEvent = new FogColorEvent(this.fogColorRed, this.fogColorGreen, this.fogColorBlue, partialTicks);
+        fogColorEvent.call();
+        this.fogColorRed = fogColorEvent.red;
+        this.fogColorGreen = fogColorEvent.green;
+        this.fogColorBlue = fogColorEvent.blue;
 
         Shaders.setClearColor(this.fogColorRed, this.fogColorGreen, this.fogColorBlue, 0.0F);
     }
