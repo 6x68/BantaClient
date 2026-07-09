@@ -329,7 +329,7 @@ public class InventoryUtil implements IMinecraft {
         for (int i = 0; i < 9; i++) {
             ItemStack stack = mc.thePlayer.inventory.getStackInSlot(i);
 
-            if (stack != null && stack.getItem() instanceof ItemBlock) {
+            if (stack != null && stack.getItem() instanceof ItemBlock && ((ItemBlock) stack.getItem()).getBlock().isBlockNormalCube()) {
                 total += stack.stackSize;
             }
         }

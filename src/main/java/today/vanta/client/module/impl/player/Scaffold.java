@@ -117,7 +117,7 @@ public class Scaffold extends Module {
                 int blockSlot = -1;
                 for (int i = 0; i < 9; i++) {
                     ItemStack stack = mc.thePlayer.inventory.getStackInSlot(i);
-                    if (stack != null && stack.getItem() instanceof ItemBlock && stack.stackSize > 0) {
+                    if (stack != null && stack.getItem() instanceof ItemBlock && stack.stackSize > 0 && ((ItemBlock) stack.getItem()).getBlock().isBlockNormalCube()) {
                         blockSlot = i;
                         break;
                     }
