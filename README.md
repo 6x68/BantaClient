@@ -3,6 +3,7 @@
   Vanta Client is a blatant Minecraft 1.8.9 cheat client for servers like funnymc.ru, miniblox.io & more.
   It's built on top of MCP + Optifine sources 1.8.9 and has code from other projects.
   <img src="https://i.imgur.com/71GnVBp.png" width="148" height="148" align="right">
+    <br>Use Azul Zulu JDK 8, many other JDKs are known to mess with the font renderer<br>
 </p>
 
 ## Pasted stuff
