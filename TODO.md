@@ -1,4 +1,3 @@
-- Animations to the Arraylist (Slide maybe)
 - Better font renderer?
 - Fade animation to targethud on draw and before ending render
 - Notification System

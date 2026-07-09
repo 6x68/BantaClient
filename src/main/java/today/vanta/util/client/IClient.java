@@ -14,6 +14,6 @@ public interface IClient {
     String COMMAND_PREFIX = ".";
 
     List<String> CHANGELOG = Arrays.asList(
-
+        "[+] Added more NoFall modes"
     );
 }
