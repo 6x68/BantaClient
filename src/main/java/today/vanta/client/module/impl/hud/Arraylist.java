@@ -1,9 +1,6 @@
 package today.vanta.client.module.impl.hud;
 
 import today.vanta.Vanta;
-import today.vanta.client.event.impl.client.ModuleDisableEvent;
-import today.vanta.client.event.impl.client.ModuleEnableEvent;
-import today.vanta.client.event.impl.client.ModuleRenamedEvent;
 import today.vanta.client.event.impl.client.RenderOverlayEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
@@ -19,11 +16,14 @@ import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.render.font.CFonts;
 import today.vanta.util.game.render.shape.impl.Rectangle;
 import today.vanta.util.system.math.ColorUtil;
+import today.vanta.util.system.math.animation.Animation;
+import today.vanta.util.system.math.animation.Easing;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 public class Arraylist extends Module {
@@ -32,7 +32,8 @@ public class Arraylist extends Module {
 
     private final NumberSetting
             xOffset = Setting.of("X offset", 5, 0, 25),
-            yOffset = Setting.of("Y offset", 5, 0, 25);
+            yOffset = Setting.of("Y offset", 5, 0, 25),
+            animationLength = Setting.of("Animation length", 250, 0, 1000, "ms");
 
     private final StringSetting
             font = Setting.of("Font", "SFPT", "SFPT", "Tahoma", "Minecraft", "Exhibition"),
@@ -53,7 +54,8 @@ public class Arraylist extends Module {
             moduleCase = Setting.of("Module case", "Default", "Default", "Lowercase", "Uppercase"),
             colorMode = Setting.of("Color mode", "Theme", "Theme", "Rainbow", "Random", "Category", "Fade");
 
-    private final List<Module> enabledModules = new ArrayList<>();
+    private final Map<Module, ArraylistEntry> entryMap = new HashMap<>();
+    private final List<ArraylistEntry> entries = new ArrayList<>();
 
     public Arraylist() {
         super("Arraylist", "Draws an arraylist of modules.", Category.HUD);
@@ -64,7 +66,6 @@ public class Arraylist extends Module {
         font.addListener(((setting, oldValue, newValue) -> setFont()));
         fontStyle.addListener(((setting, oldValue, newValue) -> setFont()));
         fontSize.addListener(((setting, oldValue, newValue) -> setFont()));
-        suffixes.addListener(((setting, oldValue, newValue) -> resortModules()));
 
         setFont();
     }
@@ -86,51 +87,62 @@ public class Arraylist extends Module {
                 arraylistFontRenderer = new GlyphRenderer(CFonts.getFont("SFPT-" + fontStyle.getValue(), fontSize.getValue().intValue()));
                 break;
         }
-
-        resortModules();
     }
 
-    @EventListen
-    private void onModuleDisable(ModuleDisableEvent event) {
-        enabledModules.remove(event.module);
-        resortModules();
-    }
+    private void updateEntries() {
+        for (Module module : Vanta.instance.moduleStorage.list) {
+            boolean desiredVisible = module.isEnabled() && !module.hideFromArraylist;
+            ArraylistEntry entry = entryMap.get(module);
 
-    @EventListen
-    private void onModuleEnable(ModuleEnableEvent event) {
-        if (!enabledModules.contains(event.module)) {
-            enabledModules.add(event.module);
+            if (desiredVisible) {
+                if (entry == null) {
+                    float width = getModuleWidth(module);
+                    float offscreen = width + xOffset.getValue().floatValue() + 5;
+                    entry = new ArraylistEntry(module, offscreen);
+                    entryMap.put(module, entry);
+                    entries.add(entry);
+                    entry.visible = true;
+                    entry.animateTo(0, animationLength.getValue().longValue());
+                } else if (!entry.visible) {
+                    entry.visible = true;
+                    entry.animateTo(0, animationLength.getValue().longValue());
+                }
+            } else if (entry != null && entry.visible) {
+                entry.visible = false;
+                float width = getModuleWidth(module);
+                float offscreen = width + xOffset.getValue().floatValue() + 5;
+                entry.animateTo(offscreen, animationLength.getValue().longValue());
+            }
         }
-        resortModules();
+
+        entries.removeIf(entry -> {
+            if (!entry.visible && entry.isAnimationFinished()) {
+                entryMap.remove(entry.module);
+                return true;
+            }
+            return false;
+        });
     }
 
-    @EventListen
-    private void onModuleRenamed(ModuleRenamedEvent e) {
-        resortModules();
-    }
-
-    private void resortModules() {
-        if (enabledModules.isEmpty()) return;
-        enabledModules.sort(Comparator.comparingDouble(
-                m -> arraylistFontRenderer.getStringWidth(getModuleName((Module) m))
-        ).reversed());
+    private float getModuleWidth(Module module) {
+        return arraylistFontRenderer.getStringWidth(getModuleName(module));
     }
 
     @EventListen
     private void onRenderOverlay(RenderOverlayEvent event) {
-        if (enabledModules.isEmpty()) return;
+        updateEntries();
 
-        List<Module> visibleModules = new ArrayList<>();
-
-        for (Module module : enabledModules) {
-            if (!module.hideFromArraylist) {
-                visibleModules.add(module);
-            }
-        }
-
-        if (visibleModules.isEmpty()) {
+        if (entries.isEmpty()) {
             return;
         }
+
+        entries.sort((e1, e2) -> {
+            int compare = Float.compare(getModuleWidth(e2.module), getModuleWidth(e1.module));
+            if (compare != 0) {
+                return compare;
+            }
+            return e1.module.name.compareTo(e2.module.name);
+        });
 
         Color primaryColor = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
         Color secondaryColor = Vanta.instance.moduleStorage.getT(Theme.class).colors[1];
@@ -138,11 +150,12 @@ public class Arraylist extends Module {
 
         float y = yOffset.getValue().floatValue();
         int counter = 0;
-        for (Module module : visibleModules) {
+        for (ArraylistEntry entry : entries) {
+            Module module = entry.module;
             String name = getModuleName(module);
 
             float modWidth = arraylistFontRenderer.getStringWidth(name);
-            float x = event.scaledResolution.getScaledWidth() - modWidth - xOffset.getValue().floatValue() - 2.5f;
+            float x = event.scaledResolution.getScaledWidth() - modWidth - xOffset.getValue().floatValue() - 2.5f + entry.slideOffset;
 
             Color color = primaryColor;
 
@@ -174,13 +187,13 @@ public class Arraylist extends Module {
             }
 
             boolean first = counter == 0;
-            boolean last = counter == visibleModules.size() - 1;
+            boolean last = counter == entries.size() - 1;
+            ArraylistEntry nextEntry = last ? null : entries.get(counter + 1);
 
             switch (line.getValue()) {
                 case "Top+right":
                 case "Top":
                     if (first) {
-                        // top
                         Rectangle
                                 .create(rectX, rectY - 1, rectWidth, 1)
                                 .color(color)
@@ -188,7 +201,6 @@ public class Arraylist extends Module {
                     }
 
                     if (line.isValue("Top+right")) {
-                        // right side
                         Rectangle
                                 .create(rectX + rectWidth, rectY - 1, 1, rectHeight + 1)
                                 .color(color)
@@ -197,12 +209,10 @@ public class Arraylist extends Module {
                     break;
                 case "Full":
                     if (first) {
-                        // top
                         Rectangle
                                 .create(rectX, rectY - 1, rectWidth, 1)
                                 .color(color)
                                 .push(event);
-                        // top left corner
                         Rectangle
                                 .create(rectX - 1, rectY - 1, 1, 1)
                                 .color(color)
@@ -210,41 +220,33 @@ public class Arraylist extends Module {
                     }
 
                     if (last) {
-                        // bottom for last module
                         Rectangle
                                 .create(rectX, rectY + rectHeight, rectWidth, 1)
                                 .color(color)
                                 .push(event);
                     } else {
-                        // bottom for each middle module
-                        Module nextModule = last
-                                ? null
-                                : visibleModules.get(counter + 1);
-
-                        String nextName = getModuleName(nextModule);
+                        String nextName = getModuleName(nextEntry.module);
                         float nextModWidth = arraylistFontRenderer.getStringWidth(nextName);
-                        float nextX = event.scaledResolution.getScaledWidth() - nextModWidth - 5;
-                        float nextRectX = nextX - xOffset.getValue().floatValue();
-
+                        float nextX = event.scaledResolution.getScaledWidth() - nextModWidth - xOffset.getValue().floatValue() - 2.5f + nextEntry.slideOffset;
+                        float nextRectX = nextX - 2;
                         float widthToNext = nextRectX - rectX;
 
-                        Rectangle
-                                .create(rectX, rectY + rectHeight, widthToNext, 1)
-                                .color(color)
-                                .push(event);
+                        if (widthToNext > 0) {
+                            Rectangle
+                                    .create(rectX, rectY + rectHeight, widthToNext, 1)
+                                    .color(color)
+                                    .push(event);
+                        }
                     }
 
-                    // left side
                     Rectangle
                             .create(rectX - 1, rectY, 1, rectHeight)
                             .color(color)
                             .push(event);
-                    // bottom left corner
                     Rectangle
                             .create(rectX - 1, rectY + rectHeight, 1, 1)
                             .color(color)
                             .push(event);
-                    // right side
                     Rectangle
                             .create(rectX + rectWidth, rectY - 1, 1, rectHeight + 2)
                             .color(color)
@@ -252,7 +254,6 @@ public class Arraylist extends Module {
                     break;
 
                 case "Left":
-                    // left side
                     Rectangle
                             .create(rectX - 1, rectY, 1, rectHeight)
                             .color(color)
@@ -260,7 +261,6 @@ public class Arraylist extends Module {
                     break;
 
                 case "Right":
-                    // right side
                     Rectangle
                             .create(rectX + rectWidth, rectY, 1, rectHeight)
                             .color(color)
@@ -304,5 +304,30 @@ public class Arraylist extends Module {
         }
 
         return name;
+    }
+
+    private static class ArraylistEntry {
+        final Module module;
+        float slideOffset;
+        boolean visible;
+        Animation animation;
+
+        ArraylistEntry(Module module, float slideOffset) {
+            this.module = module;
+            this.slideOffset = slideOffset;
+        }
+
+        void animateTo(float target, long duration) {
+            if (animation != null) {
+                animation.stop();
+            }
+
+            animation = Animation.create(slideOffset, target, duration, Easing.EASE_OUT_QUART, value -> slideOffset = value);
+            animation.start();
+        }
+
+        boolean isAnimationFinished() {
+            return animation == null || animation.finished;
+        }
     }
 }
