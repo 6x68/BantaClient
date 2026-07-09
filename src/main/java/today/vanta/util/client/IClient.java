@@ -18,6 +18,7 @@ public interface IClient {
             "[#] ClickTeleport now draws destination",
             "[#] Fixed ClientSounds",
             "[#] Fixed Scaffold",
+            "[+] Added Clicking settings module",
             "[+] Added session stat modules",
             "[+] Added Arraylist animations",
             "[+] Added new Boxy ClickGUI",
