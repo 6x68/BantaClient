@@ -1,6 +1,7 @@
 package today.vanta.client.module.impl.hud;
 
 import net.minecraft.client.gui.GuiChat;
+import net.minecraft.client.gui.ScaledResolution;
 import org.lwjgl.input.Mouse;
 import today.vanta.Vanta;
 import today.vanta.client.event.impl.client.RenderScreenEvent;
@@ -172,18 +173,20 @@ public class BlockCounter extends Module {
                 CFonts.SFPT_SEMIBOLD_20.drawStringWithShadow(block_str, x + WIDTH - length - 2 - 1, y + 1, -1);
                 break;
             case "Adjust":
+                ScaledResolution res = new ScaledResolution(mc);
                 String numberStr = String.valueOf(blocks);
                 String suffixStr = " blocks";
 
-                float suffixLength = CFonts.getFont("SFPT-Regular", 24).getStringWidth(suffixStr);
-                float totalLength = CFonts.getFont("SFPT-Medium", 24).getStringWidth(numberStr) + suffixLength;
-                float numberLength = CFonts.getFont("SFPT-Medium", 24).getStringWidth(numberStr);
-                float spaceLength = CFonts.getFont("SFPT-Regular", 24).getStringWidth(" ");
+                float suffixLength = CFonts.getFont("T-Regular", 18).getStringWidth(suffixStr);
+                float totalLength = CFonts.getFont("T-Regular", 18).getStringWidth(numberStr) + suffixLength;
+                float numberLength = CFonts.getFont("T-Regular", 18).getStringWidth(numberStr);
+                float spaceLength = CFonts.getFont("T-Regular", 18).getStringWidth(" ");
 
-                float startX = xce - totalLength / 2f;
+                float adjustX = res.getScaledWidth() / 2f - totalLength / 2f;
+                float adjustY = res.getScaledHeight() / 2f + 15;
 
-                CFonts.getFont("SFPT-Medium", 24).drawStringWithShadow(numberStr, startX, y - 83, color);
-                CFonts.getFont("SFPT-Regular", 24).drawStringWithShadow("blocks", startX + numberLength + spaceLength, y - 83, Color.white);
+                CFonts.getFont("T-Regular", 18).drawStringWithShadow(numberStr, adjustX, adjustY, color);
+                CFonts.getFont("T-Regular", 18).drawStringWithShadow("blocks", adjustX + spaceLength + numberLength, adjustY, Color.white);
                 break;
         }
 
