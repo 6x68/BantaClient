@@ -53,6 +53,8 @@ public class Information extends Module {
 
     public Information() {
         super("Information", "Provides information on the player.", Category.HUD);
+        displayNames = new String[]{"Information", "SessionStats", "SessionInfo"};
+        hideFromArraylist = true;
     }
 
     private void handleDragging(float mouseX, float mouseY) {

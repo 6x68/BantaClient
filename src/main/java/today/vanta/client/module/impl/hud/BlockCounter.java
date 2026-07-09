@@ -49,6 +49,7 @@ public class BlockCounter extends Module {
 
     public BlockCounter() {
         super("BlockCounter", "Block information.", Category.HUD);
+        hideFromArraylist = true;
     }
 
     private boolean canBeDrawn() {

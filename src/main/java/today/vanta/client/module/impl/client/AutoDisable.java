@@ -30,6 +30,7 @@ public class AutoDisable extends Module {
 
     public AutoDisable() {
         super("AutoDisable", "Automatically disables modules in emergencies.", Category.CLIENT);
+        hideFromArraylist = true;
     }
 
     @EventListen

@@ -28,6 +28,7 @@ public class Crosshair extends Module {
 
     public Crosshair() {
         super("Crosshair", "Looks like CSGO.", Category.HUD);
+        hideFromArraylist = true;
     }
 
     @EventListen

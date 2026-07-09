@@ -54,6 +54,8 @@ public class TargetHUD extends Module {
 
     public TargetHUD() {
         super("TargetHUD", "Target information.", Category.HUD);
+        displayNames = new String[]{"TargetHUD", "TargetHud", "TargetInfo"};
+        hideFromArraylist = true;
     }
 
     @EventListen

@@ -11,6 +11,7 @@ import java.awt.*;
 public class Test extends Module {
     public Test() {
         super("Test", "Test module for developers.", Category.CLIENT);
+        hideFromArraylist = true;
     }
 
     @EventListen

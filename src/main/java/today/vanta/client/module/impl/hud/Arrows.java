@@ -21,6 +21,7 @@ public class Arrows extends Module {
 
     public Arrows() {
         super("Arrows", "Triangles pointing to players.", Category.HUD);
+        hideFromArraylist = true;
     }
 
     @EventListen
