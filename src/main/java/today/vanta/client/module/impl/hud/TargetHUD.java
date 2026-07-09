@@ -100,10 +100,10 @@ public class TargetHUD extends Module {
         }
     }
 
-    private float barWidth = width - 36f - 6f;
-    private float ghostBarWidth = width - 36f - 6f;
-    private float targetWidth = width - 36f - 6f;
-    private float targetWidth2 = width - 36f - 6f;
+    private float barWidth = width - 26f - 6f;
+    private float ghostBarWidth = width - 26f - 6f;
+    private float targetWidth = width - 26f - 6f;
+    private float targetWidth2 = width - 26f - 6f;
     private float adtargetWidth = width - 4f;
     private float adtargetWidth2 = width - 4f;
     private float adghostBarWidth = width - 4f;
@@ -127,26 +127,21 @@ public class TargetHUD extends Module {
 
         switch (mode.getValue()) {
             case "Vanta":
-                int hurt = localTarget.hurtTime;
-                // thanks claude
-                float distFromMid = Math.abs(hurt - 5);
-                float amount = 0.8f + (distFromMid / 5f) * 0.2f;
-                float headSize = 36f * amount;
-                ChatUtil.send(ChatUtil.Prefix.INFO, String.valueOf(amount));
+                float headSize = 26f;
 
-                width = 137;
-                height = 40;
+                width = 128;
+                height = 30;
 
                 Rectangle
                         .create(x, y, width, height)
                         .color(new Color(28, 29, 33))
                         .push(renderable);
 
-                RenderUtil.renderHead(renderable, (EntityPlayer) localTarget, x + 20f - (headSize / 2), y - (headSize / 2) + (height / 2), headSize);
-                CFonts.SFPT_MEDIUM_20.drawStringWithShadow(localTarget.getName(), x + 38, y + 1, Color.WHITE);
-                CFonts.SFPT_REGULAR_18.drawStringWithShadow(String.format("%.1f", localTarget.getHealth()), x + 38, y + 11, Color.WHITE);
+                RenderUtil.renderHead(renderable, (EntityPlayer) localTarget, x + 2, y - (headSize / 2) + (height / 2), headSize);
+                CFonts.SFPT_MEDIUM_20.drawStringWithShadow(localTarget.getName(), x + 2 + headSize, y + 1, Color.WHITE);
+                CFonts.SFPT_REGULAR_18.drawStringWithShadow(String.format("%.1f", localTarget.getHealth()), x + 2 + headSize, y + 11, Color.WHITE);
 
-                float barrwidth = width - 36f - 6f;
+                float barrwidth = width - 26f - 6f;
                 float healthWidth = barrwidth * (localTarget.getHealth() / localTarget.getMaxHealth());
                 float ghostWidth = barrwidth * (localTarget.getHealth() / localTarget.getMaxHealth());
 
@@ -197,17 +192,17 @@ public class TargetHUD extends Module {
                 }
 
                 Rectangle
-                        .create(x + 40f, y + 32, barrwidth, 6f)
+                        .create(x + 4 + headSize, y + 22, barrwidth, 6f)
                         .color(DARKER_BACKGROUND)
                         .push(renderable);
 
                 Rectangle
-                        .create(x + 40f, y + 32, ghostBarWidth, 6f)
+                        .create(x + 4 + headSize, y + 22, ghostBarWidth, 6f)
                         .color(color.darker())
                         .push(renderable);
 
                 GradientRectangle
-                        .create(x + 40f, y + 32, barWidth, 6f)
+                        .create(x + 4 + headSize, y + 22, barWidth, 6f)
                         .firstColor(color.darker())
                         .secondColor(color)
                         .push(renderable);

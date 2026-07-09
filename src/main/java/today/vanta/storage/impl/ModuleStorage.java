@@ -84,7 +84,6 @@ public class ModuleStorage extends Storage<Module> {
         list.add(new Crosshair());
         list.add(new TargetList());
         list.add(new Information());
-        list.add(new KillStats());
         list.add(new Arrows());
         list.add(new WindowSettings());
 
