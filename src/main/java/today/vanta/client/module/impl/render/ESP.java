@@ -11,6 +11,7 @@ import today.vanta.client.event.impl.client.RenderOverlayEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.module.impl.client.Theme;
+import today.vanta.client.processor.impl.TargetProcessor;
 import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.MultiStringSetting;
 import today.vanta.client.setting.impl.StringSetting;
@@ -87,6 +88,7 @@ public class ESP extends Module {
         if (living instanceof IMob && entities.isEnabled("Monsters")) return true;
         if (living.isInvisible() && entities.isEnabled("Invisibles")) return true;
         if (living instanceof EntityPlayer && entities.isEnabled("Player")) return true;
+        if (TargetProcessor.getInstance().bots.contains(living.getName())) return false;
         return false;
     }
 }
