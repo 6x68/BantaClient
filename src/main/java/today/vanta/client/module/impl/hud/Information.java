@@ -107,7 +107,7 @@ public class Information extends Module {
                 break;
             case "Window":
                 width = 150;
-                height = 61;
+                height = 51;
                 totalHeight = RenderUtil.getTotalWindowHeight(height);
                 totalWidth = RenderUtil.getTotalWindowWidth(width);
                 outlineWidth = RenderUtil.getOutlineWidth();
@@ -124,13 +124,12 @@ public class Information extends Module {
 //                        .color(BACKGROUND)
 //                        .push(event);
 
-                RenderUtil.renderHead(event,mc.thePlayer,x.getValue().floatValue() + 2,y.getValue().floatValue() + 14,57);
-                CFonts.SFPT_REGULAR_18.drawStringWithShadow(mc.thePlayer.getName(), x.getValue().floatValue() + 60, y.getValue().floatValue() + 11, Color.WHITE);
-                CFonts.SFPT_REGULAR_18.drawStringWithShadow("FPS: "+ Minecraft.getDebugFPS(), x.getValue().floatValue() + 60, y.getValue().floatValue() + 21, Color.WHITE);
-                CFonts.SFPT_REGULAR_18.drawStringWithShadow("BPS: "+ MovementUtil.getBPS(), x.getValue().floatValue() + 60, y.getValue().floatValue() + 31, Color.WHITE);
-                CFonts.SFPT_REGULAR_18.drawStringWithShadow("Ping: "+ PlayerUtil.getPing(mc.thePlayer), x.getValue().floatValue() + 60, y.getValue().floatValue() + 41, Color.WHITE);
-                CFonts.SFPT_REGULAR_18.drawStringWithShadow("Session: " + MathUtil.formatDuration(playTime.getElapsedTime()), x.getValue().floatValue() + 60, y.getValue().floatValue() + 51, Color.WHITE);
-                CFonts.SFPT_REGULAR_18.drawStringWithShadow("Kills: ",x.getValue().floatValue() + 60,y.getValue().floatValue() + 61, Color.WHITE);
+                RenderUtil.renderHead(event,mc.thePlayer,x.getValue().floatValue() + 2,y.getValue().floatValue() + 14,47);
+                CFonts.SFPT_REGULAR_18.drawStringWithShadow(mc.thePlayer.getName(), x.getValue().floatValue() + 50, y.getValue().floatValue() + 11, Color.WHITE);
+                CFonts.SFPT_REGULAR_18.drawStringWithShadow("FPS: "+ Minecraft.getDebugFPS(), x.getValue().floatValue() + 50, y.getValue().floatValue() + 21, Color.WHITE);
+                CFonts.SFPT_REGULAR_18.drawStringWithShadow("BPS: "+ MovementUtil.getBPS(), x.getValue().floatValue() + 50, y.getValue().floatValue() + 31, Color.WHITE);
+                CFonts.SFPT_REGULAR_18.drawStringWithShadow("Ping: "+ PlayerUtil.getPing(mc.thePlayer), x.getValue().floatValue() + 50, y.getValue().floatValue() + 41, Color.WHITE);
+                CFonts.SFPT_REGULAR_18.drawStringWithShadow("Session: " + MathUtil.formatDuration(playTime.getElapsedTime()), x.getValue().floatValue() + 50, y.getValue().floatValue() + 51, Color.WHITE);
 
                 break;
 

@@ -3,12 +3,14 @@ package today.vanta.client.module.impl.movement;
 import net.minecraft.item.*;
 import today.vanta.Vanta;
 import today.vanta.client.event.impl.game.player.SlowdownEvent;
+import today.vanta.client.event.impl.game.player.WebSlowdownEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.BooleanSetting;
 import today.vanta.client.setting.impl.MultiStringSetting;
 import today.vanta.client.setting.impl.NumberSetting;
+import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.player.MovementUtil;
 
@@ -19,7 +21,10 @@ public class NoSlowdown extends Module {
             forwardMultiplier = Setting.of("Forward multiplier", 1, 0, 1, 2),
             strafeMultiplier = Setting.of("Strafe multiplier", 1, 0, 1, 2);
 
-    private final BooleanSetting shouldSprint = Setting.of("Should sprint", true);
+    private final BooleanSetting
+            shouldSprint = Setting.of("Should sprint", true),
+            cobWebs = Setting.of("Cobwebs", false);
+//    private final StringSetting cobMode = Setting.of("Cobweb mode", "Vanilla", "Vanilla").hide(() -> !cobWebs.getValue());
 
     public NoSlowdown() {
         super("NoSlowdown", "Removes the slowdown effect when using an item.", Category.MOVEMENT);
@@ -47,6 +52,16 @@ public class NoSlowdown extends Module {
 
             event.forward = forwardMultiplier.getValue().floatValue();
             event.strafe = strafeMultiplier.getValue().floatValue();
+        }
+        if (mc.thePlayer.isInWeb && cobWebs.getValue()) {
+            mc.thePlayer.isInWeb = false;
+        }
+    }
+
+    @EventListen
+    private void onWebSlowdown(WebSlowdownEvent event) {
+        if (cobWebs.getValue()) {
+            event.cancelled = true;
         }
     }
 

@@ -27,6 +27,7 @@ import net.minecraft.util.*;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import today.vanta.client.event.impl.game.player.WebSlowdownEvent;
 import today.vanta.client.event.impl.game.world.EntityCollisionBorderSizeEvent;
 
 import java.util.List;
@@ -1583,6 +1584,9 @@ public abstract class Entity implements ICommandSender {
     }
 
     public void setInWeb() {
+        WebSlowdownEvent event = new WebSlowdownEvent();
+        event.call();
+        if (event.cancelled) return;
         this.isInWeb = true;
         this.fallDistance = 0.0F;
     }
