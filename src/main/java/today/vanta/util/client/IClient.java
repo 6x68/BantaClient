@@ -19,6 +19,7 @@ public interface IClient {
             "[#] Fixed ClientSounds",
             "[#] Fixed Scaffold",
             "[+] Added session stat modules",
+            "[+] Added Arraylist animations",
             "[+] Added new Boxy ClickGUI",
             "[+] Added WindowSettings",
             "[+] Added AutoRegister",
