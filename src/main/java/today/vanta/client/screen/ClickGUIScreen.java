@@ -166,7 +166,11 @@ public class ClickGUIScreen extends VantaScreen {
             for (Module module : Vanta.instance.moduleStorage.getModulesByCategory(category)) {
                 boolean hoverMod = RenderUtil.hovered(mouseX, mouseY, x + 1.5f, y + 1, PANEL_WIDTH - 3, 14);
                 if (Vanta.instance.moduleStorage.getT(Theme.class).theme.isValue("Monochrome")) {
-                    textColor = new Color(200,200,200);
+                    color1 = new Color(200,200,200);
+                    textColor = Color.WHITE;
+                } else {
+                    textColor = Color.white;
+                    color1 = Vanta.instance.moduleStorage.getT(Theme.class).colors[0];
                 }
 
                 Rectangle
