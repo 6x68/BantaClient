@@ -48,6 +48,7 @@ public class TabGUI extends Module {
 
     public TabGUI() {
         super("TabGUI", "Tabbin' the categories an modules.", Category.HUD);
+        displayNames = new String[] {"TabGUI", "TabGui"};
     }
 
     public Category getSelectedCategory() {

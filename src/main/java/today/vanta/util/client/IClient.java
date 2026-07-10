@@ -15,6 +15,9 @@ public interface IClient {
 
     List<String> CHANGELOG = Arrays.asList(
             "[+] Added CustomSky, World & Fog",
-            "[+] Added more NoFall modes"
+            "[+] Added more NoFall modes",
+            "[+] Added TabGUI",
+            "[+] Added new theme 'Monochrome'",
+            "[#] Crosshair renders in 3rd person"
     );
 }
