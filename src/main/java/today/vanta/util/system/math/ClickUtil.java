@@ -1,7 +1,7 @@
 package today.vanta.util.system.math;
 
 import today.vanta.Vanta;
-import today.vanta.client.module.impl.client.Clicking;
+import today.vanta.client.module.impl.client.ClickSettings;
 
 import java.util.Random;
 
@@ -28,7 +28,7 @@ public class ClickUtil {
     }
 
     public boolean shouldClick(boolean hurt) {
-        Clicking clicking = Vanta.instance.moduleStorage.getT(Clicking.class);
+        ClickSettings clicking = Vanta.instance.moduleStorage.getT(ClickSettings.class);
         if (clicking == null) {
             return false;
         }
@@ -56,7 +56,7 @@ public class ClickUtil {
         return false;
     }
 
-    private long calculateDelayNanos(boolean hurt, Clicking clicking) {
+    private long calculateDelayNanos(boolean hurt, ClickSettings clicking) {
         int minCps = clicking.minCps.getValue().intValue();
         int maxCps = clicking.maxCps.getValue().intValue();
 
@@ -91,7 +91,7 @@ public class ClickUtil {
         return (long) (delayMs * 1_000_000.0);
     }
 
-    private void updateState(boolean hurt, Clicking clicking) {
+    private void updateState(boolean hurt, ClickSettings clicking) {
         if (hurtCooldown > 0) {
             hurtCooldown--;
         }

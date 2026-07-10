@@ -24,7 +24,7 @@ public class ModuleStorage extends Storage<Module> {
 
         // Client
         list.add(new ClickGUI());
-        list.add(new Clicking());
+        list.add(new ClickSettings());
         list.add(new Theme());
         list.add(new AutoDisable());
         list.add(new Test());

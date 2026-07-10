@@ -6,7 +6,7 @@ import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.BooleanSetting;
 import today.vanta.client.setting.impl.NumberSetting;
 
-public class Clicking extends Module {
+public class ClickSettings extends Module {
     public final NumberSetting
             minCps = Setting.of("Min CPS", 10, 1, 20),
             maxCps = Setting.of("Max CPS", 11, 1, 20),
@@ -21,8 +21,8 @@ public class Clicking extends Module {
             hurtReaction = Setting.of("Hurt reaction", true),
             flicks = Setting.of("Flicks", true);
 
-    public Clicking() {
-        super("Clicking", "Configure combat clicking behavior.", Category.CLIENT);
+    public ClickSettings() {
+        super("ClickSettings", "Configure combat clicking behavior.", Category.CLIENT);
         frozen = true;
 
         maxCps.addListener((setting, oldValue, newValue) -> {
