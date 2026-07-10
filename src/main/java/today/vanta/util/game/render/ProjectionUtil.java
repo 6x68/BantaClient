@@ -1,11 +1,16 @@
 package today.vanta.util.game.render;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.entity.Entity;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
+import net.minecraft.world.World;
 import today.vanta.util.game.IMinecraft;
 
 public class ProjectionUtil implements IMinecraft {
@@ -52,6 +57,43 @@ public class ProjectionUtil implements IMinecraft {
         bounds.clamp(sr.getScaledWidth_double(), sr.getScaledHeight_double());
         return bounds.isVisible() ? bounds : null;
     }
+
+    // claude made this
+    public static ScreenBounds projectSelectionBoundingBox(AxisAlignedBB box, ScaledResolution sr) {
+        double viewerX = mc.getRenderManager().viewerPosX;
+        double viewerY = mc.getRenderManager().viewerPosY;
+        double viewerZ = mc.getRenderManager().viewerPosZ;
+
+        AxisAlignedBB cameraSpaceBox = new AxisAlignedBB(
+                box.minX - viewerX,
+                box.minY - viewerY,
+                box.minZ - viewerZ,
+                box.maxX - viewerX,
+                box.maxY - viewerY,
+                box.maxZ - viewerZ
+        );
+
+        ScreenBounds bounds = new ScreenBounds();
+        boolean projected = false;
+
+        for (int i = 0; i < 8; i++) {
+            double cornerX = (i & 1) == 0 ? cameraSpaceBox.minX : cameraSpaceBox.maxX;
+            double cornerY = (i & 2) == 0 ? cameraSpaceBox.minY : cameraSpaceBox.maxY;
+            double cornerZ = (i & 4) == 0 ? cameraSpaceBox.minZ : cameraSpaceBox.maxZ;
+
+            Vec3 screen = project(cornerX, cornerY, cornerZ, sr);
+            if (screen != null) {
+                bounds.include(screen.xCoord, screen.yCoord);
+                projected = true;
+            }
+        }
+
+        if (!projected) return null;
+
+        bounds.clamp(sr.getScaledWidth_double(), sr.getScaledHeight_double());
+        return bounds.isVisible() ? bounds : null;
+    }
+
 
     public static Vec3 project(double x, double y, double z, ScaledResolution sr) {
         Vec3 projected = ActiveRenderInfo.projectWorldToScreen(x, y, z);

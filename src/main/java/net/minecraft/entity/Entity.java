@@ -357,6 +357,8 @@ public abstract class Entity implements ICommandSender {
     }
 
     public void moveEntity(double x, double y, double z) {
+        WebSlowdownEvent event = new WebSlowdownEvent();
+        event.call();
         if (this.noClip) {
             this.setEntityBoundingBox(this.getEntityBoundingBox().offset(x, y, z));
             this.resetPositionToBB();
@@ -366,7 +368,7 @@ public abstract class Entity implements ICommandSender {
             double d1 = this.posY;
             double d2 = this.posZ;
 
-            if (this.isInWeb) {
+            if (this.isInWeb && !event.cancelled) {
                 this.isInWeb = false;
                 x *= 0.25D;
                 y *= 0.05000000074505806D;
@@ -1584,9 +1586,6 @@ public abstract class Entity implements ICommandSender {
     }
 
     public void setInWeb() {
-        WebSlowdownEvent event = new WebSlowdownEvent();
-        event.call();
-        if (event.cancelled) return;
         this.isInWeb = true;
         this.fallDistance = 0.0F;
     }

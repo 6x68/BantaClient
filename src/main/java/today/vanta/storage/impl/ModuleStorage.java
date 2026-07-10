@@ -71,6 +71,7 @@ public class ModuleStorage extends Storage<Module> {
         list.add(new CustomFog());
         list.add(new CustomSky());
         list.add(new CustomWorld());
+        list.add(new ChestESP());
 
         // Misc
         list.add(new Disabler());

@@ -1,10 +1,12 @@
 package today.vanta.client.module.impl.player;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import today.vanta.client.event.impl.game.network.SendPacketEvent;
 import today.vanta.client.event.impl.game.world.UpdateEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.setting.Setting;
+import today.vanta.client.setting.impl.BooleanSetting;
 import today.vanta.client.setting.impl.NumberSetting;
 import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.events.EventListen;
@@ -16,6 +18,7 @@ public class AntiVoid extends Module {
     private final StringSetting mode = Setting.of("Mode", "Flag", "Blink", "Flag", "Setback");
     private final StringSetting setbackmode = Setting.of("Setback mode", "Ground", "Previous", "Ground");
     private final NumberSetting waitTime = Setting.of("Ticks until activation", 5, 0, 40, 0);
+    private final BooleanSetting stopMotion = Setting.of("Stop motion", false);
 
     private double prevPosZ, prevPosX, prevPosY;
     private int tick;
@@ -54,6 +57,9 @@ public class AntiVoid extends Module {
                     tick++;
                     if (tick > waitTime.getValue().intValue()) {
                         mc.thePlayer.motionY -= 0.4f;
+                        if (stopMotion.getValue()) {
+                            MovementUtil.stop();
+                        }
                     }
                 } else {
                     tick = 0;
@@ -65,6 +71,9 @@ public class AntiVoid extends Module {
                     tick++;
                     if (tick > waitTime.getValue().intValue()) {
                         mc.thePlayer.setPosition(prevPosX, prevPosY, prevPosZ);
+                        if (stopMotion.getValue()) {
+                            MovementUtil.stop();
+                        }
                     }
                 } else {
                     tick = 0;
@@ -76,6 +85,9 @@ public class AntiVoid extends Module {
                     tick++;
                     if (tick > waitTime.getValue().intValue()) {
                         mc.thePlayer.setPosition(prevPosX, prevPosY, prevPosZ);
+                        if (stopMotion.getValue()) {
+                            MovementUtil.stop();
+                        }
                     }
                 } else {
                     tick = 0;
