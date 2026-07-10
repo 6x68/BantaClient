@@ -50,6 +50,7 @@ public class ClickGUIScreen extends VantaScreen {
     private Module listeningModule = null;
 
     private boolean closing = false;
+    private Color textColor = Color.WHITE;
 
     @Override
     protected void initScreen() {
@@ -164,13 +165,16 @@ public class ClickGUIScreen extends VantaScreen {
 
             for (Module module : Vanta.instance.moduleStorage.getModulesByCategory(category)) {
                 boolean hoverMod = RenderUtil.hovered(mouseX, mouseY, x + 1.5f, y + 1, PANEL_WIDTH - 3, 14);
+                if (Vanta.instance.moduleStorage.getT(Theme.class).theme.isValue("Monochrome")) {
+                    textColor = new Color(200,200,200);
+                }
 
                 Rectangle
                         .create(x + 1.5f, y, PANEL_WIDTH - 3, 14)
                         .color(hoverMod ? new Color(50, 50, 50) : new Color(40, 40, 40))
                         .push(event);
 
-                regular.drawString(module.name, x + 3, y + 1, ColorUtil.interpolateColor(Color.WHITE, color1, getAnimationValue(module.name + "_enabled", module.isEnabled() ? 1f : 0f, 200, Easing.EASE_OUT_QUAD)));
+                regular.drawString(module.name, x + 3, y + 1, ColorUtil.interpolateColor(textColor, color1, getAnimationValue(module.name + "_enabled", module.isEnabled() ? 1f : 0f, 200, Easing.EASE_OUT_QUAD)));
                 regular.drawString(module.isExpanded() ? "-" : "+", x + PANEL_WIDTH - regular.getStringWidth(module.isExpanded() ? "-" : "+") - 7, y + 1, hoverMod ? Color.LIGHT_GRAY : Color.WHITE);
 
                 y += 14;

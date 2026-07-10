@@ -10,6 +10,7 @@ import today.vanta.Vanta;
 import today.vanta.client.event.impl.game.player.KeepSprintEvent;
 import today.vanta.client.event.impl.game.player.MotionEvent;
 import today.vanta.client.event.impl.game.player.SprintEvent;
+import today.vanta.client.event.impl.game.world.UpdateEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.processor.impl.RotationProcessor;
@@ -32,7 +33,7 @@ public class KillAura extends Module {
     public final StringSetting
             attackMode = Setting.of("Attack mode", "Single", "Single"),
             sortMode = Setting.of("Sort mode", "Range", "Range", "Health", "Armor", "Hurt-time", "Ticks", "Skin color"),
-            autoBlockMode = Setting.of("Auto-block mode", "None", "None", "Vanilla", "Packet", "Hold", "Mospixel Post"),
+            autoBlockMode = Setting.of("Auto-block mode", "None", "None", "Vanilla", "Packet", "Hold", "Mospixel Post", "Tick"),
             swingMode = Setting.of("Swing mode", "Legit", "Legit", "Blatant");
 
     public final NumberSetting
@@ -46,9 +47,12 @@ public class KillAura extends Module {
             noSwing = Setting.of("No swing", false).hide(() -> !swingMode.isValue("Blatant")),
             sprintReset = Setting.of("Sprint reset", true),
             keepSprint = Setting.of("Keep sprint", false).hide(sprintReset::getValue),
-            swingOnHurtTime = Setting.of("Swing on hurt-time", false);
+            swingOnHurtTime = Setting.of("Swing on hurt-time", false),
+            noBlockSwing = Setting.of("Don't swing while blocking", false);
 
     private float previousAttackRange;
+    private int tick;
+    boolean can;
 
     public KillAura() {
         super("KillAura", "Attacks entities in proximity.", Category.COMBAT);
@@ -97,6 +101,15 @@ public class KillAura extends Module {
         }
     }
 
+    @EventListen
+    private void onUpdate(UpdateEvent event) {
+        if (autoBlockMode.isValue("Tick")) {
+            tick++;
+        } else {
+            tick = 0;
+        }
+    }
+
     @EventListen(priority = EventPriority.HIGHEST)
     private void onMotion(MotionEvent event) {
         if (!TargetProcessor.getInstance().scaffold.isEnabled()) {
@@ -106,6 +119,8 @@ public class KillAura extends Module {
             }
         }
 
+
+
         if (event.state == EventState.PRE) {
             if (mc.thePlayer.ticksExisted % 20 == 0) {
                 rangeFix = (int) (attackRange.getValue().floatValue() + ThreadLocalRandom.current().nextDouble() * 0.4);
@@ -113,6 +128,21 @@ public class KillAura extends Module {
 
             if (blockDelay > 0) {
                 blockDelay--;
+            }
+
+            if (autoBlockMode.isValue("Tick") && TargetProcessor.getInstance().target != null) {
+                if (tick == 2) {
+                    startVanillaBlock();
+                }
+                if (tick >= 3) {
+                    stopVanillaBlock();
+                    tick = 0;
+                    can = true;
+                }
+
+                if (can && tick == 1) {
+                    can = false;
+                }
             }
 
             if (TargetProcessor.getInstance().target != null && mc.thePlayer.getHeldItem() != null && mc.thePlayer.getHeldItem().getItem() instanceof ItemSword) {
@@ -169,6 +199,12 @@ public class KillAura extends Module {
         }
     }
 
+    private void canAttack() {
+        if (swingOnHurtTime.getValue() && TargetProcessor.getInstance().target != null && TargetProcessor.getInstance().target.hurtTime < 2) {
+
+        }
+    }
+
     private void handleAttack() {
         if (TargetProcessor.getInstance().scaffold.isEnabled()) {
             if (isBlocking && !autoBlockMode.isValue("Hold")) {
@@ -198,12 +234,24 @@ public class KillAura extends Module {
                         }
 
                         if (!noSwing.getValue())
-                            if (swingOnHurtTime.getValue()) {
-                                if (TargetProcessor.getInstance().target.hurtTime < 2) {
-                                    mc.thePlayer.swingItem();
+                            if (noBlockSwing.getValue()) {
+                                if (!mc.thePlayer.isBlocking()) {
+                                    if (swingOnHurtTime.getValue()) {
+                                        if (TargetProcessor.getInstance().target.hurtTime < 2) {
+                                            mc.thePlayer.swingItem();
+                                        }
+                                    } else {
+                                        mc.thePlayer.swingItem();
+                                    }
                                 }
                             } else {
-                                mc.thePlayer.swingItem();
+                                if (swingOnHurtTime.getValue()) {
+                                    if (TargetProcessor.getInstance().target.hurtTime < 2) {
+                                        mc.thePlayer.swingItem();
+                                    }
+                                } else {
+                                    mc.thePlayer.swingItem();
+                                }
                             }
                         else if (swingOnHurtTime.getValue()) {
                             if (TargetProcessor.getInstance().target.hurtTime < 1) {
@@ -212,14 +260,26 @@ public class KillAura extends Module {
                         } else {
                             mc.thePlayer.sendQueue.addToSendQueue(new C0APacketAnimation());
                         }
-
-                        switch (swingMode.getValue()) {
-                            case "Legit":
-                                mc.clickMouse();
-                                break;
-                            case "Blatant":
-                                mc.playerController.attackEntity(mc.thePlayer, TargetProcessor.getInstance().target);
-                                break;
+                        if (noBlockSwing.getValue()) {
+                            if (!mc.thePlayer.isBlocking()) {
+                                switch (swingMode.getValue()) {
+                                    case "Legit":
+                                        mc.clickMouse();
+                                        break;
+                                    case "Blatant":
+                                        mc.playerController.attackEntity(mc.thePlayer, TargetProcessor.getInstance().target);
+                                        break;
+                                }
+                            }
+                        } else {
+                            switch (swingMode.getValue()) {
+                                case "Legit":
+                                    mc.clickMouse();
+                                    break;
+                                case "Blatant":
+                                    mc.playerController.attackEntity(mc.thePlayer, TargetProcessor.getInstance().target);
+                                    break;
+                            }
                         }
 
                         if (autoBlockMode.isValue("Vanilla")) {
