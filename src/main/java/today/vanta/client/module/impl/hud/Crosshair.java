@@ -23,6 +23,7 @@ public class Crosshair extends Module {
     private final NumberSetting spaceMove = Setting.of("Moving space", 7, 1, 16);
     private final StringSetting colorMode = Setting.of("Crosshair color", "White", "Theme", "White");
     private final BooleanSetting outline = Setting.of("Outline", true);
+    private final BooleanSetting renderInThirdPerson = Setting.of("Third person render", true);
 
     private float animatedSpacing;
 
@@ -38,7 +39,7 @@ public class Crosshair extends Module {
 
     @EventListen
     private void onRenderOverlay(RenderOverlayEvent event) {
-        if (mc.gameSettings.thirdPersonView != 0) {
+        if (mc.gameSettings.thirdPersonView != 0 && !renderInThirdPerson.getValue()) {
             return;
         }
 
