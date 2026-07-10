@@ -29,6 +29,7 @@ public class ModuleStorage extends Storage<Module> {
         list.add(new AutoDisable());
         list.add(new Test());
         list.add(new ClientSounds());
+        list.add(new WindowSettings());
 
         // Combat
         list.add(new AntiBot());
@@ -89,7 +90,7 @@ public class ModuleStorage extends Storage<Module> {
         list.add(new TargetList());
         list.add(new Information());
         list.add(new Arrows());
-        list.add(new WindowSettings());
+        list.add(new TabGUI());
 
         for (Module mod : list) {
             this.context = mod;
