@@ -50,7 +50,6 @@ public class AntiVoid extends Module {
         if (MovementUtil.movementModuleEnabled()) {
             return;
         }
-
         switch (mode.getValue()) {
             case "Flag":
                 if (PlayerUtil.isOverVoid() && !mc.thePlayer.onGround) {
@@ -67,18 +66,6 @@ public class AntiVoid extends Module {
                 break;
 
             case "Blink":
-                if (PlayerUtil.isOverVoid() && !mc.thePlayer.onGround) {
-                    tick++;
-                    if (tick > waitTime.getValue().intValue()) {
-                        mc.thePlayer.setPosition(prevPosX, prevPosY, prevPosZ);
-                        if (stopMotion.getValue()) {
-                            MovementUtil.stop();
-                        }
-                    }
-                } else {
-                    tick = 0;
-                }
-                break;
 
             case "Setback":
                 if (PlayerUtil.isOverVoid() && !mc.thePlayer.onGround) {
