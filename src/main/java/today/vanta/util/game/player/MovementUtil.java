@@ -3,28 +3,16 @@ package today.vanta.util.game.player;
 import net.minecraft.potion.Potion;
 import today.vanta.Vanta;
 import today.vanta.client.event.impl.game.player.MoveInputEvent;
-import today.vanta.client.event.impl.game.world.UpdateEvent;
 import today.vanta.client.module.impl.movement.Fly;
 import today.vanta.client.module.impl.movement.LongJump;
 import today.vanta.storage.impl.ModuleStorage;
 import today.vanta.util.game.IMinecraft;
-import today.vanta.util.game.events.EventListen;
 
 public class MovementUtil implements IMinecraft {
-
-    private static int offGroundTicks;
     public static boolean isMoving() {
         return mc.thePlayer.moveForward != 0 || mc.thePlayer.moveStrafing != 0;
     }
 
-    @EventListen
-    private void onUpdate(UpdateEvent event) {
-        if (mc.thePlayer.onGround) offGroundTicks = 0;
-        if (!mc.thePlayer.onGround) offGroundTicks++;
-    }
-    public static int getOffGroundTicks() {
-        return offGroundTicks;
-    }
     public static void stop() {
         if (mc.thePlayer == null) {return;}
         mc.thePlayer.motionX = 0;
