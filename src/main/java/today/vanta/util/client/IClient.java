@@ -18,6 +18,7 @@ public interface IClient {
             "[+] Added more NoFall modes",
             "[+] Added TabGUI",
             "[+] Added new theme 'Monochrome'",
+            "[+] Added new Speed mode 'Miniblox'",
             "[#] Crosshair renders in 3rd person"
     );
 }
