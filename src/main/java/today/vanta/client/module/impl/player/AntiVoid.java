@@ -85,7 +85,7 @@ public class AntiVoid extends Module {
 
     @EventListen
     private void onSendPacket(SendPacketEvent event) {
-        if (mode.isValue("Blink") && PlayerUtil.isOverVoid() && !mc.thePlayer.onGround) {
+        if (mode.isValue("Blink") && PlayerUtil.isOverVoid() && !mc.thePlayer.onGround && !mc.thePlayer.isSpectator() && !mc.thePlayer.capabilities.isFlying) {
             event.cancelled = true;
         }
     }

@@ -18,7 +18,7 @@ import today.vanta.util.game.player.MovementUtil;
 
 public class Speed extends Module {
     private final StringSetting
-            mode = Setting.of("Mode", "NCP", "OldNCP", "Mospixel-Basic", "Mospixel", "NCP", "Miniblox-Ground", "Custom"),
+            mode = Setting.of("Mode", "NCP", "OldNCP", "Mospixel-Basic", "Mospixel", "NCP", "Miniblox", "Custom"),
             oncpmode = Setting.of("OldNCP mode", "Y-Port", "Y-Port", "Strafe").hide(() -> !mode.isValue("OldNCP"));
 
     private final BooleanSetting shouldjump = Setting.of("Should jump", true).hide(() -> !mode.isValue("Custom"));
@@ -43,6 +43,9 @@ public class Speed extends Module {
     private int offGroundTicks;
     private int tick;
     private boolean flag;
+    private boolean a;
+    private boolean b;
+    private int c;
 
     @EventListen
     private void onMotion(MotionEvent event) {
@@ -87,7 +90,6 @@ public class Speed extends Module {
                         case "Y-Port":
                             if (mc.thePlayer.onGround) {
                                 mc.thePlayer.jump();
-                                MovementUtil.strafe(0.51);
                             } else {
                                 mc.thePlayer.motionY -= 0.16;
                             }
@@ -167,9 +169,33 @@ public class Speed extends Module {
                         MovementUtil.stop();
                     }
                     break;
-                case "Miniblox-Ground":
+                case "Miniblox":
+                    if (flag) return;
                     if (mc.thePlayer.onGround) {
-                        MovementUtil.strafe(0.16f);
+                        MovementUtil.strafe(0.12f);
+                        mc.thePlayer.jump();
+                        if (!a) {
+                            c++;
+                            a = true;
+                        }
+//                        MovementUtil.strafe(0.4f);
+                    } else {
+                        a = false;
+                    }
+//                    if (offGroundTicks > 9) {
+//                        mc.thePlayer.motionY -= 2.0f;
+//                    }
+//                    mc.thePlayer.moveForward = 3.0f;
+//                    if (offGroundTicks > 4 && offGroundTicks < 10) {
+//                        mc.thePlayer.motionY = -0.1f;
+//                    }
+                    if (!mc.thePlayer.onGround && mc.thePlayer.hurtTime == 0) {
+                        mc.thePlayer.motionY += -3;
+                    }
+
+                    if (mc.thePlayer.onGround && c > 8) {
+//                        MovementUtil.strafe(0);
+                        c = 0;
                     }
 
                     break;

@@ -4,9 +4,11 @@ import io.netty.buffer.Unpooled;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.client.*;
+import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import today.vanta.Vanta;
+import today.vanta.client.event.impl.game.network.ReceivePacketEvent;
 import today.vanta.client.event.impl.game.network.SendPacketEvent;
 import today.vanta.client.event.impl.game.world.UpdateEvent;
 import today.vanta.client.module.Category;
@@ -20,7 +22,7 @@ import today.vanta.util.game.events.EventListen;
 import java.util.*;
 
 public class Disabler extends Module {
-    private final MultiStringSetting disable = Setting.of("Disable", new String[]{"Miniblox"}, new String[]{"Miniblox", "Grim"});
+    private final MultiStringSetting disable = Setting.of("Disable", new String[]{"Miniblox"}, new String[]{"Miniblox", "Grim", "S08"});
     private final NumberSetting holdLength = Setting.of("Hold length", 50, 0, 1000, "ms").hide(() -> !disable.isEnabled("Grim"));
 
     public Disabler() {
@@ -73,6 +75,7 @@ public class Disabler extends Module {
                 packetbuffer.writeBoolean(mc.thePlayer.movementInput.jump);
                 packetbuffer.writeBoolean(mc.thePlayer.movementInput.sneak);
                 packetbuffer.writeBoolean(mc.thePlayer.onGround);
+                packetbuffer.writeBoolean(mc.thePlayer.isSprinting());
                 mc.getNetHandler().addToSendQueue(new C17PacketCustomPayload("miniblox:movepacket", packetbuffer));
             }
         }
@@ -82,6 +85,14 @@ public class Disabler extends Module {
                 packetQueue.add(event.packet);
                 event.cancelled = true;
             }
+        }
+    }
+
+    @EventListen
+    private void onReceivePacket(ReceivePacketEvent event) {
+        if (mc.thePlayer == null) return;
+        if (event.packet instanceof S08PacketPlayerPosLook && disable.isEnabled("S08")) {
+            event.cancelled = true;
         }
     }
 

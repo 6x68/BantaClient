@@ -45,7 +45,7 @@ public class InventoryUtil implements IMinecraft {
     }
 
     public static boolean isBlockValid(Block block) {
-        return block.isFullBlock() && !INVALID_ITEMS.contains(block);
+        return !INVALID_ITEMS.contains(block);
     }
 
     public static int armorProt(ItemArmor armor, ItemStack item) {
