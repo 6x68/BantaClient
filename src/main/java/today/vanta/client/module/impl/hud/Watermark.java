@@ -12,6 +12,7 @@ import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.client.IClient;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.events.EventPriority;
+import today.vanta.util.game.render.font.CFont;
 import today.vanta.util.game.render.font.CFonts;
 import today.vanta.util.game.render.shape.impl.GradientRectangle;
 import today.vanta.util.game.render.shape.impl.Rectangle;
@@ -21,8 +22,9 @@ import java.util.Calendar;
 import java.util.Formatter;
 
 public class Watermark extends Module {
-    private final StringSetting style = Setting.of("Style", "Vanta", "Vanta", "Jello", "Char", "Exhi", "Adjust" , "Vestige");
-    private final BooleanSetting mcfont = Setting.of("Vanilla font", true).hide(() -> !style.isValue("Exhi"));
+    private final StringSetting
+            style = Setting.of("Style", "Vanta", "Vanta", "Jello", "Char", "Exhi", "Adjust" , "Vestige"),
+            fontMode = Setting.of("Font mode", "Exhi", "Exhi", "Minecraft", "SFPT").hide(() -> !style.isValue("Exhi"));
     private static final Color BACKGROUND = new Color(20, 20, 20, 190);
 
     public Watermark() {
@@ -64,12 +66,20 @@ public class Watermark extends Module {
                 format.format("%tl:%tM %Tp", gfg_calender,
                         gfg_calender, gfg_calender);
 
-                if (mcfont.getValue()) {
-                    mc.fontRendererObj.drawString(firstChar, 2, 2, colors[0], true);
-                    mc.fontRendererObj.drawString(watermarkText + EnumChatFormatting.GRAY + " [" + EnumChatFormatting.WHITE + format + EnumChatFormatting.GRAY + "] " + "[" + EnumChatFormatting.WHITE + mc.getDebugFPS() + " FPS" + EnumChatFormatting.GRAY + "]", 8, 2, Color.WHITE, true);
-                } else {
-                    mc.exhiFontRendererObj.drawString(firstChar, 2, 2, colors[0], true);
-                    mc.exhiFontRendererObj.drawString(watermarkText + EnumChatFormatting.GRAY + " [" + EnumChatFormatting.WHITE + format + EnumChatFormatting.GRAY + "] " + "[" + EnumChatFormatting.WHITE + mc.getDebugFPS() + " FPS" + EnumChatFormatting.GRAY + "]", 9, 2, Color.WHITE, true);
+
+                switch (fontMode.getValue()) {
+                    case "Exhi":
+                        mc.exhiFontRendererObj.drawString(firstChar, 2, 2, colors[0], true);
+                        mc.exhiFontRendererObj.drawString(watermarkText + EnumChatFormatting.GRAY + " [" + EnumChatFormatting.WHITE + format + EnumChatFormatting.GRAY + "] " + "[" + EnumChatFormatting.WHITE + mc.getDebugFPS() + " FPS" + EnumChatFormatting.GRAY + "]", 9, 2, Color.WHITE, true);
+                        break;
+                    case "Minecraft":
+                        mc.fontRendererObj.drawString(firstChar, 2, 2, colors[0], true);
+                        mc.fontRendererObj.drawString(watermarkText + EnumChatFormatting.GRAY + " [" + EnumChatFormatting.WHITE + format + EnumChatFormatting.GRAY + "] " + "[" + EnumChatFormatting.WHITE + mc.getDebugFPS() + " FPS" + EnumChatFormatting.GRAY + "]", 8, 2, Color.WHITE, true);
+                        break;
+                    case "SFPT":
+                        CFonts.SFPT_REGULAR_22.drawStringWithShadow(firstChar, 2, 2, colors[0]);
+                        CFonts.SFPT_REGULAR_22.drawStringWithShadow(watermarkText + EnumChatFormatting.GRAY + " [" + EnumChatFormatting.WHITE + format + EnumChatFormatting.GRAY + "] " + "[" + EnumChatFormatting.WHITE + mc.getDebugFPS() + " FPS" + EnumChatFormatting.GRAY + "]", 9, 2, Color.WHITE);
+                        break;
                 }
                 break;
 

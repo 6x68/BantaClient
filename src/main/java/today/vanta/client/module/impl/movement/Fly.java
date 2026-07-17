@@ -37,7 +37,7 @@ public class Fly extends Module {
         switch (mode.getValue()) {
             case "Vanilla":
                 mc.thePlayer.motionY = 0f;
-                MovementUtil.strafe(1f);
+                MovementUtil.strafe(2f);
                 if (mc.gameSettings.keyBindJump.isKeyDown()) {
                     mc.thePlayer.motionY = 1f;
                 }

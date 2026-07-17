@@ -172,6 +172,7 @@ public class Speed extends Module {
                 case "Miniblox":
                     if (flag) return;
                     if (mc.thePlayer.onGround) {
+                        mc.timer.timerSpeed = 2f;
                         MovementUtil.strafe(0.12f);
                         mc.thePlayer.jump();
                         if (!a) {
@@ -181,6 +182,7 @@ public class Speed extends Module {
 //                        MovementUtil.strafe(0.4f);
                     } else {
                         a = false;
+                        mc.timer.timerSpeed = 1.0f;
                     }
 //                    if (offGroundTicks > 9) {
 //                        mc.thePlayer.motionY -= 2.0f;
