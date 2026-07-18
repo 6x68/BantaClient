@@ -54,7 +54,8 @@ public class Scaffold extends Module {
             keepY = Setting.of("Keep Y", false).hide(() -> rotationMode.isValue("Godbridge")),
             speedKeepY = Setting.of("Keep Y on speed", false).hide(() -> rotationMode.isValue("Godbridge") || keepY.getValue()),
             downwards = Setting.of("Downwards", false).hide(() -> rotationMode.isValue("Godbridge")),
-            smoothRotations = Setting.of("Smooth rotations", false).hide(() -> rotationMode.isValue("Godbridge"));
+            smoothRotations = Setting.of("Smooth rotations", false).hide(() -> rotationMode.isValue("Godbridge")),
+            miniblox = Setting.of("Miniblox expand", false);
 
     private final DistanceCounter distCounter = new DistanceCounter();
     private int targetDistance = 7;
@@ -183,7 +184,11 @@ public class Scaffold extends Module {
             }
 
             BlockPos playerBlockPos = new BlockPos(mc.thePlayer.posX, posY, mc.thePlayer.posZ);
-            TargetProcessor.getInstance().cache = BlockCache.getCache(playerBlockPos, mc.thePlayer.rotationYaw);
+            if (miniblox.getValue()) {
+                TargetProcessor.getInstance().cache = BlockCache.getCache(playerBlockPos, mc.thePlayer.rotationYaw);
+            } else {
+                TargetProcessor.getInstance().cache = BlockCache.getCache(playerBlockPos);
+            }
 
             if (TargetProcessor.getInstance().cache != null && lastRots != null) {
                 switch (rotationMode.getValue()) {
