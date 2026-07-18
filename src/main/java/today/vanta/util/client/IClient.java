@@ -7,20 +7,12 @@ import java.util.List;
 
 public interface IClient {
     String CLIENT_NAME = "Vanta";
-    String CLIENT_VERSION = "1.6";
+    String CLIENT_VERSION = "1.7";
     String DEVELOPERS = "made by mark & luna";
     String CLIENT_FULL_TITLE = CLIENT_NAME + " - " + CLIENT_VERSION + " - " + DEVELOPERS;
     int COMMAND_PREFIX_KEY = Keyboard.KEY_PERIOD;
     String COMMAND_PREFIX = ".";
 
     List<String> CHANGELOG = Arrays.asList(
-            "[+] Added CustomSky, World & Fog",
-            "[+] Added more NoFall modes",
-            "[+] Added TabGUI",
-            "[+] Added new theme 'Monochrome'",
-            "[+] Added new toggle 'Miniblox expand' in Scaffold",
-            "[#] Fixed AutoPlay for Miniblox",
-            "[#] Crosshair renders in 3rd person"
-
     );
 }

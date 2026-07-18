@@ -46,6 +46,14 @@ public abstract class Module implements IMinecraft {
         this.description = description;
         this.key = key;
 
+        if (name.contains(" ")) {
+            throw new IllegalArgumentException("Module name must not have spaces in it: " + name);
+        }
+
+        if (!description.endsWith(".")) {
+            throw new IllegalArgumentException("No description or description missing period at the end: " + name);
+        }
+
         this.displayName = name;
         this.displayNames = new String[]{displayName};
 
@@ -79,10 +87,6 @@ public abstract class Module implements IMinecraft {
 
     public Module(String name, String description, Category category) {
         this(name, description, category, 0);
-
-        if (!description.endsWith(".")) {
-            throw new IllegalArgumentException("No description or description missing period at the end: " + name);
-        }
     }
 
     public void onEnable() {

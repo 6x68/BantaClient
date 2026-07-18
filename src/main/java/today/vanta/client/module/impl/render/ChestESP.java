@@ -23,7 +23,7 @@ public class ChestESP extends Module {
     private Color color = Vanta.instance.moduleStorage.getT(Theme.class).colors[1];
 
     public ChestESP() {
-        super("Chest ESP", "Shows you where chests are.", Category.PLAYER);
+        super("ChestESP", "Shows you where chests are.", Category.PLAYER);
     }
 
     @EventListen
