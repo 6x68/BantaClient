@@ -16,13 +16,13 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.*;
 import net.minecraft.util.DamageSource;
-import today.vanta.util.game.IMinecraft;
+import today.vanta.util.game.Commons;
 
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class InventoryUtil implements IMinecraft {
+public class InventoryUtil implements Commons {
     private static final List<Object> INVALID_ITEMS = Collections.unmodifiableList(Arrays.asList(
             Blocks.sand, Blocks.gravel, Blocks.dispenser, Blocks.command_block, Blocks.noteblock, Blocks.furnace, Blocks.crafting_table, Blocks.tnt,
             Blocks.dropper, Blocks.beacon, Blocks.vine, Blocks.soul_sand, Blocks.snow, Blocks.ice, Blocks.pumpkin,

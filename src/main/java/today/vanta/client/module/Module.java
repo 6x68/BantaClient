@@ -8,14 +8,14 @@ import today.vanta.client.event.impl.client.ModuleRenamedEvent;
 import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.BooleanSetting;
 import today.vanta.client.setting.impl.StringSetting;
-import today.vanta.util.game.IMinecraft;
+import today.vanta.util.game.Commons;
 import today.vanta.util.system.math.ColorUtil;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Module implements IMinecraft {
+public abstract class Module implements Commons {
     public String name, description;
     public Category category;
 

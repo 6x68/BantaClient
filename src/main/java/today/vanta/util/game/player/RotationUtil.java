@@ -5,11 +5,11 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
-import today.vanta.util.game.IMinecraft;
+import today.vanta.util.game.Commons;
 import today.vanta.util.game.player.constructors.Rotation;
 import today.vanta.util.game.world.BlockCache;
 
-public class RotationUtil implements IMinecraft {
+public class RotationUtil implements Commons {
     public static Rotation gcd(final Rotation rotation) {
         final Rotation previousRotation = new Rotation(mc.thePlayer.prevRotationYaw, mc.thePlayer.prevRotationPitch);
         return gcd(rotation, previousRotation);

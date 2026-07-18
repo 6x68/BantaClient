@@ -4,7 +4,7 @@ import de.florianmichael.viamcp.ViaMCP;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import today.vanta.storage.impl.*;
-import today.vanta.util.client.IClient;
+import today.vanta.util.client.Strings;
 import today.vanta.util.game.events.bus.EventBus;
 import today.vanta.util.system.FileUtil;
 import today.vanta.util.system.lwjgl.imgui.ImGuiImpl;
@@ -23,8 +23,8 @@ public enum Vanta {
     public AccountStorage accountStorage;
 
     static {
-        FileUtil.createFolder(IClient.CLIENT_NAME);
-        FileUtil.createFolder(IClient.CLIENT_NAME + "/configs");
+        FileUtil.createFolder(Strings.CLIENT_NAME);
+        FileUtil.createFolder(Strings.CLIENT_NAME + "/configs");
     }
 
     public void start() {

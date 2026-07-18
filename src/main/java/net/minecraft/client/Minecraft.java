@@ -108,7 +108,7 @@ import today.vanta.client.event.impl.game.player.ChangeWorldEvent;
 import today.vanta.client.event.impl.game.render.DisplayGuiScreenEvent;
 import today.vanta.client.event.impl.game.world.LoadWorldEvent;
 import today.vanta.client.event.impl.system.KeyboardEvent;
-import today.vanta.util.client.IClient;
+import today.vanta.util.client.Strings;
 import today.vanta.util.game.events.EventState;
 import today.vanta.util.game.render.font.impl.BitMapFontRenderer;
 
@@ -428,7 +428,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 
     private void createDisplay() throws LWJGLException {
         Display.setResizable(true);
-        Display.setTitle(IClient.CLIENT_FULL_TITLE);
+        Display.setTitle(Strings.CLIENT_FULL_TITLE);
 
         try {
             Display.create((new PixelFormat()).withDepthBits(24));

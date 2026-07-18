@@ -7,12 +7,10 @@ import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
 import today.vanta.client.module.impl.client.Theme;
 import today.vanta.client.setting.Setting;
-import today.vanta.client.setting.impl.BooleanSetting;
 import today.vanta.client.setting.impl.StringSetting;
-import today.vanta.util.client.IClient;
+import today.vanta.util.client.Strings;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.events.EventPriority;
-import today.vanta.util.game.render.font.CFont;
 import today.vanta.util.game.render.font.CFonts;
 import today.vanta.util.game.render.shape.impl.GradientRectangle;
 import today.vanta.util.game.render.shape.impl.Rectangle;
@@ -35,9 +33,9 @@ public class Watermark extends Module {
 
     @EventListen(priority = EventPriority.LOWEST)
     private void onRenderOverlay(RenderOverlayEvent event) {
-        String firstChar = String.valueOf(IClient.CLIENT_NAME.charAt(0));
+        String firstChar = String.valueOf(Strings.CLIENT_NAME.charAt(0));
         float firstCharWidth = CFonts.SFPT_SEMIBOLD_42.getStringWidth(firstChar) - 1;
-        String watermarkText = IClient.CLIENT_NAME.substring(1);
+        String watermarkText = Strings.CLIENT_NAME.substring(1);
 
         Color[] colors = Vanta.instance.moduleStorage.getT(Theme.class).colors;
 
@@ -46,12 +44,12 @@ public class Watermark extends Module {
 
         switch (style.getValue()) {
             case "Vanta":
-                CFonts.SFPT_SEMIBOLD_42.drawStringWithShadow(IClient.CLIENT_NAME, x, y, colors[0]);
-                CFonts.SFPT_MEDIUM_18.drawStringWithShadow(IClient.CLIENT_VERSION, x, y + 18 + 3, Color.WHITE);
+                CFonts.SFPT_SEMIBOLD_42.drawStringWithShadow(Strings.CLIENT_NAME, x, y, colors[0]);
+                CFonts.SFPT_MEDIUM_18.drawStringWithShadow(Strings.CLIENT_VERSION, x, y + 18 + 3, Color.WHITE);
                 break;
 
             case "Jello":
-                CFonts.HN_REGULAR_48.drawString(IClient.CLIENT_NAME, x, y, new Color(255, 255, 255, 185));
+                CFonts.HN_REGULAR_48.drawString(Strings.CLIENT_NAME, x, y, new Color(255, 255, 255, 185));
                 CFonts.HN_MEDIUM_24.drawString("Jello", x, y + CFonts.HN_REGULAR_48.getFontHeight() - 1, new Color(255, 255, 255, 185));
                 break;
 
@@ -87,7 +85,7 @@ public class Watermark extends Module {
                 CFonts.getFont("T-Regular", 20).drawStringWithShadow("§r" + firstChar + "§f" + watermarkText, 2, 2, colors[0]);
                 break;
             case "Vestige":
-                float length = CFonts.SFPT_MEDIUM_24.getStringWidth(IClient.CLIENT_NAME + " v"+ IClient.CLIENT_VERSION);
+                float length = CFonts.SFPT_MEDIUM_24.getStringWidth(Strings.CLIENT_NAME + " v"+ Strings.CLIENT_VERSION);
                 GradientRectangle
                         .create(2,2,length + 2,2)
                         .firstColor(colors[0])
@@ -98,7 +96,7 @@ public class Watermark extends Module {
                         .color(BACKGROUND)
                         .push(event);
 
-                CFonts.SFPT_MEDIUM_24.drawString(IClient.CLIENT_NAME + " v"+ IClient.CLIENT_VERSION, 2,4,Color.WHITE,false);
+                CFonts.SFPT_MEDIUM_24.drawString(Strings.CLIENT_NAME + " v"+ Strings.CLIENT_VERSION, 2,4,Color.WHITE,false);
                 break;
         }
     }

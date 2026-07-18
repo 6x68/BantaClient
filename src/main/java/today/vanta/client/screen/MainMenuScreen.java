@@ -7,7 +7,7 @@ import today.vanta.Vanta;
 import today.vanta.client.event.impl.client.RenderScreenEvent;
 import today.vanta.client.screen.component.Component;
 import today.vanta.client.screen.component.impl.ButtonComponent;
-import today.vanta.util.client.IClient;
+import today.vanta.util.client.Strings;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.render.ImageUtil;
 import today.vanta.util.game.render.font.impl.GlyphFontRenderer;
@@ -57,11 +57,11 @@ public class MainMenuScreen extends VantaScreen {
                 .push(event);
 
         float panelWidth = 0;
-        for (String change : IClient.CHANGELOG) {
+        for (String change : Strings.CHANGELOG) {
             panelWidth = Math.max(panelWidth, changesFont.getStringWidth(change) + 10);
         }
 
-        float boxHeight = 14 * IClient.CHANGELOG.size() + 18;
+        float boxHeight = 14 * Strings.CHANGELOG.size() + 18;
         float middleY = 5;
 
         Rectangle
@@ -70,8 +70,8 @@ public class MainMenuScreen extends VantaScreen {
                 .push(event);
         smallTitle.drawString("Changelog", 5 + 3.5f, middleY + 4.5f - 1, -1);
 
-        for (int i = 0; i < IClient.CHANGELOG.size(); i++) {
-            String change = IClient.CHANGELOG.get(i);
+        for (int i = 0; i < Strings.CHANGELOG.size(); i++) {
+            String change = Strings.CHANGELOG.get(i);
             float y = middleY + 18 + i * 14 - 1.5f;
 
             Rectangle
@@ -91,8 +91,8 @@ public class MainMenuScreen extends VantaScreen {
                 .create(middleX - 143 / 2f, middleY - 16, 143, 14 * (buttons.size()) + 18)
                 .color(new Color(30, 30, 30))
                 .push(event);
-        roundedSemibold10.drawString(IClient.CLIENT_NAME, middleX - 143 / 2f + 3, middleY - 18 + 4.5f, -1);
-        roundedMedium9.drawString(IClient.CLIENT_VERSION + " | " + IClient.DEVELOPERS, middleX * 2 - roundedMedium9.getStringWidth(IClient.CLIENT_VERSION + " | " + IClient.DEVELOPERS) - 3, middleY * 2 - roundedMedium9.getFontHeight() - 5.5f, new Color(200, 200, 200));
+        roundedSemibold10.drawString(Strings.CLIENT_NAME, middleX - 143 / 2f + 3, middleY - 18 + 4.5f, -1);
+        roundedMedium9.drawString(Strings.CLIENT_VERSION + " | " + Strings.DEVELOPERS, middleX * 2 - roundedMedium9.getStringWidth(Strings.CLIENT_VERSION + " | " + Strings.DEVELOPERS) - 3, middleY * 2 - roundedMedium9.getFontHeight() - 5.5f, new Color(200, 200, 200));
 
         if (rotation > 360) {
             rotation = 0;
