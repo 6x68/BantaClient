@@ -61,6 +61,7 @@ public class ModuleStorage extends Storage<Module> {
         list.add(new ChestStealer());
         list.add(new InventoryManager());
         list.add(new NoFall());
+        list.add(new Phase());
 
         // Render
         list.add(new ESP());

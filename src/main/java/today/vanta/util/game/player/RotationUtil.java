@@ -144,7 +144,7 @@ public class RotationUtil implements IMinecraft {
     }
 
     public static Rotation getForwardRotations(BlockCache blockCache, Rotation lastRotations) {
-        return new Rotation(mc.thePlayer.rotationYaw, 75.5f);
+        return new Rotation(mc.thePlayer.rotationYaw, 57.5f);
     }
 
     private static float smooth(float current, float target, float max) {

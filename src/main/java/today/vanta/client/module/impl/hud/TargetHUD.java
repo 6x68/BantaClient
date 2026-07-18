@@ -163,7 +163,7 @@ public class TargetHUD extends Module {
                             barWidth,
                             targetWidth,
                             100,
-                            Easing.LINEAR,
+                            Easing.EASE_IN_OUT,
                             val -> barWidth = val
                     );
 
@@ -186,7 +186,7 @@ public class TargetHUD extends Module {
                             ghostBarWidth,
                             targetWidth2,
                             300,
-                            Easing.LINEAR,
+                            Easing.EASE_IN_OUT,
                             val -> ghostBarWidth = val
                     );
 

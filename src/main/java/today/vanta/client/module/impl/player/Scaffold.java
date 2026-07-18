@@ -36,7 +36,7 @@ import java.util.Random;
 
 public class Scaffold extends Module {
     private final StringSetting
-            rotationMode = Setting.of("Rotation mode", "Simple", "Simple", "Godbridge", "Static", "Forward", "Sideways"),
+            rotationMode = Setting.of("Rotation mode", "Simple", "Simple", "Godbridge", "Static", "Forward", "Sideways", "None"),
             itemSwitchMode = Setting.of("Item spoof", "Switch", "Switch", "Spoof", "None"),
             towerMode = Setting.of("Tower mode", "Jump", "Jump", "Motion", "Low"),
             sprintMode = Setting.of("Sprint mode", "Manual", "None", "Always");
@@ -183,10 +183,13 @@ public class Scaffold extends Module {
             }
 
             BlockPos playerBlockPos = new BlockPos(mc.thePlayer.posX, posY, mc.thePlayer.posZ);
-            TargetProcessor.getInstance().cache = BlockCache.getCache(playerBlockPos);
+            TargetProcessor.getInstance().cache = BlockCache.getCache(playerBlockPos, mc.thePlayer.rotationYaw);
 
             if (TargetProcessor.getInstance().cache != null && lastRots != null) {
                 switch (rotationMode.getValue()) {
+                    case "None":
+                        rots = new Rotation(mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch);
+                        break;
                     case "Simple":
                         rots = smoothRotations.getValue() ? RotationUtil.getSimpleRotations(TargetProcessor.getInstance().cache, lastRots) : RotationUtil.getSimpleRotations(TargetProcessor.getInstance().cache);
                         break;

@@ -30,6 +30,13 @@ public class PlayerUtil implements IMinecraft {
         return true;
     }
 
+    // claude fixed this
+    public static boolean isGlassUnderneath() {
+        BlockPos position = new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 1, mc.thePlayer.posZ);
+        IBlockState state = mc.theWorld.getBlockState(position);
+        return state.getBlock() == Blocks.barrier;
+    }
+
     // from Seline :sob:
     public static boolean checkIllegal(EntityLivingBase entity) {
         float length = entity.getName().length();

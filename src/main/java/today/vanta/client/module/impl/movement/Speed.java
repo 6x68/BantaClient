@@ -174,7 +174,7 @@ public class Speed extends Module {
                     if (mc.thePlayer.onGround) {
                         mc.timer.timerSpeed = 2f;
                         MovementUtil.strafe(0.12f);
-                        mc.thePlayer.jump();
+                        mc.thePlayer.motionY += 0.1f;
                         if (!a) {
                             c++;
                             a = true;
@@ -191,9 +191,9 @@ public class Speed extends Module {
 //                    if (offGroundTicks > 4 && offGroundTicks < 10) {
 //                        mc.thePlayer.motionY = -0.1f;
 //                    }
-                    if (!mc.thePlayer.onGround && mc.thePlayer.hurtTime == 0) {
-                        mc.thePlayer.motionY += -3;
-                    }
+//                    if (!mc.thePlayer.onGround && mc.thePlayer.hurtTime == 0) {
+//                        mc.thePlayer.motionY += -3;
+//                    }
 
                     if (mc.thePlayer.onGround && c > 8) {
 //                        MovementUtil.strafe(0);

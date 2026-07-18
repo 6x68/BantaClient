@@ -19,8 +19,8 @@ public class AutoPlay extends Module {
         String message = event.message;
 
         if (mode.isValue("Miniblox")) {
-            if (message.contains("§6§lQueueing next game in 15 seconds (or click Next Game to queue immediately)...")) {
-                mc.thePlayer.sendChatMessage("/server skywars");
+            if (message.contains("§6§lQueueing next game in 15 seconds (or click Next Game to queue immediately)...") || message.startsWith(mc.thePlayer.getName() + " has been eliminated by")) {
+                mc.thePlayer.sendChatMessage("/play skywars");
             }
         }
     }
