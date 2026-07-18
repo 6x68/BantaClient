@@ -14,11 +14,11 @@ public class CFonts {
     private static final Map<String, GlyphFontRenderer> RENDERER_CACHE = new ConcurrentHashMap<>();
 
     // SF Pro Text
-    public static GlyphFontRenderer SFPT_MEDIUM_18 = getFont("SFPT-Medium", 18);
-    public static GlyphFontRenderer SFPT_SEMIBOLD_20 = getFont("SFPT-Semibold", 20);
-    public static GlyphFontRenderer SFPT_MEDIUM_24 = getFont("SFPT-Medium", 24);
-    public static GlyphFontRenderer SFPT_REGULAR_18 = getFont("SFPT-Regular", 18);
-    public static GlyphFontRenderer SFPT_REGULAR_24 = getFont("SFPT-Regular", 24);
+    public static final GlyphFontRenderer SFPT_MEDIUM_18 = getFont("SFPT-Medium", 18);
+    public static final GlyphFontRenderer SFPT_SEMIBOLD_20 = getFont("SFPT-Semibold", 20);
+    public static final GlyphFontRenderer SFPT_MEDIUM_24 = getFont("SFPT-Medium", 24);
+    public static final GlyphFontRenderer SFPT_REGULAR_18 = getFont("SFPT-Regular", 18);
+    public static final GlyphFontRenderer SFPT_REGULAR_24 = getFont("SFPT-Regular", 24);
 
     public static GlyphFontRenderer getFont(String fontName, float size) {
         return getFont(fontName, size, null);

@@ -1,5 +1,4 @@
 package today.vanta.client.module.impl.hud;
-// half of this module is made by Claude (Claude made most of the functions, and I made all of the UI/Design and rendering)
 
 import net.minecraft.client.gui.GuiChat;
 import org.lwjgl.input.Keyboard;
@@ -27,21 +26,28 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
+// half of this module is made by Claude (Claude made most of the functions, and I made all of the UI/Design and rendering)
 public class TabGUI extends Module {
-    public static GlyphFontRenderer SFPT_REGULAR_22 = CFonts.getFont("SFPT-Regular", 22);
-    public static GlyphFontRenderer SFPT_REGULAR_20 = CFonts.getFont("SFPT-Regular", 20);
-    private final NumberSetting
-            x = Setting.of("X position", 20, 0, 2000),
-            y = Setting.of("Y position", 20, 0, 2000),
-            opacity = Setting.of("Background opacity", 190,10,255);
-    private final StringSetting gradMode = Setting.of("Selection mode", "Horizontal gradient", "Horizontal gradient", "Vertical gradient", "Darker");
+    private static final Comparator<Category> COMP =
+        Comparator.comparingInt((Category c) -> CFonts.SFPT_REGULAR_18.getStringWidth(c.name)).reversed();
+
+    private static final GlyphFontRenderer SFPT_REGULAR_22 = CFonts.getFont("SFPT-Regular", 22);
+    private static final GlyphFontRenderer SFPT_REGULAR_20 = CFonts.getFont("SFPT-Regular", 20);
 
     private static final float ROW_HEIGHT = 12f;
     private static final float WIDTH = 70f;
     private static final float catWIDTH = 100f;
 
-    private static final Comparator<Category> COMP =
-            Comparator.comparingInt((Category c) -> CFonts.SFPT_REGULAR_18.getStringWidth(c.name)).reversed();
+    private final NumberSetting
+            x = Setting.of("X position", 20, 0, 2000),
+            y = Setting.of("Y position", 20, 0, 2000),
+            opacity = Setting.of("Background opacity", 190,10,255);
+
+    private final StringSetting gradMode = Setting.of(
+            "Selection mode",
+            "Horizontal gradient",
+            "Horizontal gradient", "Vertical gradient", "Darker"
+    );
 
     private final Category[] categories = Arrays.stream(Category.values())
             .sorted(COMP)

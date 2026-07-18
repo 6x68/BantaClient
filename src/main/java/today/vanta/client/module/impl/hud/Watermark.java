@@ -1,5 +1,6 @@
 package today.vanta.client.module.impl.hud;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.EnumChatFormatting;
 import today.vanta.Vanta;
 import today.vanta.client.event.impl.client.RenderOverlayEvent;
@@ -21,14 +22,14 @@ import java.util.Calendar;
 import java.util.Formatter;
 
 public class Watermark extends Module {
-    // Helvetica Neue
-    public static GlyphFontRenderer HN_MEDIUM_24 = CFonts.getFont("HN-Medium", 24);
-    public static GlyphFontRenderer HN_REGULAR_48 = CFonts.getFont("HN-Regular", 48);
-    public static GlyphFontRenderer SFPT_SEMIBOLD_42 = CFonts.getFont("SFPT-Semibold", 42);
+    private static final GlyphFontRenderer HN_MEDIUM_24 = CFonts.getFont("HN-Medium", 24);
+    private static final GlyphFontRenderer HN_REGULAR_48 = CFonts.getFont("HN-Regular", 48);
+    private static final GlyphFontRenderer SFPT_SEMIBOLD_42 = CFonts.getFont("SFPT-Semibold", 42);
+    private static final Color BACKGROUND = new Color(20, 20, 20, 190);
+
     private final StringSetting
             style = Setting.of("Style", "Vanta", "Vanta", "Jello", "Char", "Exhi", "Adjust" , "Vestige"),
             fontMode = Setting.of("Font mode", "Exhi", "Exhi", "Minecraft", "SFPT").hide(() -> !style.isValue("Exhi"));
-    private static final Color BACKGROUND = new Color(20, 20, 20, 190);
 
     public Watermark() {
         super("Watermark", "Draws a watermark of the client.", Category.HUD);
@@ -73,15 +74,15 @@ public class Watermark extends Module {
                 switch (fontMode.getValue()) {
                     case "Exhi":
                         mc.exhiFontRendererObj.drawString(firstChar, 2, 2, colors[0], true);
-                        mc.exhiFontRendererObj.drawString(watermarkText + EnumChatFormatting.GRAY + " [" + EnumChatFormatting.WHITE + format + EnumChatFormatting.GRAY + "] " + "[" + EnumChatFormatting.WHITE + mc.getDebugFPS() + " FPS" + EnumChatFormatting.GRAY + "]", 9, 2, Color.WHITE, true);
+                        mc.exhiFontRendererObj.drawString(watermarkText + EnumChatFormatting.GRAY + " [" + EnumChatFormatting.WHITE + format + EnumChatFormatting.GRAY + "] " + "[" + EnumChatFormatting.WHITE + Minecraft.getDebugFPS() + " FPS" + EnumChatFormatting.GRAY + "]", 9, 2, Color.WHITE, true);
                         break;
                     case "Minecraft":
                         mc.fontRendererObj.drawString(firstChar, 2, 2, colors[0], true);
-                        mc.fontRendererObj.drawString(watermarkText + EnumChatFormatting.GRAY + " [" + EnumChatFormatting.WHITE + format + EnumChatFormatting.GRAY + "] " + "[" + EnumChatFormatting.WHITE + mc.getDebugFPS() + " FPS" + EnumChatFormatting.GRAY + "]", 8, 2, Color.WHITE, true);
+                        mc.fontRendererObj.drawString(watermarkText + EnumChatFormatting.GRAY + " [" + EnumChatFormatting.WHITE + format + EnumChatFormatting.GRAY + "] " + "[" + EnumChatFormatting.WHITE + Minecraft.getDebugFPS() + " FPS" + EnumChatFormatting.GRAY + "]", 8, 2, Color.WHITE, true);
                         break;
                     case "SFPT":
                         CFonts.SFPT_REGULAR_24.drawStringWithShadow(firstChar, 2, 2, colors[0]);
-                        CFonts.SFPT_REGULAR_24.drawStringWithShadow(watermarkText + EnumChatFormatting.GRAY + " [" + EnumChatFormatting.WHITE + format + EnumChatFormatting.GRAY + "] " + "[" + EnumChatFormatting.WHITE + mc.getDebugFPS() + " FPS" + EnumChatFormatting.GRAY + "]", 9, 2, Color.WHITE);
+                        CFonts.SFPT_REGULAR_24.drawStringWithShadow(watermarkText + EnumChatFormatting.GRAY + " [" + EnumChatFormatting.WHITE + format + EnumChatFormatting.GRAY + "] " + "[" + EnumChatFormatting.WHITE + Minecraft.getDebugFPS() + " FPS" + EnumChatFormatting.GRAY + "]", 9, 2, Color.WHITE);
                         break;
                 }
                 break;

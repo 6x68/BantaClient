@@ -10,5 +10,7 @@ public interface Strings {
     String CLIENT_FULL_TITLE = CLIENT_NAME + " - " + CLIENT_VERSION + " - " + DEVELOPERS;
 
     List<String> CHANGELOG = Arrays.asList(
+            "[#] Fixed Boxy ClickGUI size & position not saving",
+            "[#] Fixed Boxy ClickGUI stutterness"
     );
 }
