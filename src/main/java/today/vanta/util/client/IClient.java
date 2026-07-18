@@ -18,7 +18,9 @@ public interface IClient {
             "[+] Added more NoFall modes",
             "[+] Added TabGUI",
             "[+] Added new theme 'Monochrome'",
-            "[+] Added new Speed mode 'Miniblox'",
+            "[+] Added new toggle 'Miniblox expand' in Scaffold",
+            "[#] Fixed AutoPlay for Miniblox",
             "[#] Crosshair renders in 3rd person"
+
     );
 }
