@@ -14,6 +14,7 @@ import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.NumberSetting;
 import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.events.EventListen;
+import today.vanta.util.game.player.ChatUtil;
 import today.vanta.util.game.player.InventoryUtil;
 import today.vanta.util.game.render.RenderUtil;
 import today.vanta.util.game.render.Renderable;
@@ -143,12 +144,13 @@ public class BlockCounter extends Module {
                             animBarWidth,
                             targetwidth,
                             100,
-                            Easing.LINEAR,
+                            Easing.EASE_IN_OUT,
                             val -> animBarWidth = val
                     );
 
                     animation.start();
                 }
+                ChatUtil.send(ChatUtil.Prefix.INFO, String.valueOf(bar));
 
 
                 Rectangle

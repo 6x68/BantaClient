@@ -73,7 +73,7 @@ public class InventoryUtil implements Commons {
     }
 
     public static boolean isTrash(Item item) {
-        return INVALID_ITEMS.contains(item.getClass());
+        return INVALID_ITEMS.contains(item);
     }
 
     public static void windowClick(Minecraft mc, int windowId, int slotId, int mouseButtonClicked, ClickType type) {
@@ -84,7 +84,9 @@ public class InventoryUtil implements Commons {
         PICKUP, QUICK_MOVE, SWAP, CLONE, THROW, QUICK_CRAFT, PICKUP_ALL
     }
 
-    public static boolean canPlaceOnBlock(final Block block) {return Stream.of(INVALID_ITEMS).noneMatch(block::equals);}
+    public static boolean canPlaceOnBlock(final Block block) {
+        return !INVALID_ITEMS.contains(block);
+    }
 
     public static ItemStack getHeldItem() {
         InventoryPlayer inventory = mc.thePlayer.inventory;
@@ -317,7 +319,7 @@ public class InventoryUtil implements Commons {
     public static int getBlockCount(int slot) {
         ItemStack itemStack = mc.thePlayer.inventory.getStackInSlot(slot);
 
-        if (itemStack != null && itemStack.getItem() instanceof ItemBlock) {
+        if (itemStack != null && itemStack.getItem() instanceof ItemBlock && ((ItemBlock) itemStack.getItem()).getBlock().isBlockNormalCube()) {
             return itemStack.stackSize;
         }
 
