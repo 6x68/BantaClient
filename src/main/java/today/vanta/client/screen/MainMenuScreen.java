@@ -56,32 +56,34 @@ public class MainMenuScreen extends VantaScreen {
                 .color(new Color(20, 20, 20))
                 .push(event);
 
-        float panelWidth = 0;
-        for (String change : Strings.CHANGELOG) {
-            panelWidth = Math.max(panelWidth, changesFont.getStringWidth(change) + 10);
-        }
-
-        float boxHeight = 14 * Strings.CHANGELOG.size() + 18;
         float middleY = 5;
+        if (!Strings.CHANGELOG.isEmpty()) {
+            float panelWidth = 0;
+            for (String change : Strings.CHANGELOG) {
+                panelWidth = Math.max(panelWidth, changesFont.getStringWidth(change) + 10);
+            }
 
-        Rectangle
-                .create(5, middleY, panelWidth, boxHeight)
-                .color(new Color(30, 30, 30))
-                .push(event);
-        smallTitle.drawString("Changelog", 5 + 3.5f, middleY + 4.5f - 1, -1);
-
-        for (int i = 0; i < Strings.CHANGELOG.size(); i++) {
-            String change = Strings.CHANGELOG.get(i);
-            float y = middleY + 18 + i * 14 - 1.5f;
+            float boxHeight = 14 * Strings.CHANGELOG.size() + 18;
 
             Rectangle
-                    .create(5 + 1.5f, y, (panelWidth - 3), 14)
-                    .color(new Color(35, 35, 35))
+                    .create(5, middleY, panelWidth, boxHeight)
+                    .color(new Color(30, 30, 30))
                     .push(event);
+            smallTitle.drawString("Changelog", 5 + 3.5f, middleY + 4.5f - 1, -1);
 
-            String formattedChange = formatChange(change);
+            for (int i = 0; i < Strings.CHANGELOG.size(); i++) {
+                String change = Strings.CHANGELOG.get(i);
+                float y = middleY + 18 + i * 14 - 1.5f;
 
-            changesFont.drawYCenteredString(formattedChange, 5 + 3.5f, y + 14 / 2f - 2, Color.WHITE, false);
+                Rectangle
+                        .create(5 + 1.5f, y, (panelWidth - 3), 14)
+                        .color(new Color(35, 35, 35))
+                        .push(event);
+
+                String formattedChange = formatChange(change);
+
+                changesFont.drawYCenteredString(formattedChange, 5 + 3.5f, y + 14 / 2f - 2, Color.WHITE, false);
+            }
         }
 
         float middleX = width / 2f;
