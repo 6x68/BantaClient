@@ -1,7 +1,5 @@
 package today.vanta.client.module.impl.movement;
 
-import com.viaversion.viaversion.protocols.v1_21_5to1_21_6.storage.SneakStorage;
-import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C0BPacketEntityAction;
 import today.vanta.client.event.impl.game.network.SendPacketEvent;
 import today.vanta.client.event.impl.game.player.SneakInputEvent;
@@ -10,7 +8,6 @@ import today.vanta.client.module.Module;
 import today.vanta.client.setting.Setting;
 import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.events.EventListen;
-import today.vanta.util.game.player.ChatUtil;
 
 public class FastSneak extends Module {
     private final StringSetting mode = Setting.of("Mode", "Vanilla", "Vanilla", "Packet");

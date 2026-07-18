@@ -17,6 +17,7 @@ import today.vanta.storage.impl.ModuleStorage;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.render.RenderUtil;
 import today.vanta.util.game.render.font.CFonts;
+import today.vanta.util.game.render.font.impl.GlyphFontRenderer;
 import today.vanta.util.game.render.shape.GradientMode;
 import today.vanta.util.game.render.shape.impl.GradientRectangle;
 import today.vanta.util.game.render.shape.impl.Rectangle;
@@ -27,6 +28,8 @@ import java.util.Comparator;
 import java.util.List;
 
 public class TabGUI extends Module {
+    public static GlyphFontRenderer SFPT_REGULAR_22 = CFonts.getFont("SFPT-Regular", 22);
+    public static GlyphFontRenderer SFPT_REGULAR_20 = CFonts.getFont("SFPT-Regular", 20);
     private final NumberSetting
             x = Setting.of("X position", 20, 0, 2000),
             y = Setting.of("Y position", 20, 0, 2000),
@@ -142,7 +145,7 @@ public class TabGUI extends Module {
 
         float yDraw = yPos;
         for (Category category : categories) {
-            CFonts.SFPT_REGULAR_22.drawStringWithShadow(
+            SFPT_REGULAR_22.drawStringWithShadow(
                     category.name,
                     xPos + 0.5f,
                     yDraw - 1,
@@ -196,7 +199,7 @@ public class TabGUI extends Module {
 
                 for (int i = 0; i < currentModules.size(); i++) {
                     Module module = currentModules.get(i);
-                    CFonts.SFPT_REGULAR_20.drawStringWithShadow(
+                    SFPT_REGULAR_20.drawStringWithShadow(
                             module.name,
                             drawX + 0.5f,
                             drawY - 1,

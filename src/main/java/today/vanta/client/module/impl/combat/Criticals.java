@@ -4,7 +4,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C0APacketAnimation;
 import today.vanta.Vanta;
-import today.vanta.client.event.impl.game.network.ReceivePacketEvent;
 import today.vanta.client.event.impl.game.network.SendPacketEvent;
 import today.vanta.client.event.impl.game.player.MotionEvent;
 import today.vanta.client.event.impl.game.world.UpdateEvent;
@@ -18,7 +17,6 @@ import today.vanta.client.setting.impl.StringSetting;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.events.EventState;
 import today.vanta.util.game.player.ChatUtil;
-import today.vanta.util.game.player.MovementUtil;
 
 import java.util.concurrent.ThreadLocalRandom;
 

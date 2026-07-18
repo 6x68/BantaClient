@@ -21,11 +21,7 @@ import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.player.ChatUtil;
 import today.vanta.util.game.player.RotationUtil;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class AntiCheat extends Module {

@@ -1,5 +1,8 @@
 package today.vanta.client.module.impl.render;
 
+import net.minecraft.tileentity.TileEntityChest;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
 import today.vanta.Vanta;
 import today.vanta.client.event.impl.client.RenderOverlayEvent;
 import today.vanta.client.module.Category;
@@ -8,9 +11,6 @@ import today.vanta.client.module.impl.client.Theme;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.render.ProjectionUtil;
 import today.vanta.util.game.render.shape.impl.Rectangle;
-import net.minecraft.tileentity.TileEntityChest;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
 
 import java.awt.*;
 import java.util.ArrayList;

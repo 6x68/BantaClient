@@ -12,6 +12,7 @@ import today.vanta.util.client.Strings;
 import today.vanta.util.game.events.EventListen;
 import today.vanta.util.game.events.EventPriority;
 import today.vanta.util.game.render.font.CFonts;
+import today.vanta.util.game.render.font.impl.GlyphFontRenderer;
 import today.vanta.util.game.render.shape.impl.GradientRectangle;
 import today.vanta.util.game.render.shape.impl.Rectangle;
 
@@ -20,6 +21,10 @@ import java.util.Calendar;
 import java.util.Formatter;
 
 public class Watermark extends Module {
+    // Helvetica Neue
+    public static GlyphFontRenderer HN_MEDIUM_24 = CFonts.getFont("HN-Medium", 24);
+    public static GlyphFontRenderer HN_REGULAR_48 = CFonts.getFont("HN-Regular", 48);
+    public static GlyphFontRenderer SFPT_SEMIBOLD_42 = CFonts.getFont("SFPT-Semibold", 42);
     private final StringSetting
             style = Setting.of("Style", "Vanta", "Vanta", "Jello", "Char", "Exhi", "Adjust" , "Vestige"),
             fontMode = Setting.of("Font mode", "Exhi", "Exhi", "Minecraft", "SFPT").hide(() -> !style.isValue("Exhi"));
@@ -34,7 +39,7 @@ public class Watermark extends Module {
     @EventListen(priority = EventPriority.LOWEST)
     private void onRenderOverlay(RenderOverlayEvent event) {
         String firstChar = String.valueOf(Strings.CLIENT_NAME.charAt(0));
-        float firstCharWidth = CFonts.SFPT_SEMIBOLD_42.getStringWidth(firstChar) - 1;
+        float firstCharWidth = SFPT_SEMIBOLD_42.getStringWidth(firstChar) - 1;
         String watermarkText = Strings.CLIENT_NAME.substring(1);
 
         Color[] colors = Vanta.instance.moduleStorage.getT(Theme.class).colors;
@@ -44,18 +49,18 @@ public class Watermark extends Module {
 
         switch (style.getValue()) {
             case "Vanta":
-                CFonts.SFPT_SEMIBOLD_42.drawStringWithShadow(Strings.CLIENT_NAME, x, y, colors[0]);
+                SFPT_SEMIBOLD_42.drawStringWithShadow(Strings.CLIENT_NAME, x, y, colors[0]);
                 CFonts.SFPT_MEDIUM_18.drawStringWithShadow(Strings.CLIENT_VERSION, x, y + 18 + 3, Color.WHITE);
                 break;
 
             case "Jello":
-                CFonts.HN_REGULAR_48.drawString(Strings.CLIENT_NAME, x, y, new Color(255, 255, 255, 185));
-                CFonts.HN_MEDIUM_24.drawString("Jello", x, y + CFonts.HN_REGULAR_48.getFontHeight() - 1, new Color(255, 255, 255, 185));
+                HN_REGULAR_48.drawString(Strings.CLIENT_NAME, x, y, new Color(255, 255, 255, 185));
+                HN_MEDIUM_24.drawString("Jello", x, y + HN_REGULAR_48.getFontHeight() - 1, new Color(255, 255, 255, 185));
                 break;
 
             case "Char":
-                CFonts.SFPT_SEMIBOLD_42.drawStringWithShadow(firstChar, x, y, colors[0]);
-                CFonts.SFPT_SEMIBOLD_42.drawStringWithShadow(watermarkText, x + firstCharWidth, y, Color.WHITE);
+                SFPT_SEMIBOLD_42.drawStringWithShadow(firstChar, x, y, colors[0]);
+                SFPT_SEMIBOLD_42.drawStringWithShadow(watermarkText, x + firstCharWidth, y, Color.WHITE);
                 break;
 
             case "Exhi":
