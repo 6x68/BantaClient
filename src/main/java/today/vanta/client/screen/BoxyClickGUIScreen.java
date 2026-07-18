@@ -126,6 +126,20 @@ public class BoxyClickGUIScreen extends VantaScreen {
             if (selectedCat != null)
                 drawModules(event);
         });
+
+        if (dragging) {
+            x = event.mouseX - dragOffsetX;
+            y = event.mouseY - dragOffsetY;
+        }
+
+        if (resizing) {
+            sWidth = Math.max(MIN_WIDTH, event.mouseX - x);
+            sHeight = Math.max(MIN_HEIGHT, event.mouseY - y);
+        }
+
+        if (draggingSlider != null) {
+            updateSliderValue(draggingSlider, event.mouseX, draggingTrackX, draggingTrackWidth);
+        }
     }
 
     @Override
@@ -146,23 +160,6 @@ public class BoxyClickGUIScreen extends VantaScreen {
 
         clickCategory(mouseX, mouseY, mouseButton);
         clickModules(mouseX, mouseY, mouseButton);
-    }
-
-    @Override
-    protected void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick) {
-        if (dragging) {
-            x = mouseX - dragOffsetX;
-            y = mouseY - dragOffsetY;
-        }
-
-        if (resizing) {
-            sWidth = Math.max(MIN_WIDTH, mouseX - x);
-            sHeight = Math.max(MIN_HEIGHT, mouseY - y);
-        }
-
-        if (draggingSlider != null) {
-            updateSliderValue(draggingSlider, mouseX, draggingTrackX, draggingTrackWidth);
-        }
     }
 
     @Override
