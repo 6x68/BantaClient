@@ -150,7 +150,6 @@ public class BlockCounter extends Module {
 
                     animation.start();
                 }
-                ChatUtil.send(ChatUtil.Prefix.INFO, String.valueOf(bar));
 
 
                 Rectangle
