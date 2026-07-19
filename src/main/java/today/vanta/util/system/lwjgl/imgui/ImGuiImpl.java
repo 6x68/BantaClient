@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class ImGuiImpl{
+public class ImGuiImpl {
     private static final List<ImGuiCall> list = new ArrayList<>();
     private static final ImGuiGL3 imGuiGl = new ImGuiGL3();
     private static final ImGuiLwjgl2 imGuiLwjgl = new ImGuiLwjgl2();
