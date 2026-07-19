@@ -11,6 +11,9 @@ public interface Strings {
 
     List<String> CHANGELOG = Arrays.asList(
             "[#] Fixed Boxy ClickGUI size & position not saving",
-            "[#] Fixed Boxy ClickGUI stutterness"
+            "[#] Fixed glass check checking for barriers",
+            "[#] Fixed Boxy ClickGUI stutterness",
+            "[#] Fixed module event crashes",
+            "[~] Moved NoWeb to separate module class"
     );
 }
