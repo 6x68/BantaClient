@@ -146,8 +146,8 @@ public class TargetHUD extends Module {
                         .push(renderable);
 
                 RenderUtil.renderHead(renderable, (EntityPlayer) localTarget, x + 2, y - (headSize / 2) + (height / 2), headSize);
-                SFPT_MEDIUM_20.drawStringWithShadow(localTarget.getName(), x + 2 + headSize, y + 1, Color.WHITE);
-                CFonts.SFPT_REGULAR_18.drawStringWithShadow(String.format("%.1f", localTarget.getHealth()), x + 2 + headSize, y + 11, Color.WHITE);
+                SFPT_MEDIUM_20.drawStringWithShadow(localTarget.getName(), x + 3 + headSize, y + 1, Color.WHITE);
+                CFonts.SFPT_REGULAR_18.drawStringWithShadow(String.format("%.1f", localTarget.getHealth()), x + 3 + headSize, y + 11, Color.WHITE);
 
                 float barrwidth = width - 26f - 6f;
                 float healthWidth = barrwidth * (localTarget.getHealth() / localTarget.getMaxHealth());
@@ -191,7 +191,7 @@ public class TargetHUD extends Module {
                     ghostAnimation = Animation.create(
                             ghostBarWidth,
                             targetWidth2,
-                            300,
+                            450,
                             Easing.EASE_IN_OUT,
                             val -> ghostBarWidth = val
                     );

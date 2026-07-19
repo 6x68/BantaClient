@@ -152,6 +152,21 @@ public class BlockCounter extends Module {
                     animation.start();
                 }
 
+                if (animBarWidth != targetwidth) {
+                    targetwidth = bar;
+                    if (animation.finished) {
+                        animation = Animation.create(
+                                animBarWidth,
+                                targetwidth,
+                                100,
+                                Easing.EASE_IN_OUT,
+                                val -> animBarWidth = val
+                        );
+
+                        animation.start();
+                    }
+                }
+
 
                 Rectangle
                         .create(x, y, WIDTH, HEIGHT)

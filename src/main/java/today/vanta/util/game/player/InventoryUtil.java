@@ -45,7 +45,7 @@ public class InventoryUtil implements Commons {
     }
 
     public static boolean isBlockValid(Block block) {
-        return block.isFullBlock() && !INVALID_ITEMS.contains(block);
+        return !INVALID_ITEMS.contains(block);
     }
 
     public static int armorProt(ItemArmor armor, ItemStack item) {
@@ -319,7 +319,7 @@ public class InventoryUtil implements Commons {
     public static int getBlockCount(int slot) {
         ItemStack itemStack = mc.thePlayer.inventory.getStackInSlot(slot);
 
-        if (itemStack != null && itemStack.getItem() instanceof ItemBlock && ((ItemBlock) itemStack.getItem()).getBlock().isBlockNormalCube()) {
+        if (itemStack != null && itemStack.getItem() instanceof ItemBlock && !INVALID_ITEMS.contains(((ItemBlock) itemStack.getItem()).getBlock())) {
             return itemStack.stackSize;
         }
 
@@ -331,7 +331,7 @@ public class InventoryUtil implements Commons {
         for (int i = 0; i < 9; i++) {
             ItemStack stack = mc.thePlayer.inventory.getStackInSlot(i);
 
-            if (stack != null && stack.getItem() instanceof ItemBlock && ((ItemBlock) stack.getItem()).getBlock().isBlockNormalCube()) {
+            if (stack != null && stack.getItem() instanceof ItemBlock && !INVALID_ITEMS.contains(((ItemBlock) stack.getItem()).getBlock())) {
                 total += stack.stackSize;
             }
         }
