@@ -52,6 +52,7 @@ public class ModuleStorage extends Storage<Module> {
         list.add(new NoJumpDelay());
         list.add(new SaveMoveKeys());
         list.add(new ClickTeleport());
+        list.add(new NoWeb());
 
         // Player
         list.add(new Scaffold());
