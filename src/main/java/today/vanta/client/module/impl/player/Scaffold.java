@@ -267,6 +267,7 @@ public class Scaffold extends Module {
 
     @EventListen
     private void onSendPacket(SendPacketEvent event) {
+        if (mc.thePlayer == null) return;
         if (itemSwitchMode.isValue("Spoof") && event.packet instanceof C09PacketHeldItemChange) {
             C09PacketHeldItemChange packet = (C09PacketHeldItemChange) event.packet;
             if (packet.getSlotId() != lastSlot) {
@@ -297,23 +298,22 @@ public class Scaffold extends Module {
         KeyBinding.setKeyBindState(mc.gameSettings.keyBindSprint.getKeyCode(), Keyboard.isKeyDown(mc.gameSettings.keyBindSprint.getKeyCode()));
         KeyBinding.setKeyBindState(mc.gameSettings.keyBindSneak.getKeyCode(), Keyboard.isKeyDown(mc.gameSettings.keyBindSneak.getKeyCode()));
 
-        if (itemSwitchMode.isValue("Spoof") && lastSlot != -1 && lastSlot != mc.thePlayer.inventory.currentItem) {
-            sendPacket(new C09PacketHeldItemChange(mc.thePlayer.inventory.currentItem));
-        }
-
         distCounter.reset();
         unSneakCounter.reset();
 
         rots = null;
         lastRots = null;
         lastSlot = -1;
+
+        if (mc.thePlayer == null) return;
+        if (itemSwitchMode.isValue("Spoof") && lastSlot != -1 && lastSlot != mc.thePlayer.inventory.currentItem) {
+            sendPacket(new C09PacketHeldItemChange(mc.thePlayer.inventory.currentItem));
+        }
     }
 
     @Override
     public void onEnable() {
-        if (mc.thePlayer == null) {
-            return;
-        }
+        if (mc.thePlayer == null) return;
 
         if (InventoryUtil.getHotbarBlockCount() == 0) {
             this.setEnabled(false);

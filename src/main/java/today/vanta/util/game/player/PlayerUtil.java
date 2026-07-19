@@ -30,11 +30,10 @@ public class PlayerUtil implements Commons {
         return true;
     }
 
-    // claude fixed this
     public static boolean isGlassUnderneath() {
         BlockPos position = new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 1, mc.thePlayer.posZ);
         IBlockState state = mc.theWorld.getBlockState(position);
-        return state.getBlock() == Blocks.barrier;
+        return state.getBlock() == Blocks.glass;
     }
 
     // from Seline :sob:

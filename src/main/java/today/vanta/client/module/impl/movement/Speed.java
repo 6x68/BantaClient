@@ -4,7 +4,6 @@ import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 import net.minecraft.potion.Potion;
 import today.vanta.client.event.impl.client.RenderOverlayEvent;
 import today.vanta.client.event.impl.game.network.ReceivePacketEvent;
-import today.vanta.client.event.impl.game.player.MotionEvent;
 import today.vanta.client.event.impl.game.world.UpdateEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
@@ -43,17 +42,7 @@ public class Speed extends Module {
     private int tick;
     private boolean flag;
     private boolean a;
-    private boolean b;
-    private int c;
-
-    @EventListen
-    private void onMotion(MotionEvent event) {
-        if (!mc.thePlayer.onGround) {
-            offGroundTicks++;
-        } else {
-            offGroundTicks = 0;
-        }
-    }
+    private int b;
 
     @EventListen
     private void onRenderOverlay(RenderOverlayEvent event) {
@@ -71,6 +60,12 @@ public class Speed extends Module {
 
     @EventListen
     private void onUpdate(UpdateEvent event) {
+        if (!mc.thePlayer.onGround) {
+            offGroundTicks++;
+        } else {
+            offGroundTicks = 0;
+        }
+
         if (flag) {
             tick++;
         }
@@ -117,15 +112,7 @@ public class Speed extends Module {
                     if (mc.thePlayer.onGround && !mc.gameSettings.keyBindJump.isKeyDown()) {
                         mc.thePlayer.jump();
                     }
-                    //if (mc.thePlayer.onGround) {
-                    //  MovementUtil.strafe(0.3f);
-                    //} else {
-                    //  MovementUtil.strafe(0.3f);
-                    //}
 
-                    if (offGroundTicks > 2) {
-                        //MovementUtil.strafe(0.3f);
-                    }
                     if (mc.thePlayer.motionY < 0.17f && offGroundTicks > 3) {
                         mc.thePlayer.motionY -= 0.05f;
                     }
@@ -138,15 +125,7 @@ public class Speed extends Module {
                     if (flag) {
                         return;
                     }
-//                    if (mc.thePlayer.onGround && !mc.gameSettings.keyBindJump.isKeyDown()) {
-//                        mc.thePlayer.jump();
-//                    }
-//                    if (mc.thePlayer.onGround) {
-//                        MovementUtil.strafe(0.39f);
-//                    }
-//                    if (mc.thePlayer.motionY < 0.421) {
-//                        MovementUtil.strafe(MovementUtil.getSpeed() * 1.03f);
-//                    }
+
                     if (mc.thePlayer.onGround && !mc.gameSettings.keyBindJump.isKeyDown()) {
                         mc.thePlayer.jump();
                     }
@@ -156,7 +135,6 @@ public class Speed extends Module {
                     }
                     if (offGroundTicks == 2 && !mc.thePlayer.isPotionActive(Potion.moveSpeed)) {
                         MovementUtil.strafe(0.33f);
-//                        ChatUtil.send(ChatUtil.Prefix.INFO, String.valueOf(MovementUtil.getBPS()));
                     } else {
                         MovementUtil.strafe();
                     }
@@ -175,28 +153,16 @@ public class Speed extends Module {
                         MovementUtil.strafe(0.12f);
                         mc.thePlayer.motionY += 0.1f;
                         if (!a) {
-                            c++;
+                            b++;
                             a = true;
                         }
-//                        MovementUtil.strafe(0.4f);
                     } else {
                         a = false;
                         mc.timer.timerSpeed = 1.0f;
                     }
-//                    if (offGroundTicks > 9) {
-//                        mc.thePlayer.motionY -= 2.0f;
-//                    }
-//                    mc.thePlayer.moveForward = 3.0f;
-//                    if (offGroundTicks > 4 && offGroundTicks < 10) {
-//                        mc.thePlayer.motionY = -0.1f;
-//                    }
-//                    if (!mc.thePlayer.onGround && mc.thePlayer.hurtTime == 0) {
-//                        mc.thePlayer.motionY += -3;
-//                    }
 
-                    if (mc.thePlayer.onGround && c > 8) {
-//                        MovementUtil.strafe(0);
-                        c = 0;
+                    if (mc.thePlayer.onGround && b > 8) {
+                        b = 0;
                     }
 
                     break;
@@ -247,12 +213,15 @@ public class Speed extends Module {
 
     @Override
     public void onDisable() {
-        mc.gameSettings.keyBindSprint.pressed = false;
-        mc.gameSettings.keyBindJump.pressed = false;
-        mc.timer.timerSpeed = 1.0f;
         offGroundTicks = 0;
         tick = 0;
         flag = false;
+
+        mc.gameSettings.keyBindSprint.pressed = false;
+        mc.gameSettings.keyBindJump.pressed = false;
+
+        if (mc.theWorld == null) return;
+        mc.timer.timerSpeed = 1.0f;
     }
 
     @Override

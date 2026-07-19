@@ -50,9 +50,6 @@ public class KillAura extends Module {
             swingOnHurtTime = Setting.of("Swing on hurt-time", false),
             noBlockSwing = Setting.of("Don't swing while blocking", false);
 
-    private float previousAttackRange;
-    private int tick;
-    boolean can;
 
     public KillAura() {
         super("KillAura", "Attacks entities in proximity.", Category.COMBAT);
@@ -83,6 +80,10 @@ public class KillAura extends Module {
     private boolean isBlocking = false;
     private int blockDelay = 0;
     private boolean isAttacking = false;
+
+    private float previousAttackRange;
+    private int tick;
+    private boolean can;
 
     private Rotation rots;
 
@@ -118,8 +119,6 @@ public class KillAura extends Module {
                 RotationProcessor.getInstance().setTargetRotation(rots);
             }
         }
-
-
 
         if (event.state == EventState.PRE) {
             if (mc.thePlayer.ticksExisted % 20 == 0) {
@@ -196,12 +195,6 @@ public class KillAura extends Module {
                     startPacketBlock();
                 }
             }
-        }
-    }
-
-    private void canAttack() {
-        if (swingOnHurtTime.getValue() && TargetProcessor.getInstance().target != null && TargetProcessor.getInstance().target.hurtTime < 2) {
-
         }
     }
 

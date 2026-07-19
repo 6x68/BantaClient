@@ -22,6 +22,7 @@ public class FastSneak extends Module {
 
     @EventListen
     private void onSendPacket(SendPacketEvent event) {
+        if (mc.thePlayer == null) return;
         if (mode.isValue("Packet")) {
             if (event.packet instanceof C0BPacketEntityAction) {
                 if (((C0BPacketEntityAction) event.packet).getAction() == C0BPacketEntityAction.Action.START_SNEAKING) {

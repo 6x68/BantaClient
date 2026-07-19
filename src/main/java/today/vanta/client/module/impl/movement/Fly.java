@@ -18,7 +18,7 @@ public class Fly extends Module {
 
     private final NumberSetting distance = Setting.of("TP distance", 3, 0, 10, "m").hide(() -> !mode.isValue("Teleport"));
     private final NumberSetting ticks = Setting.of("TP ticks", 10, 1, 20).hide(() -> !mode.isValue("Teleport"));
-    private final NumberSetting viewBobbing = Setting.of("View-bob amount", 60.0f,0.0f,100f);
+    private final NumberSetting viewBobbing = Setting.of("View-bob amount", 60.0f, 0.0f, 100f);
 
     private final Counter jumpCounter = new Counter();
 
@@ -34,6 +34,7 @@ public class Fly extends Module {
         if (MovementUtil.isMoving()) {
             mc.thePlayer.cameraYaw = viewBobbing.getValue().floatValue() / 1000.0F;
         }
+
         switch (mode.getValue()) {
             case "Vanilla":
                 mc.thePlayer.motionY = 0f;
@@ -56,14 +57,6 @@ public class Fly extends Module {
 
     @EventListen
     private void onMotion(MotionEvent event) {
-        if (mode.isValue("Miniblox")) {
-            // dont work xd
-//                mc.gameSettings.keyBindSneak.pressed = true;
-            MovementUtil.strafe(0.15f);
-            if (mc.thePlayer.posY <= prevposY) {
-                mc.thePlayer.jump();
-            }
-        }
         if (event.state == EventState.PRE) {
             switch (mode.getValue()) {
                 case "Teleport":
@@ -79,6 +72,13 @@ public class Fly extends Module {
                                 mc.thePlayer.posY,
                                 mc.thePlayer.posZ + Math.cos(Math.toRadians(mc.thePlayer.rotationYaw)) * distance
                         );
+                    }
+                    break;
+
+                case "Miniblox":
+                    MovementUtil.strafe(0.15f);
+                    if (mc.thePlayer.posY <= prevposY) {
+                        mc.thePlayer.jump();
                     }
                     break;
             }
@@ -97,13 +97,6 @@ public class Fly extends Module {
         if (mc.thePlayer == null) return;
 
         prevposY = mc.thePlayer.posY;
-
-    }
-
-    @Override
-    public void onDisable() {
-        if (mc.thePlayer == null) return;
-
     }
 
     @Override

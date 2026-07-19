@@ -68,8 +68,6 @@ public class AntiCheat extends Module {
 
     @EventListen
     private void onUpdate(UpdateEvent event) {
-        if (mc.thePlayer == null || mc.theWorld == null) return;
-
         long now = System.currentTimeMillis();
 
         PacketRecord record;
@@ -130,6 +128,7 @@ public class AntiCheat extends Module {
 
     @EventListen
     private void onReceivePacket(ReceivePacketEvent event) {
+        if (mc.thePlayer == null || mc.theWorld == null) return;
         long now = System.currentTimeMillis();
 
         if (event.packet instanceof S0BPacketAnimation) {

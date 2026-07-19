@@ -63,6 +63,8 @@ public class Criticals extends Module {
 
     @EventListen
     private void onSendPacket(SendPacketEvent event) {
+        if (mc.thePlayer == null) return;
+
         if (!mode.isValue("Packet")) return;
 
         if (!(event.packet instanceof C0APacketAnimation)) return;
