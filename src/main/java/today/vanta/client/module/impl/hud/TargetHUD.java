@@ -137,7 +137,7 @@ public class TargetHUD extends Module {
             case "Vanta":
                 float headSize = 26f;
 
-                width = 128;
+                width = 138;
                 height = 30;
 
                 Rectangle
@@ -629,7 +629,7 @@ public class TargetHUD extends Module {
                 SFPT_REGULAR_16.drawString(healthperStr + "%", x + width - lengthh - 4, y + 34 + 6 - stringheight, Color.WHITE);
                 break;
             case "Atmosphere":
-                width = 125;
+                width = 130;
                 height = 34;
                 barrrrwidth = width - 36f;
                 widthoutline = width - 34f;

@@ -4,6 +4,7 @@ import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 import net.minecraft.potion.Potion;
 import today.vanta.client.event.impl.client.RenderOverlayEvent;
 import today.vanta.client.event.impl.game.network.ReceivePacketEvent;
+import today.vanta.client.event.impl.game.player.MoveEvent;
 import today.vanta.client.event.impl.game.world.UpdateEvent;
 import today.vanta.client.module.Category;
 import today.vanta.client.module.Module;
@@ -43,6 +44,7 @@ public class Speed extends Module {
     private boolean flag;
     private boolean a;
     private int b;
+    private float move;
 
     @EventListen
     private void onRenderOverlay(RenderOverlayEvent event) {
@@ -148,9 +150,8 @@ public class Speed extends Module {
                     break;
                 case "Miniblox":
                     if (flag) return;
+                    move = 50f;
                     if (mc.thePlayer.onGround) {
-                        mc.timer.timerSpeed = 2f;
-                        MovementUtil.strafe(0.12f);
                         mc.thePlayer.motionY += 0.1f;
                         if (!a) {
                             b++;
@@ -158,7 +159,6 @@ public class Speed extends Module {
                         }
                     } else {
                         a = false;
-                        mc.timer.timerSpeed = 1.0f;
                     }
 
                     if (mc.thePlayer.onGround && b > 8) {
@@ -222,6 +222,11 @@ public class Speed extends Module {
 
         if (mc.theWorld == null) return;
         mc.timer.timerSpeed = 1.0f;
+    }
+
+    @EventListen
+    private void onMove(MoveEvent event) {
+        event.setSpeed(move);
     }
 
     @Override

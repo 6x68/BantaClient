@@ -83,6 +83,7 @@ public class ModuleStorage extends Storage<Module> {
         list.add(new AntiCheat());
         list.add(new AutoRegister());
         list.add(new AutoPlay());
+        list.add(new StaffDetector());
 
         //Hud
         list.add(new Arraylist());
