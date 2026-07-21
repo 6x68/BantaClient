@@ -31,8 +31,6 @@ public class Fly extends Module {
     private final NumberSetting distance = Setting.of("TP distance", 3, 0, 10, "m").hide(() -> !mode.isValue("Teleport"));
     private final NumberSetting ticks = Setting.of("TP ticks", 10, 1, 20).hide(() -> !mode.isValue("Teleport"));
     private final NumberSetting viewBobbing = Setting.of("View-bob amount", 0.8f, 0.0f, 1f, 1);
-    private final NumberSetting timer = Setting.of("Timer", 10, 0.1, 100, 2)
-            .hide(() -> mode.isValue("Teleport"));
 
     private final Counter jumpCounter = new Counter();
 
@@ -113,14 +111,6 @@ public class Fly extends Module {
                                 mc.thePlayer.posZ + Math.cos(Math.toRadians(mc.thePlayer.rotationYaw)) * distance
                         );
                     }
-                    break;
-
-                case "Miniblox":
-                    MovementUtil.strafe(0.15f);
-                    if (mc.thePlayer.posY <= prevposY) {
-                        mc.thePlayer.jump();
-                    }
-                    break;
             }
         }
     }
@@ -129,13 +119,6 @@ public class Fly extends Module {
     @SuppressWarnings("unused")
     private void onMove(MoveEvent event) {
         if (mode.isValue("Teleport")) event.setSpeed(0);
-    }
-
-    @Override
-    public void onEnable() {
-        if (mc.thePlayer == null) return;
-
-        prevposY = mc.thePlayer.posY;
     }
 
     @Override
